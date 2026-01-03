@@ -6,4 +6,5 @@ class AppStyle {
     fontSize: 25,
     fontWeight: FontWeight.bold,
   );
+  static TextStyle btext = TextStyle(fontSize: 18, fontWeight: FontWeight.w600);
 }

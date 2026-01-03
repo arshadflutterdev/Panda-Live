@@ -18,6 +18,7 @@ class _AuthOptionsState extends State<AuthOptions> {
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
     return Scaffold(
+      backgroundColor: Colors.grey,
       body: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 30),
         child: Column(
@@ -56,12 +57,59 @@ class _AuthOptionsState extends State<AuthOptions> {
               height: 50,
               width: double.infinity,
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Colors.white,
                 borderRadius: BorderRadius.circular(20),
               ),
               child: Row(
                 children: [
                   // Icon(CupertinoIcons.goog)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    child: Image(
+                      height: 30,
+                      width: 40,
+                      image: AssetImage(AppImages.google),
+                    ),
+                  ),
+                  Gap(width * 0.080),
+                  Text(
+                    "Login with Google",
+                    style: AppStyle.btext.copyWith(color: Colors.blue),
+                  ),
+                ],
+              ),
+            ),
+
+            Gap(15),
+            Container(
+              height: 50,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: Row(
+                children: [
+                  // Icon(CupertinoIcons.goog)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 6,
+                      vertical: 2,
+                    ),
+                    child: Image(
+                      height: 30,
+                      width: 40,
+                      image: AssetImage(AppImages.facebook),
+                    ),
+                  ),
+                  Gap(width * 0.050),
+                  Text(
+                    "Login with Facebook",
+                    style: AppStyle.btext.copyWith(color: Colors.blue),
+                  ),
                 ],
               ),
             ),
