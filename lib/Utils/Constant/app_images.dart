@@ -1,3 +1,3 @@
 class AppImages {
-  static String splashimage = "assets/images/PandaLive.png";
+  static String splashimage = "assets/images/PandaLive (1).png";
 }

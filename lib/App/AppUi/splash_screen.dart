@@ -14,18 +14,6 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
-    return Scaffold(
-      body: Container(
-        height: height,
-        width: width,
-        decoration: BoxDecoration(
-          color: Colors.red,
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: AssetImage(AppImages.splashimage),
-          ),
-        ),
-      ),
-    );
+    return Scaffold(body: Center(child: Text("PandaLive")));
   }
 }
