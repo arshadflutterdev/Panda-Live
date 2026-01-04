@@ -8,6 +8,8 @@ class AppImages {
   static String phone = "assets/icons/smartphone.png";
   static String email = "assets/icons/envelope.png";
   static String userId = "assets/icons/user.png";
+  //more used image
+  static String bgimage = "assets/images/PandaLivebg.png";
   //below images for authOpt screen
   static String girl1 = "assets/images/girll1.jpg";
   static String girl2 = "assets/images/girll2.jpg";
