@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
@@ -150,9 +151,14 @@ class _AuthOptionsState extends State<AuthOptions> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text("I have read and agreed the"),
-                    Text(
-                      "PandaLive terms of Services",
-                      style: TextStyle(color: Colors.blueAccent),
+                    GestureDetector(
+                      onTap: () {
+                        Get.toNamed(AppRoutes.terms);
+                      },
+                      child: Text(
+                        "PandaLive terms of Services",
+                        style: TextStyle(color: Colors.blueAccent),
+                      ),
                     ),
                   ],
                 ),
