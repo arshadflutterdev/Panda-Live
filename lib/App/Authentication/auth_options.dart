@@ -14,6 +14,8 @@ class AuthOptions extends StatefulWidget {
 }
 
 class _AuthOptionsState extends State<AuthOptions> {
+  //here is list of images
+  RxList imagess = [].obs;
   RxBool checkValue = false.obs;
   @override
   Widget build(BuildContext context) {
