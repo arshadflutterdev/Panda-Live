@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
+import 'package:pandlive/App/Widgets/DialogBox/terms_dialog.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
@@ -47,69 +48,6 @@ class _AuthOptionsState extends State<AuthOptions> {
   }
 
   //here below to show dialogebox
-  void showdialoge() {
-    double height = AppHeightwidth.screenHeight(context);
-    double width = AppHeightwidth.screenWidth(context);
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          backgroundColor: Colors.transparent,
-          content: Container(
-            height: height * 0.23,
-            width: width * 0.10,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              children: [
-                Gap(5),
-                Text("Terms of service", style: AppStyle.tagline),
-
-                Text("User_agreement_contant"),
-                TextButton(
-                  onPressed: () {
-                    Get.toNamed(AppRoutes.terms);
-                  },
-                  child: FittedBox(
-                    child: Text(
-                      "Panda Live terms of services",
-                      style: AppStyle.btext,
-                    ),
-                  ),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-
-                  children: [
-                    TextButton(
-                      onPressed: () {
-                        Get.back();
-                      },
-                      child: FittedBox(
-                        child: Text(
-                          "Cancel",
-                          style: AppStyle.btext.copyWith(color: Colors.grey),
-                        ),
-                      ),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: FittedBox(
-                        child: Text("Accept", style: AppStyle.btext),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -264,7 +202,14 @@ class _AuthOptionsState extends State<AuthOptions> {
                       Gap(20),
                       GestureDetector(
                         onTap: () {
-                          showdialoge();
+                          showDialog(
+                            context: context,
+                            builder: (context) => TermsDialog(
+                              onAccept: () {
+                                Get.back();
+                              },
+                            ),
+                          );
                         },
                         child: CircleAvatar(
                           backgroundImage: AssetImage(AppImages.phone),
