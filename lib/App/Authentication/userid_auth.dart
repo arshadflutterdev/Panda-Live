@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
@@ -53,24 +54,28 @@ class _UseridAuthState extends State<UseridAuth> {
                   vertical: 8,
                   horizontal: 10,
                 ),
-                child: Text("Login With Your Email", style: AppStyle.btext),
+                child: Text("Login With Your_Id", style: AppStyle.btext),
               ),
               Form(
                 key: _formkey,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: MyTextFormField(
-                    keyboard: TextInputType.number,
-                    validator: (value) {
-                      if (userController.text.isEmpty) {
-                        return "Please Add Your Email";
-                      } else if (!userController.text.contains("@gmail.com")) {
-                        return "Please Enter Valid Email";
-                      }
-                      return null;
-                    },
-                    controller: userController,
-                    hintext: 'Please enter your email.',
+                  child: SizedBox(
+                    height: 50,
+                    child: MyTextFormField(
+                      inputformat: [FilteringTextInputFormatter.digitsOnly],
+                      keyboard: TextInputType.number,
+                      validator: (value) {
+                        if (userController.text.isEmpty) {
+                          return "Please Add Your userId";
+                        } else if (userController.text.length < 6) {
+                          return "Please Enter 6 Digits userId";
+                        }
+                        return null;
+                      },
+                      controller: userController,
+                      hintext: 'Please Enter Your userId.',
+                    ),
                   ),
                 ),
               ),

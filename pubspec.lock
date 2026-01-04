@@ -78,6 +78,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_intl_phone_field:
+    dependency: "direct main"
+    description:
+      name: flutter_intl_phone_field
+      sha256: ec38faf32e62f1e0d3efe2c2630202728c024d17eef0c6ababc877c9b3c9d113
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.7"
   flutter_lints:
     dependency: "direct dev"
     description:

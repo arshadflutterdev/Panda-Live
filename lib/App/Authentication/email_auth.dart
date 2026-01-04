@@ -60,18 +60,23 @@ class _EmailAuthState extends State<EmailAuth> {
                 key: _formkey,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: MyTextFormField(
-                    keyboard: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (emailController.text.isEmpty) {
-                        return "Please Add Your Email";
-                      } else if (!emailController.text.contains("@gmail.com")) {
-                        return "Please Enter Valid Email";
-                      }
-                      return null;
-                    },
-                    controller: emailController,
-                    hintext: 'Please enter your email.',
+                  child: SizedBox(
+                    height: 50,
+                    child: MyTextFormField(
+                      keyboard: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (emailController.text.isEmpty) {
+                          return "Please Add Your Email";
+                        } else if (!emailController.text.contains(
+                          "@gmail.com",
+                        )) {
+                          return "Please Enter Valid Email";
+                        }
+                        return null;
+                      },
+                      controller: emailController,
+                      hintext: 'Please enter your email.',
+                    ),
                   ),
                 ),
               ),

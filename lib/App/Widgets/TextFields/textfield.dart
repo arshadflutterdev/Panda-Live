@@ -1,15 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
 
 class MyTextFormField extends StatelessWidget {
   final String hintext;
   final Icon? prefix;
   final Icon? suffix;
+  final List<TextInputFormatter>? inputformat;
   final TextInputType keyboard;
   final FormFieldValidator? validator;
   final TextEditingController? controller;
+
   const MyTextFormField({
     super.key,
+    this.inputformat,
     required this.keyboard,
     this.validator,
     required this.hintext,
@@ -23,6 +27,8 @@ class MyTextFormField extends StatelessWidget {
     return TextFormField(
       keyboardType: keyboard,
       validator: validator,
+      inputFormatters: inputformat,
+
       cursorColor: AppColours.blues,
       controller: controller,
       decoration: InputDecoration(
