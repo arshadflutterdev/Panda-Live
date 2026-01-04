@@ -1,20 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
 
-class MyTextField extends StatelessWidget {
-  const MyTextField({super.key});
+class MyTextFormField extends StatelessWidget {
+  final String hintext;
+  final Icon? prefix;
+  final Icon? suffix;
+  final TextInputType keyboard;
+  final FormFieldValidator? validator;
+  final TextEditingController? controller;
+  const MyTextFormField({
+    super.key,
+    required this.keyboard,
+    this.validator,
+    required this.hintext,
+    this.prefix,
+    this.suffix,
+    this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
+    return TextFormField(
+      keyboardType: keyboard,
+      validator: validator,
       cursorColor: AppColours.blues,
-
+      controller: controller,
       decoration: InputDecoration(
-        suffixIcon: Icon(Icons.close),
-        prefixIcon: Icon(Icons.close),
+        suffixIcon: suffix,
+        prefixIcon: prefix,
+
         hint: Text(
-          "Arshad",
-          style: TextStyle(fontSize: 18, color: Colors.black54),
+          hintext,
+          style: TextStyle(fontSize: 16, color: Colors.black54),
         ),
 
         filled: true,
