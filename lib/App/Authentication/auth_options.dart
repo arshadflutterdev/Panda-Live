@@ -1,6 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
@@ -13,6 +13,7 @@ class AuthOptions extends StatefulWidget {
 }
 
 class _AuthOptionsState extends State<AuthOptions> {
+  RxBool checkValue = false.obs;
   @override
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
@@ -112,6 +113,50 @@ class _AuthOptionsState extends State<AuthOptions> {
                   ),
                 ],
               ),
+            ),
+            Gap(height * 0.080),
+            Image(image: AssetImage(AppImages.or)),
+            Gap(height * 0.030),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                CircleAvatar(backgroundImage: AssetImage(AppImages.email)),
+                Gap(20),
+                CircleAvatar(backgroundImage: AssetImage(AppImages.phone)),
+              ],
+            ),
+            Gap(height * 0.10),
+
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Obx(
+                  () => Checkbox(
+                    shape: CircleBorder(),
+                    activeColor: Colors.green,
+                    checkColor: Colors.white,
+
+                    value: checkValue.value,
+                    onChanged: (newvalue) {
+                      checkValue.value = newvalue ?? false;
+                    },
+                  ),
+                ),
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text("I have read and agreed the"),
+                    Text(
+                      "PandaLive terms of Services",
+                      style: TextStyle(color: Colors.blueAccent),
+                    ),
+                  ],
+                ),
+              ],
             ),
           ],
         ),
