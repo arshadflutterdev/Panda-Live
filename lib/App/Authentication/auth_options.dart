@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -14,7 +15,7 @@ class AuthOptions extends StatefulWidget {
 }
 
 class _AuthOptionsState extends State<AuthOptions> {
-  //here is list of images
+  RxBool checkValue = false.obs;
   RxList imagess = [
     AppImages.girl1,
     AppImages.girl2,
@@ -26,180 +27,228 @@ class _AuthOptionsState extends State<AuthOptions> {
     AppImages.girl8,
     AppImages.girl9,
   ].obs;
+
   RxInt currentimage = 0.obs;
-  // void changeimage() {
-
-  //   Obx(()=>  currentimage = (currentimage + 1) % imagess.length)
-
-  // }
+  Timer? timer;
 
   @override
   void initState() {
     super.initState();
+    // Pre-cache images for smoother transitions (optional but recommended)
+    timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+      currentimage.value = (currentimage.value + 1) % imagess.length;
+    });
   }
 
-  RxBool checkValue = false.obs;
+  @override
+  void dispose() {
+    timer?.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
+
     return Scaffold(
-      backgroundColor: Colors.grey,
+      backgroundColor: Colors.black, // Set to black to avoid white flashes
       body: Obx(
-        () => Container(
-          height: height,
-          width: width,
-          decoration: BoxDecoration(
-            image: DecorationImage(
-              fit: BoxFit.cover,
-              image: AssetImage(imagess[currentimage.value]),
+        () => AnimatedSwitcher(
+          duration: const Duration(
+            seconds: 2,
+          ), // Adjust for a slower, smoother blend
+          switchInCurve: Curves.easeIn,
+          switchOutCurve: Curves.easeOut,
+          // This builder ensures the images are stacked on top of each other
+          layoutBuilder: (Widget? currentChild, List<Widget> previousChildren) {
+            return Stack(
+              children: <Widget>[
+                ...previousChildren,
+                if (currentChild != null) currentChild,
+              ],
+            );
+          },
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return FadeTransition(opacity: animation, child: child);
+          },
+          child: Container(
+            // The Key is vital to tell Flutter the child has changed
+            key: ValueKey<int>(currentimage.value),
+            height: height,
+            width: width,
+            decoration: BoxDecoration(
+              image: DecorationImage(
+                fit: BoxFit.cover,
+                image: AssetImage(imagess[currentimage.value]),
+              ),
             ),
-          ),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 30),
-            child: Column(
-              children: [
-                Gap(height * 0.20),
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 30),
+              child: Column(
+                children: [
+                  Gap(height * 0.20),
 
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Container(
-                      height: height * 0.082,
-                      width: width * 0.20,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                        image: DecorationImage(
-                          fit: BoxFit.cover,
-                          image: AssetImage(AppImages.logo),
-                        ),
-                      ),
-                    ),
-
-                    Gap(10),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("PandaLive", style: AppStyle.logo),
-
-                        Text("Live. Stream. Connect."),
-                      ],
-                    ),
-                  ],
-                ),
-                Gap(height * 0.10),
-                Container(
-                  height: 50,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Icon(CupertinoIcons.goog)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        child: Image(
-                          height: 30,
-                          width: 40,
-                          image: AssetImage(AppImages.google),
-                        ),
-                      ),
-                      Gap(width * 0.080),
-                      Text(
-                        "Login with Google",
-                        style: AppStyle.btext.copyWith(color: Colors.blue),
-                      ),
-                    ],
-                  ),
-                ),
-
-                // here is image
-                Gap(15),
-                Container(
-                  height: 50,
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: Row(
-                    children: [
-                      // Icon(CupertinoIcons.goog)
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 6,
-                          vertical: 2,
-                        ),
-                        child: Image(
-                          height: 30,
-                          width: 40,
-                          image: AssetImage(AppImages.facebook),
-                        ),
-                      ),
-                      Gap(width * 0.050),
-                      Text(
-                        "Login with Facebook",
-                        style: AppStyle.btext.copyWith(color: Colors.blue),
-                      ),
-                    ],
-                  ),
-                ),
-                Gap(height * 0.080),
-                Image(image: AssetImage(AppImages.or)),
-                Gap(height * 0.030),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircleAvatar(backgroundImage: AssetImage(AppImages.email)),
-                    Gap(20),
-                  ],
-                ),
-                Gap(height * 0.10),
-
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Obx(
-                      () => Checkbox(
-                        shape: CircleBorder(),
-                        activeColor: Colors.green,
-                        checkColor: Colors.white,
-
-                        value: checkValue.value,
-                        onChanged: (newvalue) {
-                          checkValue.value = newvalue ?? false;
-                        },
-                      ),
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Text("I have read and agreed the"),
-                        GestureDetector(
-                          onTap: () {
-                            // Get.toNamed(AppRoutes.terms);
-                          },
-                          child: Text(
-                            "PandaLive terms of Services",
-                            style: TextStyle(color: Colors.blueAccent),
+                      Container(
+                        height: height * 0.090,
+                        width: width * 0.20,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(10),
+                          image: DecorationImage(
+                            fit: BoxFit.cover,
+                            image: AssetImage(AppImages.logo),
                           ),
                         ),
+                      ),
+
+                      Gap(10),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "PandaLive",
+                            style: AppStyle.logo.copyWith(color: Colors.white),
+                          ),
+
+                          Text(
+                            "Live. Stream. Connect.",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                  Gap(height * 0.10),
+                  Container(
+                    height: 50,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        // Icon(CupertinoIcons.goog)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          child: Image(
+                            height: 30,
+                            width: 40,
+                            image: AssetImage(AppImages.google),
+                          ),
+                        ),
+                        Gap(width * 0.080),
+                        Text(
+                          "Login with Google",
+                          style: AppStyle.btext.copyWith(color: Colors.blue),
+                        ),
                       ],
                     ),
-                  ],
-                ),
-              ],
+                  ),
+
+                  // here is image
+                  Gap(15),
+                  Container(
+                    height: 50,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Row(
+                      children: [
+                        // Icon(CupertinoIcons.goog)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 6,
+                            vertical: 2,
+                          ),
+                          child: Image(
+                            height: 30,
+                            width: 40,
+                            image: AssetImage(AppImages.facebook),
+                          ),
+                        ),
+                        Gap(width * 0.050),
+                        Text(
+                          "Login with Facebook",
+                          style: AppStyle.btext.copyWith(color: Colors.blue),
+                        ),
+                      ],
+                    ),
+                  ),
+                  Gap(height * 0.080),
+                  Image(image: AssetImage(AppImages.or)),
+                  Gap(height * 0.030),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        backgroundImage: AssetImage(AppImages.email),
+                      ),
+                      Gap(20),
+                      GestureDetector(
+                        onTap: () {
+                          currentimage.value =
+                              (currentimage.value + 1) % imagess.length;
+                        },
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage(AppImages.phone),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Gap(height * 0.10),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Obx(
+                        () => Checkbox(
+                          shape: CircleBorder(),
+                          activeColor: Colors.green,
+                          checkColor: Colors.white,
+
+                          value: checkValue.value,
+                          onChanged: (newvalue) {
+                            checkValue.value = newvalue ?? false;
+                          },
+                        ),
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            "I have read and agreed the",
+                            style: TextStyle(color: Colors.white),
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              Get.toNamed(AppRoutes.terms);
+                            },
+                            child: Text(
+                              "PandaLive terms of Services",
+                              style: TextStyle(color: Colors.blueAccent),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           ),
         ),
