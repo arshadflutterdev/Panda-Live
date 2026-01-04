@@ -127,65 +127,99 @@ class _AuthOptionsState extends State<AuthOptions> {
                     ],
                   ),
                   Gap(height * 0.10),
-                  Container(
-                    height: 50,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      children: [
-                        // Icon(CupertinoIcons.goog)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
+                  GestureDetector(
+                    onTap: () {
+                      if (checkValue.value == true) {
+                        Get.toNamed(AppRoutes.terms);
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) => TermsDialog(
+                            onAccept: () {
+                              Get.back();
+                            },
                           ),
-                          child: Image(
-                            height: 30,
-                            width: 40,
-                            image: AssetImage(AppImages.google),
+                        );
+                      }
+                    },
+
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          // Icon(CupertinoIcons.goog)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            child: Image(
+                              height: 30,
+                              width: 40,
+                              image: AssetImage(AppImages.google),
+                            ),
                           ),
-                        ),
-                        Gap(width * 0.080),
-                        Text(
-                          "Login with Google",
-                          style: AppStyle.btext.copyWith(color: Colors.blue),
-                        ),
-                      ],
+                          Gap(width * 0.080),
+                          Text(
+                            "Login with Google",
+                            style: AppStyle.btext.copyWith(color: Colors.blue),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
 
                   // here is image
                   Gap(15),
-                  Container(
-                    height: 50,
-                    width: double.infinity,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      children: [
-                        // Icon(CupertinoIcons.goog)
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 6,
-                            vertical: 2,
+                  GestureDetector(
+                    onTap: () {
+                      if (checkValue.value == true) {
+                        Get.toNamed(AppRoutes.terms);
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (context) => TermsDialog(
+                            onAccept: () {
+                              Get.back();
+                            },
                           ),
-                          child: Image(
-                            height: 30,
-                            width: 40,
-                            image: AssetImage(AppImages.facebook),
+                        );
+                      }
+                    },
+
+                    child: Container(
+                      height: 50,
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      child: Row(
+                        children: [
+                          // Icon(CupertinoIcons.goog)
+                          Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 6,
+                              vertical: 2,
+                            ),
+                            child: Image(
+                              height: 30,
+                              width: 40,
+                              image: AssetImage(AppImages.facebook),
+                            ),
                           ),
-                        ),
-                        Gap(width * 0.050),
-                        Text(
-                          "Login with Facebook",
-                          style: AppStyle.btext.copyWith(color: Colors.blue),
-                        ),
-                      ],
+                          Gap(width * 0.050),
+                          Text(
+                            "Login with Facebook",
+                            style: AppStyle.btext.copyWith(color: Colors.blue),
+                          ),
+                        ],
+                      ),
                     ),
                   ),
                   Gap(height * 0.080),
@@ -196,21 +230,43 @@ class _AuthOptionsState extends State<AuthOptions> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
-                      CircleAvatar(
-                        backgroundImage: AssetImage(AppImages.email),
+                      GestureDetector(
+                        onTap: () {
+                          if (checkValue.value == true) {
+                            Get.toNamed(AppRoutes.terms);
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) => TermsDialog(
+                                onAccept: () {
+                                  Get.back();
+                                },
+                              ),
+                            );
+                          }
+                        },
+
+                        child: CircleAvatar(
+                          backgroundImage: AssetImage(AppImages.email),
+                        ),
                       ),
                       Gap(20),
                       GestureDetector(
                         onTap: () {
-                          showDialog(
-                            context: context,
-                            builder: (context) => TermsDialog(
-                              onAccept: () {
-                                Get.back();
-                              },
-                            ),
-                          );
+                          if (checkValue.value == true) {
+                            Get.toNamed(AppRoutes.terms);
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) => TermsDialog(
+                                onAccept: () {
+                                  Get.back();
+                                },
+                              ),
+                            );
+                          }
                         },
+
                         child: CircleAvatar(
                           backgroundImage: AssetImage(AppImages.phone),
                         ),

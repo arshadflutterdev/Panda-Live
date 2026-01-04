@@ -16,7 +16,7 @@ class TermsDialog extends StatelessWidget {
     return AlertDialog(
       backgroundColor: Colors.transparent,
       content: Container(
-        height: height * 0.23,
+        height: height * 0.21,
         width: width * 0.10,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -26,16 +26,31 @@ class TermsDialog extends StatelessWidget {
           children: [
             Gap(5),
             Text("Terms of service", style: AppStyle.tagline),
+            Gap(5),
 
             Text("User_agreement_contant"),
-            TextButton(
-              onPressed: () {
+            Gap(3),
+            GestureDetector(
+              onTap: () {
                 Get.toNamed(AppRoutes.terms);
               },
-              child: FittedBox(
-                child: Text(
-                  "Panda Live terms of services",
-                  style: AppStyle.btext,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  text: 'Panda Live Terms Of',
+                  style: TextStyle(
+                    color: Colors.blueAccent,
+                    fontSize: 18,
+                    decoration: TextDecoration.underline,
+                  ),
+                  children: [
+                    TextSpan(text: "\nServices"),
+                    TextSpan(
+                      text: "and",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                    TextSpan(text: "Privacy Policy"),
+                  ],
                 ),
               ),
             ),
