@@ -13,7 +13,7 @@ class TermsOfServiceScreen extends StatelessWidget {
         title: const Text("Terms of Service"),
         centerTitle: true,
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back),
+          icon: const Icon(Icons.arrow_back_ios_new),
           onPressed: () => Get.back(),
         ),
       ),
