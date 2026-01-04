@@ -233,13 +233,13 @@ class _AuthOptionsState extends State<AuthOptions> {
                       GestureDetector(
                         onTap: () {
                           if (checkValue.value == true) {
-                            Get.toNamed(AppRoutes.terms);
+                            Get.toNamed(AppRoutes.emailauth);
                           } else {
                             showDialog(
                               context: context,
                               builder: (context) => TermsDialog(
                                 onAccept: () {
-                                  Get.back();
+                                  Get.toNamed(AppRoutes.emailauth);
                                 },
                               ),
                             );
@@ -254,13 +254,13 @@ class _AuthOptionsState extends State<AuthOptions> {
                       GestureDetector(
                         onTap: () {
                           if (checkValue.value == true) {
-                            Get.toNamed(AppRoutes.terms);
+                            Get.toNamed(AppRoutes.userauth);
                           } else {
                             showDialog(
                               context: context,
                               builder: (context) => TermsDialog(
                                 onAccept: () {
-                                  Get.back();
+                                  Get.toNamed(AppRoutes.userauth);
                                 },
                               ),
                             );
@@ -276,13 +276,13 @@ class _AuthOptionsState extends State<AuthOptions> {
                       GestureDetector(
                         onTap: () {
                           if (checkValue.value == true) {
-                            Get.toNamed(AppRoutes.terms);
+                            Get.toNamed(AppRoutes.phoneauth);
                           } else {
                             showDialog(
                               context: context,
                               builder: (context) => TermsDialog(
                                 onAccept: () {
-                                  Get.back();
+                                  Get.toNamed(AppRoutes.phoneauth);
                                 },
                               ),
                             );
