@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
+import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 
@@ -17,6 +19,7 @@ class _EmailAuthState extends State<EmailAuth> {
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Container(
         height: height,
         width: width,
@@ -26,21 +29,25 @@ class _EmailAuthState extends State<EmailAuth> {
             image: AssetImage(AppImages.bgimage),
           ),
         ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Gap(height * 0.010),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
-              child: IconButton(
-                onPressed: () {
-                  Get.back();
-                },
-                icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Gap(height * 0.010),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 8),
+                child: IconButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                ),
               ),
-            ),
-          ],
+              Gap(height * 0.30),
+              Padding(padding: const EdgeInsets.all(8.0), child: MyTextField()),
+            ],
+          ),
         ),
       ),
     );

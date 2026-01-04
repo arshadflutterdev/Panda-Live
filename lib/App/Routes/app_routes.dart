@@ -20,6 +20,6 @@ class AppRoutes {
     GetPage(name: terms, page: () => TermsOfServiceScreen()),
     GetPage(name: emailauth, page: () => EmailAuth()),
     GetPage(name: userauth, page: () => UseridAuth()),
-    // GetPage(name: phoneauth, page: () => PhoneAuth()),
+    GetPage(name: phoneauth, page: () => PhoneAuth()),
   ];
 }
