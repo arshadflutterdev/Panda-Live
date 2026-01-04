@@ -268,6 +268,28 @@ class _AuthOptionsState extends State<AuthOptions> {
                         },
 
                         child: CircleAvatar(
+                          backgroundImage: AssetImage(AppImages.userId),
+                        ),
+                      ),
+
+                      Gap(20),
+                      GestureDetector(
+                        onTap: () {
+                          if (checkValue.value == true) {
+                            Get.toNamed(AppRoutes.terms);
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) => TermsDialog(
+                                onAccept: () {
+                                  Get.back();
+                                },
+                              ),
+                            );
+                          }
+                        },
+
+                        child: CircleAvatar(
                           backgroundImage: AssetImage(AppImages.phone),
                         ),
                       ),
@@ -286,6 +308,7 @@ class _AuthOptionsState extends State<AuthOptions> {
                           checkColor: Colors.white,
 
                           value: checkValue.value,
+
                           onChanged: (newvalue) {
                             checkValue.value = newvalue ?? false;
                           },
