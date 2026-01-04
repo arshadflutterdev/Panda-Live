@@ -7,4 +7,8 @@ class AppStyle {
     fontWeight: FontWeight.bold,
   );
   static TextStyle btext = TextStyle(fontSize: 18, fontWeight: FontWeight.w600);
+  static TextStyle tagline = TextStyle(
+    fontSize: 22,
+    fontWeight: FontWeight.w800,
+  );
 }
