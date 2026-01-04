@@ -7,6 +7,9 @@ class AppRoutes {
   static const splash = "/";
   static const authoptions = "/AuthOptions";
   static const terms = "/TermsOfServiceScreen";
+  static const emailauth = "/EmailAuth";
+  static const userauth = "/UseridAuth";
+  static const phoneauth = "/PhoneAuth";
 
   static final routes = [
     GetPage(name: splash, page: () => SplashScreen()),
