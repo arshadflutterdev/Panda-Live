@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:pandlive/App/Controllers/email_controller.dart';
-import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
@@ -19,6 +17,7 @@ class EmailAuth extends StatefulWidget {
 class _EmailAuthState extends State<EmailAuth> {
   final _formkey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
+  RxBool isEmailEmpty = false.obs;
   @override
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
@@ -76,10 +75,15 @@ class _EmailAuthState extends State<EmailAuth> {
                       },
                       controller: emailController,
                       hintext: 'Please enter your email.',
-                      // onChanged:onEmailChanges,
-                      suffix: emailController.text.isNotEmpty
+                      onChanged: (NewValue) {
+                        isEmailEmpty.value = NewValue.isNotEmpty;
+                      },
+                      suffix: isEmailEmpty.value
                           ? IconButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                emailController.clear();
+                                isEmailEmpty.value = false;
+                              },
                               icon: Icon(Icons.close, color: Colors.black54),
                             )
                           : null,
