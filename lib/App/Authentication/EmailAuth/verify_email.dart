@@ -109,7 +109,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                   children: [
                     // Gap(height * 0.5),
                     Text(
-                      "Login With Phone number",
+                      "Login With Email",
                       style: AppStyle.btext.copyWith(fontSize: 22),
                     ),
                     Text(
@@ -183,20 +183,17 @@ class _VerifyEmailState extends State<VerifyEmail> {
                               Gap(4),
                             ],
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                "Chnage the way?",
-                                style: TextStyle(color: Colors.black54),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: TextButton(
+                              onPressed: () {
+                                Get.offAllNamed(AppRoutes.authoptions);
+                              },
+                              child: Text(
+                                "Try another method?",
+                                style: TextStyle(color: AppColours.blues),
                               ),
-                              TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  "Resend Watsapp?",
-                                  style: TextStyle(color: AppColours.blues),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
 
                           Obx(

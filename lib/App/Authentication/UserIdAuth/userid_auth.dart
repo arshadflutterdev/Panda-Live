@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
@@ -17,6 +18,7 @@ class UseridAuth extends StatefulWidget {
 
 class _UseridAuthState extends State<UseridAuth> {
   final _formkey = GlobalKey<FormState>();
+  RxBool isUserIdEmpty = false.obs;
   TextEditingController userController = TextEditingController();
   @override
   Widget build(BuildContext context) {
@@ -60,19 +62,32 @@ class _UseridAuthState extends State<UseridAuth> {
                 key: _formkey,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: MyTextFormField(
-                    inputformat: [FilteringTextInputFormatter.digitsOnly],
-                    keyboard: TextInputType.number,
-                    validator: (value) {
-                      if (userController.text.isEmpty) {
-                        return "Please Add Your userId";
-                      } else if (userController.text.length < 6) {
-                        return "Please Enter 6 Digits userId";
-                      }
-                      return null;
-                    },
-                    controller: userController,
-                    hintext: 'Please Enter Your userId.',
+                  child: Obx(
+                    () => MyTextFormField(
+                      onChanged: (newValue) {
+                        isUserIdEmpty.value = newValue.isNotEmpty;
+                      },
+                      inputformat: [FilteringTextInputFormatter.digitsOnly],
+                      keyboard: TextInputType.number,
+                      validator: (value) {
+                        if (userController.text.isEmpty) {
+                          return "Please Add Your userId";
+                        } else if (userController.text.length < 6) {
+                          return "Please Enter 6 Digits userId";
+                        }
+                        return null;
+                      },
+                      controller: userController,
+                      hintext: 'Please Enter Your userId.',
+                      suffix: isUserIdEmpty.value
+                          ? IconButton(
+                              onPressed: () {
+                                userController.clear();
+                              },
+                              icon: Icon(Icons.close),
+                            )
+                          : null,
+                    ),
                   ),
                 ),
               ),
@@ -88,11 +103,7 @@ class _UseridAuthState extends State<UseridAuth> {
                   ),
                   onPressed: () {
                     if (_formkey.currentState!.validate()) {
-                      Get.snackbar(
-                        "Congratulations",
-                        "You added information correctly",
-                      );
-                      userController.clear();
+                      Get.toNamed(AppRoutes.createprofile);
                     }
                   },
                   child: Text(

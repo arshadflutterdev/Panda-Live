@@ -41,7 +41,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
     Timer(Duration(seconds: 3), () {
       Get.snackbar(
         "Code",
-        "112233 is your code",
+        "258012 is your code",
         backgroundColor: AppColours.blues,
         colorText: Colors.white,
       );
@@ -183,20 +183,17 @@ class _VerifyNumberState extends State<VerifyNumber> {
                               Gap(4),
                             ],
                           ),
-                          Row(
-                            children: [
-                              Text(
-                                "Chnage the way?",
-                                style: TextStyle(color: Colors.black54),
+                          Align(
+                            alignment: Alignment.bottomLeft,
+                            child: TextButton(
+                              onPressed: () {
+                                Get.offAllNamed(AppRoutes.authoptions);
+                              },
+                              child: Text(
+                                "Try another method?",
+                                style: TextStyle(color: AppColours.blues),
                               ),
-                              TextButton(
-                                onPressed: () {},
-                                child: Text(
-                                  "Resend Watsapp?",
-                                  style: TextStyle(color: AppColours.blues),
-                                ),
-                              ),
-                            ],
+                            ),
                           ),
 
                           Obx(
