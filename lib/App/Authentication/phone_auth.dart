@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
@@ -59,22 +60,34 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 key: _formkey,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    height: 50,
-                    child: MyTextFormField(
-                      keyboard: TextInputType.emailAddress,
-                      validator: (value) {
-                        if (phoneController.text.isEmpty) {
-                          return "Please Add Your Email";
-                        } else if (!phoneController.text.contains(
-                          "@gmail.com",
-                        )) {
-                          return "Please Enter Valid Email";
-                        }
-                        return null;
-                      },
-                      controller: phoneController,
-                      hintext: 'Enter Your Phone Number.',
+                  child: IntlPhoneField(
+                    showDropdownIcon: false,
+                    initialCountryCode: "SA",
+
+                    decoration: InputDecoration(
+                      hint: Text(
+                        'Add phone number',
+                        style: TextStyle(fontSize: 16, color: Colors.black54),
+                      ),
+
+                      filled: true,
+                      fillColor: Colors.grey.shade200,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade200),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade200),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColours.blues),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
                     ),
                   ),
                 ),
