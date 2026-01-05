@@ -10,6 +10,7 @@ class AppImages {
   static String userId = "assets/icons/user.png";
   //more used image
   static String bgimage = "assets/images/PandaLivebg.png";
+  static String halfbg = "assets/images/halfbg.png";
   //below images for authOpt screen
   static String girl1 = "assets/images/girll1.jpg";
   static String girl2 = "assets/images/girll2.jpg";

@@ -1,4 +1,5 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:pandlive/App/AppUi/Profile/create_profile.dart';
 import 'package:pandlive/App/AppUi/splash_screen.dart';
 import 'package:pandlive/App/AppUi/terms_services.dart';
 import 'package:pandlive/App/Authentication/PhoneAuth/verify_number.dart';
@@ -15,6 +16,7 @@ class AppRoutes {
   static const userauth = "/UseridAuth";
   static const phoneauth = "/PhoneAuth";
   static const verifynumber = "/VerifyNumber";
+  static const createprofile = "/CreateProfile";
 
   static final routes = [
     GetPage(name: splash, page: () => SplashScreen()),
@@ -24,5 +26,6 @@ class AppRoutes {
     GetPage(name: userauth, page: () => UseridAuth()),
     GetPage(name: phoneauth, page: () => PhoneAuth()),
     GetPage(name: verifynumber, page: () => VerifyNumber()),
+    GetPage(name: createprofile, page: () => CreateProfile()),
   ];
 }
