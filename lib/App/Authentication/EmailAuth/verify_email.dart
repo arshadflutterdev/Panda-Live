@@ -11,14 +11,14 @@ import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 
-class VerifyNumber extends StatefulWidget {
-  const VerifyNumber({super.key});
+class VerifyEmail extends StatefulWidget {
+  const VerifyEmail({super.key});
 
   @override
-  State<VerifyNumber> createState() => _VerifyNumberState();
+  State<VerifyEmail> createState() => _VerifyEmailState();
 }
 
-class _VerifyNumberState extends State<VerifyNumber> {
+class _VerifyEmailState extends State<VerifyEmail> {
   TextEditingController smsController = TextEditingController();
   TextEditingController passController = TextEditingController();
   RxBool isSMSEmtpy = false.obs;
@@ -41,7 +41,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
     Timer(Duration(seconds: 3), () {
       Get.snackbar(
         "Code",
-        "112233 is your code",
+        "258012 is your code",
         backgroundColor: AppColours.blues,
         colorText: Colors.white,
       );
@@ -113,7 +113,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
                       style: AppStyle.btext.copyWith(fontSize: 22),
                     ),
                     Text(
-                      "verification code send to +966 ******34",
+                      "verification code send to arshad****gmail.com",
                       style: TextStyle(color: Colors.black54),
                     ),
                     Gap(height * 0.030),
@@ -241,14 +241,14 @@ class _VerifyNumberState extends State<VerifyNumber> {
                                       },
                                       icon: isSecure.value
                                           ? Image(
-                                              height: 30,
+                                              height: 25,
 
                                               image: AssetImage(
                                                 AppImages.eyesoff,
                                               ),
                                             )
                                           : Image(
-                                              height: 30,
+                                              height: 25,
                                               image: AssetImage(
                                                 AppImages.eyeson,
                                               ),

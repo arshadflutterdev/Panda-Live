@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
@@ -100,7 +101,9 @@ class _EmailAuthState extends State<EmailAuth> {
                   width: width,
                   btext: 'Next',
                   onPressed: () {
-                    if (_formkey.currentState!.validate()) {}
+                    if (_formkey.currentState!.validate()) {
+                      Get.toNamed(AppRoutes.verifyemail);
+                    }
                   },
                 ),
               ),
