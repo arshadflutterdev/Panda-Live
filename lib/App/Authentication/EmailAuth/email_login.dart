@@ -92,6 +92,18 @@ class _EmailLoginState extends State<EmailLogin> {
                               : null,
                         ),
                       ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: TextButton(
+                          onPressed: () {
+                            Get.toNamed(AppRoutes.resetpassword);
+                          },
+                          child: Text(
+                            "Forget Password?",
+                            style: TextStyle(color: AppColours.blues),
+                          ),
+                        ),
+                      ),
                     ],
                   ),
                 ),
