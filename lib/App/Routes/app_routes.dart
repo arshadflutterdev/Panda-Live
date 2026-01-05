@@ -5,6 +5,8 @@ import 'package:pandlive/App/AppUi/terms_services.dart';
 import 'package:pandlive/App/Authentication/EmailAuth/email_login.dart';
 import 'package:pandlive/App/Authentication/EmailAuth/reset_password.dart';
 import 'package:pandlive/App/Authentication/EmailAuth/verify_email.dart';
+import 'package:pandlive/App/Authentication/PhoneAuth/phone_login.dart';
+import 'package:pandlive/App/Authentication/PhoneAuth/resetpassword_phone.dart';
 import 'package:pandlive/App/Authentication/PhoneAuth/verify_number.dart';
 import 'package:pandlive/App/Authentication/auth_options.dart';
 import 'package:pandlive/App/Authentication/EmailAuth/email_auth.dart';
@@ -23,6 +25,8 @@ class AppRoutes {
   static const verifyemail = "/VerifyEmail";
   static const loginemail = "/EmailLogin";
   static const resetpassword = "/ResetPassword";
+  static const phonelogin = "/PhoneLogin";
+  static const phonereset = "/PhoneResetPassword";
 
   static final routes = [
     GetPage(name: splash, page: () => SplashScreen()),
@@ -36,5 +40,7 @@ class AppRoutes {
     GetPage(name: verifyemail, page: () => VerifyEmail()),
     GetPage(name: loginemail, page: () => EmailLogin()),
     GetPage(name: resetpassword, page: () => ResetPassword()),
+    GetPage(name: phonelogin, page: () => PhoneLogin()),
+    GetPage(name: phonereset, page: () => PhoneResetPassword()),
   ];
 }

@@ -11,14 +11,14 @@ import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 
-class ResetPassword extends StatefulWidget {
-  const ResetPassword({super.key});
+class PhoneResetPassword extends StatefulWidget {
+  const PhoneResetPassword({super.key});
 
   @override
-  State<ResetPassword> createState() => _ResetPasswordState();
+  State<PhoneResetPassword> createState() => _PhoneResetPasswordState();
 }
 
-class _ResetPasswordState extends State<ResetPassword> {
+class _PhoneResetPasswordState extends State<PhoneResetPassword> {
   TextEditingController smsController = TextEditingController();
   TextEditingController passController = TextEditingController();
   RxBool isSMSEmtpy = false.obs;
@@ -113,7 +113,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                       style: AppStyle.btext.copyWith(fontSize: 22),
                     ),
                     Text(
-                      "verification code send to arshad****gmail.com",
+                      "verification code send to +966 ******345 ",
                       style: TextStyle(color: Colors.black54),
                     ),
                     Gap(height * 0.030),
