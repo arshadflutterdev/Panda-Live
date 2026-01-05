@@ -109,7 +109,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                   children: [
                     // Gap(height * 0.5),
                     Text(
-                      "Login With Email",
+                      "Reset Password",
                       style: AppStyle.btext.copyWith(fontSize: 22),
                     ),
                     Text(
@@ -209,7 +209,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                               obscure: isSecure.value,
                               controller: passController,
                               keyboard: TextInputType.number,
-                              hintext: "Create Password",
+                              hintext: "Create New Password",
                               onChanged: (newValue) {
                                 isCodeEmpty.value = newValue.isNotEmpty;
                               },

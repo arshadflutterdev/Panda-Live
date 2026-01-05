@@ -302,6 +302,15 @@ class _VerifyEmailState extends State<VerifyEmail> {
                         ),
                       ],
                     ),
+                    Align(
+                      alignment: Alignment.center,
+                      child: TextButton(
+                        onPressed: () {
+                          Get.toNamed(AppRoutes.loginemail);
+                        },
+                        child: Text("Already have an Account?"),
+                      ),
+                    ),
                   ],
                 ),
               ),

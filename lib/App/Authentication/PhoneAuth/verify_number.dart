@@ -302,15 +302,6 @@ class _VerifyNumberState extends State<VerifyNumber> {
                         ),
                       ],
                     ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: TextButton(
-                        onPressed: () {
-                          Get.toNamed(AppRoutes.loginemail);
-                        },
-                        child: Text("Already have an Account?"),
-                      ),
-                    ),
                   ],
                 ),
               ),
