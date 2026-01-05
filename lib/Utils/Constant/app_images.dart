@@ -8,6 +8,8 @@ class AppImages {
   static String phone = "assets/icons/smartphone.png";
   static String email = "assets/icons/envelope.png";
   static String userId = "assets/icons/user.png";
+  static String eyeson = "assets/icons/eyes.png";
+  static const eyesoff = "assets/icons/eye.png";
   //more used image
   static String bgimage = "assets/images/PandaLivebg.png";
   static String halfbg = "assets/images/halfbg.png";

@@ -225,17 +225,6 @@ class _VerifyNumberState extends State<VerifyNumber> {
                                     IconButton(
                                       padding: EdgeInsets.zero,
                                       onPressed: () {
-                                        isSecure.value = !isSecure.value;
-                                      },
-                                      icon: isSecure.value
-                                          ? Icon(Icons.remove_red_eye)
-                                          : Icon(
-                                              Icons.panorama_fish_eye_outlined,
-                                            ),
-                                    ),
-                                    IconButton(
-                                      padding: EdgeInsets.zero,
-                                      onPressed: () {
                                         passController.clear();
                                       },
                                       icon: isCodeEmpty.value
@@ -244,6 +233,26 @@ class _VerifyNumberState extends State<VerifyNumber> {
                                               color: Colors.black54,
                                             )
                                           : SizedBox.shrink(),
+                                    ),
+                                    IconButton(
+                                      padding: EdgeInsets.zero,
+                                      onPressed: () {
+                                        isSecure.value = !isSecure.value;
+                                      },
+                                      icon: isSecure.value
+                                          ? Image(
+                                              height: 30,
+
+                                              image: AssetImage(
+                                                AppImages.eyesoff,
+                                              ),
+                                            )
+                                          : Image(
+                                              height: 30,
+                                              image: AssetImage(
+                                                AppImages.eyeson,
+                                              ),
+                                            ),
                                     ),
                                   ],
                                 ),

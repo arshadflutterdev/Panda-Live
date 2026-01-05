@@ -99,7 +99,9 @@ class _EmailAuthState extends State<EmailAuth> {
                 child: MyElevatedButton(
                   width: width,
                   btext: 'Next',
-                  onPressed: () {},
+                  onPressed: () {
+                    if (_formkey.currentState!.validate()) {}
+                  },
                 ),
               ),
             ],
