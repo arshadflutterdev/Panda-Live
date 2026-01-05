@@ -133,14 +133,15 @@ class _AuthOptionsState extends State<AuthOptions> {
                     GestureDetector(
                       onTap: () {
                         if (checkValue.value == true) {
-                          Get.snackbar("Wait", "No Screen Created");
+                          Get.toNamed(AppRoutes.createprofile);
                         } else {
                           showDialog(
                             context: context,
                             builder: (context) => TermsDialog(
                               onAccept: () {
                                 Get.back();
-                                Get.snackbar("Wait", "No Screen Created");
+
+                                Get.toNamed(AppRoutes.createprofile);
                               },
                             ),
                           );
@@ -185,14 +186,14 @@ class _AuthOptionsState extends State<AuthOptions> {
                     GestureDetector(
                       onTap: () {
                         if (checkValue.value == true) {
-                          Get.snackbar("Wait", "No Screen Created");
+                          Get.toNamed(AppRoutes.createprofile);
                         } else {
                           showDialog(
                             context: context,
                             builder: (context) => TermsDialog(
                               onAccept: () {
                                 Get.back();
-                                Get.snackbar("Wait", "No Screen Created");
+                                Get.toNamed(AppRoutes.createprofile);
                               },
                             ),
                           );

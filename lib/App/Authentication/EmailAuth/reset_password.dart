@@ -274,7 +274,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                         btext: "Next",
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
-                            Get.toNamed(AppRoutes.createprofile);
+                            Get.toNamed(AppRoutes.bottomnav);
                           }
                           Get.snackbar(
                             "Password Reset",
