@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
@@ -104,10 +105,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                   ),
                   onPressed: () {
                     if (_formkey.currentState!.validate()) {
-                      Get.snackbar(
-                        "Congratulations",
-                        "You added information correctly",
-                      );
+                      Get.toNamed(AppRoutes.verifynumber);
                       phoneController.clear();
                     }
                   },
