@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/Controllers/email_controller.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
@@ -60,24 +61,29 @@ class _EmailAuthState extends State<EmailAuth> {
                 key: _formkey,
                 child: Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: MyTextFormField(
-                    keyboard: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (emailController.text.isEmpty) {
-                        return "Please Add Your Email";
-                      } else if (!emailController.text.contains("@gmail.com")) {
-                        return "Please Enter Valid Email";
-                      }
-                      return null;
-                    },
-                    controller: emailController,
-                    hintext: 'Please enter your email.',
-                    suffix: emailController.text.isNotEmpty
-                        ? IconButton(
-                            onPressed: () {},
-                            icon: Icon(Icons.close, color: Colors.black),
-                          )
-                        : null,
+                  child: Obx(
+                    () => MyTextFormField(
+                      keyboard: TextInputType.emailAddress,
+                      validator: (value) {
+                        if (emailController.text.isEmpty) {
+                          return "Please Add Your Email";
+                        } else if (!emailController.text.contains(
+                          "@gmail.com",
+                        )) {
+                          return "Please Enter Valid Email";
+                        }
+                        return null;
+                      },
+                      controller: emailController,
+                      hintext: 'Please enter your email.',
+                      // onChanged:onEmailChanges,
+                      suffix: emailController.text.isNotEmpty
+                          ? IconButton(
+                              onPressed: () {},
+                              icon: Icon(Icons.close, color: Colors.black54),
+                            )
+                          : null,
+                    ),
                   ),
                 ),
               ),

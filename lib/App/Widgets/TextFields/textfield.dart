@@ -10,11 +10,12 @@ class MyTextFormField extends StatelessWidget {
   final TextInputType keyboard;
   final FormFieldValidator? validator;
   final TextEditingController? controller;
-  final VoidCallback? onChanged;
+  final ValueChanged<String>? onChanged;
 
   const MyTextFormField({
     super.key,
     this.onChanged,
+
     this.inputformat,
     required this.keyboard,
     this.validator,
@@ -27,6 +28,8 @@ class MyTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onChanged: onChanged,
+
       keyboardType: keyboard,
       validator: validator,
       inputFormatters: inputformat,
