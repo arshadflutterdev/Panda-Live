@@ -5,14 +5,16 @@ import 'package:pandlive/Utils/Constant/app_colours.dart';
 class MyTextFormField extends StatelessWidget {
   final String hintext;
   final Icon? prefix;
-  final Icon? suffix;
+  final Widget? suffix;
   final List<TextInputFormatter>? inputformat;
   final TextInputType keyboard;
   final FormFieldValidator? validator;
   final TextEditingController? controller;
+  final VoidCallback? onChanged;
 
   const MyTextFormField({
     super.key,
+    this.onChanged,
     this.inputformat,
     required this.keyboard,
     this.validator,

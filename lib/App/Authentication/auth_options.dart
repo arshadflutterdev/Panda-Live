@@ -48,7 +48,7 @@ class _AuthOptionsState extends State<AuthOptions> {
   }
 
   //here below to show dialogebox
-
+  bool isNavigate = false;
   @override
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
@@ -88,259 +88,267 @@ class _AuthOptionsState extends State<AuthOptions> {
             ),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 30),
-              child: Column(
-                children: [
-                  Gap(height * 0.20),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    Gap(height * 0.20),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Container(
-                        height: height * 0.090,
-                        width: width * 0.20,
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Container(
+                          height: height * 0.090,
+                          width: width * 0.20,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: AssetImage(AppImages.logo),
+                            ),
+                          ),
+                        ),
+
+                        Gap(10),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "PandaLive",
+                              style: AppStyle.logo.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+
+                            Text(
+                              "Live. Stream. Connect.",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                    Gap(height * 0.10),
+                    GestureDetector(
+                      onTap: () {
+                        if (checkValue.value == true) {
+                          Get.snackbar("Wait", "No Screen Created");
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) => TermsDialog(
+                              onAccept: () {
+                                Get.back();
+                                Get.snackbar("Wait", "No Screen Created");
+                              },
+                            ),
+                          );
+                        }
+                      },
+
+                      child: Container(
+                        height: 50,
+                        width: double.infinity,
                         decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          image: DecorationImage(
-                            fit: BoxFit.cover,
-                            image: AssetImage(AppImages.logo),
-                          ),
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
                         ),
-                      ),
-
-                      Gap(10),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "PandaLive",
-                            style: AppStyle.logo.copyWith(color: Colors.white),
-                          ),
-
-                          Text(
-                            "Live. Stream. Connect.",
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  Gap(height * 0.10),
-                  GestureDetector(
-                    onTap: () {
-                      if (checkValue.value == true) {
-                        Get.snackbar("Wait", "No Screen Created");
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (context) => TermsDialog(
-                            onAccept: () {
-                              Get.back();
-                              Get.snackbar("Wait", "No Screen Created");
-                            },
-                          ),
-                        );
-                      }
-                    },
-
-                    child: Container(
-                      height: 50,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        children: [
-                          // Icon(CupertinoIcons.goog)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
+                        child: Row(
+                          children: [
+                            // Icon(CupertinoIcons.goog)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              child: Image(
+                                height: 30,
+                                width: 40,
+                                image: AssetImage(AppImages.google),
+                              ),
                             ),
-                            child: Image(
-                              height: 30,
-                              width: 40,
-                              image: AssetImage(AppImages.google),
+                            Gap(width * 0.080),
+                            Text(
+                              "Login with Google",
+                              style: AppStyle.btext.copyWith(
+                                color: Colors.blue,
+                              ),
                             ),
-                          ),
-                          Gap(width * 0.080),
-                          Text(
-                            "Login with Google",
-                            style: AppStyle.btext.copyWith(color: Colors.blue),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
 
-                  // here is image
-                  Gap(15),
-                  GestureDetector(
-                    onTap: () {
-                      if (checkValue.value == true) {
-                        Get.snackbar("Wait", "No Screen Created");
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (context) => TermsDialog(
-                            onAccept: () {
-                              Get.back();
-                              Get.snackbar("Wait", "No Screen Created");
-                            },
-                          ),
-                        );
-                      }
-                    },
+                    // here is image
+                    Gap(15),
+                    GestureDetector(
+                      onTap: () {
+                        if (checkValue.value == true) {
+                          Get.snackbar("Wait", "No Screen Created");
+                        } else {
+                          showDialog(
+                            context: context,
+                            builder: (context) => TermsDialog(
+                              onAccept: () {
+                                Get.back();
+                                Get.snackbar("Wait", "No Screen Created");
+                              },
+                            ),
+                          );
+                        }
+                      },
 
-                    child: Container(
-                      height: 50,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      child: Row(
-                        children: [
-                          // Icon(CupertinoIcons.goog)
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 6,
-                              vertical: 2,
+                      child: Container(
+                        height: 50,
+                        width: double.infinity,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: Row(
+                          children: [
+                            // Icon(CupertinoIcons.goog)
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
+                                horizontal: 6,
+                                vertical: 2,
+                              ),
+                              child: Image(
+                                height: 30,
+                                width: 40,
+                                image: AssetImage(AppImages.facebook),
+                              ),
                             ),
-                            child: Image(
-                              height: 30,
-                              width: 40,
-                              image: AssetImage(AppImages.facebook),
+                            Gap(width * 0.050),
+                            Text(
+                              "Login with Facebook",
+                              style: AppStyle.btext.copyWith(
+                                color: Colors.blue,
+                              ),
                             ),
-                          ),
-                          Gap(width * 0.050),
-                          Text(
-                            "Login with Facebook",
-                            style: AppStyle.btext.copyWith(color: Colors.blue),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                  Gap(height * 0.080),
-                  Image(image: AssetImage(AppImages.or)),
-                  Gap(height * 0.030),
+                    Gap(height * 0.080),
+                    Image(image: AssetImage(AppImages.or)),
+                    Gap(height * 0.030),
 
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          if (checkValue.value == true) {
-                            Get.toNamed(AppRoutes.emailauth);
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (context) => TermsDialog(
-                                onAccept: () {
-                                  Get.back();
-                                  Get.toNamed(AppRoutes.emailauth);
-                                },
-                              ),
-                            );
-                          }
-                        },
-
-                        child: CircleAvatar(
-                          backgroundImage: AssetImage(AppImages.email),
-                        ),
-                      ),
-                      Gap(20),
-                      GestureDetector(
-                        onTap: () {
-                          if (checkValue.value == true) {
-                            Get.toNamed(AppRoutes.userauth);
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (context) => TermsDialog(
-                                onAccept: () {
-                                  Get.back();
-                                  Get.toNamed(AppRoutes.userauth);
-                                },
-                              ),
-                            );
-                          }
-                        },
-
-                        child: CircleAvatar(
-                          backgroundImage: AssetImage(AppImages.userId),
-                        ),
-                      ),
-
-                      Gap(20),
-                      GestureDetector(
-                        onTap: () {
-                          if (checkValue.value == true) {
-                            Get.toNamed(AppRoutes.phoneauth);
-                          } else {
-                            showDialog(
-                              context: context,
-                              builder: (context) => TermsDialog(
-                                onAccept: () {
-                                  Get.back();
-                                  Get.toNamed(AppRoutes.phoneauth);
-                                },
-                              ),
-                            );
-                          }
-                        },
-
-                        child: CircleAvatar(
-                          backgroundImage: AssetImage(AppImages.phone),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Gap(height * 0.10),
-
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Obx(
-                        () => Checkbox(
-                          shape: CircleBorder(),
-                          activeColor: Colors.green,
-                          checkColor: Colors.white,
-
-                          value: checkValue.value,
-
-                          onChanged: (newvalue) {
-                            checkValue.value = newvalue ?? false;
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            if (checkValue.value == true) {
+                              Get.toNamed(AppRoutes.emailauth);
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (context) => TermsDialog(
+                                  onAccept: () {
+                                    Get.back();
+                                    Get.toNamed(AppRoutes.emailauth);
+                                  },
+                                ),
+                              );
+                            }
                           },
+
+                          child: CircleAvatar(
+                            backgroundImage: AssetImage(AppImages.email),
+                          ),
                         ),
-                      ),
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            "I have read and agreed the",
-                            style: TextStyle(color: Colors.white),
+                        Gap(20),
+                        GestureDetector(
+                          onTap: () {
+                            if (checkValue.value == true) {
+                              Get.toNamed(AppRoutes.userauth);
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (context) => TermsDialog(
+                                  onAccept: () {
+                                    Get.back();
+                                    Get.toNamed(AppRoutes.userauth);
+                                  },
+                                ),
+                              );
+                            }
+                          },
+
+                          child: CircleAvatar(
+                            backgroundImage: AssetImage(AppImages.userId),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              Get.toNamed(AppRoutes.terms);
+                        ),
+
+                        Gap(20),
+                        GestureDetector(
+                          onTap: () {
+                            if (checkValue.value == true) {
+                              Get.toNamed(AppRoutes.phoneauth);
+                            } else {
+                              showDialog(
+                                context: context,
+                                builder: (context) => TermsDialog(
+                                  onAccept: () {
+                                    Get.back();
+                                    Get.toNamed(AppRoutes.phoneauth);
+                                  },
+                                ),
+                              );
+                            }
+                          },
+
+                          child: CircleAvatar(
+                            backgroundImage: AssetImage(AppImages.phone),
+                          ),
+                        ),
+                      ],
+                    ),
+                    Gap(height * 0.10),
+
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Obx(
+                          () => Checkbox(
+                            shape: CircleBorder(),
+                            activeColor: Colors.green,
+                            checkColor: Colors.white,
+
+                            value: checkValue.value,
+
+                            onChanged: (newvalue) {
+                              checkValue.value = newvalue ?? false;
                             },
-                            child: Text(
-                              "PandaLive terms of Services",
-                              style: TextStyle(color: Colors.blueAccent),
-                            ),
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              "I have read and agreed the",
+                              style: TextStyle(color: Colors.white),
+                            ),
+                            GestureDetector(
+                              onTap: () {
+                                Get.toNamed(AppRoutes.terms);
+                              },
+                              child: Text(
+                                "PandaLive terms of Services",
+                                style: TextStyle(color: Colors.blueAccent),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
               ),
             ),
           ),
