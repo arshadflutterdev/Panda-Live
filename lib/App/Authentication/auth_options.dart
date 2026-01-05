@@ -140,7 +140,6 @@ class _AuthOptionsState extends State<AuthOptions> {
                             builder: (context) => TermsDialog(
                               onAccept: () {
                                 Get.back();
-
                                 Get.toNamed(AppRoutes.createprofile);
                               },
                             ),

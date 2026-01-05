@@ -275,13 +275,13 @@ class _ResetPasswordState extends State<ResetPassword> {
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
                             Get.toNamed(AppRoutes.bottomnav);
+                            Get.snackbar(
+                              "Password Reset",
+                              "Your Password reset successfully",
+                              colorText: Colors.white,
+                              backgroundColor: AppColours.blues,
+                            );
                           }
-                          Get.snackbar(
-                            "Password Reset",
-                            "Your Password reset successfully",
-                            colorText: Colors.white,
-                            backgroundColor: AppColours.blues,
-                          );
                         },
                       ),
                     ),

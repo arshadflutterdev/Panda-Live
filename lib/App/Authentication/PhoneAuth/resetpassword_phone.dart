@@ -275,13 +275,13 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
                             Get.toNamed(AppRoutes.bottomnav);
+                            Get.snackbar(
+                              "Password Reset",
+                              "Your Password reset successfully",
+                              colorText: Colors.white,
+                              backgroundColor: AppColours.blues,
+                            );
                           }
-                          Get.snackbar(
-                            "Password Reset",
-                            "Your Password reset successfully",
-                            colorText: Colors.white,
-                            backgroundColor: AppColours.blues,
-                          );
                         },
                       ),
                     ),

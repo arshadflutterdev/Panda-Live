@@ -85,7 +85,6 @@ class _PhoneLoginState extends State<PhoneLogin> {
                               ? IconButton(
                                   onPressed: () {
                                     passController.clear();
-                                    Get.toNamed(AppRoutes.createprofile);
                                   },
                                   icon: Icon(Icons.close),
                                 )
@@ -120,7 +119,7 @@ class _PhoneLoginState extends State<PhoneLogin> {
                   ),
                   onPressed: () {
                     if (_formkey.currentState!.validate()) {
-                      Get.toNamed(AppRoutes.createprofile);
+                      Get.toNamed(AppRoutes.bottomnav);
                     }
                   },
                   child: Text(

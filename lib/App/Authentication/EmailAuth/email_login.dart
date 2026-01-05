@@ -120,7 +120,7 @@ class _EmailLoginState extends State<EmailLogin> {
                   ),
                   onPressed: () {
                     if (_formkey.currentState!.validate()) {
-                      Get.toNamed(AppRoutes.createprofile);
+                      Get.toNamed(AppRoutes.bottomnav);
                     }
                   },
                   child: Text(
