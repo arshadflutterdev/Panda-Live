@@ -115,6 +115,28 @@ class _PhoneAuthState extends State<PhoneAuth> {
                   ),
                 ),
               ),
+              Gap(height * 0.030),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Text(
+                      "I have read and agreed the",
+                      style: TextStyle(color: Colors.black),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed(AppRoutes.terms);
+                    },
+                    child: Text(
+                      "PandaLive terms of Services",
+                      style: TextStyle(color: Colors.blueAccent),
+                    ),
+                  ),
+                ],
+              ),
             ],
           ),
         ),
