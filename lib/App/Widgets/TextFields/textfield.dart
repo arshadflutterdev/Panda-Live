@@ -12,11 +12,15 @@ class MyTextFormField extends StatelessWidget {
   final TextEditingController? controller;
   final ValueChanged<String>? onChanged;
   final bool? obscure;
+  final bool? read;
+  final VoidCallback? ontapp;
 
   const MyTextFormField({
     super.key,
     this.onChanged,
     this.obscure,
+    this.read,
+    this.ontapp,
 
     this.inputformat,
     required this.keyboard,
@@ -30,6 +34,9 @@ class MyTextFormField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      onTap: ontapp,
+
+      readOnly: read ?? false,
       obscureText: obscure ?? false,
       obscuringCharacter: "*",
       onChanged: onChanged,
