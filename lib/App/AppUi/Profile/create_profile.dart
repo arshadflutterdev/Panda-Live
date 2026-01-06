@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
@@ -25,7 +26,7 @@ class _CreateProfileState extends State<CreateProfile> {
           Image(fit: BoxFit.cover, image: AssetImage(AppImages.halfbg)),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+              padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 0),
               child: SingleChildScrollView(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -88,14 +89,14 @@ class _CreateProfileState extends State<CreateProfile> {
                       keyboard: TextInputType.text,
                       hintext: "Enter Your Name",
                     ),
-                    Gap(10),
+                    Gap(7),
                     Text("Date of Birth", style: AppStyle.halfblacktext),
                     Gap(5),
                     MyTextFormField(
                       keyboard: TextInputType.text,
                       hintext: "Enter your date of birth",
                     ),
-                    Gap(10),
+                    Gap(7),
                     Row(
                       children: [
                         Text("Country", style: AppStyle.halfblacktext),
@@ -111,7 +112,7 @@ class _CreateProfileState extends State<CreateProfile> {
                       keyboard: TextInputType.text,
                       hintext: "Select Your Country",
                     ),
-                    Gap(10),
+                    Gap(7),
                     Row(
                       children: [
                         Text("Gender", style: AppStyle.halfblacktext),
@@ -136,7 +137,8 @@ class _CreateProfileState extends State<CreateProfile> {
                           ),
                           child: Row(
                             children: [
-                              Text("lashari"),
+                              Gap(width * 0.050),
+                              Text("Male", style: AppStyle.btext),
                               Spacer(),
                               Image(
                                 // color: Colors.white,
@@ -155,7 +157,8 @@ class _CreateProfileState extends State<CreateProfile> {
                           ),
                           child: Row(
                             children: [
-                              Text("lashari"),
+                              Gap(width * 0.050),
+                              Text("Female", style: AppStyle.btext),
                               Spacer(),
                               Image(
                                 // color: Colors.white,
@@ -165,6 +168,11 @@ class _CreateProfileState extends State<CreateProfile> {
                           ),
                         ),
                       ],
+                    ),
+                    MyElevatedButton(
+                      width: width,
+                      btext: Text("Submit"),
+                      onPressed: () {},
                     ),
                   ],
                 ),
