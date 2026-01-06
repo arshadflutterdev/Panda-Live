@@ -1,5 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
@@ -15,6 +19,14 @@ class CreateProfile extends StatefulWidget {
 }
 
 class _CreateProfileState extends State<CreateProfile> {
+  RxBool isloading = false.obs;
+  final _formkey = GlobalKey<FormState>();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController dobController = TextEditingController();
+  TextEditingController countryController = TextEditingController();
+  RxInt isSelected = 0.obs;
+  //image picker
+
   @override
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
@@ -85,32 +97,66 @@ class _CreateProfileState extends State<CreateProfile> {
 
                     Text("Name", style: AppStyle.halfblacktext),
                     Gap(5),
-                    MyTextFormField(
-                      keyboard: TextInputType.text,
-                      hintext: "Enter Your Name",
-                    ),
-                    Gap(7),
-                    Text("Date of Birth", style: AppStyle.halfblacktext),
-                    Gap(5),
-                    MyTextFormField(
-                      keyboard: TextInputType.text,
-                      hintext: "Enter your date of birth",
-                    ),
-                    Gap(7),
-                    Row(
-                      children: [
-                        Text("Country", style: AppStyle.halfblacktext),
-                        Text(" 👀 "),
-                        Text(
-                          "not to be altered once set",
-                          style: AppStyle.halfblacktext.copyWith(fontSize: 13),
-                        ),
-                      ],
-                    ),
-                    Gap(5),
-                    MyTextFormField(
-                      keyboard: TextInputType.text,
-                      hintext: "Select Your Country",
+                    Form(
+                      key: _formkey,
+                      child: Column(
+                        children: [
+                          MyTextFormField(
+                            validator: (value) {
+                              if (nameController.text.isEmpty) {
+                                return "Enter your name";
+                              } else if (nameController.text.length < 6) {
+                                return "Name too short";
+                              }
+                              return null;
+                            },
+                            controller: nameController,
+                            keyboard: TextInputType.text,
+                            hintext: "Enter Your Name",
+                          ),
+                          Gap(7),
+                          Text("Date of Birth", style: AppStyle.halfblacktext),
+                          Gap(5),
+                          MyTextFormField(
+                            controller: dobController,
+                            keyboard: TextInputType.datetime,
+                            hintext: "DD-MM-YYYY",
+                            validator: (value) {
+                              if (value == null || value.isEmpty) {
+                                return "Add your date of birth";
+                              }
+
+                              // DD-MM-YYYY format check
+                              final dobRegex = RegExp(r'^\d{2}-\d{2}-\d{4}$');
+
+                              if (!dobRegex.hasMatch(value)) {
+                                return "Please enter date in DD-MM-YYYY format";
+                              }
+
+                              return null; // ✅ valid
+                            },
+                          ),
+
+                          Gap(7),
+                          Row(
+                            children: [
+                              Text("Country", style: AppStyle.halfblacktext),
+                              Text(" 👀 "),
+                              Text(
+                                "not to be altered once set",
+                                style: AppStyle.halfblacktext.copyWith(
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                          Gap(5),
+                          MyTextFormField(
+                            keyboard: TextInputType.text,
+                            hintext: "Select Your Country",
+                          ),
+                        ],
+                      ),
                     ),
                     Gap(7),
                     Row(
@@ -128,51 +174,87 @@ class _CreateProfileState extends State<CreateProfile> {
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
-                          height: height * 0.075,
-                          width: width * 0.40,
-                          decoration: BoxDecoration(
-                            color: AppColours.greycolour,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            children: [
-                              Gap(width * 0.050),
-                              Text("Male", style: AppStyle.btext),
-                              Spacer(),
-                              Image(
-                                // color: Colors.white,
-                                image: AssetImage(AppImages.boy),
+                        GestureDetector(
+                          onTap: () {
+                            isSelected.value = 1;
+                          },
+                          child: Obx(
+                            () => Container(
+                              height: height * 0.075,
+                              width: width * 0.40,
+                              decoration: BoxDecoration(
+                                color: isSelected.value == 1
+                                    ? Colors.blue.shade100
+                                    : AppColours.greycolour,
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                            ],
+                              child: Row(
+                                children: [
+                                  Gap(width * 0.050),
+                                  Text("Male", style: AppStyle.btext),
+                                  Spacer(),
+                                  Image(
+                                    // color: Colors.white,
+                                    image: AssetImage(AppImages.boy),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
 
-                        Container(
-                          height: height * 0.075,
-                          width: width * 0.40,
-                          decoration: BoxDecoration(
-                            color: AppColours.greycolour,
-                            borderRadius: BorderRadius.circular(10),
-                          ),
-                          child: Row(
-                            children: [
-                              Gap(width * 0.050),
-                              Text("Female", style: AppStyle.btext),
-                              Spacer(),
-                              Image(
-                                // color: Colors.white,
-                                image: AssetImage(AppImages.girl),
+                        GestureDetector(
+                          onTap: () {
+                            isSelected.value = 2;
+                          },
+                          child: Obx(
+                            () => Container(
+                              height: height * 0.075,
+                              width: width * 0.40,
+                              decoration: BoxDecoration(
+                                color: isSelected.value == 2
+                                    ? Colors.blue.shade100
+                                    : AppColours.greycolour,
+                                borderRadius: BorderRadius.circular(10),
                               ),
-                            ],
+                              child: Row(
+                                children: [
+                                  Gap(width * 0.050),
+                                  Text("Female", style: AppStyle.btext),
+                                  Spacer(),
+                                  Image(
+                                    // color: Colors.white,
+                                    image: AssetImage(AppImages.girl),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    MyElevatedButton(
-                      width: width,
-                      btext: Text("Submit"),
-                      onPressed: () {},
+                    Gap(height * 0.015),
+                    Center(
+                      child: MyElevatedButton(
+                        width: width,
+                        btext: isloading.value
+                            ? CircularProgressIndicator(color: Colors.white)
+                            : Text(
+                                "Submit",
+                                style: AppStyle.btext.copyWith(
+                                  color: Colors.white,
+                                ),
+                              ),
+                        onPressed: () {
+                          if (_formkey.currentState!.validate()) {
+                            isloading.value = true;
+                            Timer(Duration(seconds: 2), () {
+                              isloading.value = false;
+                              Get.toNamed(AppRoutes.createprofile);
+                            });
+                          }
+                        },
+                      ),
                     ),
                   ],
                 ),

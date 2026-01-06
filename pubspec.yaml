@@ -38,6 +38,7 @@ dependencies:
   gap: ^3.0.1
   google_fonts: ^6.3.3
   flutter_intl_phone_field: ^0.0.7
+  image_picker: ^1.2.1
 
 dev_dependencies:
   flutter_test:
