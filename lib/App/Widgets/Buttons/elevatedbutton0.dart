@@ -3,7 +3,7 @@ import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 
 class MyElevatedButton extends StatelessWidget {
-  final String btext;
+  final Widget btext;
   final VoidCallback onPressed;
   const MyElevatedButton({
     super.key,
@@ -25,7 +25,7 @@ class MyElevatedButton extends StatelessWidget {
         fixedSize: Size(width * 0.60, 45),
       ),
       onPressed: onPressed,
-      child: Text(btext, style: AppStyle.btext.copyWith(color: Colors.white)),
+      child: btext,
     );
   }
 }

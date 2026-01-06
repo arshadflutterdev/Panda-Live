@@ -60,6 +60,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
     super.dispose();
   }
 
+  RxBool isLoading = false.obs;
   @override
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
@@ -208,7 +209,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                               },
                               obscure: isSecure.value,
                               controller: passController,
-                              keyboard: TextInputType.number,
+                              keyboard: TextInputType.text,
                               hintext: "Create Password",
                               onChanged: (newValue) {
                                 isCodeEmpty.value = newValue.isNotEmpty;
@@ -271,10 +272,23 @@ class _VerifyEmailState extends State<VerifyEmail> {
                     Center(
                       child: MyElevatedButton(
                         width: width,
-                        btext: "Next",
+                        btext: Obx(
+                          () => isLoading.value
+                              ? CircularProgressIndicator(color: Colors.white)
+                              : Text(
+                                  "Next",
+                                  style: AppStyle.btext.copyWith(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        ),
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
-                            Get.toNamed(AppRoutes.createprofile);
+                            isLoading.value = true;
+                            Timer(Duration(seconds: 2), () {
+                              isLoading.value = false;
+                              Get.toNamed(AppRoutes.createprofile);
+                            });
                           }
                         },
                       ),

@@ -20,7 +20,7 @@ class UseridAuth extends StatefulWidget {
 }
 
 class _UseridAuthState extends State<UseridAuth> {
-  final LoadingController isloading = Get.put(LoadingController());
+  // final LoadingController isloading = Get.put(LoadingController());
   RxBool isLoading = false.obs;
 
   final _formkey = GlobalKey<FormState>();

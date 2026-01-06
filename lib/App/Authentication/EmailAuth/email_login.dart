@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
@@ -23,6 +25,7 @@ class _EmailLoginState extends State<EmailLogin> {
   final _formkey = GlobalKey<FormState>();
   RxBool isCodeEmpty = false.obs;
   RxBool isSecure = true.obs;
+  RxBool isLoading = false.obs;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +81,7 @@ class _EmailLoginState extends State<EmailLogin> {
                           },
                           obscure: isSecure.value,
                           controller: passController,
-                          keyboard: TextInputType.number,
+                          keyboard: TextInputType.text,
                           hintext: "Enter Your Password",
                           onChanged: (newValue) {
                             isCodeEmpty.value = newValue.isNotEmpty;
@@ -148,12 +151,20 @@ class _EmailLoginState extends State<EmailLogin> {
                   ),
                   onPressed: () {
                     if (_formkey.currentState!.validate()) {
-                      Get.toNamed(AppRoutes.bottomnav);
+                      isLoading.value = true;
+                      Timer(Duration(seconds: 2), () {
+                        isLoading.value = false;
+                        Get.toNamed(AppRoutes.bottomnav);
+                      });
                     }
                   },
-                  child: Text(
-                    "Next",
-                    style: AppStyle.btext.copyWith(color: Colors.white),
+                  child: Obx(
+                    () => isLoading.value
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                            "Next",
+                            style: AppStyle.btext.copyWith(color: Colors.white),
+                          ),
                   ),
                 ),
               ),

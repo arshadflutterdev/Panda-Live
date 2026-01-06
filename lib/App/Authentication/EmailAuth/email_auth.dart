@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -17,6 +19,7 @@ class EmailAuth extends StatefulWidget {
 }
 
 class _EmailAuthState extends State<EmailAuth> {
+  RxBool isloading = false.obs;
   final _formkey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   RxBool isEmailEmpty = false.obs;
@@ -99,10 +102,21 @@ class _EmailAuthState extends State<EmailAuth> {
               Center(
                 child: MyElevatedButton(
                   width: width,
-                  btext: 'Next',
+                  btext: Obx(
+                    () => isloading.value
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                            "Next",
+                            style: AppStyle.btext.copyWith(color: Colors.white),
+                          ),
+                  ),
                   onPressed: () {
                     if (_formkey.currentState!.validate()) {
-                      Get.toNamed(AppRoutes.verifyemail);
+                      isloading.value = true;
+                      Timer(Duration(seconds: 2), () {
+                        isloading.value = false;
+                        Get.toNamed(AppRoutes.verifyemail);
+                      });
                     }
                   },
                 ),

@@ -271,7 +271,10 @@ class _VerifyNumberState extends State<VerifyNumber> {
                     Center(
                       child: MyElevatedButton(
                         width: width,
-                        btext: "Next",
+                        btext: Text(
+                          "Next",
+                          style: AppStyle.btext.copyWith(color: Colors.white),
+                        ),
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
                             Get.toNamed(AppRoutes.createprofile);

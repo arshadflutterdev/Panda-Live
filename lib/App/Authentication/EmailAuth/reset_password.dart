@@ -24,6 +24,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   RxBool isSMSEmtpy = false.obs;
   RxBool isCodeEmpty = false.obs;
   RxInt seconds = 60.obs;
+  RxBool isloading = false.obs;
   Timer? timr;
   RxBool isSecure = true.obs;
   final _formkey = GlobalKey<FormState>();
@@ -208,7 +209,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                               },
                               obscure: isSecure.value,
                               controller: passController,
-                              keyboard: TextInputType.number,
+                              keyboard: TextInputType.text,
                               hintext: "Create New Password",
                               onChanged: (newValue) {
                                 isCodeEmpty.value = newValue.isNotEmpty;
@@ -271,16 +272,29 @@ class _ResetPasswordState extends State<ResetPassword> {
                     Center(
                       child: MyElevatedButton(
                         width: width,
-                        btext: "Reset",
+                        btext: Obx(
+                          () => isloading.value
+                              ? CircularProgressIndicator(color: Colors.white)
+                              : Text(
+                                  "Reset",
+                                  style: AppStyle.btext.copyWith(
+                                    color: Colors.white,
+                                  ),
+                                ),
+                        ),
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
-                            Get.toNamed(AppRoutes.bottomnav);
-                            Get.snackbar(
-                              "Password Reset",
-                              "Your Password reset successfully",
-                              colorText: Colors.white,
-                              backgroundColor: AppColours.blues,
-                            );
+                            isloading.value = true;
+                            Timer(Duration(seconds: 2), () {
+                              isloading.value = false;
+                              Get.toNamed(AppRoutes.bottomnav);
+                              Get.snackbar(
+                                "Password Reset",
+                                "Your Password reset successfully",
+                                colorText: Colors.white,
+                                backgroundColor: AppColours.blues,
+                              );
+                            });
                           }
                         },
                       ),
