@@ -271,7 +271,7 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                     Center(
                       child: MyElevatedButton(
                         width: width,
-                        btext: "Next",
+                        btext: "Reset",
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
                             Get.toNamed(AppRoutes.bottomnav);

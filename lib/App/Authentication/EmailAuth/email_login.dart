@@ -21,7 +21,9 @@ class _EmailLoginState extends State<EmailLogin> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
-  RxBool isUserIdEmpty = false.obs;
+  RxBool isCodeEmpty = false.obs;
+  RxBool isSecure = true.obs;
+
   @override
   Widget build(BuildContext context) {
     double width = AppHeightwidth.screenWidth(context);
@@ -66,32 +68,58 @@ class _EmailLoginState extends State<EmailLogin> {
                       Gap(height * 0.010),
                       Obx(
                         () => MyTextFormField(
-                          onChanged: (newValue) {
-                            isUserIdEmpty.value = newValue.isNotEmpty;
-                          },
-
-                          keyboard: TextInputType.number,
                           validator: (value) {
                             if (passController.text.isEmpty) {
                               return "Enter Your Password";
                             } else if (passController.text.length < 8) {
-                              return "Please Enter 8 Digits Password";
+                              return "Password must be 8 digits";
                             }
                             return null;
                           },
+                          obscure: isSecure.value,
                           controller: passController,
-                          hintext: 'Please Enter Your Password.',
-                          suffix: isUserIdEmpty.value
-                              ? IconButton(
+                          keyboard: TextInputType.number,
+                          hintext: "Enter Your Password",
+                          onChanged: (newValue) {
+                            isCodeEmpty.value = newValue.isNotEmpty;
+                          },
+                          suffix: SizedBox(
+                            height: 20,
+                            width: width * 0.27,
+
+                            child: Row(
+                              children: [
+                                IconButton(
+                                  padding: EdgeInsets.zero,
                                   onPressed: () {
                                     passController.clear();
-                                    Get.toNamed(AppRoutes.createprofile);
                                   },
-                                  icon: Icon(Icons.close),
-                                )
-                              : null,
+                                  icon: isCodeEmpty.value
+                                      ? Icon(Icons.close, color: Colors.black54)
+                                      : SizedBox.shrink(),
+                                ),
+                                IconButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () {
+                                    isSecure.value = !isSecure.value;
+                                  },
+                                  icon: isSecure.value
+                                      ? Image(
+                                          height: 25,
+
+                                          image: AssetImage(AppImages.eyesoff),
+                                        )
+                                      : Image(
+                                          height: 25,
+                                          image: AssetImage(AppImages.eyeson),
+                                        ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       ),
+
                       Align(
                         alignment: Alignment.bottomRight,
                         child: TextButton(

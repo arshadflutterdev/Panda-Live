@@ -271,7 +271,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                     Center(
                       child: MyElevatedButton(
                         width: width,
-                        btext: "Next",
+                        btext: "Reset",
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
                             Get.toNamed(AppRoutes.bottomnav);
