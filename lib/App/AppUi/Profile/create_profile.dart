@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
+import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
@@ -130,7 +131,7 @@ class _CreateProfileState extends State<CreateProfile> {
                           height: height * 0.075,
                           width: width * 0.40,
                           decoration: BoxDecoration(
-                            color: Colors.black,
+                            color: AppColours.greycolour,
                             borderRadius: BorderRadius.circular(10),
                           ),
                           child: Row(
@@ -138,7 +139,8 @@ class _CreateProfileState extends State<CreateProfile> {
                               Text("lashari"),
                               Spacer(),
                               Image(
-                                image: AssetImage("assets/images/girl.png"),
+                                // color: Colors.white,
+                                image: AssetImage(AppImages.boy),
                               ),
                             ],
                           ),
@@ -148,8 +150,18 @@ class _CreateProfileState extends State<CreateProfile> {
                           height: height * 0.075,
                           width: width * 0.40,
                           decoration: BoxDecoration(
-                            color: Colors.black,
+                            color: AppColours.greycolour,
                             borderRadius: BorderRadius.circular(10),
+                          ),
+                          child: Row(
+                            children: [
+                              Text("lashari"),
+                              Spacer(),
+                              Image(
+                                // color: Colors.white,
+                                image: AssetImage(AppImages.girl),
+                              ),
+                            ],
                           ),
                         ),
                       ],
