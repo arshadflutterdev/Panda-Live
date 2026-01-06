@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
@@ -17,6 +20,7 @@ class PhoneAuth extends StatefulWidget {
 }
 
 class _PhoneAuthState extends State<PhoneAuth> {
+  RxBool isloading = false.obs;
   TextEditingController phoneController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
   @override
@@ -105,13 +109,21 @@ class _PhoneAuthState extends State<PhoneAuth> {
                   ),
                   onPressed: () {
                     if (_formkey.currentState!.validate()) {
-                      Get.toNamed(AppRoutes.verifynumber);
-                      phoneController.clear();
+                      isloading.value = true;
+                      Timer(Duration(seconds: 2), () {
+                        isloading.value = false;
+                        Get.toNamed(AppRoutes.verifynumber);
+                        phoneController.clear();
+                      });
                     }
                   },
-                  child: Text(
-                    "Next",
-                    style: AppStyle.btext.copyWith(color: Colors.white),
+                  child: Obx(
+                    () => isloading.value
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                            "Next",
+                            style: AppStyle.btext.copyWith(color: Colors.white),
+                          ),
                   ),
                 ),
               ),

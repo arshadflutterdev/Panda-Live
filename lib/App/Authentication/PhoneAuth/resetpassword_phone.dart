@@ -25,6 +25,7 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
   RxBool isCodeEmpty = false.obs;
   RxInt seconds = 60.obs;
   Timer? timr;
+  RxBool isloading = false.obs;
   RxBool isSecure = true.obs;
   final _formkey = GlobalKey<FormState>();
   void starttimer() {
@@ -208,7 +209,7 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                               },
                               obscure: isSecure.value,
                               controller: passController,
-                              keyboard: TextInputType.number,
+                              keyboard: TextInputType.text,
                               hintext: "Create New Password",
                               onChanged: (newValue) {
                                 isCodeEmpty.value = newValue.isNotEmpty;
@@ -277,13 +278,16 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                         ),
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
-                            Get.toNamed(AppRoutes.bottomnav);
-                            Get.snackbar(
-                              "Password Reset",
-                              "Your Password reset successfully",
-                              colorText: Colors.white,
-                              backgroundColor: AppColours.blues,
-                            );
+                            isloading.value = true;
+                            Timer(Duration(seconds: 2), () {
+                              Get.toNamed(AppRoutes.bottomnav);
+                              Get.snackbar(
+                                "Password Reset",
+                                "Your Password reset successfully",
+                                colorText: Colors.white,
+                                backgroundColor: AppColours.blues,
+                              );
+                            });
                           }
                         },
                       ),

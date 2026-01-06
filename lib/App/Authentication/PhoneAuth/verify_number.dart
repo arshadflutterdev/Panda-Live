@@ -24,6 +24,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
   RxBool isSMSEmtpy = false.obs;
   RxBool isCodeEmpty = false.obs;
   RxInt seconds = 60.obs;
+  RxBool isloading = false.obs;
   Timer? timr;
   RxBool isSecure = true.obs;
   final _formkey = GlobalKey<FormState>();
@@ -208,7 +209,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
                               },
                               obscure: isSecure.value,
                               controller: passController,
-                              keyboard: TextInputType.number,
+                              keyboard: TextInputType.text,
                               hintext: "Create Password",
                               onChanged: (newValue) {
                                 isCodeEmpty.value = newValue.isNotEmpty;
@@ -271,13 +272,23 @@ class _VerifyNumberState extends State<VerifyNumber> {
                     Center(
                       child: MyElevatedButton(
                         width: width,
-                        btext: Text(
-                          "Next",
-                          style: AppStyle.btext.copyWith(color: Colors.white),
+                        btext: Obx(
+                          () => isloading.value
+                              ? CircularProgressIndicator(color: Colors.white)
+                              : Text(
+                                  "Next",
+                                  style: AppStyle.btext.copyWith(
+                                    color: Colors.white,
+                                  ),
+                                ),
                         ),
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
-                            Get.toNamed(AppRoutes.createprofile);
+                            isloading.value = true;
+                            Timer(Duration(seconds: 2), () {
+                              isloading.value = false;
+                              Get.toNamed(AppRoutes.createprofile);
+                            });
                           }
                         },
                       ),
