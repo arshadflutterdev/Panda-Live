@@ -272,14 +272,21 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                     Center(
                       child: MyElevatedButton(
                         width: width,
-                        btext: Text(
-                          "Reset",
-                          style: AppStyle.btext.copyWith(color: Colors.white),
+                        btext: Obx(
+                          () => isloading.value
+                              ? CircularProgressIndicator(color: Colors.white)
+                              : Text(
+                                  "Reset",
+                                  style: AppStyle.btext.copyWith(
+                                    color: Colors.white,
+                                  ),
+                                ),
                         ),
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
                             isloading.value = true;
                             Timer(Duration(seconds: 2), () {
+                              isloading.value = false;
                               Get.toNamed(AppRoutes.bottomnav);
                               Get.snackbar(
                                 "Password Reset",
