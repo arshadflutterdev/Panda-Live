@@ -31,6 +31,7 @@ class MyTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       obscureText: obscure ?? false,
+      obscuringCharacter: "*",
       onChanged: onChanged,
 
       keyboardType: keyboard,

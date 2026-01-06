@@ -1,7 +1,10 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/Controllers/loading_controller.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
@@ -17,6 +20,9 @@ class UseridAuth extends StatefulWidget {
 }
 
 class _UseridAuthState extends State<UseridAuth> {
+  final LoadingController isloading = Get.put(LoadingController());
+  RxBool isLoading = false.obs;
+
   final _formkey = GlobalKey<FormState>();
   RxBool isUserIdEmpty = false.obs;
   TextEditingController userController = TextEditingController();
@@ -103,12 +109,20 @@ class _UseridAuthState extends State<UseridAuth> {
                   ),
                   onPressed: () {
                     if (_formkey.currentState!.validate()) {
-                      Get.toNamed(AppRoutes.createprofile);
+                      isLoading.value = true;
+                      Timer(Duration(seconds: 2), () {
+                        isLoading.value = false;
+                        Get.toNamed(AppRoutes.createprofile);
+                      });
                     }
                   },
-                  child: Text(
-                    "Next",
-                    style: AppStyle.btext.copyWith(color: Colors.white),
+                  child: Obx(
+                    () => isLoading.value
+                        ? CircularProgressIndicator(color: Colors.white)
+                        : Text(
+                            "Next",
+                            style: AppStyle.btext.copyWith(color: Colors.white),
+                          ),
                   ),
                 ),
               ),
