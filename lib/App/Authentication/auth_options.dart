@@ -91,7 +91,18 @@ class _AuthOptionsState extends State<AuthOptions> {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Gap(height * 0.20),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 15),
+                      child: Align(
+                        alignment: Alignment.topRight,
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.black,
+                          backgroundImage: AssetImage(AppImages.language),
+                        ),
+                      ),
+                    ),
+                    Gap(height * 0.18),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,

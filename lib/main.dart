@@ -29,6 +29,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
       supportedLocales: flocalization.supportedLocales,
       localizationsDelegates: flocalization.localizationsDelegates,
       initialRoute: AppRoutes.splash,

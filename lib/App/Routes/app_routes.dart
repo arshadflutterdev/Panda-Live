@@ -1,6 +1,7 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:pandlive/App/AppUi/BottomNavBar/bottomnavbar.dart';
 import 'package:pandlive/App/AppUi/Profile/create_profile.dart';
+import 'package:pandlive/App/AppUi/change_language.dart';
 import 'package:pandlive/App/AppUi/splash_screen.dart';
 import 'package:pandlive/App/AppUi/terms_services.dart';
 import 'package:pandlive/App/Authentication/EmailAuth/email_login.dart';
@@ -29,6 +30,7 @@ class AppRoutes {
   static const phonelogin = "/PhoneLogin";
   static const phonereset = "/PhoneResetPassword";
   static const bottomnav = "/Bottomnavbar";
+  static const language = "/ChangeLanguage";
 
   static final routes = [
     GetPage(name: splash, page: () => SplashScreen()),
@@ -45,5 +47,6 @@ class AppRoutes {
     GetPage(name: phonelogin, page: () => PhoneLogin()),
     GetPage(name: phonereset, page: () => PhoneResetPassword()),
     GetPage(name: bottomnav, page: () => Bottomnavbar()),
+    GetPage(name: language, page: () => ChangeLanguage()),
   ];
 }

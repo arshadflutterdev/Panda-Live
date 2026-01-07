@@ -12,6 +12,7 @@ class AppImages {
   static const eyesoff = "assets/icons/eye.png";
   static const girl = "assets/images/girl.png";
   static const boy = "assets/images/boy.png";
+  static const language = "assets/icons/travel.png";
   //more used image
   static String bgimage = "assets/images/PandaLivebg.png";
   static String halfbg = "assets/images/halfbg.png";
