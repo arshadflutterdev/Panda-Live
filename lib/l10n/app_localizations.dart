@@ -148,6 +148,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Login with Facebook'**
   String get facebook;
+
+  /// No description provided for @terms.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms of service'**
+  String get terms;
+
+  /// No description provided for @agreement.
+  ///
+  /// In en, this message translates to:
+  /// **'user_agreement_contant'**
+  String get agreement;
+
+  /// No description provided for @pterms.
+  ///
+  /// In en, this message translates to:
+  /// **'Panda Live Terms Of'**
+  String get pterms;
+
+  /// No description provided for @service.
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get service;
+
+  /// No description provided for @and.
+  ///
+  /// In en, this message translates to:
+  /// **'and'**
+  String get and;
+
+  /// No description provided for @policy.
+  ///
+  /// In en, this message translates to:
+  /// **'Privacy Policy'**
+  String get policy;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

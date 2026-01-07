@@ -9,4 +9,12 @@
   
   "google": "Login with Google",
   "facebook": "Login with Facebook",
+
+  "terms":"Terms of service",
+  "agreement":"user_agreement_contant",
+  "pterms": "Panda Live Terms Of",
+  "service": "Services",
+  "and": "and",
+  "policy":"Privacy Policy",
+  "cancel": "Cancel",
 }

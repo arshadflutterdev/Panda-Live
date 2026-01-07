@@ -34,4 +34,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get facebook => 'تسجيل الدخول مع الفيسبوك';
+
+  @override
+  String get terms => 'شروط الخدمة';
+
+  @override
+  String get agreement => 'محتوى اتفاقية المستخدم';
+
+  @override
+  String get pterms => 'شروط خدمة باندا لايف';
+
+  @override
+  String get service => 'خدمات';
+
+  @override
+  String get and => 'و';
+
+  @override
+  String get policy => 'سياسة الخصوصية';
 }

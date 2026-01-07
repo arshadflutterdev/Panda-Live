@@ -34,4 +34,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get facebook => 'Login with Facebook';
+
+  @override
+  String get terms => 'Terms of service';
+
+  @override
+  String get agreement => 'user_agreement_contant';
+
+  @override
+  String get pterms => 'Panda Live Terms Of';
+
+  @override
+  String get service => 'Services';
+
+  @override
+  String get and => 'and';
+
+  @override
+  String get policy => 'Privacy Policy';
 }
