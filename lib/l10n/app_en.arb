@@ -7,5 +7,6 @@
   "languageSelectedEnglish": "Your selected language is English",
   "languageSelectedArabic": "اللغة التي اخترتها هي العربية",
   
-  "google": "Login with Google"
+  "google": "Login with Google",
+  "facebook": "Login with Facebook",
 }

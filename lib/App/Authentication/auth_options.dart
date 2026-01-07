@@ -195,9 +195,15 @@ class _AuthOptionsState extends State<AuthOptions> {
                               Gap(width * 0.080),
                               Text(
                                 localization.google,
-                                style: AppStyle.btext.copyWith(
-                                  color: Colors.blue,
-                                ),
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.blue,
+                                        fontSize: 20,
+                                      )
+                                    : AppStyle.btext.copyWith(
+                                        color: Colors.blue,
+                                      ),
                               ),
                             ],
                           ),
@@ -249,10 +255,16 @@ class _AuthOptionsState extends State<AuthOptions> {
                               ),
                               Gap(width * 0.050),
                               Text(
-                                "Login with Facebook",
-                                style: AppStyle.btext.copyWith(
-                                  color: Colors.blue,
-                                ),
+                                localization.facebook,
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        color: Colors.blue,
+                                        fontWeight: FontWeight.w600,
+                                        fontSize: 20,
+                                      )
+                                    : AppStyle.btext.copyWith(
+                                        color: Colors.blue,
+                                      ),
                               ),
                             ],
                           ),

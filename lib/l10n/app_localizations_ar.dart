@@ -31,4 +31,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get google => 'تسجيل الدخول مع جوجل';
+
+  @override
+  String get facebook => 'تسجيل الدخول مع الفيسبوك';
 }
