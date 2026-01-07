@@ -19,7 +19,7 @@ class TermsDialog extends StatelessWidget {
     return AlertDialog(
       backgroundColor: Colors.transparent,
       content: Container(
-        height: height * 0.21,
+        height: isArabic ? height * 0.25 : height * 0.21,
         width: width * 0.10,
         decoration: BoxDecoration(
           color: Colors.white,
@@ -86,15 +86,28 @@ class TermsDialog extends StatelessWidget {
                   },
                   child: FittedBox(
                     child: Text(
-                      "Cancel",
-                      style: AppStyle.btext.copyWith(color: Colors.grey),
+                      localization.bcancel,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(
+                              color: Colors.grey,
+                              fontSize: 20,
+                            )
+                          : AppStyle.btext.copyWith(color: Colors.grey),
                     ),
                   ),
                 ),
                 TextButton(
                   onPressed: onAccept,
                   child: FittedBox(
-                    child: Text("Accept", style: AppStyle.btext),
+                    child: Text(
+                      localization.baccept,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(
+                              color: Colors.grey,
+                              fontSize: 20,
+                            )
+                          : AppStyle.btext.copyWith(color: Colors.grey),
+                    ),
                   ),
                 ),
               ],

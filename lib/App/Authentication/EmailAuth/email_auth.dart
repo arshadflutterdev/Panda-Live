@@ -10,6 +10,8 @@ import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
+import 'package:pandlive/l10n/app_localizations_ar.dart';
 
 class EmailAuth extends StatefulWidget {
   const EmailAuth({super.key});
@@ -23,8 +25,10 @@ class _EmailAuthState extends State<EmailAuth> {
   final _formkey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
   RxBool isEmailEmpty = false.obs;
+  bool isArabic = Get.locale?.languageCode == "ar";
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
     return Scaffold(
@@ -60,7 +64,15 @@ class _EmailAuthState extends State<EmailAuth> {
                   vertical: 8,
                   horizontal: 10,
                 ),
-                child: Text("Login With Your Email", style: AppStyle.btext),
+                child: Text(
+                  localization.loginwithemail,
+                  style: isArabic
+                      ? AppStyle.arabictext.copyWith(
+                          fontSize: 22,
+                          fontWeight: FontWeight.bold,
+                        )
+                      : AppStyle.btext,
+                ),
               ),
 
               Form(
@@ -72,16 +84,16 @@ class _EmailAuthState extends State<EmailAuth> {
                       keyboard: TextInputType.emailAddress,
                       validator: (value) {
                         if (emailController.text.isEmpty) {
-                          return "Please Add Your Email";
+                          return localization.enteremail;
                         } else if (!emailController.text.contains(
                           "@gmail.com",
                         )) {
-                          return "Please Enter Valid Email";
+                          return localization.validemail;
                         }
                         return null;
                       },
                       controller: emailController,
-                      hintext: 'Please enter your email.',
+                      hintext: localization.enteremail,
                       onChanged: (newValue) {
                         isEmailEmpty.value = newValue.isNotEmpty;
                       },
@@ -106,8 +118,13 @@ class _EmailAuthState extends State<EmailAuth> {
                     () => isloading.value
                         ? CircularProgressIndicator(color: Colors.white)
                         : Text(
-                            "Next",
-                            style: AppStyle.btext.copyWith(color: Colors.white),
+                            localization.buttonnext,
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    fontSize: 25,
+                                    color: Colors.white,
+                                  )
+                                : AppStyle.btext.copyWith(color: Colors.white),
                           ),
                   ),
                   onPressed: () {

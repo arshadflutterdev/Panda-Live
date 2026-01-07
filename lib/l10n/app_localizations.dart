@@ -196,6 +196,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Accept'**
   String get baccept;
+
+  /// No description provided for @loginwithemail.
+  ///
+  /// In en, this message translates to:
+  /// **'Login With Your Email'**
+  String get loginwithemail;
+
+  /// No description provided for @enteremail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please Enter Your Email'**
+  String get enteremail;
+
+  /// No description provided for @validemail.
+  ///
+  /// In en, this message translates to:
+  /// **'Please Enter Valid Email'**
+  String get validemail;
+
+  /// No description provided for @buttonnext.
+  ///
+  /// In en, this message translates to:
+  /// **'Next'**
+  String get buttonnext;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

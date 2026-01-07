@@ -58,4 +58,16 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get baccept => 'Accept';
+
+  @override
+  String get loginwithemail => 'Login With Your Email';
+
+  @override
+  String get enteremail => 'Please Enter Your Email';
+
+  @override
+  String get validemail => 'Please Enter Valid Email';
+
+  @override
+  String get buttonnext => 'Next';
 }

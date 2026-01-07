@@ -58,4 +58,16 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get baccept => 'يقبل';
+
+  @override
+  String get loginwithemail => 'تسجيل الدخول باستخدام البريد الإلكتروني الخاص بك';
+
+  @override
+  String get enteremail => 'الرجاء إدخال البريد الإلكتروني الخاص بك';
+
+  @override
+  String get validemail => 'الرجاء إدخال بريد إلكتروني صالح';
+
+  @override
+  String get buttonnext => 'التالي';
 }

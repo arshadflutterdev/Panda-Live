@@ -17,6 +17,11 @@
   "and": "and",
   "policy":"Privacy Policy",
   "bcancel":"Cancel",
-  "baccept":"Accept"
-  
+  "baccept":"Accept",
+
+  "loginwithemail": "Login With Your Email",
+  "enteremail": "Please Enter Your Email",
+  "validemail": "Please Enter Valid Email",
+  "buttonnext": "Next"
+
 }
