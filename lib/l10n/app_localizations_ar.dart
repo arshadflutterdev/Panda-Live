@@ -52,4 +52,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get policy => 'سياسة الخصوصية';
+
+  @override
+  String get bcancel => 'يلغي';
 }

@@ -184,6 +184,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Privacy Policy'**
   String get policy;
+
+  /// No description provided for @bcancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get bcancel;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

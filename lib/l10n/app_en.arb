@@ -16,5 +16,7 @@
   "service": "Services",
   "and": "and",
   "policy":"Privacy Policy",
-  "cancel": "Cancel",
+  "bcancel":"Cancel",
+  "baccept":"Accept"
+  
 }

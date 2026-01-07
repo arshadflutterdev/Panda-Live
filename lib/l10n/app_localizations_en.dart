@@ -52,4 +52,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get policy => 'Privacy Policy';
+
+  @override
+  String get bcancel => 'Cancel';
 }
