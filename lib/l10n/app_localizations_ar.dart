@@ -28,4 +28,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get languageSelectedArabic => 'اللغة التي اخترتها هي العربية';
+
+  @override
+  String get google => 'تسجيل الدخول مع جوجل';
 }

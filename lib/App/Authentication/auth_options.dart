@@ -7,6 +7,7 @@ import 'package:pandlive/App/Widgets/DialogBox/terms_dialog.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
 
 class AuthOptions extends StatefulWidget {
   const AuthOptions({super.key});
@@ -49,10 +50,12 @@ class _AuthOptionsState extends State<AuthOptions> {
 
   //here below to show dialogebox
   bool isNavigate = false;
+  bool isArabic = Get.locale?.languageCode == "ar";
   @override
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
+    final localization = AppLocalizations.of(context)!;
 
     return Scaffold(
       backgroundColor: Colors.black, // Set to black to avoid white flashes
@@ -173,28 +176,31 @@ class _AuthOptionsState extends State<AuthOptions> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: Row(
-                          children: [
-                            // Icon(CupertinoIcons.goog)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
+                        child: Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: Row(
+                            children: [
+                              // Icon(CupertinoIcons.goog)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                child: Image(
+                                  height: 30,
+                                  width: 40,
+                                  image: AssetImage(AppImages.google),
+                                ),
                               ),
-                              child: Image(
-                                height: 30,
-                                width: 40,
-                                image: AssetImage(AppImages.google),
+                              Gap(width * 0.080),
+                              Text(
+                                localization.google,
+                                style: AppStyle.btext.copyWith(
+                                  color: Colors.blue,
+                                ),
                               ),
-                            ),
-                            Gap(width * 0.080),
-                            Text(
-                              "Login with Google",
-                              style: AppStyle.btext.copyWith(
-                                color: Colors.blue,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -225,28 +231,31 @@ class _AuthOptionsState extends State<AuthOptions> {
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(20),
                         ),
-                        child: Row(
-                          children: [
-                            // Icon(CupertinoIcons.goog)
-                            Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 6,
-                                vertical: 2,
+                        child: Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: Row(
+                            children: [
+                              // Icon(CupertinoIcons.goog)
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 6,
+                                  vertical: 2,
+                                ),
+                                child: Image(
+                                  height: 30,
+                                  width: 40,
+                                  image: AssetImage(AppImages.facebook),
+                                ),
                               ),
-                              child: Image(
-                                height: 30,
-                                width: 40,
-                                image: AssetImage(AppImages.facebook),
+                              Gap(width * 0.050),
+                              Text(
+                                "Login with Facebook",
+                                style: AppStyle.btext.copyWith(
+                                  color: Colors.blue,
+                                ),
                               ),
-                            ),
-                            Gap(width * 0.050),
-                            Text(
-                              "Login with Facebook",
-                              style: AppStyle.btext.copyWith(
-                                color: Colors.blue,
-                              ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ),
@@ -350,16 +359,24 @@ class _AuthOptionsState extends State<AuthOptions> {
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             Text(
-                              "I have read and agreed the",
-                              style: TextStyle(color: Colors.white),
+                              localization.readAndAgree,
+                              style: isArabic
+                                  ? AppStyle.arabictext.copyWith(
+                                      color: Colors.white,
+                                    )
+                                  : TextStyle(color: Colors.white),
                             ),
                             GestureDetector(
                               onTap: () {
                                 Get.toNamed(AppRoutes.terms);
                               },
                               child: Text(
-                                "PandaLive terms of Services",
-                                style: TextStyle(color: Colors.blueAccent),
+                                localization.termsOfService,
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        color: Colors.blue,
+                                      )
+                                    : TextStyle(color: Colors.blueAccent),
                               ),
                             ),
                           ],

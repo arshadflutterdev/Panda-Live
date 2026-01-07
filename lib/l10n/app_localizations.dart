@@ -136,6 +136,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'اللغة التي اخترتها هي العربية'**
   String get languageSelectedArabic;
+
+  /// No description provided for @google.
+  ///
+  /// In en, this message translates to:
+  /// **'Login with Google'**
+  String get google;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
