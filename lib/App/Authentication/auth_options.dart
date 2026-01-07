@@ -109,41 +109,44 @@ class _AuthOptionsState extends State<AuthOptions> {
                     ),
                     Gap(height * 0.17),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: height * 0.090,
-                          width: width * 0.20,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(10),
-                            image: DecorationImage(
-                              fit: BoxFit.cover,
-                              image: AssetImage(AppImages.logo),
-                            ),
-                          ),
-                        ),
-
-                        Gap(10),
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "PandaLive",
-                              style: AppStyle.logo.copyWith(
-                                color: Colors.white,
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            height: height * 0.090,
+                            width: width * 0.20,
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              image: DecorationImage(
+                                fit: BoxFit.cover,
+                                image: AssetImage(AppImages.logo),
                               ),
                             ),
+                          ),
 
-                            Text(
-                              "Live. Stream. Connect.",
-                              style: TextStyle(color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ],
+                          Gap(10),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "PandaLive",
+                                style: AppStyle.logo.copyWith(
+                                  color: Colors.white,
+                                ),
+                              ),
+
+                              Text(
+                                "Live. Stream. Connect.",
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
                     Gap(height * 0.10),
                     GestureDetector(

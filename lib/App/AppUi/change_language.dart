@@ -18,6 +18,7 @@ class ChangeLanguage extends StatefulWidget {
 }
 
 class _ChangeLanguageState extends State<ChangeLanguage> {
+  bool isarabic = Get.locale?.languageCode == "ar";
   RxInt selectedlanguage = 1.obs;
   @override
   Widget build(BuildContext context) {
@@ -30,97 +31,110 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
         children: [
           Image(fit: BoxFit.cover, image: AssetImage(AppImages.halfbg)),
           Gap(height * 0.15),
-          Text(localization.changeAppLanguage, style: AppStyle.logo),
+          Text(
+            localization.changeAppLanguage,
+            style: isarabic
+                ? AppStyle.arabictext.copyWith(fontSize: 35)
+                : AppStyle.logo.copyWith(fontSize: 30),
+          ),
           Gap(height * 0.040),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Obx(
-                () => ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: Size(width * 0.45, height * 0.060),
-                    backgroundColor: selectedlanguage.value == 1
-                        ? AppColours.blues
-                        : Colors.black,
-                    shape: ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
+          Directionality(
+            textDirection: TextDirection.ltr,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
 
-                  onPressed: () {
-                    selectedlanguage.value = 1;
-                    Get.updateLocale(Locale("en"));
-
-                    Get.snackbar(
-                      backgroundColor: Colors.black,
-                      colorText: Colors.white,
-                      "English",
-                      "Your selected langauge is English",
-                    );
-                  },
-                  child: Text(
-                    localization.english,
-                    style: AppStyle.btext.copyWith(
-                      color: Colors.white,
-                      fontSize: 25,
-                    ),
-                  ),
-                ),
-              ),
-
-              Obx(
-                () => ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    fixedSize: Size(width * 0.45, height * 0.060),
-                    backgroundColor: selectedlanguage.value == 2
-                        ? AppColours.blues
-                        : Colors.black,
-                    shape: ContinuousRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                    ),
-                  ),
-
-                  onPressed: () {
-                    Get.updateLocale(Locale("ar"));
-                    selectedlanguage.value = 2;
-
-                    Get.snackbar(
-                      "",
-                      "",
-                      colorText: Colors.white,
-                      backgroundColor: Colors.black,
-
-                      titleText: Align(
-                        alignment: Alignment.topRight,
-                        child: Text(
-                          localization.arabic,
-                          style: AppStyle.arabictext.copyWith(
-                            color: Colors.white,
-                          ),
+                children: [
+                  Obx(
+                    () => ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(width * 0.40, 60),
+                        backgroundColor: selectedlanguage.value == 1
+                            ? AppColours.blues
+                            : Colors.black,
+                        shape: ContinuousRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
                         ),
                       ),
 
-                      messageText: Align(
-                        alignment: Alignment.topRight,
-                        child: Text(
-                          "اللغة التي اخترتها هي العربية",
-                          style: AppStyle.arabictext.copyWith(
-                            color: Colors.white,
-                          ),
+                      onPressed: () {
+                        selectedlanguage.value = 1;
+                        Get.updateLocale(Locale("en"));
+
+                        Get.snackbar(
+                          backgroundColor: Colors.black,
+                          colorText: Colors.white,
+                          "English",
+                          "Your selected language is english",
+                        );
+                      },
+                      child: Text(
+                        "English",
+                        style: AppStyle.btext.copyWith(
+                          color: Colors.white,
+                          fontSize: 25,
                         ),
                       ),
-                    );
-                  },
-                  child: Text(
-                    "عربي",
-                    style: AppStyle.btext.copyWith(
-                      color: Colors.white,
-                      fontSize: 25,
                     ),
                   ),
-                ),
+
+                  Obx(
+                    () => ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        minimumSize: Size(width * 0.40, 60),
+                        backgroundColor: selectedlanguage.value == 2
+                            ? AppColours.blues
+                            : Colors.black,
+                        shape: ContinuousRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                      ),
+
+                      onPressed: () {
+                        Get.updateLocale(Locale("ar"));
+                        selectedlanguage.value = 2;
+
+                        Get.snackbar(
+                          "",
+                          "",
+                          colorText: Colors.white,
+                          backgroundColor: Colors.black,
+
+                          titleText: Align(
+                            alignment: Alignment.topRight,
+                            child: Text(
+                              "عربي",
+
+                              style: AppStyle.arabictext.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+
+                          messageText: Align(
+                            alignment: Alignment.topRight,
+                            child: Text(
+                              "اللغة التي اخترتها هي العربية",
+                              style: AppStyle.arabictext.copyWith(
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        );
+                      },
+                      child: Text(
+                        "عربي",
+                        style: AppStyle.btext.copyWith(
+                          color: Colors.white,
+                          fontSize: 25,
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
           Gap(height * .050),
           Column(
@@ -128,16 +142,20 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "I have read and agreed the",
-                style: TextStyle(color: Colors.black),
+                localization.readAndAgree,
+                style: isarabic
+                    ? AppStyle.arabictext
+                    : TextStyle(color: Colors.black),
               ),
               GestureDetector(
                 onTap: () {
                   Get.toNamed(AppRoutes.terms);
                 },
                 child: Text(
-                  "PandaLive terms of Services",
-                  style: TextStyle(color: Colors.blueAccent),
+                  localization.termsOfService,
+                  style: isarabic
+                      ? AppStyle.arabictext.copyWith(color: Colors.black)
+                      : TextStyle(color: Colors.blue),
                 ),
               ),
             ],
