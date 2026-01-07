@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 import 'package:get/get.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
@@ -8,22 +9,10 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
 
-  // final flocalization = FlutterLocalization.instance;
-  // await flocalization.ensureInitialized();
-  // flocalization.init(
-  //   mapLocales: [
-  //     MapLocale('en', {'title': 'Welcome'}),
-  //     MapLocale('ur', {'title': 'خوش آمدید'}),
-  //     MapLocale('ar', {'title': 'مرحبا'}),
-  //   ],
-  //   initLanguageCode: 'en',
-  // );
-
   runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  // final FlutterLocalization flocalization = FlutterLocalization.instance;
   MyApp({super.key});
 
   // This widget is the root of your application.
@@ -31,8 +20,13 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
-      // supportedLocales: flocalization.supportedLocales,
-      // localizationsDelegates: flocalization.localizationsDelegates,
+      localizationsDelegates: [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [Locale("en"), Locale("ar")],
+
       initialRoute: AppRoutes.splash,
       getPages: AppRoutes.routes,
       title: 'Flutter Demo',
