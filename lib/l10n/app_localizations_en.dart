@@ -55,4 +55,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bcancel => 'Cancel';
+
+  @override
+  String get baccept => 'Accept';
 }

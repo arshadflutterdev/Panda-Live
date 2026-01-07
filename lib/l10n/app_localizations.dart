@@ -190,6 +190,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cancel'**
   String get bcancel;
+
+  /// No description provided for @baccept.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept'**
+  String get baccept;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

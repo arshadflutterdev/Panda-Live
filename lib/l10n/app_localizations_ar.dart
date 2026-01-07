@@ -55,4 +55,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get bcancel => 'يلغي';
+
+  @override
+  String get baccept => 'يقبل';
 }
