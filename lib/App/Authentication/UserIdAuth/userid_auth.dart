@@ -112,7 +112,7 @@ class _UseridAuthState extends State<UseridAuth> {
                       isLoading.value = true;
                       Timer(Duration(seconds: 2), () {
                         isLoading.value = false;
-                        Get.toNamed(AppRoutes.createprofile);
+                        Get.toNamed(AppRoutes.bottomnav);
                       });
                     }
                   },

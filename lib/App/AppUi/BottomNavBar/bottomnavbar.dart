@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pandlive/Utils/Constant/app_style.dart';
 
 class Bottomnavbar extends StatefulWidget {
   const Bottomnavbar({super.key});
@@ -10,6 +11,9 @@ class Bottomnavbar extends StatefulWidget {
 class _BottomnavbarState extends State<Bottomnavbar> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text("First Screen")));
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(child: Text("BottomNavBar", style: AppStyle.logo)),
+    );
   }
 }

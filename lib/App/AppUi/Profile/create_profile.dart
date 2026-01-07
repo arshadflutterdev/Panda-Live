@@ -27,6 +27,7 @@ class _CreateProfileState extends State<CreateProfile> {
   TextEditingController dobController = TextEditingController();
   TextEditingController countryController = TextEditingController();
   RxInt isSelected = 0.obs;
+  RxString genderError = "".obs;
   //image picker
   Rxn<File> image = Rxn<File>();
 
@@ -39,6 +40,9 @@ class _CreateProfileState extends State<CreateProfile> {
 
     image.value = File(images!.path);
     print("here is image path $image");
+    if (!mounted) {
+      return;
+    }
   }
 
   //dialog box for countries
@@ -449,7 +453,13 @@ class _CreateProfileState extends State<CreateProfile> {
                             hintext: "Enter Your Name",
                           ),
                           Gap(7),
-                          Text("Date of Birth", style: AppStyle.halfblacktext),
+                          Align(
+                            alignment: Alignment.topLeft,
+                            child: Text(
+                              "Date of Birth",
+                              style: AppStyle.halfblacktext,
+                            ),
+                          ),
                           Gap(5),
                           MyTextFormField(
                             read: true,
@@ -483,6 +493,11 @@ class _CreateProfileState extends State<CreateProfile> {
                           ),
                           Gap(5),
                           MyTextFormField(
+                            validator: (value) {
+                              if (countryController.text.isEmpty) {
+                                return "Please select your country";
+                              }
+                            },
                             controller: countryController,
                             read: true,
                             ontapp: selectCountry,
@@ -511,6 +526,7 @@ class _CreateProfileState extends State<CreateProfile> {
                         GestureDetector(
                           onTap: () {
                             isSelected.value = 1;
+                            genderError.value = "";
                           },
                           child: Obx(
                             () => Container(
@@ -540,6 +556,7 @@ class _CreateProfileState extends State<CreateProfile> {
                         GestureDetector(
                           onTap: () {
                             isSelected.value = 2;
+                            genderError.value = "";
                           },
                           child: Obx(
                             () => Container(
@@ -567,29 +584,92 @@ class _CreateProfileState extends State<CreateProfile> {
                         ),
                       ],
                     ),
+                    Obx(
+                      () => genderError.value.isEmpty
+                          ? const SizedBox()
+                          : Padding(
+                              padding: const EdgeInsets.only(left: 8, top: 4),
+                              child: Text(
+                                genderError.value,
+                                style: const TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ),
+                    ),
+
                     Gap(height * 0.015),
                     Center(
                       child: MyElevatedButton(
                         width: width,
-                        btext: isloading.value
-                            ? CircularProgressIndicator(color: Colors.white)
-                            : Text(
-                                "Submit",
-                                style: AppStyle.btext.copyWith(
-                                  color: Colors.white,
+                        btext: Obx(
+                          () => isloading.value
+                              ? CircularProgressIndicator(color: Colors.white)
+                              : Text(
+                                  "Submit",
+                                  style: AppStyle.btext.copyWith(
+                                    color: Colors.white,
+                                  ),
                                 ),
-                              ),
+                        ),
+
                         onPressed: () {
-                          if (_formkey.currentState!.validate()) {
+                          bool formValid = _formkey.currentState!.validate();
+
+                          if (isSelected.value == 0) {
+                            genderError.value = "Please select your gender";
+                            return;
+                          }
+
+                          if (formValid) {
                             isloading.value = true;
-                            Timer(Duration(seconds: 2), () {
+
+                            // ✅ STORED VALUES (Future use)
+                            String name = nameController.text;
+                            String dob = dobController.text;
+                            String country = countryController.text;
+
+                            String gender = isSelected.value == 1
+                                ? "male"
+                                : "female";
+
+                            print(name);
+                            print(dob);
+                            print(country);
+                            print(gender);
+
+                            Timer(const Duration(seconds: 2), () {
                               isloading.value = false;
-                              Get.toNamed(AppRoutes.createprofile);
+                              Get.toNamed(AppRoutes.bottomnav);
+                              Get.snackbar(
+                                "Congratulations",
+                                "Your profile is done",
+                                colorText: Colors.white,
+                                backgroundColor: Colors.black,
+                              );
                             });
                           }
                         },
+
+                        // onPressed: () {
+                        //   if (_formkey.currentState!.validate()) {
+                        //     isloading.value = true;
+                        //     Timer(Duration(seconds: 2), () {
+                        //       isloading.value = false;
+                        //       Get.snackbar(
+                        //         "Congratulations",
+                        //         "Your profile is done",
+                        //         colorText: Colors.white,
+                        //         backgroundColor: Colors.black,
+                        //       );
+                        //     });
+
+                        //   }
+                        // },
                       ),
                     ),
+                    Gap(height * 0.020),
                   ],
                 ),
               ),
