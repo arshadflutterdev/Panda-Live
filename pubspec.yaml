@@ -36,10 +36,11 @@ dependencies:
   cupertino_icons: ^1.0.8
   get: ^4.7.3
   gap: ^3.0.1
-  google_fonts: ^6.3.3
+  google_fonts: ^7.0.0
   flutter_intl_phone_field: ^0.0.7
   image_picker: ^1.2.1
-  flutter_localization: ^0.3.3
+  
+ 
 
 dev_dependencies:
   flutter_test:

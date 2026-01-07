@@ -16,4 +16,5 @@ class AppStyle {
     fontSize: 16,
     color: Colors.black38,
   );
+  static TextStyle arabictext = GoogleFonts.amiri(fontSize: 16);
 }

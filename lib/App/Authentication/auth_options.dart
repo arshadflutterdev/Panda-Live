@@ -92,17 +92,22 @@ class _AuthOptionsState extends State<AuthOptions> {
                 child: Column(
                   children: [
                     Padding(
-                      padding: const EdgeInsets.only(top: 15),
+                      padding: const EdgeInsets.only(top: 18),
                       child: Align(
                         alignment: Alignment.topRight,
-                        child: CircleAvatar(
-                          radius: 20,
-                          backgroundColor: Colors.black,
-                          backgroundImage: AssetImage(AppImages.language),
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.toNamed(AppRoutes.language);
+                          },
+                          child: CircleAvatar(
+                            radius: 14,
+                            backgroundColor: Colors.white,
+                            backgroundImage: AssetImage(AppImages.language),
+                          ),
                         ),
                       ),
                     ),
-                    Gap(height * 0.18),
+                    Gap(height * 0.17),
 
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
