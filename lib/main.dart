@@ -16,7 +16,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      initialRoute: AppRoutes.bottomnav,
+      initialRoute: AppRoutes.splash,
       getPages: AppRoutes.routes,
       title: 'Flutter Demo',
       theme: ThemeData(
