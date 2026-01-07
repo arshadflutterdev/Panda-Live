@@ -9,5 +9,23 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
-  String get helloWorld => 'Hello world';
+  String get changeAppLanguage => 'Change App Language';
+
+  @override
+  String get english => 'English';
+
+  @override
+  String get arabic => 'Arabic';
+
+  @override
+  String get termsOfService => 'PandaLive Terms of Services';
+
+  @override
+  String get readAndAgree => 'I have read and agreed the';
+
+  @override
+  String get languageSelectedEnglish => 'Your selected language is English';
+
+  @override
+  String get languageSelectedArabic => 'اللغة التي اخترتها هي العربية';
 }

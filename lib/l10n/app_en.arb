@@ -1,3 +1,9 @@
 {
-    "helloWorld":"Hello world"
+  "changeAppLanguage": "Change App Language",
+  "english": "English",
+  "arabic": "Arabic",
+  "termsOfService": "PandaLive Terms of Services",
+  "readAndAgree": "I have read and agreed the",
+  "languageSelectedEnglish": "Your selected language is English",
+  "languageSelectedArabic": "اللغة التي اخترتها هي العربية"
 }

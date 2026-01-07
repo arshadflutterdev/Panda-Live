@@ -95,11 +95,47 @@ abstract class AppLocalizations {
     Locale('en')
   ];
 
-  /// No description provided for @helloWorld.
+  /// No description provided for @changeAppLanguage.
   ///
   /// In en, this message translates to:
-  /// **'Hello world'**
-  String get helloWorld;
+  /// **'Change App Language'**
+  String get changeAppLanguage;
+
+  /// No description provided for @english.
+  ///
+  /// In en, this message translates to:
+  /// **'English'**
+  String get english;
+
+  /// No description provided for @arabic.
+  ///
+  /// In en, this message translates to:
+  /// **'Arabic'**
+  String get arabic;
+
+  /// No description provided for @termsOfService.
+  ///
+  /// In en, this message translates to:
+  /// **'PandaLive Terms of Services'**
+  String get termsOfService;
+
+  /// No description provided for @readAndAgree.
+  ///
+  /// In en, this message translates to:
+  /// **'I have read and agreed the'**
+  String get readAndAgree;
+
+  /// No description provided for @languageSelectedEnglish.
+  ///
+  /// In en, this message translates to:
+  /// **'Your selected language is English'**
+  String get languageSelectedEnglish;
+
+  /// No description provided for @languageSelectedArabic.
+  ///
+  /// In en, this message translates to:
+  /// **'اللغة التي اخترتها هي العربية'**
+  String get languageSelectedArabic;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

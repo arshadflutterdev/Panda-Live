@@ -1,3 +1,9 @@
 {
-    "helloWorld":"مرحبا بالعالم"
+  "changeAppLanguage": "تغيير لغة التطبيق",
+  "english": "إنجليزي",
+  "arabic": "عربي",
+  "termsOfService": "شروط خدمة PandaLive",
+  "readAndAgree": "لقد قرأت ووافقت على",
+  "languageSelectedEnglish": "اللغة التي اخترتها هي الإنجليزية",
+  "languageSelectedArabic": "اللغة التي اخترتها هي العربية"
 }

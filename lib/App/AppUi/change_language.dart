@@ -3,10 +3,12 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
+import 'package:pandlive/App/Services/Localization/localization_services.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
 
 class ChangeLanguage extends StatefulWidget {
   const ChangeLanguage({super.key});
@@ -21,23 +23,14 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
+    final localization = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
         children: [
           Image(fit: BoxFit.cover, image: AssetImage(AppImages.halfbg)),
           Gap(height * 0.15),
-          Obx(
-            () => selectedlanguage.value == 1
-                ? Text("Change App Language", style: AppStyle.logo)
-                : Text(
-                    "تغيير لغة التطبيق",
-                    style: AppStyle.arabictext.copyWith(
-                      fontSize: 30,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-          ),
+          Text(localization.changeAppLanguage, style: AppStyle.logo),
           Gap(height * 0.040),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -56,6 +49,8 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
 
                   onPressed: () {
                     selectedlanguage.value = 1;
+                    Get.updateLocale(Locale("en"));
+
                     Get.snackbar(
                       backgroundColor: Colors.black,
                       colorText: Colors.white,
@@ -64,7 +59,7 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
                     );
                   },
                   child: Text(
-                    "English",
+                    localization.english,
                     style: AppStyle.btext.copyWith(
                       color: Colors.white,
                       fontSize: 25,
@@ -86,7 +81,9 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
                   ),
 
                   onPressed: () {
+                    Get.updateLocale(Locale("ar"));
                     selectedlanguage.value = 2;
+
                     Get.snackbar(
                       "",
                       "",
@@ -96,7 +93,7 @@ class _ChangeLanguageState extends State<ChangeLanguage> {
                       titleText: Align(
                         alignment: Alignment.topRight,
                         child: Text(
-                          "عربي",
+                          localization.arabic,
                           style: AppStyle.arabictext.copyWith(
                             color: Colors.white,
                           ),

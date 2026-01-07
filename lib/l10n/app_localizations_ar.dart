@@ -9,5 +9,23 @@ class AppLocalizationsAr extends AppLocalizations {
   AppLocalizationsAr([String locale = 'ar']) : super(locale);
 
   @override
-  String get helloWorld => 'مرحبا بالعالم';
+  String get changeAppLanguage => 'تغيير لغة التطبيق';
+
+  @override
+  String get english => 'إنجليزي';
+
+  @override
+  String get arabic => 'عربي';
+
+  @override
+  String get termsOfService => 'شروط خدمة PandaLive';
+
+  @override
+  String get readAndAgree => 'لقد قرأت ووافقت على';
+
+  @override
+  String get languageSelectedEnglish => 'اللغة التي اخترتها هي الإنجليزية';
+
+  @override
+  String get languageSelectedArabic => 'اللغة التي اخترتها هي العربية';
 }
