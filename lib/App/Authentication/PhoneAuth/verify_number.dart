@@ -42,8 +42,8 @@ class _VerifyNumberState extends State<VerifyNumber> {
   void otp() {
     Timer(Duration(seconds: 3), () {
       Get.snackbar(
-        "Code",
-        "258012 is your code",
+        AppLocalizations.of(context)!.code,
+        AppLocalizations.of(context)!.isyourcode,
         backgroundColor: AppColours.blues,
         colorText: Colors.white,
       );
@@ -86,7 +86,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
               ),
             ),
             child: Align(
-              alignment: Alignment.topLeft,
+              alignment: isArabic ? Alignment.topRight : Alignment.topLeft,
               child: Padding(
                 padding: const EdgeInsets.symmetric(
                   vertical: 12,

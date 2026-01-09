@@ -72,43 +72,40 @@ class _PhoneAuthState extends State<PhoneAuth> {
               ),
               Form(
                 key: _formkey,
-                child: Directionality(
-                  textDirection: TextDirection.ltr,
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: IntlPhoneField(
-                      showDropdownIcon: false,
-                      initialCountryCode: "SA",
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: IntlPhoneField(
+                    showDropdownIcon: false,
+                    initialCountryCode: "SA",
 
-                      decoration: InputDecoration(
-                        hint: Text(
-                          localization.enterphone,
-                          style: isArabic
-                              ? AppStyle.arabictext.copyWith(
-                                  fontSize: 18,
-                                  color: Colors.black54,
-                                )
-                              : TextStyle(fontSize: 16, color: Colors.black54),
-                        ),
+                    decoration: InputDecoration(
+                      hint: Text(
+                        localization.enterphone,
+                        style: isArabic
+                            ? AppStyle.arabictext.copyWith(
+                                fontSize: 18,
+                                color: Colors.black54,
+                              )
+                            : TextStyle(fontSize: 16, color: Colors.black54),
+                      ),
 
-                        filled: true,
-                        fillColor: Colors.grey.shade200,
-                        border: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey.shade200),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        errorBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.red),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.grey.shade200),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: AppColours.blues),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
+                      filled: true,
+                      fillColor: Colors.grey.shade200,
+                      border: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade200),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.red),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.grey.shade200),
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: AppColours.blues),
+                        borderRadius: BorderRadius.circular(20),
                       ),
                     ),
                   ),
