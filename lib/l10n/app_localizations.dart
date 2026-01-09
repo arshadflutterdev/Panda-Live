@@ -274,6 +274,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Already have an Account?'**
   String get alreadyaccount;
+
+  /// No description provided for @code.
+  ///
+  /// In en, this message translates to:
+  /// **'Code'**
+  String get code;
+
+  /// No description provided for @isyourcode.
+  ///
+  /// In en, this message translates to:
+  /// **'258012 is your code'**
+  String get isyourcode;
+
+  /// No description provided for @codeincorrect.
+  ///
+  /// In en, this message translates to:
+  /// **'Code Incorrect'**
+  String get codeincorrect;
+
+  /// No description provided for @lettersend.
+  ///
+  /// In en, this message translates to:
+  /// **'letterResend SMS'**
+  String get lettersend;
+
+  /// No description provided for @smssended.
+  ///
+  /// In en, this message translates to:
+  /// **'SMS resend successfully'**
+  String get smssended;
+
+  /// No description provided for @code8digits.
+  ///
+  /// In en, this message translates to:
+  /// **'Password must be 8 digits'**
+  String get code8digits;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

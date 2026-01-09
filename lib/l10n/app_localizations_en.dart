@@ -97,4 +97,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get alreadyaccount => 'Already have an Account?';
+
+  @override
+  String get code => 'Code';
+
+  @override
+  String get isyourcode => '258012 is your code';
+
+  @override
+  String get codeincorrect => 'Code Incorrect';
+
+  @override
+  String get lettersend => 'letterResend SMS';
+
+  @override
+  String get smssended => 'SMS resend successfully';
+
+  @override
+  String get code8digits => 'Password must be 8 digits';
 }

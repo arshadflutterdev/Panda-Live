@@ -97,4 +97,22 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get alreadyaccount => 'هل لديك حساب بالفعل؟';
+
+  @override
+  String get code => 'شفرة';
+
+  @override
+  String get isyourcode => '258012 هو رمزك';
+
+  @override
+  String get codeincorrect => 'الكود غير صحيح';
+
+  @override
+  String get lettersend => 'إعادة إرسال الرسالة النصية';
+
+  @override
+  String get smssended => 'تمت إعادة إرسال الرسالة النصية بنجاح';
+
+  @override
+  String get code8digits => 'يجب أن تتكون كلمة المرور من 8 أرقام';
 }
