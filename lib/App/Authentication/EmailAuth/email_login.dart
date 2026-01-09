@@ -71,7 +71,7 @@ class _EmailLoginState extends State<EmailLogin> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Please Enter 8 Digits Password"),
+                      Text("Please Enter 6-8 Digits Password"),
                       Gap(height * 0.010),
                       Obx(
                         () => MyTextFormField(

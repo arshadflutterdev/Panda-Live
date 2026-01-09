@@ -463,8 +463,8 @@ class _CreateProfileState extends State<CreateProfile> {
                               isloading.value = false;
                               Get.toNamed(AppRoutes.bottomnav);
                               Get.snackbar(
-                                "Congratulations",
-                                "Your profile is done",
+                                localization.mubark,
+                                localization.profiledone,
                                 colorText: Colors.white,
                                 backgroundColor: Colors.black,
                               );

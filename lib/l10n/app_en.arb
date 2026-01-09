@@ -58,7 +58,12 @@
   "sbmet": "Submit",
   "selectgender": "Please select your gender",
   "mubark": "Congratulations",
-  "profiledone":"Your profile is done"  
+  "profiledone":"Your profile is done",
+
+  "enter8pass": "Please Enter 6-8 Digits Password",
+  "enteryourpass": "Enter Your Password",
+  "forgetpass": "Forget Password?" 
+
 
 
 }

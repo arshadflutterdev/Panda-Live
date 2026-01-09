@@ -172,4 +172,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get profiledone => 'Your profile is done';
+
+  @override
+  String get enter8pass => 'Please Enter 6-8 Digits Password';
+
+  @override
+  String get enteryourpass => 'Enter Your Password';
+
+  @override
+  String get forgetpass => 'Forget Password?';
 }

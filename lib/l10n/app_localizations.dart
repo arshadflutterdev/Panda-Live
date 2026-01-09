@@ -424,6 +424,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your profile is done'**
   String get profiledone;
+
+  /// No description provided for @enter8pass.
+  ///
+  /// In en, this message translates to:
+  /// **'Please Enter 6-8 Digits Password'**
+  String get enter8pass;
+
+  /// No description provided for @enteryourpass.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Your Password'**
+  String get enteryourpass;
+
+  /// No description provided for @forgetpass.
+  ///
+  /// In en, this message translates to:
+  /// **'Forget Password?'**
+  String get forgetpass;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

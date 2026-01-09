@@ -172,4 +172,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get profiledone => 'تم الانتهاء من ملف التعريف الخاص بك';
+
+  @override
+  String get enter8pass => 'الرجاء إدخال كلمة مرور مكونة من 6 إلى 8 أرقام';
+
+  @override
+  String get enteryourpass => 'أدخل كلمة المرور الخاصة بك';
+
+  @override
+  String get forgetpass => 'نسيت كلمة المرور؟';
 }
