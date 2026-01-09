@@ -66,7 +66,11 @@
 
   "resetpass": "Reset Password",
   "reset": "Reset",
-  "passresetsuccess": "Your Password reset successfully"
+  "passresetsuccess": "Your Password reset successfully",
+
+  "loginwithid": "Login With Your_Id",
+  "adduserid": "Please Add Your userId",
+  "uid6digits": "Please Enter Your 6 Digits userId"
 
 }
 

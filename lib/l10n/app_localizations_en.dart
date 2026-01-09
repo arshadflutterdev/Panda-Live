@@ -190,4 +190,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get passresetsuccess => 'Your Password reset successfully';
+
+  @override
+  String get loginwithid => 'Login With Your_Id';
+
+  @override
+  String get adduserid => 'Please Add Your userId';
+
+  @override
+  String get uid6digits => 'Please Enter Your 6 Digits userId';
 }

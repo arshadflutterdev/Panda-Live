@@ -79,12 +79,12 @@ class _UseridAuthState extends State<UseridAuth> {
                         if (userController.text.isEmpty) {
                           return "Please Add Your userId";
                         } else if (userController.text.length < 6) {
-                          return "Please Enter 6 Digits userId";
+                          return "Please Enter Your 6 Digits userId";
                         }
                         return null;
                       },
                       controller: userController,
-                      hintext: 'Please Enter Your userId.',
+                      hintext: "Please Enter Your 6 Digits userId",
                       suffix: isUserIdEmpty.value
                           ? IconButton(
                               onPressed: () {

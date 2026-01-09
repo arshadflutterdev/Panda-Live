@@ -190,4 +190,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get passresetsuccess => 'تم إعادة تعيين كلمة المرور الخاصة بك بنجاح';
+
+  @override
+  String get loginwithid => 'سجّل الدخول باستخدام معرفك';
+
+  @override
+  String get adduserid => 'الرجاء إضافة معرف المستخدم الخاص بك';
+
+  @override
+  String get uid6digits => 'الرجاء إدخال معرف المستخدم الخاص بك المكون من 6 أرقام';
 }

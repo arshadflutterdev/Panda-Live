@@ -460,6 +460,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Your Password reset successfully'**
   String get passresetsuccess;
+
+  /// No description provided for @loginwithid.
+  ///
+  /// In en, this message translates to:
+  /// **'Login With Your_Id'**
+  String get loginwithid;
+
+  /// No description provided for @adduserid.
+  ///
+  /// In en, this message translates to:
+  /// **'Please Add Your userId'**
+  String get adduserid;
+
+  /// No description provided for @uid6digits.
+  ///
+  /// In en, this message translates to:
+  /// **'Please Enter Your 6 Digits userId'**
+  String get uid6digits;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
