@@ -10,6 +10,7 @@ import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
 
 class ResetPassword extends StatefulWidget {
   const ResetPassword({super.key});
@@ -23,6 +24,7 @@ class _ResetPasswordState extends State<ResetPassword> {
   TextEditingController passController = TextEditingController();
   RxBool isSMSEmtpy = false.obs;
   RxBool isCodeEmpty = false.obs;
+  bool isArabic = Get.locale?.languageCode == "ar";
   RxInt seconds = 60.obs;
   RxBool isloading = false.obs;
   Timer? timr;
@@ -41,8 +43,8 @@ class _ResetPasswordState extends State<ResetPassword> {
   void otp() {
     Timer(Duration(seconds: 3), () {
       Get.snackbar(
-        "Code",
-        "128025 is your code",
+        AppLocalizations.of(context)!.code,
+        AppLocalizations.of(context)!.isyourcode,
         backgroundColor: AppColours.blues,
         colorText: Colors.white,
       );
@@ -63,6 +65,7 @@ class _ResetPasswordState extends State<ResetPassword> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
     // double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
@@ -114,8 +117,10 @@ class _ResetPasswordState extends State<ResetPassword> {
                       style: AppStyle.btext.copyWith(fontSize: 22),
                     ),
                     Text(
-                      "verification code send to arshad****gmail.com",
-                      style: TextStyle(color: Colors.black54),
+                      localization.vcodesended,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(color: Colors.black54)
+                          : TextStyle(color: Colors.black54),
                     ),
                     Gap(height * 0.030),
                     Form(
@@ -126,17 +131,17 @@ class _ResetPasswordState extends State<ResetPassword> {
                             () => MyTextFormField(
                               validator: (value) {
                                 if (smsController.text.isEmpty) {
-                                  return "Type Code";
+                                  return localization.hint6ditis;
                                 } else if (!smsController.text.contains(
                                   "128025",
                                 )) {
-                                  return "Code Incorrect";
+                                  return localization.codeincorrect;
                                 }
                                 return null;
                               },
                               controller: smsController,
                               keyboard: TextInputType.number,
-                              hintext: "Type 6 digits code",
+                              hintext: localization.hint6ditis,
                               onChanged: (newValue) {
                                 isSMSEmtpy.value = newValue.isNotEmpty;
                               },
@@ -155,7 +160,10 @@ class _ResetPasswordState extends State<ResetPassword> {
                               Obx(() {
                                 if (seconds.value > 0) {
                                   return Text(
-                                    "${seconds.value}s letterResend SMS",
+                                    "${seconds.value}s ${localization.lettersend},",
+                                    style: isArabic
+                                        ? AppStyle.arabictext
+                                        : TextStyle(),
                                   );
                                 } else {
                                   return TextButton(
@@ -166,8 +174,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                                       Get.snackbar(
                                         backgroundColor: AppColours.blues,
 
-                                        "Resend",
-                                        "SMS resend successfully",
+                                        localization.resms,
+                                        localization.smssended,
                                         colorText: Colors.white,
                                       );
                                       Timer(Duration(seconds: 5), () {
@@ -175,8 +183,12 @@ class _ResetPasswordState extends State<ResetPassword> {
                                       });
                                     },
                                     child: Text(
-                                      "Resend SMS",
-                                      style: TextStyle(color: AppColours.blues),
+                                      localization.resms,
+                                      style: isArabic
+                                          ? AppStyle.arabictext.copyWith(
+                                              color: AppColours.blues,
+                                            )
+                                          : TextStyle(color: AppColours.blues),
                                     ),
                                   );
                                 }
@@ -185,14 +197,20 @@ class _ResetPasswordState extends State<ResetPassword> {
                             ],
                           ),
                           Align(
-                            alignment: Alignment.bottomLeft,
+                            alignment: isArabic
+                                ? Alignment.bottomRight
+                                : Alignment.bottomLeft,
                             child: TextButton(
                               onPressed: () {
                                 Get.offAllNamed(AppRoutes.authoptions);
                               },
                               child: Text(
-                                "Try another method?",
-                                style: TextStyle(color: AppColours.blues),
+                                localization.tryanother,
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        color: AppColours.blues,
+                                      )
+                                    : TextStyle(color: AppColours.blues),
                               ),
                             ),
                           ),
@@ -201,16 +219,16 @@ class _ResetPasswordState extends State<ResetPassword> {
                             () => MyTextFormField(
                               validator: (value) {
                                 if (passController.text.isEmpty) {
-                                  return "Create Your Password";
+                                  return localization.createpassword;
                                 } else if (passController.text.length < 8) {
-                                  return "Password must be 8 digits";
+                                  return localization.code8digits;
                                 }
                                 return null;
                               },
                               obscure: isSecure.value,
                               controller: passController,
                               keyboard: TextInputType.text,
-                              hintext: "Create New Password",
+                              hintext: localization.createpassword,
                               onChanged: (newValue) {
                                 isCodeEmpty.value = newValue.isNotEmpty;
                               },
@@ -259,10 +277,16 @@ class _ResetPasswordState extends State<ResetPassword> {
                           ),
 
                           Align(
-                            alignment: Alignment.topLeft,
+                            alignment: isArabic
+                                ? Alignment.topRight
+                                : Alignment.topLeft,
                             child: Text(
-                              "Set 6-8 digits code with letters&numbers",
-                              style: TextStyle(color: Colors.black54),
+                              localization.setpassword,
+                              style: isArabic
+                                  ? AppStyle.arabictext.copyWith(
+                                      color: Colors.black54,
+                                    )
+                                  : TextStyle(color: Colors.black54),
                             ),
                           ),
                         ],
@@ -306,8 +330,12 @@ class _ResetPasswordState extends State<ResetPassword> {
                       children: [
                         Center(
                           child: Text(
-                            "I have read and agreed the",
-                            style: TextStyle(color: Colors.black),
+                            localization.readAndAgree,
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    color: Colors.black54,
+                                  )
+                                : TextStyle(color: Colors.black),
                           ),
                         ),
 
@@ -316,8 +344,12 @@ class _ResetPasswordState extends State<ResetPassword> {
                             Get.toNamed(AppRoutes.terms);
                           },
                           child: Text(
-                            "PandaLive terms of Services",
-                            style: TextStyle(color: Colors.blueAccent),
+                            localization.pterms,
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    color: Colors.blueAccent,
+                                  )
+                                : TextStyle(color: Colors.blueAccent),
                           ),
                         ),
                       ],

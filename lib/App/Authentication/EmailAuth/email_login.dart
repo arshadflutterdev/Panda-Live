@@ -71,22 +71,25 @@ class _EmailLoginState extends State<EmailLogin> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text("Please Enter 6-8 Digits Password"),
+                      Text(
+                        localization.enter8pass,
+                        style: isArabic ? AppStyle.arabictext : TextStyle(),
+                      ),
                       Gap(height * 0.010),
                       Obx(
                         () => MyTextFormField(
                           validator: (value) {
                             if (passController.text.isEmpty) {
-                              return "Enter Your Password";
+                              return localization.enteryourpass;
                             } else if (passController.text.length < 8) {
-                              return "Password must be 8 digits";
+                              return localization.code8digits;
                             }
                             return null;
                           },
                           obscure: isSecure.value,
                           controller: passController,
                           keyboard: TextInputType.text,
-                          hintext: "Enter Your Password",
+                          hintext: localization.enteryourpass,
                           onChanged: (newValue) {
                             isCodeEmpty.value = newValue.isNotEmpty;
                           },
@@ -134,8 +137,12 @@ class _EmailLoginState extends State<EmailLogin> {
                             Get.toNamed(AppRoutes.resetpassword);
                           },
                           child: Text(
-                            "Forget Password?",
-                            style: TextStyle(color: AppColours.blues),
+                            localization.forgetpass,
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    color: AppColours.blues,
+                                  )
+                                : TextStyle(color: AppColours.blues),
                           ),
                         ),
                       ),
@@ -166,8 +173,14 @@ class _EmailLoginState extends State<EmailLogin> {
                     () => isLoading.value
                         ? CircularProgressIndicator(color: Colors.white)
                         : Text(
-                            "Next",
-                            style: AppStyle.btext.copyWith(color: Colors.white),
+                            localization.buttonnext,
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                  )
+                                : AppStyle.btext.copyWith(color: Colors.white),
                           ),
                   ),
                 ),
@@ -179,8 +192,10 @@ class _EmailLoginState extends State<EmailLogin> {
                 children: [
                   Center(
                     child: Text(
-                      "I have read and agreed the",
-                      style: TextStyle(color: Colors.black),
+                      localization.readAndAgree,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(color: Colors.black)
+                          : TextStyle(color: Colors.black),
                     ),
                   ),
                   GestureDetector(
@@ -188,8 +203,10 @@ class _EmailLoginState extends State<EmailLogin> {
                       Get.toNamed(AppRoutes.terms);
                     },
                     child: Text(
-                      "PandaLive terms of Services",
-                      style: TextStyle(color: Colors.blueAccent),
+                      localization.pterms,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(color: Colors.blue)
+                          : TextStyle(color: Colors.blueAccent),
                     ),
                   ),
                 ],
