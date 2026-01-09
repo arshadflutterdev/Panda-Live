@@ -22,6 +22,44 @@
   "loginwithemail": "Login With Your Email",
   "enteremail": "Please Enter Your Email",
   "validemail": "Please Enter Valid Email",
-  "buttonnext": "Next"
+  "buttonnext": "Next",
+
+  "verifyemail": "Verify Your Email",
+  "vcodesended": "verification code send to arshad***gmail.com",
+  "enter6digitcode": "Enter the 6-digits code send to your email",
+  "hint6ditis": "Type 6 digits code",
+  "resms": "Resend SMS",
+  "tryanother": "Try another method",
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

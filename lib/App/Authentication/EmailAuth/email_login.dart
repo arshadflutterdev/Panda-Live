@@ -11,6 +11,7 @@ import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
 
 class EmailLogin extends StatefulWidget {
   const EmailLogin({super.key});
@@ -26,11 +27,14 @@ class _EmailLoginState extends State<EmailLogin> {
   RxBool isCodeEmpty = false.obs;
   RxBool isSecure = true.obs;
   RxBool isLoading = false.obs;
+  bool isArabic = Get.locale?.languageCode == "ar";
 
   @override
   Widget build(BuildContext context) {
     double width = AppHeightwidth.screenWidth(context);
     double height = AppHeightwidth.screenHeight(context);
+    final localization = AppLocalizations.of(context)!;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(

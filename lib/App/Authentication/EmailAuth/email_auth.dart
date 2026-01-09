@@ -11,7 +11,6 @@ import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 import 'package:pandlive/l10n/app_localizations.dart';
-import 'package:pandlive/l10n/app_localizations_ar.dart';
 
 class EmailAuth extends StatefulWidget {
   const EmailAuth({super.key});

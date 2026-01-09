@@ -10,6 +10,7 @@ import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
 
 class VerifyEmail extends StatefulWidget {
   const VerifyEmail({super.key});
@@ -24,6 +25,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
   RxBool isSMSEmtpy = false.obs;
   RxBool isCodeEmpty = false.obs;
   RxInt seconds = 60.obs;
+  bool isArabic = Get.locale?.languageCode == "ar";
   Timer? timr;
   RxBool isSecure = true.obs;
   final _formkey = GlobalKey<FormState>();
@@ -65,6 +67,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
+    final localization = AppLocalizations.of(context)!;
     // double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -110,7 +113,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                   children: [
                     // Gap(height * 0.5),
                     Text(
-                      "Login With Email",
+                      "Verify Your Email",
                       style: AppStyle.btext.copyWith(fontSize: 22),
                     ),
                     Text(
@@ -118,6 +121,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                       style: TextStyle(color: Colors.black54),
                     ),
                     Gap(height * 0.030),
+                    Text("Enter the 6-digit code sent to your email"),
                     Form(
                       key: _formkey,
                       child: Column(
