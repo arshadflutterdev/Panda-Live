@@ -29,7 +29,11 @@
   "enter6digitcode": "Enter the 6-digits code send to your email",
   "hint6ditis": "Type 6 digits code",
   "resms": "Resend SMS",
-  "tryanother": "Try another method",
+  "tryanother": "Try another method?",
+  "createpassword": "Create Password",
+  "setpassword": "Set 6-8 digits code with letters&numbers",
+  "alreadyaccount": "Already have an Account?"
+
 
 }
 

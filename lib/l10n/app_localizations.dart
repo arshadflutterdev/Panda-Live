@@ -220,6 +220,60 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Next'**
   String get buttonnext;
+
+  /// No description provided for @verifyemail.
+  ///
+  /// In en, this message translates to:
+  /// **'Verify Your Email'**
+  String get verifyemail;
+
+  /// No description provided for @vcodesended.
+  ///
+  /// In en, this message translates to:
+  /// **'verification code send to arshad***gmail.com'**
+  String get vcodesended;
+
+  /// No description provided for @enter6digitcode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the 6-digits code send to your email'**
+  String get enter6digitcode;
+
+  /// No description provided for @hint6ditis.
+  ///
+  /// In en, this message translates to:
+  /// **'Type 6 digits code'**
+  String get hint6ditis;
+
+  /// No description provided for @resms.
+  ///
+  /// In en, this message translates to:
+  /// **'Resend SMS'**
+  String get resms;
+
+  /// No description provided for @tryanother.
+  ///
+  /// In en, this message translates to:
+  /// **'Try another method?'**
+  String get tryanother;
+
+  /// No description provided for @createpassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Password'**
+  String get createpassword;
+
+  /// No description provided for @setpassword.
+  ///
+  /// In en, this message translates to:
+  /// **'Set 6-8 digits code with letters&numbers'**
+  String get setpassword;
+
+  /// No description provided for @alreadyaccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Already have an Account?'**
+  String get alreadyaccount;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

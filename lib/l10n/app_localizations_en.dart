@@ -70,4 +70,31 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get buttonnext => 'Next';
+
+  @override
+  String get verifyemail => 'Verify Your Email';
+
+  @override
+  String get vcodesended => 'verification code send to arshad***gmail.com';
+
+  @override
+  String get enter6digitcode => 'Enter the 6-digits code send to your email';
+
+  @override
+  String get hint6ditis => 'Type 6 digits code';
+
+  @override
+  String get resms => 'Resend SMS';
+
+  @override
+  String get tryanother => 'Try another method?';
+
+  @override
+  String get createpassword => 'Create Password';
+
+  @override
+  String get setpassword => 'Set 6-8 digits code with letters&numbers';
+
+  @override
+  String get alreadyaccount => 'Already have an Account?';
 }

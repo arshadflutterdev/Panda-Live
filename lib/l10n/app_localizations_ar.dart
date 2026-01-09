@@ -70,4 +70,31 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get buttonnext => 'التالي';
+
+  @override
+  String get verifyemail => 'التحقق من البريد الإلكتروني الخاص بك';
+
+  @override
+  String get vcodesended => 'سيتم إرسال رمز التحقق إلى arshad***gmail.com';
+
+  @override
+  String get enter6digitcode => 'أدخل الرمز المكون من 6 أرقام والذي تم إرساله إلى بريدك الإلكتروني';
+
+  @override
+  String get hint6ditis => 'أدخل الرمز المكون من 6 أرقام';
+
+  @override
+  String get resms => 'إعادة إرسال الرسائل القصيرة';
+
+  @override
+  String get tryanother => 'جرب طريقة أخرى؟';
+
+  @override
+  String get createpassword => 'إنشاء كلمة المرور';
+
+  @override
+  String get setpassword => 'قم بتعيين رمز مكون من 6-8 أرقام وحروف وأرقام';
+
+  @override
+  String get alreadyaccount => 'هل لديك حساب بالفعل؟';
 }
