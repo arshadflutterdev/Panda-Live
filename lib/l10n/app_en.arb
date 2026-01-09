@@ -32,7 +32,14 @@
   "tryanother": "Try another method?",
   "createpassword": "Create Password",
   "setpassword": "Set 6-8 digits code with letters&numbers",
-  "alreadyaccount": "Already have an Account?"
+  "alreadyaccount": "Already have an Account?",
+  "code": "Code",
+  "isyourcode": "258012 is your code",
+  "codeincorrect": "Code Incorrect",
+  "lettersend": "letterResend SMS",
+  "smssended": "SMS resend successfully",
+  "code8digits": "Password must be 8 digits"
+  
 
 
 }

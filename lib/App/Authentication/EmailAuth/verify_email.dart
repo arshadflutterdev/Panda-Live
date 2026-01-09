@@ -113,15 +113,27 @@ class _VerifyEmailState extends State<VerifyEmail> {
                   children: [
                     // Gap(height * 0.5),
                     Text(
-                      "Verify Your Email",
-                      style: AppStyle.btext.copyWith(fontSize: 22),
+                      localization.verifyemail,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w800,
+                            )
+                          : AppStyle.btext.copyWith(fontSize: 22),
                     ),
                     Text(
-                      "verification code send to arshad****gmail.com",
-                      style: TextStyle(color: Colors.black54),
+                      localization.vcodesended,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(color: Colors.black54)
+                          : TextStyle(color: Colors.black54),
                     ),
                     Gap(height * 0.030),
-                    Text("Enter the 6-digit code sent to your email"),
+                    Text(
+                      localization.enter6digitcode,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(fontSize: 14)
+                          : TextStyle(),
+                    ),
                     Form(
                       key: _formkey,
                       child: Column(
@@ -130,7 +142,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                             () => MyTextFormField(
                               validator: (value) {
                                 if (smsController.text.isEmpty) {
-                                  return "Type Code";
+                                  return localization.hint6ditis;
                                 } else if (!smsController.text.contains(
                                   "258012",
                                 )) {
@@ -140,7 +152,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                               },
                               controller: smsController,
                               keyboard: TextInputType.number,
-                              hintext: "Type 6 digits code",
+                              hintext: localization.hint6ditis,
                               onChanged: (newValue) {
                                 isSMSEmtpy.value = newValue.isNotEmpty;
                               },
@@ -170,7 +182,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                       Get.snackbar(
                                         backgroundColor: AppColours.blues,
 
-                                        "Resend",
+                                        localization.resms,
                                         "SMS resend successfully",
                                         colorText: Colors.white,
                                       );
@@ -179,8 +191,13 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                       });
                                     },
                                     child: Text(
-                                      "Resend SMS",
-                                      style: TextStyle(color: AppColours.blues),
+                                      localization.resms,
+                                      style: isArabic
+                                          ? AppStyle.arabictext.copyWith(
+                                              color: Colors.black,
+                                              fontWeight: FontWeight.w700,
+                                            )
+                                          : TextStyle(color: AppColours.blues),
                                     ),
                                   );
                                 }
@@ -195,8 +212,13 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                 Get.offAllNamed(AppRoutes.authoptions);
                               },
                               child: Text(
-                                "Try another method?",
-                                style: TextStyle(color: AppColours.blues),
+                                localization.tryanother,
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        color: AppColours.blues,
+                                        fontWeight: FontWeight.w600,
+                                      )
+                                    : TextStyle(color: AppColours.blues),
                               ),
                             ),
                           ),
@@ -205,7 +227,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                             () => MyTextFormField(
                               validator: (value) {
                                 if (passController.text.isEmpty) {
-                                  return "Create Your Password";
+                                  return localization.createpassword;
                                 } else if (passController.text.length < 8) {
                                   return "Password must be 8 digits";
                                 }
@@ -214,7 +236,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                               obscure: isSecure.value,
                               controller: passController,
                               keyboard: TextInputType.text,
-                              hintext: "Create Password",
+                              hintext: localization.createpassword,
                               onChanged: (newValue) {
                                 isCodeEmpty.value = newValue.isNotEmpty;
                               },
@@ -265,8 +287,12 @@ class _VerifyEmailState extends State<VerifyEmail> {
                           Align(
                             alignment: Alignment.topLeft,
                             child: Text(
-                              "Set 6-8 digits code with letters&numbers",
-                              style: TextStyle(color: Colors.black54),
+                              localization.setpassword,
+                              style: isArabic
+                                  ? AppStyle.arabictext.copyWith(
+                                      color: Colors.black54,
+                                    )
+                                  : TextStyle(color: Colors.black54),
                             ),
                           ),
                         ],
@@ -280,10 +306,15 @@ class _VerifyEmailState extends State<VerifyEmail> {
                           () => isLoading.value
                               ? CircularProgressIndicator(color: Colors.white)
                               : Text(
-                                  "Next",
-                                  style: AppStyle.btext.copyWith(
-                                    color: Colors.white,
-                                  ),
+                                  localization.buttonnext,
+                                  style: isArabic
+                                      ? AppStyle.arabictext.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.white,
+                                        )
+                                      : AppStyle.btext.copyWith(
+                                          color: Colors.white,
+                                        ),
                                 ),
                         ),
                         onPressed: () {
@@ -304,8 +335,10 @@ class _VerifyEmailState extends State<VerifyEmail> {
                       children: [
                         Center(
                           child: Text(
-                            "I have read and agreed the",
-                            style: TextStyle(color: Colors.black),
+                            localization.readAndAgree,
+                            style: isArabic
+                                ? AppStyle.arabictext
+                                : TextStyle(color: Colors.black),
                           ),
                         ),
 
@@ -314,8 +347,13 @@ class _VerifyEmailState extends State<VerifyEmail> {
                             Get.toNamed(AppRoutes.terms);
                           },
                           child: Text(
-                            "PandaLive terms of Services",
-                            style: TextStyle(color: Colors.blueAccent),
+                            localization.pterms,
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.blue,
+                                  )
+                                : TextStyle(color: Colors.blueAccent),
                           ),
                         ),
                       ],
@@ -326,7 +364,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                         onPressed: () {
                           Get.toNamed(AppRoutes.loginemail);
                         },
-                        child: Text("Already have an Account?"),
+                        child: Text(localization.alreadyaccount),
                       ),
                     ),
                   ],
