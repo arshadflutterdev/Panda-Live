@@ -113,8 +113,13 @@ class _ResetPasswordState extends State<ResetPassword> {
                   children: [
                     // Gap(height * 0.5),
                     Text(
-                      "Reset Password",
-                      style: AppStyle.btext.copyWith(fontSize: 22),
+                      localization.resetpass,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w600,
+                            )
+                          : AppStyle.btext.copyWith(fontSize: 22),
                     ),
                     Text(
                       localization.vcodesended,
@@ -300,10 +305,16 @@ class _ResetPasswordState extends State<ResetPassword> {
                           () => isloading.value
                               ? CircularProgressIndicator(color: Colors.white)
                               : Text(
-                                  "Reset",
-                                  style: AppStyle.btext.copyWith(
-                                    color: Colors.white,
-                                  ),
+                                  localization.reset,
+                                  style: isArabic
+                                      ? AppStyle.arabictext.copyWith(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        )
+                                      : AppStyle.btext.copyWith(
+                                          color: Colors.white,
+                                        ),
                                 ),
                         ),
                         onPressed: () {
@@ -313,8 +324,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                               isloading.value = false;
                               Get.toNamed(AppRoutes.bottomnav);
                               Get.snackbar(
-                                "Password Reset",
-                                "Your Password reset successfully",
+                                localization.resetpass,
+                                localization.passresetsuccess,
                                 colorText: Colors.white,
                                 backgroundColor: AppColours.blues,
                               );

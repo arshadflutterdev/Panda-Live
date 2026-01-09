@@ -62,9 +62,11 @@
 
   "enter8pass": "Please Enter 6-8 Digits Password",
   "enteryourpass": "Enter Your Password",
-  "forgetpass": "Forget Password?" 
+  "forgetpass": "Forget Password?",
 
-
+  "resetpass": "Reset Password",
+  "reset": "Reset",
+  "passresetsuccess": "Your Password reset successfully"
 
 }
 

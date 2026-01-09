@@ -442,6 +442,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Forget Password?'**
   String get forgetpass;
+
+  /// No description provided for @resetpass.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset Password'**
+  String get resetpass;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @passresetsuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Your Password reset successfully'**
+  String get passresetsuccess;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
