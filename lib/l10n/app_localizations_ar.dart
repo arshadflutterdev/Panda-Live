@@ -199,4 +199,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get uid6digits => 'الرجاء إدخال معرف المستخدم الخاص بك المكون من 6 أرقام';
+
+  @override
+  String get hintid => 'أدخل معرفك';
 }

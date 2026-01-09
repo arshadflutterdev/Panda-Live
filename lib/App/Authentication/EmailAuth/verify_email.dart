@@ -360,6 +360,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                         ),
                       ],
                     ),
+
                     Align(
                       alignment: Alignment.center,
                       child: TextButton(

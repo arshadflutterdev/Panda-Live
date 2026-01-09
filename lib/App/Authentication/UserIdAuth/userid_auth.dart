@@ -11,6 +11,7 @@ import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
 
 class UseridAuth extends StatefulWidget {
   const UseridAuth({super.key});
@@ -22,6 +23,7 @@ class UseridAuth extends StatefulWidget {
 class _UseridAuthState extends State<UseridAuth> {
   // final LoadingController isloading = Get.put(LoadingController());
   RxBool isLoading = false.obs;
+  bool isArabic = Get.locale?.languageCode == "ar";
 
   final _formkey = GlobalKey<FormState>();
   RxBool isUserIdEmpty = false.obs;
@@ -30,6 +32,7 @@ class _UseridAuthState extends State<UseridAuth> {
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
+    final localization = AppLocalizations.of(context)!;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(
@@ -62,7 +65,15 @@ class _UseridAuthState extends State<UseridAuth> {
                   vertical: 8,
                   horizontal: 10,
                 ),
-                child: Text("Login With Your_Id", style: AppStyle.btext),
+                child: Text(
+                  localization.loginwithid,
+                  style: isArabic
+                      ? AppStyle.arabictext.copyWith(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                        )
+                      : AppStyle.btext,
+                ),
               ),
               Form(
                 key: _formkey,
@@ -77,14 +88,14 @@ class _UseridAuthState extends State<UseridAuth> {
                       keyboard: TextInputType.number,
                       validator: (value) {
                         if (userController.text.isEmpty) {
-                          return "Please Add Your userId";
+                          return localization.adduserid;
                         } else if (userController.text.length < 6) {
-                          return "Please Enter Your 6 Digits userId";
+                          return localization.uid6digits;
                         }
                         return null;
                       },
                       controller: userController,
-                      hintext: "Please Enter Your 6 Digits userId",
+                      hintext: localization.hintid,
                       suffix: isUserIdEmpty.value
                           ? IconButton(
                               onPressed: () {
@@ -120,11 +131,47 @@ class _UseridAuthState extends State<UseridAuth> {
                     () => isLoading.value
                         ? CircularProgressIndicator(color: Colors.white)
                         : Text(
-                            "Next",
-                            style: AppStyle.btext.copyWith(color: Colors.white),
+                            localization.buttonnext,
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.white,
+                                  )
+                                : AppStyle.btext.copyWith(color: Colors.white),
                           ),
                   ),
                 ),
+              ),
+              Gap(height * 0.020),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Center(
+                    child: Text(
+                      localization.readAndAgree,
+                      style: isArabic
+                          ? AppStyle.arabictext
+                          : TextStyle(color: Colors.black),
+                    ),
+                  ),
+
+                  GestureDetector(
+                    onTap: () {
+                      Get.toNamed(AppRoutes.terms);
+                    },
+                    child: Text(
+                      localization.pterms,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.blue,
+                            )
+                          : TextStyle(color: Colors.blueAccent),
+                    ),
+                  ),
+                ],
               ),
             ],
           ),

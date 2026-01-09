@@ -478,6 +478,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Please Enter Your 6 Digits userId'**
   String get uid6digits;
+
+  /// No description provided for @hintid.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Your Id'**
+  String get hintid;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

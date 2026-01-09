@@ -199,4 +199,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get uid6digits => 'Please Enter Your 6 Digits userId';
+
+  @override
+  String get hintid => 'Enter Your Id';
 }
