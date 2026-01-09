@@ -115,4 +115,61 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get code8digits => 'Password must be 8 digits';
+
+  @override
+  String get completedata => 'Complete personal data';
+
+  @override
+  String get letknow => 'Let everyone know you better';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get nam => 'Name';
+
+  @override
+  String get entername => 'Enter your name';
+
+  @override
+  String get shortnam => 'Name too short';
+
+  @override
+  String get dob => 'Date of Birth';
+
+  @override
+  String get date => 'DD-MM-YYYY';
+
+  @override
+  String get adddob => 'Add your date of birth';
+
+  @override
+  String get contry => 'Country';
+
+  @override
+  String get noalterd => 'not to be altered once set';
+
+  @override
+  String get selectcontry => 'Please select your country';
+
+  @override
+  String get gender => 'Gender';
+
+  @override
+  String get man => 'Male';
+
+  @override
+  String get fmale => 'Female';
+
+  @override
+  String get sbmet => 'Submit';
+
+  @override
+  String get selectgender => 'Please select your gender';
+
+  @override
+  String get mubark => 'Congratulations';
+
+  @override
+  String get profiledone => 'Your profile is done';
 }

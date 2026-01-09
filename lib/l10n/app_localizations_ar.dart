@@ -115,4 +115,61 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get code8digits => 'يجب أن تتكون كلمة المرور من 8 أرقام';
+
+  @override
+  String get completedata => 'استكمال البيانات الشخصية';
+
+  @override
+  String get letknow => 'دع الجميع يتعرفون عليك بشكل أفضل';
+
+  @override
+  String get profile => 'حساب تعريفي';
+
+  @override
+  String get nam => 'اسم';
+
+  @override
+  String get entername => 'أدخل اسمك';
+
+  @override
+  String get shortnam => 'الاسم قصير جدًا';
+
+  @override
+  String get dob => 'تاريخ الميلاد';
+
+  @override
+  String get date => 'يوم-شهر-سنة';
+
+  @override
+  String get adddob => 'أضف تاريخ ميلادك';
+
+  @override
+  String get contry => 'دولة';
+
+  @override
+  String get noalterd => 'لا يجوز تغييرها بعد ضبطها';
+
+  @override
+  String get selectcontry => 'الرجاء تحديد بلدك';
+
+  @override
+  String get gender => 'جنس';
+
+  @override
+  String get man => 'ذكر';
+
+  @override
+  String get fmale => 'أنثى';
+
+  @override
+  String get sbmet => 'يُقدِّم';
+
+  @override
+  String get selectgender => 'الرجاء تحديد جنسك';
+
+  @override
+  String get mubark => 'تهانينا';
+
+  @override
+  String get profiledone => 'تم الانتهاء من ملف التعريف الخاص بك';
 }

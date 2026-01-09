@@ -310,6 +310,120 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Password must be 8 digits'**
   String get code8digits;
+
+  /// No description provided for @completedata.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete personal data'**
+  String get completedata;
+
+  /// No description provided for @letknow.
+  ///
+  /// In en, this message translates to:
+  /// **'Let everyone know you better'**
+  String get letknow;
+
+  /// No description provided for @profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
+
+  /// No description provided for @nam.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get nam;
+
+  /// No description provided for @entername.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your name'**
+  String get entername;
+
+  /// No description provided for @shortnam.
+  ///
+  /// In en, this message translates to:
+  /// **'Name too short'**
+  String get shortnam;
+
+  /// No description provided for @dob.
+  ///
+  /// In en, this message translates to:
+  /// **'Date of Birth'**
+  String get dob;
+
+  /// No description provided for @date.
+  ///
+  /// In en, this message translates to:
+  /// **'DD-MM-YYYY'**
+  String get date;
+
+  /// No description provided for @adddob.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your date of birth'**
+  String get adddob;
+
+  /// No description provided for @contry.
+  ///
+  /// In en, this message translates to:
+  /// **'Country'**
+  String get contry;
+
+  /// No description provided for @noalterd.
+  ///
+  /// In en, this message translates to:
+  /// **'not to be altered once set'**
+  String get noalterd;
+
+  /// No description provided for @selectcontry.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select your country'**
+  String get selectcontry;
+
+  /// No description provided for @gender.
+  ///
+  /// In en, this message translates to:
+  /// **'Gender'**
+  String get gender;
+
+  /// No description provided for @man.
+  ///
+  /// In en, this message translates to:
+  /// **'Male'**
+  String get man;
+
+  /// No description provided for @fmale.
+  ///
+  /// In en, this message translates to:
+  /// **'Female'**
+  String get fmale;
+
+  /// No description provided for @sbmet.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get sbmet;
+
+  /// No description provided for @selectgender.
+  ///
+  /// In en, this message translates to:
+  /// **'Please select your gender'**
+  String get selectgender;
+
+  /// No description provided for @mubark.
+  ///
+  /// In en, this message translates to:
+  /// **'Congratulations'**
+  String get mubark;
+
+  /// No description provided for @profiledone.
+  ///
+  /// In en, this message translates to:
+  /// **'Your profile is done'**
+  String get profiledone;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {
