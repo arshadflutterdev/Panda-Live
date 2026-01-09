@@ -21,7 +21,7 @@ class PhoneAuth extends StatefulWidget {
 class _PhoneAuthState extends State<PhoneAuth> {
   RxBool isloading = false.obs;
   TextEditingController phoneController = TextEditingController();
-  bool isArabic = Get.locale?.countryCode == "ar";
+  bool isArabic = Get.locale?.languageCode == "ar";
   final _formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
@@ -64,7 +64,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                   localization.enterphone,
                   style: isArabic
                       ? AppStyle.arabictext.copyWith(
-                          fontSize: 24,
+                          fontSize: 22,
                           fontWeight: FontWeight.w600,
                         )
                       : AppStyle.btext,
@@ -72,35 +72,43 @@ class _PhoneAuthState extends State<PhoneAuth> {
               ),
               Form(
                 key: _formkey,
-                child: Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: IntlPhoneField(
-                    showDropdownIcon: false,
-                    initialCountryCode: "SA",
+                child: Directionality(
+                  textDirection: TextDirection.ltr,
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: IntlPhoneField(
+                      showDropdownIcon: false,
+                      initialCountryCode: "SA",
 
-                    decoration: InputDecoration(
-                      hint: Text(
-                        'Add phone number',
-                        style: TextStyle(fontSize: 16, color: Colors.black54),
-                      ),
+                      decoration: InputDecoration(
+                        hint: Text(
+                          localization.enterphone,
+                          style: isArabic
+                              ? AppStyle.arabictext.copyWith(
+                                  fontSize: 18,
+                                  color: Colors.black54,
+                                )
+                              : TextStyle(fontSize: 16, color: Colors.black54),
+                        ),
 
-                      filled: true,
-                      fillColor: Colors.grey.shade200,
-                      border: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade200),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      errorBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.grey.shade200),
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderSide: BorderSide(color: AppColours.blues),
-                        borderRadius: BorderRadius.circular(20),
+                        filled: true,
+                        fillColor: Colors.grey.shade200,
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey.shade200),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.red),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: Colors.grey.shade200),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(color: AppColours.blues),
+                          borderRadius: BorderRadius.circular(20),
+                        ),
                       ),
                     ),
                   ),
@@ -130,8 +138,13 @@ class _PhoneAuthState extends State<PhoneAuth> {
                     () => isloading.value
                         ? CircularProgressIndicator(color: Colors.white)
                         : Text(
-                            "Next",
-                            style: AppStyle.btext.copyWith(color: Colors.white),
+                            localization.buttonnext,
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    fontSize: 22,
+                                    color: Colors.white,
+                                  )
+                                : AppStyle.btext.copyWith(color: Colors.white),
                           ),
                   ),
                 ),
@@ -143,17 +156,25 @@ class _PhoneAuthState extends State<PhoneAuth> {
                 children: [
                   Center(
                     child: Text(
-                      "I have read and agreed the",
-                      style: TextStyle(color: Colors.black),
+                      localization.readAndAgree,
+                      style: isArabic
+                          ? AppStyle.arabictext
+                          : TextStyle(color: Colors.black),
                     ),
                   ),
+
                   GestureDetector(
                     onTap: () {
                       Get.toNamed(AppRoutes.terms);
                     },
                     child: Text(
-                      "PandaLive terms of Services",
-                      style: TextStyle(color: Colors.blueAccent),
+                      localization.pterms,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(
+                              fontWeight: FontWeight.w600,
+                              color: Colors.blue,
+                            )
+                          : TextStyle(color: Colors.blueAccent),
                     ),
                   ),
                 ],

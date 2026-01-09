@@ -204,5 +204,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get hintid => 'Enter Your Id';
 
   @override
+  String get loginwithphone => 'Login With Phone number';
+
+  @override
+  String get phonecodesend => 'verification code send to +966 ******34';
+
+  @override
   String get enterphone => 'Enter Your Phone Number';
 }

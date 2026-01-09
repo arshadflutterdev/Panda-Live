@@ -1,8 +1,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
@@ -11,6 +9,7 @@ import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
 
 class PhoneLogin extends StatefulWidget {
   const PhoneLogin({super.key});
@@ -22,6 +21,7 @@ class PhoneLogin extends StatefulWidget {
 class _PhoneLoginState extends State<PhoneLogin> {
   TextEditingController phoneController = TextEditingController();
   TextEditingController passController = TextEditingController();
+  bool isArabic = Get.locale?.languageCode == "ar";
   final _formkey = GlobalKey<FormState>();
   RxBool isloading = false.obs;
 
@@ -31,6 +31,7 @@ class _PhoneLoginState extends State<PhoneLogin> {
   Widget build(BuildContext context) {
     double width = AppHeightwidth.screenWidth(context);
     double height = AppHeightwidth.screenHeight(context);
+    final localization = AppLocalizations.of(context)!;
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Container(

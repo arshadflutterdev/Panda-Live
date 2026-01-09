@@ -73,6 +73,9 @@
   "uid6digits": "Please Enter Your 6 Digits userId",
   "hintid": "Enter Your Id",
 
+ "loginwithphone": "Login With Phone number",
+ "phonecodesend": "verification code send to +966 ******34",
+
   "enterphone": "Enter Your Phone Number"
 }
 

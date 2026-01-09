@@ -204,5 +204,11 @@ class AppLocalizationsAr extends AppLocalizations {
   String get hintid => 'أدخل معرفك';
 
   @override
+  String get loginwithphone => 'تسجيل الدخول برقم الهاتف';
+
+  @override
+  String get phonecodesend => 'يتم إرسال رمز التحقق إلى الرقم +966 ******34';
+
+  @override
   String get enterphone => 'أدخل رقم هاتفك';
 }

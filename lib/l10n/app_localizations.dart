@@ -485,6 +485,18 @@ abstract class AppLocalizations {
   /// **'Enter Your Id'**
   String get hintid;
 
+  /// No description provided for @loginwithphone.
+  ///
+  /// In en, this message translates to:
+  /// **'Login With Phone number'**
+  String get loginwithphone;
+
+  /// No description provided for @phonecodesend.
+  ///
+  /// In en, this message translates to:
+  /// **'verification code send to +966 ******34'**
+  String get phonecodesend;
+
   /// No description provided for @enterphone.
   ///
   /// In en, this message translates to:

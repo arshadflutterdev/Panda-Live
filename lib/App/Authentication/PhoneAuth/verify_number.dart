@@ -10,6 +10,7 @@ import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
 
 class VerifyNumber extends StatefulWidget {
   const VerifyNumber({super.key});
@@ -61,10 +62,13 @@ class _VerifyNumberState extends State<VerifyNumber> {
     super.dispose();
   }
 
+  bool isArabic = Get.locale?.languageCode == "ar";
+
   @override
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
+    final localization = AppLocalizations.of(context)!;
     // double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
     return Scaffold(
       backgroundColor: Colors.white,
@@ -110,12 +114,19 @@ class _VerifyNumberState extends State<VerifyNumber> {
                   children: [
                     // Gap(height * 0.5),
                     Text(
-                      "Login With Phone number",
-                      style: AppStyle.btext.copyWith(fontSize: 22),
+                      localization.loginwithphone,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w600,
+                            )
+                          : AppStyle.btext.copyWith(fontSize: 22),
                     ),
                     Text(
-                      "verification code send to +966 ******34",
-                      style: TextStyle(color: Colors.black54),
+                      localization.phonecodesend,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(color: Colors.black54)
+                          : TextStyle(color: Colors.black54),
                     ),
                     Gap(height * 0.030),
                     Form(
@@ -126,17 +137,17 @@ class _VerifyNumberState extends State<VerifyNumber> {
                             () => MyTextFormField(
                               validator: (value) {
                                 if (smsController.text.isEmpty) {
-                                  return "Type Code";
+                                  return localization.hint6ditis;
                                 } else if (!smsController.text.contains(
                                   "258012",
                                 )) {
-                                  return "Code Incorrect";
+                                  return localization.codeincorrect;
                                 }
                                 return null;
                               },
                               controller: smsController,
                               keyboard: TextInputType.number,
-                              hintext: "Type 6 digits code",
+                              hintext: localization.hint6ditis,
                               onChanged: (newValue) {
                                 isSMSEmtpy.value = newValue.isNotEmpty;
                               },
@@ -155,7 +166,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
                               Obx(() {
                                 if (seconds.value > 0) {
                                   return Text(
-                                    "${seconds.value}s letterResend SMS",
+                                    "${seconds.value}s ${localization.lettersend}",
                                   );
                                 } else {
                                   return TextButton(
@@ -166,8 +177,8 @@ class _VerifyNumberState extends State<VerifyNumber> {
                                       Get.snackbar(
                                         backgroundColor: AppColours.blues,
 
-                                        "Resend",
-                                        "SMS resend successfully",
+                                        localization.resms,
+                                        localization.smssended,
                                         colorText: Colors.white,
                                       );
                                       Timer(Duration(seconds: 5), () {
@@ -175,8 +186,12 @@ class _VerifyNumberState extends State<VerifyNumber> {
                                       });
                                     },
                                     child: Text(
-                                      "Resend SMS",
-                                      style: TextStyle(color: AppColours.blues),
+                                      localization.resms,
+                                      style: isArabic
+                                          ? AppStyle.arabictext.copyWith(
+                                              color: AppColours.blues,
+                                            )
+                                          : TextStyle(color: AppColours.blues),
                                     ),
                                   );
                                 }
@@ -185,14 +200,20 @@ class _VerifyNumberState extends State<VerifyNumber> {
                             ],
                           ),
                           Align(
-                            alignment: Alignment.bottomLeft,
+                            alignment: isArabic
+                                ? Alignment.bottomRight
+                                : Alignment.bottomLeft,
                             child: TextButton(
                               onPressed: () {
                                 Get.offAllNamed(AppRoutes.authoptions);
                               },
                               child: Text(
-                                "Try another method?",
-                                style: TextStyle(color: AppColours.blues),
+                                localization.tryanother,
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        color: AppColours.blues,
+                                      )
+                                    : TextStyle(color: AppColours.blues),
                               ),
                             ),
                           ),
@@ -201,16 +222,16 @@ class _VerifyNumberState extends State<VerifyNumber> {
                             () => MyTextFormField(
                               validator: (value) {
                                 if (passController.text.isEmpty) {
-                                  return "Create Your Password";
+                                  return localization.createpassword;
                                 } else if (passController.text.length < 8) {
-                                  return "Password must be 8 digits";
+                                  return localization.code8digits;
                                 }
                                 return null;
                               },
                               obscure: isSecure.value,
                               controller: passController,
                               keyboard: TextInputType.text,
-                              hintext: "Create Password",
+                              hintext: localization.createpassword,
                               onChanged: (newValue) {
                                 isCodeEmpty.value = newValue.isNotEmpty;
                               },
@@ -259,10 +280,16 @@ class _VerifyNumberState extends State<VerifyNumber> {
                           ),
 
                           Align(
-                            alignment: Alignment.topLeft,
+                            alignment: isArabic
+                                ? Alignment.topRight
+                                : Alignment.topLeft,
                             child: Text(
-                              "Set 6-8 digits code with letters&numbers",
-                              style: TextStyle(color: Colors.black54),
+                              localization.setpassword,
+                              style: isArabic
+                                  ? AppStyle.arabictext.copyWith(
+                                      color: Colors.black54,
+                                    )
+                                  : TextStyle(color: Colors.black54),
                             ),
                           ),
                         ],
@@ -276,10 +303,16 @@ class _VerifyNumberState extends State<VerifyNumber> {
                           () => isloading.value
                               ? CircularProgressIndicator(color: Colors.white)
                               : Text(
-                                  "Next",
-                                  style: AppStyle.btext.copyWith(
-                                    color: Colors.white,
-                                  ),
+                                  localization.buttonnext,
+                                  style: isArabic
+                                      ? AppStyle.arabictext.copyWith(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        )
+                                      : AppStyle.btext.copyWith(
+                                          color: Colors.white,
+                                        ),
                                 ),
                         ),
                         onPressed: () {
@@ -300,8 +333,10 @@ class _VerifyNumberState extends State<VerifyNumber> {
                       children: [
                         Center(
                           child: Text(
-                            "I have read and agreed the",
-                            style: TextStyle(color: Colors.black),
+                            localization.readAndAgree,
+                            style: isArabic
+                                ? AppStyle.arabictext
+                                : TextStyle(color: Colors.black),
                           ),
                         ),
 
@@ -310,19 +345,25 @@ class _VerifyNumberState extends State<VerifyNumber> {
                             Get.toNamed(AppRoutes.terms);
                           },
                           child: Text(
-                            "PandaLive terms of Services",
-                            style: TextStyle(color: Colors.blueAccent),
+                            localization.pterms,
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.blue,
+                                  )
+                                : TextStyle(color: Colors.blueAccent),
                           ),
                         ),
                       ],
                     ),
+
                     Align(
                       alignment: Alignment.center,
                       child: TextButton(
                         onPressed: () {
                           Get.toNamed(AppRoutes.phonelogin);
                         },
-                        child: Text("Already have an Account?"),
+                        child: Text(localization.alreadyaccount),
                       ),
                     ),
                   ],
