@@ -202,4 +202,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get hintid => 'Enter Your Id';
+
+  @override
+  String get enterphone => 'Enter Your Phone Number';
 }

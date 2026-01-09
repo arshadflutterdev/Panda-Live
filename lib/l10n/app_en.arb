@@ -71,8 +71,9 @@
   "loginwithid": "Login With Your_Id",
   "adduserid": "Please Add Your userId",
   "uid6digits": "Please Enter Your 6 Digits userId",
-  "hintid": "Enter Your Id"
+  "hintid": "Enter Your Id",
 
+  "enterphone": "Enter Your Phone Number"
 }
 
 

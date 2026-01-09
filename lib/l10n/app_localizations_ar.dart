@@ -202,4 +202,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get hintid => 'أدخل معرفك';
+
+  @override
+  String get enterphone => 'أدخل رقم هاتفك';
 }

@@ -484,6 +484,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter Your Id'**
   String get hintid;
+
+  /// No description provided for @enterphone.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter Your Phone Number'**
+  String get enterphone;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

@@ -4,13 +4,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:get/get_connect/http/src/utils/utils.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
-import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
 
 class PhoneAuth extends StatefulWidget {
   const PhoneAuth({super.key});
@@ -22,9 +21,11 @@ class PhoneAuth extends StatefulWidget {
 class _PhoneAuthState extends State<PhoneAuth> {
   RxBool isloading = false.obs;
   TextEditingController phoneController = TextEditingController();
+  bool isArabic = Get.locale?.countryCode == "ar";
   final _formkey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
     return Scaffold(
@@ -59,7 +60,15 @@ class _PhoneAuthState extends State<PhoneAuth> {
                   vertical: 8,
                   horizontal: 10,
                 ),
-                child: Text("Enter Your Phone Number", style: AppStyle.btext),
+                child: Text(
+                  localization.enterphone,
+                  style: isArabic
+                      ? AppStyle.arabictext.copyWith(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w600,
+                        )
+                      : AppStyle.btext,
+                ),
               ),
               Form(
                 key: _formkey,
