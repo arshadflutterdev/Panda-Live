@@ -38,8 +38,27 @@
   "codeincorrect": "Code Incorrect",
   "lettersend": "letterResend SMS",
   "smssended": "SMS resend successfully",
-  "code8digits": "Password must be 8 digits"
-  
+  "code8digits": "Password must be 8 digits",
+
+  "completedata": "Complete personal data",
+  "letknow": "Let everyone know you better",
+  "profile": "Profile",
+  "nam": "Name",
+  "entername":"Enter your name",
+  "shortnam": "Name too short",
+  "dob": "Date of Birth",
+  "date":"DD-MM-YYYY",
+  "adddob": "Add your date of birth",
+  "contry": "Country",
+  "noalterd": "not to be altered once set",
+  "selectcontry": "Please select your country",
+  "gender": "Gender",
+  "man": "Male",
+  "fmale": "Female",
+  "sbmet": "Submit",
+  "selectgender": "Please select your gender",
+  "mubark": "Congratulations",
+  "profiledone":"Your profile is done"  
 
 
 }

@@ -370,67 +370,70 @@ class _CreateProfileState extends State<CreateProfile> {
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Complete personal data",
-                              style: AppStyle.btext.copyWith(
-                                fontSize: width * 0.066,
-                              ),
-                            ),
-                            Text(
-                              "Let everyone know you better",
-                              style: AppStyle.halfblacktext,
-                            ),
-                          ],
-                        ),
-                        Column(
-                          children: [
-                            Obx(
-                              () => Container(
-                                height: 70,
-                                width: 70,
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.black26,
-                                  image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: image.value != null
-                                        ? FileImage(image.value!)
-                                              as ImageProvider
-                                        : AssetImage(AppImages.girl),
-                                  ),
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Complete personal data",
+                                style: AppStyle.btext.copyWith(
+                                  fontSize: width * 0.066,
                                 ),
-                                child: Stack(
-                                  children: [
-                                    Positioned(
-                                      bottom: -15,
-                                      right: -2,
-                                      child: IconButton(
-                                        onPressed: () {
-                                          imagepic();
-                                        },
-                                        icon: Icon(
-                                          Icons.camera_alt,
-                                          color: Colors.black,
+                              ),
+                              Text(
+                                "Let everyone know you better",
+                                style: AppStyle.halfblacktext,
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Obx(
+                                () => Container(
+                                  height: 70,
+                                  width: 70,
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.black26,
+                                    image: DecorationImage(
+                                      fit: BoxFit.cover,
+                                      image: image.value != null
+                                          ? FileImage(image.value!)
+                                                as ImageProvider
+                                          : AssetImage(AppImages.girl),
+                                    ),
+                                  ),
+                                  child: Stack(
+                                    children: [
+                                      Positioned(
+                                        bottom: -15,
+                                        right: -2,
+                                        child: IconButton(
+                                          onPressed: () {
+                                            imagepic();
+                                          },
+                                          icon: Icon(
+                                            Icons.camera_alt,
+                                            color: Colors.black,
+                                          ),
                                         ),
                                       ),
-                                    ),
-                                  ],
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
 
-                            Text("Profile", style: AppStyle.halfblacktext),
-                          ],
-                        ),
-                      ],
+                              Text("Profile", style: AppStyle.halfblacktext),
+                            ],
+                          ),
+                        ],
+                      ),
                     ),
 
                     Text("Name", style: AppStyle.halfblacktext),

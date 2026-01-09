@@ -42,8 +42,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
   void otp() {
     Timer(Duration(seconds: 3), () {
       Get.snackbar(
-        "Code",
-        "258012 is your code",
+        AppLocalizations.of(context)!.code,
+        AppLocalizations.of(context)!.isyourcode,
         backgroundColor: AppColours.blues,
         colorText: Colors.white,
       );
@@ -146,7 +146,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                 } else if (!smsController.text.contains(
                                   "258012",
                                 )) {
-                                  return "Code Incorrect";
+                                  return localization.codeincorrect;
                                 }
                                 return null;
                               },
@@ -171,7 +171,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                               Obx(() {
                                 if (seconds.value > 0) {
                                   return Text(
-                                    "${seconds.value}s letterResend SMS",
+                                    "${seconds.value}s ${localization.lettersend}",
                                   );
                                 } else {
                                   return TextButton(
@@ -183,7 +183,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                         backgroundColor: AppColours.blues,
 
                                         localization.resms,
-                                        "SMS resend successfully",
+                                        localization.smssended,
                                         colorText: Colors.white,
                                       );
                                       Timer(Duration(seconds: 5), () {
@@ -206,7 +206,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
                             ],
                           ),
                           Align(
-                            alignment: Alignment.bottomLeft,
+                            alignment: isArabic
+                                ? Alignment.bottomRight
+                                : Alignment.bottomLeft,
                             child: TextButton(
                               onPressed: () {
                                 Get.offAllNamed(AppRoutes.authoptions);
@@ -229,7 +231,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                 if (passController.text.isEmpty) {
                                   return localization.createpassword;
                                 } else if (passController.text.length < 8) {
-                                  return "Password must be 8 digits";
+                                  return localization.code8digits;
                                 }
                                 return null;
                               },
