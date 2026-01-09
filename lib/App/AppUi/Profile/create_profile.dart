@@ -7,11 +7,13 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
+import 'package:pandlive/App/Widgets/DialogBox/country_picker_dialoge.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
 
 class CreateProfile extends StatefulWidget {
   const CreateProfile({super.key});
@@ -46,278 +48,6 @@ class _CreateProfileState extends State<CreateProfile> {
   }
 
   //dialog box for countries
-  void selectCountry() {
-    // All country names
-    List<String> countries = [
-      "Afghanistan",
-      "Albania",
-      "Algeria",
-      "Andorra",
-      "Angola",
-      "Antigua and Barbuda",
-      "Argentina",
-      "Armenia",
-      "Australia",
-      "Austria",
-      "Azerbaijan",
-      "The Bahamas",
-      "Bahrain",
-      "Bangladesh",
-      "Barbados",
-      "Belarus",
-      "Belgium",
-      "Belize",
-      "Benin",
-      "Bhutan",
-      "Bolivia",
-      "Bosnia and Herzegovina",
-      "Botswana",
-      "Brazil",
-      "Brunei",
-      "Bulgaria",
-      "Burkina Faso",
-      "Burundi",
-      "Cabo Verde",
-      "Cambodia",
-      "Cameroon",
-      "Canada",
-      "Central African Republic",
-      "Chad",
-      "Chile",
-      "China",
-      "Colombia",
-      "Comoros",
-      "Costa Rica",
-      "Côte d'Ivoire",
-      "Croatia",
-      "Cuba",
-      "Cyprus",
-      "Czech Republic",
-      "Democratic Republic of the Congo",
-      "Denmark",
-      "Djibouti",
-      "Dominica",
-      "Dominican Republic",
-      "Ecuador",
-      "Egypt",
-      "El Salvador",
-      "Equatorial Guinea",
-      "Eritrea",
-      "Estonia",
-      "Eswatini",
-      "Ethiopia",
-      "Fiji",
-      "Finland",
-      "France",
-      "Gabon",
-      "Gambia",
-      "Georgia",
-      "Germany",
-      "Ghana",
-      "Greece",
-      "Grenada",
-      "Guatemala",
-      "Guinea",
-      "Guinea-Bissau",
-      "Guyana",
-      "Haiti",
-      "Honduras",
-      "Hungary",
-      "Iceland",
-      "India",
-      "Indonesia",
-      "Iran",
-      "Iraq",
-      "Ireland",
-      "Israel",
-      "Italy",
-      "Jamaica",
-      "Japan",
-      "Jordan",
-      "Kazakhstan",
-      "Kenya",
-      "Kiribati",
-      "Kuwait",
-      "Kyrgyzstan",
-      "Laos",
-      "Latvia",
-      "Lebanon",
-      "Lesotho",
-      "Liberia",
-      "Libya",
-      "Liechtenstein",
-      "Lithuania",
-      "Luxembourg",
-      "Madagascar",
-      "Malawi",
-      "Malaysia",
-      "Maldives",
-      "Mali",
-      "Malta",
-      "Marshall Islands",
-      "Mauritania",
-      "Mauritius",
-      "Mexico",
-      "Micronesia",
-      "Moldova",
-      "Monaco",
-      "Mongolia",
-      "Montenegro",
-      "Morocco",
-      "Mozambique",
-      "Myanmar",
-      "Namibia",
-      "Nauru",
-      "Nepal",
-      "Netherlands",
-      "New Zealand",
-      "Nicaragua",
-      "Niger",
-      "Nigeria",
-      "North Korea",
-      "North Macedonia",
-      "Norway",
-      "Oman",
-      "Pakistan",
-      "Palau",
-      "Panama",
-      "Papua New Guinea",
-      "Paraguay",
-      "Peru",
-      "Philippines",
-      "Poland",
-      "Portugal",
-      "Qatar",
-      "Romania",
-      "Russia",
-      "Rwanda",
-      "Saint Kitts and Nevis",
-      "Saint Lucia",
-      "Saint Vincent and the Grenadines",
-      "Samoa",
-      "San Marino",
-      "Sao Tome and Principe",
-      "Saudi Arabia",
-      "Senegal",
-      "Serbia",
-      "Seychelles",
-      "Sierra Leone",
-      "Singapore",
-      "Slovakia",
-      "Slovenia",
-      "Solomon Islands",
-      "Somalia",
-      "South Africa",
-      "South Korea",
-      "South Sudan",
-      "Spain",
-      "Sri Lanka",
-      "Sudan",
-      "Suriname",
-      "Sweden",
-      "Switzerland",
-      "Syria",
-      "Taiwan",
-      "Tajikistan",
-      "Tanzania",
-      "Thailand",
-      "Timor-Leste",
-      "Togo",
-      "Tonga",
-      "Trinidad and Tobago",
-      "Tunisia",
-      "Turkey",
-      "Turkmenistan",
-      "Tuvalu",
-      "Uganda",
-      "Ukraine",
-      "United Arab Emirates",
-      "United Kingdom",
-      "United States",
-      "Uruguay",
-      "Uzbekistan",
-      "Vanuatu",
-      "Vatican City",
-      "Venezuela",
-      "Vietnam",
-      "Yemen",
-      "Zambia",
-      "Zimbabwe",
-    ];
-
-    // Copy for search filtering
-    RxList<String> filteredCountries = RxList.from(countries);
-
-    showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          contentPadding: EdgeInsets.zero,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
-          ),
-          content: Container(
-            width: double.maxFinite,
-            height: 400, // dialog height
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-            ),
-            child: Column(
-              children: [
-                // Search Bar
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    height: 50,
-                    child: TextField(
-                      decoration: InputDecoration(
-                        hintText: "Search country",
-                        prefixIcon: Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        filled: true,
-                        fillColor: Colors.grey.shade200,
-                      ),
-                      onChanged: (value) {
-                        filteredCountries.value = countries
-                            .where(
-                              (c) =>
-                                  c.toLowerCase().contains(value.toLowerCase()),
-                            )
-                            .toList();
-                      },
-                    ),
-                  ),
-                ),
-
-                // List of countries
-                Expanded(
-                  child: Obx(
-                    () => ListView.builder(
-                      itemCount: filteredCountries.length,
-                      itemBuilder: (context, index) {
-                        return ListTile(
-                          dense: true,
-
-                          title: Text(filteredCountries[index]),
-                          onTap: () {
-                            countryController.text = filteredCountries[index];
-                            Get.back();
-                          },
-                        );
-                      },
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 
   Future<void> pickDate() async {
     DateTime? pickedDate = await showDatePicker(
@@ -353,10 +83,12 @@ class _CreateProfileState extends State<CreateProfile> {
     }
   }
 
+  bool isArabic = Get.locale?.languageCode == "ar";
   @override
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
+    final localization = AppLocalizations.of(context)!;
     return Scaffold(
       backgroundColor: Colors.white,
       body: Column(
@@ -381,14 +113,23 @@ class _CreateProfileState extends State<CreateProfile> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "Complete personal data",
-                                style: AppStyle.btext.copyWith(
-                                  fontSize: width * 0.066,
-                                ),
+                                localization.completedata,
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        fontSize: width * 0.066,
+                                        fontWeight: FontWeight.w600,
+                                      )
+                                    : AppStyle.btext.copyWith(
+                                        fontSize: width * 0.066,
+                                      ),
                               ),
                               Text(
-                                "Let everyone know you better",
-                                style: AppStyle.halfblacktext,
+                                localization.letknow,
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        color: Colors.black54,
+                                      )
+                                    : AppStyle.halfblacktext,
                               ),
                             ],
                           ),
@@ -429,14 +170,26 @@ class _CreateProfileState extends State<CreateProfile> {
                                 ),
                               ),
 
-                              Text("Profile", style: AppStyle.halfblacktext),
+                              Text(
+                                localization.profile,
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        color: Colors.black54,
+                                      )
+                                    : AppStyle.halfblacktext,
+                              ),
                             ],
                           ),
                         ],
                       ),
                     ),
 
-                    Text("Name", style: AppStyle.halfblacktext),
+                    Text(
+                      localization.nam,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(color: Colors.black54)
+                          : AppStyle.halfblacktext,
+                    ),
                     Gap(5),
                     Form(
                       key: _formkey,
@@ -445,22 +198,28 @@ class _CreateProfileState extends State<CreateProfile> {
                           MyTextFormField(
                             validator: (value) {
                               if (nameController.text.isEmpty) {
-                                return "Enter your name";
+                                return localization.entername;
                               } else if (nameController.text.length < 6) {
-                                return "Name too short";
+                                return localization.shortnam;
                               }
                               return null;
                             },
                             controller: nameController,
                             keyboard: TextInputType.text,
-                            hintext: "Enter Your Name",
+                            hintext: localization.entername,
                           ),
                           Gap(7),
                           Align(
-                            alignment: Alignment.topLeft,
+                            alignment: isArabic
+                                ? Alignment.topRight
+                                : Alignment.topLeft,
                             child: Text(
-                              "Date of Birth",
-                              style: AppStyle.halfblacktext,
+                              localization.dob,
+                              style: isArabic
+                                  ? AppStyle.arabictext.copyWith(
+                                      color: Colors.black54,
+                                    )
+                                  : AppStyle.halfblacktext,
                             ),
                           ),
                           Gap(5),
@@ -471,10 +230,10 @@ class _CreateProfileState extends State<CreateProfile> {
                             },
                             controller: dobController,
                             keyboard: TextInputType.datetime,
-                            hintext: "DD-MM-YYYY",
+                            hintext: localization.date,
                             validator: (value) {
                               if (value == null || value.isEmpty) {
-                                return "Add your date of birth";
+                                return localization.adddob;
                               }
 
                               return null; // ✅ valid
@@ -484,13 +243,25 @@ class _CreateProfileState extends State<CreateProfile> {
                           Gap(7),
                           Row(
                             children: [
-                              Text("Country", style: AppStyle.halfblacktext),
+                              Text(
+                                localization.contry,
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        color: Colors.black54,
+                                      )
+                                    : AppStyle.halfblacktext,
+                              ),
                               Text(" 👀 "),
                               Text(
-                                "not to be altered once set",
-                                style: AppStyle.halfblacktext.copyWith(
-                                  fontSize: 13,
-                                ),
+                                localization.noalterd,
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        fontSize: 14,
+                                        color: Colors.black54,
+                                      )
+                                    : AppStyle.halfblacktext.copyWith(
+                                        fontSize: 13,
+                                      ),
                               ),
                             ],
                           ),
@@ -498,14 +269,19 @@ class _CreateProfileState extends State<CreateProfile> {
                           MyTextFormField(
                             validator: (value) {
                               if (countryController.text.isEmpty) {
-                                return "Please select your country";
+                                return localization.selectcontry;
                               }
                             },
                             controller: countryController,
                             read: true,
-                            ontapp: selectCountry,
+                            ontapp: () {
+                              CountryPickerDialog.show(
+                                context,
+                                countryController,
+                              );
+                            },
                             keyboard: TextInputType.text,
-                            hintext: "Select Your Country",
+                            hintext: localization.selectcontry,
                           ),
                         ],
                       ),
@@ -513,79 +289,114 @@ class _CreateProfileState extends State<CreateProfile> {
                     Gap(7),
                     Row(
                       children: [
-                        Text("Gender", style: AppStyle.halfblacktext),
+                        Text(
+                          localization.gender,
+                          style: isArabic
+                              ? AppStyle.arabictext.copyWith(
+                                  color: Colors.black54,
+                                )
+                              : AppStyle.halfblacktext,
+                        ),
                         Text(" 👀 "),
                         Text(
-                          "not to be altered once set",
-                          style: AppStyle.halfblacktext.copyWith(fontSize: 13),
+                          localization.noalterd,
+                          style: isArabic
+                              ? AppStyle.arabictext.copyWith(
+                                  fontSize: 14,
+                                  color: Colors.black54,
+                                )
+                              : AppStyle.halfblacktext.copyWith(fontSize: 13),
                         ),
                       ],
                     ),
                     Gap(5),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            isSelected.value = 1;
-                            genderError.value = "";
-                          },
-                          child: Obx(
-                            () => Container(
-                              height: height * 0.075,
-                              width: width * 0.45,
-                              decoration: BoxDecoration(
-                                color: isSelected.value == 1
-                                    ? Colors.blue.shade100
-                                    : AppColours.greycolour,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Row(
-                                children: [
-                                  Gap(width * 0.050),
-                                  Text("Male", style: AppStyle.btext),
-                                  Spacer(),
-                                  Image(
-                                    // color: Colors.white,
-                                    image: AssetImage(AppImages.boy),
-                                  ),
-                                ],
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              isSelected.value = 1;
+                              genderError.value = "";
+                            },
+                            child: Obx(
+                              () => Container(
+                                height: height * 0.075,
+                                width: width * 0.45,
+                                decoration: BoxDecoration(
+                                  color: isSelected.value == 1
+                                      ? Colors.blue.shade100
+                                      : AppColours.greycolour,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Gap(
+                                      isArabic ? width * 0.099 : width * 0.050,
+                                    ),
+                                    Text(
+                                      localization.man,
+                                      style: isArabic
+                                          ? AppStyle.arabictext.copyWith(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w800,
+                                            )
+                                          : AppStyle.btext,
+                                    ),
+                                    Spacer(),
+                                    Image(
+                                      // color: Colors.white,
+                                      image: AssetImage(AppImages.boy),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
 
-                        GestureDetector(
-                          onTap: () {
-                            isSelected.value = 2;
-                            genderError.value = "";
-                          },
-                          child: Obx(
-                            () => Container(
-                              height: height * 0.075,
-                              width: width * 0.45,
-                              decoration: BoxDecoration(
-                                color: isSelected.value == 2
-                                    ? Colors.blue.shade100
-                                    : AppColours.greycolour,
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              child: Row(
-                                children: [
-                                  Gap(width * 0.050),
-                                  Text("Female", style: AppStyle.btext),
-                                  Spacer(),
-                                  Image(
-                                    // color: Colors.white,
-                                    image: AssetImage(AppImages.girl),
-                                  ),
-                                ],
+                          GestureDetector(
+                            onTap: () {
+                              isSelected.value = 2;
+                              genderError.value = "";
+                            },
+                            child: Obx(
+                              () => Container(
+                                height: height * 0.075,
+                                width: width * 0.45,
+                                decoration: BoxDecoration(
+                                  color: isSelected.value == 2
+                                      ? Colors.blue.shade100
+                                      : AppColours.greycolour,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Gap(
+                                      isArabic ? width * 0.099 : width * 0.050,
+                                    ),
+                                    Text(
+                                      localization.fmale,
+                                      style: isArabic
+                                          ? AppStyle.arabictext.copyWith(
+                                              fontSize: 20,
+                                              fontWeight: FontWeight.w600,
+                                            )
+                                          : AppStyle.btext,
+                                    ),
+                                    Spacer(),
+                                    Image(
+                                      // color: Colors.white,
+                                      image: AssetImage(AppImages.girl),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     Obx(
                       () => genderError.value.isEmpty
@@ -610,10 +421,16 @@ class _CreateProfileState extends State<CreateProfile> {
                           () => isloading.value
                               ? CircularProgressIndicator(color: Colors.white)
                               : Text(
-                                  "Submit",
-                                  style: AppStyle.btext.copyWith(
-                                    color: Colors.white,
-                                  ),
+                                  localization.sbmet,
+                                  style: isArabic
+                                      ? AppStyle.arabictext.copyWith(
+                                          fontSize: 20,
+                                          fontWeight: FontWeight.w700,
+                                          color: Colors.white,
+                                        )
+                                      : AppStyle.btext.copyWith(
+                                          color: Colors.white,
+                                        ),
                                 ),
                         ),
 
