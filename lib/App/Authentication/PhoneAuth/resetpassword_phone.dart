@@ -10,6 +10,7 @@ import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
 
 class PhoneResetPassword extends StatefulWidget {
   const PhoneResetPassword({super.key});
@@ -25,6 +26,7 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
   RxBool isCodeEmpty = false.obs;
   RxInt seconds = 60.obs;
   Timer? timr;
+  bool isArabic = Get.locale?.languageCode == "ar";
   RxBool isloading = false.obs;
   RxBool isSecure = true.obs;
   final _formkey = GlobalKey<FormState>();
@@ -41,8 +43,8 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
   void otp() {
     Timer(Duration(seconds: 3), () {
       Get.snackbar(
-        "Code",
-        "128025 is your code",
+        AppLocalizations.of(context)!.code,
+        AppLocalizations.of(context)!.isyourcode,
         backgroundColor: AppColours.blues,
         colorText: Colors.white,
       );
@@ -63,6 +65,7 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
     // double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
@@ -110,12 +113,19 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                   children: [
                     // Gap(height * 0.5),
                     Text(
-                      "Reset Password",
-                      style: AppStyle.btext.copyWith(fontSize: 22),
+                      localization.resetpass,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(
+                              fontSize: 24,
+                              fontWeight: FontWeight.w600,
+                            )
+                          : AppStyle.btext.copyWith(fontSize: 22),
                     ),
                     Text(
-                      "verification code send to +966 ******345 ",
-                      style: TextStyle(color: Colors.black54),
+                      localization.phonecodesend,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(color: Colors.black54)
+                          : TextStyle(color: Colors.black54),
                     ),
                     Gap(height * 0.030),
                     Form(
@@ -126,17 +136,17 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                             () => MyTextFormField(
                               validator: (value) {
                                 if (smsController.text.isEmpty) {
-                                  return "Type Code";
+                                  return localization.hint6ditis;
                                 } else if (!smsController.text.contains(
                                   "128025",
                                 )) {
-                                  return "Code Incorrect";
+                                  return localization.codeincorrect;
                                 }
                                 return null;
                               },
                               controller: smsController,
                               keyboard: TextInputType.number,
-                              hintext: "Type 6 digits code",
+                              hintext: localization.hint6ditis,
                               onChanged: (newValue) {
                                 isSMSEmtpy.value = newValue.isNotEmpty;
                               },
@@ -155,7 +165,7 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                               Obx(() {
                                 if (seconds.value > 0) {
                                   return Text(
-                                    "${seconds.value}s letterResend SMS",
+                                    "${seconds.value}s ${localization.lettersend}",
                                   );
                                 } else {
                                   return TextButton(
@@ -166,8 +176,8 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                                       Get.snackbar(
                                         backgroundColor: AppColours.blues,
 
-                                        "Resend",
-                                        "SMS resend successfully",
+                                        localization.resms,
+                                        localization.passresetsuccess,
                                         colorText: Colors.white,
                                       );
                                       Timer(Duration(seconds: 5), () {
@@ -175,8 +185,12 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                                       });
                                     },
                                     child: Text(
-                                      "Resend SMS",
-                                      style: TextStyle(color: AppColours.blues),
+                                      localization.resms,
+                                      style: isArabic
+                                          ? AppStyle.arabictext.copyWith(
+                                              color: AppColours.blues,
+                                            )
+                                          : TextStyle(color: AppColours.blues),
                                     ),
                                   );
                                 }
@@ -185,14 +199,20 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                             ],
                           ),
                           Align(
-                            alignment: Alignment.bottomLeft,
+                            alignment: isArabic
+                                ? Alignment.bottomRight
+                                : Alignment.bottomLeft,
                             child: TextButton(
                               onPressed: () {
                                 Get.offAllNamed(AppRoutes.authoptions);
                               },
                               child: Text(
-                                "Try another method?",
-                                style: TextStyle(color: AppColours.blues),
+                                localization.tryanother,
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        color: AppColours.blues,
+                                      )
+                                    : TextStyle(color: AppColours.blues),
                               ),
                             ),
                           ),
@@ -201,16 +221,16 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                             () => MyTextFormField(
                               validator: (value) {
                                 if (passController.text.isEmpty) {
-                                  return "Create Your Password";
+                                  return localization.createpassword;
                                 } else if (passController.text.length < 8) {
-                                  return "Password must be 8 digits";
+                                  return localization.code8digits;
                                 }
                                 return null;
                               },
                               obscure: isSecure.value,
                               controller: passController,
                               keyboard: TextInputType.text,
-                              hintext: "Create New Password",
+                              hintext: localization.createpassword,
                               onChanged: (newValue) {
                                 isCodeEmpty.value = newValue.isNotEmpty;
                               },
@@ -259,10 +279,16 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                           ),
 
                           Align(
-                            alignment: Alignment.topLeft,
+                            alignment: isArabic
+                                ? Alignment.topRight
+                                : Alignment.topLeft,
                             child: Text(
-                              "Set 6-8 digits code with letters&numbers",
-                              style: TextStyle(color: Colors.black54),
+                              localization.setpassword,
+                              style: isArabic
+                                  ? AppStyle.arabictext.copyWith(
+                                      color: AppColours.blues,
+                                    )
+                                  : TextStyle(color: Colors.black54),
                             ),
                           ),
                         ],
@@ -276,10 +302,16 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                           () => isloading.value
                               ? CircularProgressIndicator(color: Colors.white)
                               : Text(
-                                  "Reset",
-                                  style: AppStyle.btext.copyWith(
-                                    color: Colors.white,
-                                  ),
+                                  localization.reset,
+                                  style: isArabic
+                                      ? AppStyle.arabictext.copyWith(
+                                          fontSize: 24,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        )
+                                      : AppStyle.btext.copyWith(
+                                          color: Colors.white,
+                                        ),
                                 ),
                         ),
                         onPressed: () {
@@ -289,8 +321,8 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                               isloading.value = false;
                               Get.toNamed(AppRoutes.bottomnav);
                               Get.snackbar(
-                                "Password Reset",
-                                "Your Password reset successfully",
+                                localization.resetpass,
+                                localization.passresetsuccess,
                                 colorText: Colors.white,
                                 backgroundColor: AppColours.blues,
                               );
@@ -306,8 +338,10 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                       children: [
                         Center(
                           child: Text(
-                            "I have read and agreed the",
-                            style: TextStyle(color: Colors.black),
+                            localization.readAndAgree,
+                            style: isArabic
+                                ? AppStyle.arabictext
+                                : TextStyle(color: Colors.black),
                           ),
                         ),
 
@@ -316,8 +350,13 @@ class _PhoneResetPasswordState extends State<PhoneResetPassword> {
                             Get.toNamed(AppRoutes.terms);
                           },
                           child: Text(
-                            "PandaLive terms of Services",
-                            style: TextStyle(color: Colors.blueAccent),
+                            localization.pterms,
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.blue,
+                                  )
+                                : TextStyle(color: Colors.blueAccent),
                           ),
                         ),
                       ],

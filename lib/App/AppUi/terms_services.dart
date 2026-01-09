@@ -1,16 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/Utils/Constant/app_style.dart';
 
 class TermsOfServiceScreen extends StatelessWidget {
   const TermsOfServiceScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    bool isArabic = Get.locale?.languageCode == "ar";
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: const Text("Terms of Service"),
+        title: isArabic
+            ? Text(
+                "شروط الخدمة",
+                style: AppStyle.arabictext.copyWith(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 20,
+                ),
+              )
+            : const Text("Terms of Service"),
         centerTitle: true,
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new),
@@ -21,12 +31,18 @@ class TermsOfServiceScreen extends StatelessWidget {
         padding: const EdgeInsets.all(16),
         child: SingleChildScrollView(
           child: Text(
-            _termsText,
-            style: const TextStyle(
-              fontSize: 14,
-              height: 1.6,
-              color: Colors.black87,
-            ),
+            isArabic ? _termsTextArabic : _termsText,
+            style: isArabic
+                ? AppStyle.arabictext.copyWith(
+                    fontSize: 18,
+                    height: 1.6,
+                    color: Colors.black87,
+                  )
+                : const TextStyle(
+                    fontSize: 14,
+                    height: 1.6,
+                    color: Colors.black87,
+                  ),
           ),
         ),
       ),
@@ -73,4 +89,45 @@ PandaLive may update these Terms at any time. Continued use of the App means you
 12. Contact Us
 If you have any questions, contact us at:
 Email: regolive0@gmail.com
+''';
+
+const String _termsTextArabic = '''
+مرحبًا بك في PandaLive. من خلال تنزيل أو الوصول إلى أو استخدام تطبيق PandaLive للهاتف المحمول ("التطبيق")، فإنك توافق على الالتزام بشروط الخدمة هذه ("الشروط"). إذا كنت لا توافق، يرجى عدم استخدام التطبيق.
+
+1. قبول الشروط
+بإنشاء حساب أو استخدام PandaLive، فإنك تؤكد أنك قرأت وفهمت ووافقت على هذه الشروط.
+
+2. الأهلية
+يجب أن يكون عمرك 13 عامًا على الأقل لاستخدام PandaLive. إذا كنت دون 18 عامًا، فلا يجوز لك استخدام التطبيق إلا بموافقة أحد الوالدين أو الوصي.
+
+3. حسابات المستخدمين
+أنت مسؤول عن الحفاظ على سرية معلومات حسابك. تحتفظ PandaLive بالحق في تعليق أو إنهاء الحسابات التي تنتهك هذه الشروط.
+
+4. سلوك المستخدم
+توافق على عدم تحميل أو بث أي محتوى غير قانوني أو مسيء أو ضار أو يحض على الكراهية أو غير لائق. أي إساءة استخدام للتطبيق قد تؤدي إلى تعليق الحساب.
+
+5. البث المباشر والمحتوى
+يتحمل المستخدمون وحدهم مسؤولية المحتوى الذي يبثونه أو يشاركونه. لا تضمن PandaLive دقة أو قانونية المحتوى الذي ينشئه المستخدمون وقد تقوم بإزالته وفقًا لتقديرها.
+
+6. التبرعات / الدعم
+أي دعم أو تبرع يتم عبر روابط خارجية هو أمر طوعي. لا تقوم PandaLive بمعالجة المدفوعات داخل التطبيق ولا تتحمل مسؤولية خدمات الدفع التابعة لجهات خارجية.
+
+7. الملكية الفكرية
+جميع الشعارات والعلامات التجارية ومحتوى التطبيق مملوكة لـ PandaLive. لا يجوز لك نسخ أو توزيع أي محتوى دون إذن.
+
+8. إنهاء الخدمة
+يجوز لـ PandaLive تعليق أو إنهاء وصولك في أي وقت إذا انتهكت هذه الشروط.
+
+9. إخلاء المسؤولية
+يتم توفير التطبيق "كما هو" و"حسب توفره" دون أي ضمانات من أي نوع.
+
+10. تحديد المسؤولية
+لا تتحمل PandaLive المسؤولية عن فقدان البيانات أو الوصول غير المصرح به أو المحتوى الذي ينشئه المستخدمون.
+
+11. التغييرات على الشروط
+يجوز لـ PandaLive تحديث هذه الشروط في أي وقت. استمرارك في استخدام التطبيق يعني موافقتك على الشروط المحدثة.
+
+12. تواصل معنا
+إذا كانت لديك أي أسئلة، يرجى التواصل معنا عبر:
+البريد الإلكتروني: regolive0@gmail.com
 ''';
