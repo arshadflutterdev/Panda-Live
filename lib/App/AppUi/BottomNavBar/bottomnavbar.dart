@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 
 class Bottomnavbar extends StatefulWidget {
@@ -16,10 +17,18 @@ class _BottomnavbarState extends State<Bottomnavbar> {
         selectedItemColor: Colors.red,
         unselectedItemColor: Colors.black,
         items: [
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
-          BottomNavigationBarItem(icon: Icon(Icons.home), label: "Home"),
+          BottomNavigationBarItem(
+            icon: Image(image: AssetImage(AppImages.live)),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Image(image: AssetImage(AppImages.chat)),
+            label: "Home",
+          ),
+          BottomNavigationBarItem(
+            icon: Image(image: AssetImage(AppImages.profile)),
+            label: "Home",
+          ),
         ],
       ),
     );
