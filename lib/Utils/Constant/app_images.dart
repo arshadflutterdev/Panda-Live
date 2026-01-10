@@ -34,4 +34,16 @@ class AppImages {
   static String girl8 = "assets/images/girll8.jpg";
   static String girl9 = "assets/images/girll9.jpg";
   static String notfollow = "assets/images/nofollowed.png";
+  //below images are related for live streamers
+  static const eman = "assets/images/man.jpg";
+  static const egirll = "assets/images/girl.jpg";
+  static const egirl0 = "assets/images/girl0.jpg";
+  static const egirl2 = "assets/images/girl2.jpg";
+  static const eman0 = "assets/images/man0.jpg";
+  static const egirl3 = "assets/images/girl3 (2).jpg";
+  static const eman1 = "assets/images/man1.jpg";
+  static const egirl4 = "assets/images/girl4.jpg";
+  static const egirl5 = "assets/images/girl5.jpg";
+  static const egirl6 = "assets/images/girl6.jpg";
+  static const egirll7 = "assets/images/girl7.jpg";
 }
