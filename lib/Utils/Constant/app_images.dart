@@ -46,4 +46,10 @@ class AppImages {
   static const egirl5 = "assets/images/girl5.jpg";
   static const egirl6 = "assets/images/girl6.jpg";
   static const egirll7 = "assets/images/girl7.jpg";
+  //countries flag
+  static const saudi = "assets/images/saudi.png";
+  static const pak = "assets/images/pak.png";
+  static const uae = "assets/images/uae.png";
+  static const usa = "assets/images/usa.png";
+  static const india = "assets/images/india.png";
 }
