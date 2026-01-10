@@ -5,6 +5,8 @@ import 'package:pandlive/App/AppUi/HomeScreenContant/following_tab_screen.dart';
 import 'package:pandlive/App/AppUi/HomeScreenContant/newjoin_users_tab.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
+import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
 
 class HomeController extends GetxController {
   var selectedIndex = 1.obs;
@@ -22,6 +24,8 @@ class Homescreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final localization = AppLocalizations.of(context)!;
+    bool isArabic = Get.locale?.languageCode == "ar";
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
@@ -40,52 +44,100 @@ class Homescreen extends StatelessWidget {
                           GestureDetector(
                             onTap: () => controller.changeTab(0),
                             child: Text(
-                              "Following",
-                              style: TextStyle(
-                                fontSize: controller.selectedIndex.value == 0
-                                    ? 20
-                                    : 18,
-                                fontWeight: controller.selectedIndex.value == 0
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                                color: controller.selectedIndex.value == 0
-                                    ? Colors.black
-                                    : Colors.grey,
-                              ),
+                              isArabic ? localization.following : "Following",
+                              style: isArabic
+                                  ? AppStyle.arabictext.copyWith(
+                                      fontSize:
+                                          controller.selectedIndex.value == 0
+                                          ? 24
+                                          : 20,
+                                      fontWeight:
+                                          controller.selectedIndex.value == 0
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: controller.selectedIndex.value == 0
+                                          ? Colors.black
+                                          : Colors.grey,
+                                    )
+                                  : TextStyle(
+                                      fontSize:
+                                          controller.selectedIndex.value == 0
+                                          ? 20
+                                          : 18,
+                                      fontWeight:
+                                          controller.selectedIndex.value == 0
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: controller.selectedIndex.value == 0
+                                          ? Colors.black
+                                          : Colors.grey,
+                                    ),
                             ),
                           ),
                           GestureDetector(
                             onTap: () => controller.changeTab(1),
                             child: Text(
-                              "Explore",
-                              style: TextStyle(
-                                fontSize: controller.selectedIndex.value == 1
-                                    ? 20
-                                    : 18,
-                                fontWeight: controller.selectedIndex.value == 1
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                                color: controller.selectedIndex.value == 1
-                                    ? Colors.black
-                                    : Colors.grey,
-                              ),
+                              isArabic ? localization.explore : "Explore",
+                              style: isArabic
+                                  ? AppStyle.arabictext.copyWith(
+                                      fontSize:
+                                          controller.selectedIndex.value == 1
+                                          ? 24
+                                          : 20,
+                                      fontWeight:
+                                          controller.selectedIndex.value == 1
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: controller.selectedIndex.value == 1
+                                          ? Colors.black
+                                          : Colors.grey,
+                                    )
+                                  : TextStyle(
+                                      fontSize:
+                                          controller.selectedIndex.value == 1
+                                          ? 20
+                                          : 18,
+                                      fontWeight:
+                                          controller.selectedIndex.value == 1
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: controller.selectedIndex.value == 1
+                                          ? Colors.black
+                                          : Colors.grey,
+                                    ),
                             ),
                           ),
                           GestureDetector(
                             onTap: () => controller.changeTab(2),
                             child: Text(
-                              "New",
-                              style: TextStyle(
-                                fontSize: controller.selectedIndex.value == 2
-                                    ? 20
-                                    : 18,
-                                fontWeight: controller.selectedIndex.value == 2
-                                    ? FontWeight.bold
-                                    : FontWeight.normal,
-                                color: controller.selectedIndex.value == 2
-                                    ? Colors.black
-                                    : Colors.grey,
-                              ),
+                              isArabic ? localization.bnew : "New",
+                              style: isArabic
+                                  ? AppStyle.arabictext.copyWith(
+                                      fontSize:
+                                          controller.selectedIndex.value == 2
+                                          ? 24
+                                          : 20,
+                                      fontWeight:
+                                          controller.selectedIndex.value == 2
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: controller.selectedIndex.value == 2
+                                          ? Colors.black
+                                          : Colors.grey,
+                                    )
+                                  : TextStyle(
+                                      fontSize:
+                                          controller.selectedIndex.value == 2
+                                          ? 20
+                                          : 18,
+                                      fontWeight:
+                                          controller.selectedIndex.value == 2
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: controller.selectedIndex.value == 2
+                                          ? Colors.black
+                                          : Colors.grey,
+                                    ),
                             ),
                           ),
                         ],

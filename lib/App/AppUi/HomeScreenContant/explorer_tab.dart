@@ -10,6 +10,10 @@ class ExplorerScreen extends StatefulWidget {
 class _ExplorerScreenState extends State<ExplorerScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text("ExplorerTab")));
+    return Scaffold(
+      backgroundColor: Colors.white,
+
+      body: Center(child: Text("ExplorerTab")),
+    );
   }
 }

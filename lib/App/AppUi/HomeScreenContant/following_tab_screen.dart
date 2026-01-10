@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 
@@ -15,9 +16,9 @@ class _FollowingScreenState extends State<FollowingScreen> {
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
+    bool isArabic = Get.locale?.languageCode == "ar";
     return Scaffold(
       backgroundColor: Colors.white,
-
       body: Column(
         children: [
           Gap(height * 0.20),
@@ -28,7 +29,11 @@ class _FollowingScreenState extends State<FollowingScreen> {
               width: width,
             ),
           ),
-          Text("You haven't followed yet, come to follow"),
+          Text(
+            isArabic
+                ? "لم تتابع بعد، تعال للمتابعة"
+                : "You haven't followed yet, come to follow",
+          ),
         ],
       ),
     );
