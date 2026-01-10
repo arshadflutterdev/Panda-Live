@@ -1,5 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/AppUi/HomeScreenContant/explorer_tab.dart';
+import 'package:pandlive/App/AppUi/HomeScreenContant/following_tab_screen.dart';
+import 'package:pandlive/App/AppUi/HomeScreenContant/newjoin_users_tab.dart';
+import 'package:pandlive/Utils/Constant/app_images.dart';
 
 class HomeController extends GetxController {
   var selectedIndex = 1.obs;
@@ -24,7 +28,7 @@ class Homescreen extends StatelessWidget {
           children: [
             /// 🔥 TAB BAR
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 14),
               child: Row(
                 children: [
                   Expanded(
@@ -38,8 +42,8 @@ class Homescreen extends StatelessWidget {
                               "Following",
                               style: TextStyle(
                                 fontSize: controller.selectedIndex.value == 0
-                                    ? 18
-                                    : 16,
+                                    ? 20
+                                    : 18,
                                 fontWeight: controller.selectedIndex.value == 0
                                     ? FontWeight.bold
                                     : FontWeight.normal,
@@ -55,8 +59,8 @@ class Homescreen extends StatelessWidget {
                               "Explore",
                               style: TextStyle(
                                 fontSize: controller.selectedIndex.value == 1
-                                    ? 18
-                                    : 16,
+                                    ? 20
+                                    : 18,
                                 fontWeight: controller.selectedIndex.value == 1
                                     ? FontWeight.bold
                                     : FontWeight.normal,
@@ -72,8 +76,8 @@ class Homescreen extends StatelessWidget {
                               "New",
                               style: TextStyle(
                                 fontSize: controller.selectedIndex.value == 2
-                                    ? 18
-                                    : 16,
+                                    ? 20
+                                    : 18,
                                 fontWeight: controller.selectedIndex.value == 2
                                     ? FontWeight.bold
                                     : FontWeight.normal,
@@ -88,7 +92,18 @@ class Homescreen extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(width: 12),
-                  IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
+                  IconButton(
+                    onPressed: () {},
+                    icon: const Icon(Icons.search, size: 26),
+                  ),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Image(
+                      image: AssetImage(AppImages.settings),
+                      height: 28,
+                      width: 28,
+                    ),
+                  ),
                 ],
               ),
             ),
@@ -97,35 +112,11 @@ class Homescreen extends StatelessWidget {
             Expanded(
               child: Obx(() {
                 if (controller.selectedIndex.value == 0) {
-                  return const Center(
-                    child: Text(
-                      "Following Content",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  );
+                  return FollowingScreen();
                 } else if (controller.selectedIndex.value == 1) {
-                  return const Center(
-                    child: Text(
-                      "Explore Content",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  );
+                  return ExplorerScreen();
                 } else {
-                  return const Center(
-                    child: Text(
-                      "New Content",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  );
+                  return NewUsersScreen();
                 }
               }),
             ),
