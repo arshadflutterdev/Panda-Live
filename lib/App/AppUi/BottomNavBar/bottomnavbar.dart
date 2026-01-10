@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/chat_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/profile_screen.dart';
-import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 
 class Bottomnavbar extends StatefulWidget {
@@ -18,10 +17,12 @@ class _BottomnavbarState extends State<Bottomnavbar> {
   List<Widget> screens = [Homescreen(), ChatScreen(), ProfileScreen()];
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: screens[selectedScreen.value],
-      bottomNavigationBar: Obx(
-        () => BottomNavigationBar(
+    return Obx(
+      () => Scaffold(
+        backgroundColor: Colors.white,
+        body: screens[selectedScreen.value],
+        bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: Colors.white,
           selectedItemColor: Colors.black,
 
           currentIndex: selectedScreen.value,
@@ -42,7 +43,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
                 height: 35,
                 width: 35,
               ),
-              label: "Live",
+              label: "Explore",
             ),
             BottomNavigationBarItem(
               icon: Image(

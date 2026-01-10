@@ -1,16 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
-class Homescreen extends StatefulWidget {
-  const Homescreen({super.key});
+class HomeController extends GetxController {
+  var selectedIndex = 1.obs;
 
-  @override
-  State<Homescreen> createState() => _HomescreenState();
+  void changeTab(int index) {
+    selectedIndex.value = index;
+  }
 }
 
-class _HomescreenState extends State<Homescreen> {
-  int selectedTab = 2; // "New" default selected
+class Homescreen extends StatelessWidget {
+  Homescreen({super.key});
 
-  final List<String> tabs = ["Following", "Explore", "New", "Nearby"];
+  // Local controller for HomeScreen only
+  final HomeController controller = HomeController();
 
   @override
   Widget build(BuildContext context) {
@@ -19,77 +22,116 @@ class _HomescreenState extends State<Homescreen> {
       body: SafeArea(
         child: Column(
           children: [
-            /// 🔹 TOP EXPLORER BAR
+            /// 🔥 TAB BAR
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 20),
               child: Row(
                 children: [
-                  /// Tabs
                   Expanded(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: List.generate(
-                        tabs.length,
-                        (index) => GestureDetector(
-                          onTap: () {
-                            setState(() {
-                              selectedTab = index;
-                            });
-                          },
-                          child: Text(
-                            tabs[index],
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: selectedTab == index
-                                  ? FontWeight.bold
-                                  : FontWeight.normal,
-                              color: selectedTab == index
-                                  ? Colors.black
-                                  : Colors.grey,
+                    child: Obx(
+                      () => Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          GestureDetector(
+                            onTap: () => controller.changeTab(0),
+                            child: Text(
+                              "Following",
+                              style: TextStyle(
+                                fontSize: controller.selectedIndex.value == 0
+                                    ? 18
+                                    : 16,
+                                fontWeight: controller.selectedIndex.value == 0
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                                color: controller.selectedIndex.value == 0
+                                    ? Colors.black
+                                    : Colors.grey,
+                              ),
                             ),
                           ),
-                        ),
+                          GestureDetector(
+                            onTap: () => controller.changeTab(1),
+                            child: Text(
+                              "Explore",
+                              style: TextStyle(
+                                fontSize: controller.selectedIndex.value == 1
+                                    ? 18
+                                    : 16,
+                                fontWeight: controller.selectedIndex.value == 1
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                                color: controller.selectedIndex.value == 1
+                                    ? Colors.black
+                                    : Colors.grey,
+                              ),
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: () => controller.changeTab(2),
+                            child: Text(
+                              "New",
+                              style: TextStyle(
+                                fontSize: controller.selectedIndex.value == 2
+                                    ? 18
+                                    : 16,
+                                fontWeight: controller.selectedIndex.value == 2
+                                    ? FontWeight.bold
+                                    : FontWeight.normal,
+                                color: controller.selectedIndex.value == 2
+                                    ? Colors.black
+                                    : Colors.grey,
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
-
                   const SizedBox(width: 12),
-
-                  /// Icons
-                  Row(
-                    children: const [
-                      Icon(Icons.search, size: 26),
-                      SizedBox(width: 12),
-                      Icon(Icons.emoji_events, color: Colors.amber),
-                    ],
-                  ),
+                  IconButton(onPressed: () {}, icon: const Icon(Icons.search)),
                 ],
               ),
             ),
 
-            const Divider(height: 1),
-
-            /// 🔹 CONTENT AREA
-            Expanded(child: _buildTabContent()),
+            /// 🔹 TAB VIEW
+            Expanded(
+              child: Obx(() {
+                if (controller.selectedIndex.value == 0) {
+                  return const Center(
+                    child: Text(
+                      "Following Content",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                } else if (controller.selectedIndex.value == 1) {
+                  return const Center(
+                    child: Text(
+                      "Explore Content",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                } else {
+                  return const Center(
+                    child: Text(
+                      "New Content",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  );
+                }
+              }),
+            ),
           ],
         ),
       ),
     );
-  }
-
-  /// 🔹 TAB CONTENT SWITCH
-  Widget _buildTabContent() {
-    switch (selectedTab) {
-      case 0:
-        return const Center(child: Text("Following Content"));
-      case 1:
-        return const Center(child: Text("Explore Content"));
-      case 2:
-        return const Center(child: Text("New Content"));
-      case 3:
-        return const Center(child: Text("Nearby Content"));
-      default:
-        return const SizedBox();
-    }
   }
 }
