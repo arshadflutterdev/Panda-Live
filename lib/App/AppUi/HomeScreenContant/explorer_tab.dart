@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
@@ -111,64 +112,79 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
           childAspectRatio: 0.99,
         ),
         itemBuilder: (context, index) {
-          return Container(
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(12),
-              color: Colors.white,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage(images[index]),
+          return GestureDetector(
+            onTap: () {
+              Get.toNamed(
+                AppRoutes.watchstream,
+                arguments: [
+                  "images",
+                  images[index],
+                  "names",
+                  usernames[index],
+                  "arabicnam",
+                  usernamesArabic[index],
+                ],
+              );
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(12),
+                color: Colors.white,
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage(images[index]),
+                ),
               ),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(4.0),
-                  child: DecoratedBox(
-                    decoration: BoxDecoration(
-                      color: AppColours.greycolour,
-                      borderRadius: BorderRadius.circular(3),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(2.0),
-                      child: Text(isArabic ? "عش الآن" : "Live now"),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(4.0),
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: AppColours.greycolour,
+                        borderRadius: BorderRadius.circular(3),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(2.0),
+                        child: Text(isArabic ? "عش الآن" : "Live now"),
+                      ),
                     ),
                   ),
-                ),
-                Spacer(),
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    children: [
-                      Text(
-                        isArabic ? usernamesArabic[index] : usernames[index],
-                        style: isArabic
-                            ? AppStyle.arabictext.copyWith(
-                                fontSize: 22,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
-                              )
-                            : TextStyle(fontSize: 18, color: Colors.white),
-                      ),
-                      Gap(5),
-                      Image(
-                        image: AssetImage(countries[index]),
-                        height: 20,
-                        width: 20,
-                      ),
-                      Spacer(),
-                      Icon(Icons.remove_red_eye, color: Colors.white),
-                      Gap(3),
-                      Text(
-                        views[index].toString(),
-                        style: TextStyle(fontSize: 16, color: Colors.white),
-                      ),
-                    ],
+                  Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8),
+                    child: Row(
+                      children: [
+                        Text(
+                          isArabic ? usernamesArabic[index] : usernames[index],
+                          style: isArabic
+                              ? AppStyle.arabictext.copyWith(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.white,
+                                )
+                              : TextStyle(fontSize: 18, color: Colors.white),
+                        ),
+                        Gap(5),
+                        Image(
+                          image: AssetImage(countries[index]),
+                          height: 20,
+                          width: 20,
+                        ),
+                        Spacer(),
+                        Icon(Icons.remove_red_eye, color: Colors.white),
+                        Gap(3),
+                        Text(
+                          views[index].toString(),
+                          style: TextStyle(fontSize: 16, color: Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           );
         },
