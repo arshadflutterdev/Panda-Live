@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:pandlive/App/AppUi/HomeScreenContant/explorer_tab.dart';
 import 'package:pandlive/App/AppUi/HomeScreenContant/following_tab_screen.dart';
 import 'package:pandlive/App/AppUi/HomeScreenContant/newjoin_users_tab.dart';
+import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 
 class HomeController extends GetxController {
@@ -97,7 +98,9 @@ class Homescreen extends StatelessWidget {
                     icon: const Icon(Icons.search, size: 26),
                   ),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.toNamed(AppRoutes.language);
+                    },
                     icon: Image(
                       image: AssetImage(AppImages.settings),
                       height: 28,

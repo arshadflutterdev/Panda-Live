@@ -76,7 +76,12 @@
  "loginwithphone": "Login With Phone number",
  "phonecodesend": "verification code send to +966 ******34",
 
-  "enterphone": "Enter Your Phone Number"
+  "enterphone": "Enter Your Phone Number",
+  
+  "explore": "Explore",
+  "new": "New",
+  "following": "Following"
+
 }
 
 

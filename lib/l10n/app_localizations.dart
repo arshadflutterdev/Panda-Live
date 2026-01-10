@@ -502,6 +502,24 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Enter Your Phone Number'**
   String get enterphone;
+
+  /// No description provided for @explore.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore'**
+  String get explore;
+
+  /// No description provided for @new.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get new;
+
+  /// No description provided for @following.
+  ///
+  /// In en, this message translates to:
+  /// **'Following'**
+  String get following;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

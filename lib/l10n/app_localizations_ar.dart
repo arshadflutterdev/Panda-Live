@@ -211,4 +211,13 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get enterphone => 'أدخل رقم هاتفك';
+
+  @override
+  String get explore => 'Explore';
+
+  @override
+  String get new => 'New';
+
+  @override
+  String get following => 'Following';
 }

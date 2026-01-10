@@ -14,6 +14,7 @@ class Bottomnavbar extends StatefulWidget {
 
 class _BottomnavbarState extends State<Bottomnavbar> {
   RxInt selectedScreen = 0.obs;
+  bool isArabic = Get.locale?.languageCode == "ar";
   List<Widget> screens = [Homescreen(), ChatScreen(), ProfileScreen()];
   @override
   Widget build(BuildContext context) {
@@ -43,7 +44,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
                 height: 35,
                 width: 35,
               ),
-              label: "Explore",
+              label: isArabic ? "يستكشف" : "Explore",
             ),
             BottomNavigationBarItem(
               icon: Image(
@@ -55,7 +56,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
                 height: 30,
                 width: 30,
               ),
-              label: "Chat",
+              label: isArabic ? "محادثة" : "Chat",
             ),
             BottomNavigationBarItem(
               icon: Image(
@@ -67,7 +68,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
                 height: 30,
                 width: 30,
               ),
-              label: "Profile",
+              label: isArabic ? "حساب تعريفي" : "Profile",
             ),
           ],
         ),

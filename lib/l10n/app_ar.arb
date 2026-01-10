@@ -78,6 +78,10 @@
    "loginwithphone": "تسجيل الدخول برقم الهاتف",
  "phonecodesend": "يتم إرسال رمز التحقق إلى الرقم +966 ******34",
 
-  "enterphone": "أدخل رقم هاتفك"
+  "enterphone": "أدخل رقم هاتفك",
+
+  "explore": "Explore",
+  "new": "New",
+  "following": "Following"
  
 }

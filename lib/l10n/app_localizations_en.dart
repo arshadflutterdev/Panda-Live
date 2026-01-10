@@ -211,4 +211,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get enterphone => 'Enter Your Phone Number';
+
+  @override
+  String get explore => 'Explore';
+
+  @override
+  String get new => 'New';
+
+  @override
+  String get following => 'Following';
 }
