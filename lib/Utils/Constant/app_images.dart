@@ -13,6 +13,10 @@ class AppImages {
   static const girl = "assets/images/girl.png";
   static const boy = "assets/images/boy.png";
   static const language = "assets/icons/travel.png";
+  //below icons for live stream and bottomnav bar
+  static const chat = "assets/icons/chat.png";
+  static const golive = "assets/icons/live (1).png";
+  static const live = "assets/icons/live.png";
   //more used image
   static String bgimage = "assets/images/PandaLivebg.png";
   static String halfbg = "assets/images/halfbg.png";

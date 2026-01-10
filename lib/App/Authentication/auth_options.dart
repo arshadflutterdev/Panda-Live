@@ -275,77 +275,80 @@ class _AuthOptionsState extends State<AuthOptions> {
                     Image(image: AssetImage(AppImages.or)),
                     Gap(height * 0.030),
 
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        GestureDetector(
-                          onTap: () {
-                            if (checkValue.value == true) {
-                              Get.toNamed(AppRoutes.emailauth);
-                            } else {
-                              showDialog(
-                                context: context,
-                                builder: (context) => TermsDialog(
-                                  onAccept: () {
-                                    Get.back();
-                                    Get.toNamed(AppRoutes.emailauth);
-                                  },
-                                ),
-                              );
-                            }
-                          },
+                    Directionality(
+                      textDirection: TextDirection.ltr,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              if (checkValue.value == true) {
+                                Get.toNamed(AppRoutes.emailauth);
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => TermsDialog(
+                                    onAccept: () {
+                                      Get.back();
+                                      Get.toNamed(AppRoutes.emailauth);
+                                    },
+                                  ),
+                                );
+                              }
+                            },
 
-                          child: CircleAvatar(
-                            backgroundImage: AssetImage(AppImages.email),
+                            child: CircleAvatar(
+                              backgroundImage: AssetImage(AppImages.email),
+                            ),
                           ),
-                        ),
-                        Gap(20),
-                        GestureDetector(
-                          onTap: () {
-                            if (checkValue.value == true) {
-                              Get.toNamed(AppRoutes.userauth);
-                            } else {
-                              showDialog(
-                                context: context,
-                                builder: (context) => TermsDialog(
-                                  onAccept: () {
-                                    Get.back();
-                                    Get.toNamed(AppRoutes.userauth);
-                                  },
-                                ),
-                              );
-                            }
-                          },
+                          Gap(20),
+                          GestureDetector(
+                            onTap: () {
+                              if (checkValue.value == true) {
+                                Get.toNamed(AppRoutes.userauth);
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => TermsDialog(
+                                    onAccept: () {
+                                      Get.back();
+                                      Get.toNamed(AppRoutes.userauth);
+                                    },
+                                  ),
+                                );
+                              }
+                            },
 
-                          child: CircleAvatar(
-                            backgroundImage: AssetImage(AppImages.userId),
+                            child: CircleAvatar(
+                              backgroundImage: AssetImage(AppImages.userId),
+                            ),
                           ),
-                        ),
 
-                        Gap(20),
-                        GestureDetector(
-                          onTap: () {
-                            if (checkValue.value == true) {
-                              Get.toNamed(AppRoutes.phoneauth);
-                            } else {
-                              showDialog(
-                                context: context,
-                                builder: (context) => TermsDialog(
-                                  onAccept: () {
-                                    Get.back();
-                                    Get.toNamed(AppRoutes.phoneauth);
-                                  },
-                                ),
-                              );
-                            }
-                          },
+                          Gap(20),
+                          GestureDetector(
+                            onTap: () {
+                              if (checkValue.value == true) {
+                                Get.toNamed(AppRoutes.phoneauth);
+                              } else {
+                                showDialog(
+                                  context: context,
+                                  builder: (context) => TermsDialog(
+                                    onAccept: () {
+                                      Get.back();
+                                      Get.toNamed(AppRoutes.phoneauth);
+                                    },
+                                  ),
+                                );
+                              }
+                            },
 
-                          child: CircleAvatar(
-                            backgroundImage: AssetImage(AppImages.phone),
+                            child: CircleAvatar(
+                              backgroundImage: AssetImage(AppImages.phone),
+                            ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                     Gap(height * 0.10),
 
