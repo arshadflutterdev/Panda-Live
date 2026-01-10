@@ -33,4 +33,5 @@ class AppImages {
   static String girl7 = "assets/images/girll7.jpg";
   static String girl8 = "assets/images/girll8.jpg";
   static String girl9 = "assets/images/girll9.jpg";
+  static String notfollow = "assets/images/nofollowed.png";
 }

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
+import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
+import 'package:pandlive/Utils/Constant/app_images.dart';
 
 class FollowingScreen extends StatefulWidget {
   const FollowingScreen({super.key});
@@ -10,6 +13,24 @@ class FollowingScreen extends StatefulWidget {
 class _FollowingScreenState extends State<FollowingScreen> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: Center(child: Text("FollowingTabScreen")));
+    double height = AppHeightwidth.screenHeight(context);
+    double width = AppHeightwidth.screenWidth(context);
+    return Scaffold(
+      backgroundColor: Colors.white,
+
+      body: Column(
+        children: [
+          Gap(height * 0.20),
+          Center(
+            child: Image(
+              image: AssetImage(AppImages.notfollow),
+              height: height * 0.30,
+              width: width,
+            ),
+          ),
+          Text("You haven't followed yet, come to follow"),
+        ],
+      ),
+    );
   }
 }
