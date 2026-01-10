@@ -216,7 +216,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get explore => 'Explore';
 
   @override
-  String get new => 'New';
+  String get bnew => 'New';
 
   @override
   String get following => 'Following';

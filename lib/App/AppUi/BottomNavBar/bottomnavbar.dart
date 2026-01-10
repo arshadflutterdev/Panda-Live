@@ -14,10 +14,11 @@ class Bottomnavbar extends StatefulWidget {
 
 class _BottomnavbarState extends State<Bottomnavbar> {
   RxInt selectedScreen = 0.obs;
-  bool isArabic = Get.locale?.languageCode == "ar";
+
   List<Widget> screens = [Homescreen(), ChatScreen(), ProfileScreen()];
   @override
   Widget build(BuildContext context) {
+    bool isArabic = Get.locale?.languageCode == "ar";
     return Obx(
       () => Scaffold(
         backgroundColor: Colors.white,

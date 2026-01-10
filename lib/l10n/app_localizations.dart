@@ -509,11 +509,11 @@ abstract class AppLocalizations {
   /// **'Explore'**
   String get explore;
 
-  /// No description provided for @new.
+  /// No description provided for @bnew.
   ///
   /// In en, this message translates to:
   /// **'New'**
-  String get new;
+  String get bnew;
 
   /// No description provided for @following.
   ///
