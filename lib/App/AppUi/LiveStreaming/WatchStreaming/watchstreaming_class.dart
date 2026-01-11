@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
-import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 
@@ -32,6 +31,18 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
   ];
   //comment krney waalu k naam
   List<String> commentnames = ["Ali", "Ayesha", "Hassan", "Zara", "Usman"];
+  //hon gal hosi arabic ech
+  // Comments in Arabic
+  List<String> liveCommentsArabic = [
+    "🔥🔥 البث المباشر رائع جدًا، استمتعت حقًا!",
+    "تحية من باكستان 🇵🇰❤️ المضيف نشيط جدًا",
+    "الصوت واضح والفيديو سلس 👍",
+    "من فضلك اعطني تحية 🙌",
+    "الموضوع ممتع جدًا 💯",
+  ];
+
+  // Commenter names in Arabic
+  List<String> commentnamesArabic = ["علي", "عائشة", "حسن", "زارا", "عثمان"];
 
   @override
   Widget build(BuildContext context) {
@@ -105,12 +116,18 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                       ),
                       onPressed: () {},
                       child: Text(
-                        "Follow",
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white,
-                        ),
+                        isArabic ? "يتبع" : "Follow",
+                        style: isArabic
+                            ? AppStyle.arabictext.copyWith(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              )
+                            : TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white,
+                              ),
                       ),
                     ),
                   ),
@@ -123,18 +140,28 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                       Get.defaultDialog(
                         backgroundColor: Colors.white,
                         radius: 12,
-                        title: "Leave Live Stream?",
-                        titleStyle: const TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        content: const Padding(
-                          padding: EdgeInsets.symmetric(horizontal: 8),
+                        title: isArabic
+                            ? "هل تريد مغادرة البث المباشر؟"
+                            : "Leave Live Stream?",
+                        titleStyle: isArabic
+                            ? AppStyle.arabictext.copyWith(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              )
+                            : const TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        content: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: Text(
-                            "You're watching a live stream.\n"
-                            "If you leave now, you might miss something exciting!",
+                            isArabic
+                                ? "أنت تشاهد البث المباشر.\nإذا غادرت الآن، قد تفوت شيئًا ممتعًا!"
+                                : "You're watching a live stream.\nIf you leave now, you might miss something exciting!",
                             textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: 15),
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(fontSize: 16)
+                                : const TextStyle(fontSize: 15),
                           ),
                         ),
                         cancel: TextButton(
@@ -142,11 +169,16 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                             Get.back();
                           },
                           child: Text(
-                            "Stay",
-                            style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            isArabic ? "ابقَ" : "Stay",
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                : const TextStyle(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                           ),
                         ),
                         confirm: TextButton(
@@ -155,12 +187,18 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                             Get.back();
                           },
                           child: Text(
-                            "Leave",
-                            style: TextStyle(
-                              fontSize: 18,
-                              color: Colors.red,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            isArabic ? "غادر" : "Leave",
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    fontSize: 18,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                : const TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.red,
+                                    fontWeight: FontWeight.w600,
+                                  ),
                           ),
                         ),
                       );
@@ -180,7 +218,9 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                     child: MyTextFormField(
                       controller: commentController,
                       keyboard: TextInputType.text,
-                      hintext: "TYPES",
+                      hintext: isArabic
+                          ? "اكتب تعليقاً..."
+                          : "Write a comment...",
                     ),
                   ),
                   IconButton(
@@ -211,18 +251,35 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                     return Row(
                       children: [
                         Text(
-                          commentnames[index],
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.amber,
-                          ),
+                          isArabic
+                              ? commentnamesArabic[index]
+                              : commentnames[index],
+                          style: isArabic
+                              ? AppStyle.arabictext.copyWith(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.amber,
+                                )
+                              : TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  color: Colors.amber,
+                                ),
                         ),
                         Text(": "),
                         Expanded(
-                          child: Text(
-                            liveComments[index],
-                            style: TextStyle(color: Colors.white),
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(color: Colors.black12),
+                            child: Text(
+                              isArabic
+                                  ? liveCommentsArabic[index]
+                                  : liveComments[index],
+                              style: isArabic
+                                  ? AppStyle.arabictext.copyWith(
+                                      color: Colors.white,
+                                    )
+                                  : TextStyle(color: Colors.white),
+                            ),
                           ),
                         ),
                       ],

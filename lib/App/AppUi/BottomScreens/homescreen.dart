@@ -4,6 +4,7 @@ import 'package:pandlive/App/AppUi/HomeScreenContant/explorer_tab.dart';
 import 'package:pandlive/App/AppUi/HomeScreenContant/following_tab_screen.dart';
 import 'package:pandlive/App/AppUi/HomeScreenContant/newjoin_users_tab.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
+import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 import 'package:pandlive/l10n/app_localizations.dart';
@@ -21,6 +22,7 @@ class Homescreen extends StatelessWidget {
 
   // Local controller for HomeScreen only
   final HomeController controller = HomeController();
+  TextEditingController searchController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -146,7 +148,63 @@ class Homescreen extends StatelessWidget {
                   ),
                   const SizedBox(width: 12),
                   IconButton(
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.defaultDialog(
+                        title: isArabic ? "المضيف المفضل؟" : "Favourite host?",
+                        titleStyle: isArabic
+                            ? AppStyle.arabictext.copyWith(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              )
+                            : TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
+                        content: MyTextFormField(
+                          controller: searchController,
+                          keyboard: TextInputType.text,
+                          hintext: isArabic ? "ابحث هنا.." : "Search here..",
+                        ),
+                        cancel: TextButton(
+                          onPressed: () {
+                            searchController.clear();
+                          },
+                          child: Text(
+                            isArabic ? "بحث" : "Search",
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    fontSize: 18,
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                : const TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.green,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                          ),
+                        ),
+                        confirm: TextButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: Text(
+                            isArabic ? "يلغي" : "Cancel",
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.red,
+                                  )
+                                : const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: Colors.red,
+                                  ),
+                          ),
+                        ),
+                      );
+                    },
                     icon: const Icon(Icons.search, size: 26),
                   ),
                   IconButton(
