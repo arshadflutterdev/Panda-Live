@@ -94,6 +94,27 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                     ),
                   ),
                   Spacer(),
+                  SizedBox(
+                    height: 38,
+                    child: TextButton(
+                      style: TextButton.styleFrom(
+                        backgroundColor: Colors.red,
+                        shape: ContinuousRectangleBorder(
+                          borderRadius: BorderRadiusGeometry.circular(10),
+                        ),
+                      ),
+                      onPressed: () {},
+                      child: Text(
+                        "Follow",
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w600,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Gap(5),
                   IconButton(
                     style: IconButton.styleFrom(
                       backgroundColor: Colors.black54,
@@ -166,7 +187,9 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                     style: IconButton.styleFrom(
                       backgroundColor: Colors.black54,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      commentController.clear();
+                    },
                     icon: Icon(Icons.send_rounded, color: Colors.white),
                   ),
                 ],
@@ -174,18 +197,34 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
             ),
             Positioned(
               left: 10,
+              right: 10,
               bottom: height * 0.099,
               child: Container(
-                height: 100,
                 width: width,
-                color: Colors.red,
+                color: Colors.transparent,
+                constraints: BoxConstraints(maxHeight: height * 0.4),
                 child: ListView.builder(
+                  physics: AlwaysScrollableScrollPhysics(),
+                  shrinkWrap: true,
                   itemCount: liveComments.length,
                   itemBuilder: (context, index) {
                     return Row(
                       children: [
-                        Text(commentnames[index]),
-                        Text(liveComments[index]),
+                        Text(
+                          commentnames[index],
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w600,
+                            color: Colors.amber,
+                          ),
+                        ),
+                        Text(": "),
+                        Expanded(
+                          child: Text(
+                            liveComments[index],
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ],
                     );
                   },
