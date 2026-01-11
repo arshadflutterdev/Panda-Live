@@ -22,6 +22,17 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
   String get country => arg["country"] ?? "";
   String get view => arg["views"] ?? "";
 
+  //comments list
+  List<String> liveComments = [
+    "🔥🔥 bohat zabardast live hai, maza aa gaya!",
+    "Love from Pakistan 🇵🇰❤️ host full energy me hai",
+    "Audio clear hai, video bhi smooth chal rahi 👍",
+    "Please shoutout kar do 🙌",
+    "Ye topic bohat interesting hai 💯",
+  ];
+  //comment krney waalu k naam
+  List<String> commentnames = ["Ali", "Ayesha", "Hassan", "Zara", "Usman"];
+
   @override
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
@@ -159,6 +170,26 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                     icon: Icon(Icons.send_rounded, color: Colors.white),
                   ),
                 ],
+              ),
+            ),
+            Positioned(
+              left: 10,
+              bottom: height * 0.099,
+              child: Container(
+                height: 100,
+                width: width,
+                color: Colors.red,
+                child: ListView.builder(
+                  itemCount: liveComments.length,
+                  itemBuilder: (context, index) {
+                    return Row(
+                      children: [
+                        Text(commentnames[index]),
+                        Text(liveComments[index]),
+                      ],
+                    );
+                  },
+                ),
               ),
             ),
           ],
