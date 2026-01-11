@@ -1,6 +1,6 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:pandlive/App/AppUi/BottomNavBar/bottomnavbar.dart';
-import 'package:pandlive/App/AppUi/BottomScreens/chat_screen.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/updates_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/profile_screen.dart';
 import 'package:pandlive/App/AppUi/LiveStreaming/WatchStreaming/watchstreaming_class.dart';

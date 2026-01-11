@@ -207,6 +207,7 @@ class Homescreen extends StatelessWidget {
                     },
                     icon: const Icon(Icons.search, size: 26),
                   ),
+
                   IconButton(
                     onPressed: () {
                       Get.toNamed(AppRoutes.language);

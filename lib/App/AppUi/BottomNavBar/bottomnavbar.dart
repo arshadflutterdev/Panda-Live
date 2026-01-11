@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pandlive/App/AppUi/BottomScreens/chat_screen.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/updates_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/profile_screen.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
