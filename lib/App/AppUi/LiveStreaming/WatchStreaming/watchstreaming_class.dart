@@ -14,6 +14,7 @@ class WatchstreamingClass extends StatefulWidget {
 
 class _WatchstreamingClassState extends State<WatchstreamingClass> {
   TextEditingController commentController = TextEditingController();
+  RxBool isfollowing = false.obs;
   final arg = Get.arguments as Map<String, dynamic>? ?? {};
   String get images => arg["images"] ?? "";
   String get namess => arg["names"] ?? "";
@@ -114,19 +115,38 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                           borderRadius: BorderRadiusGeometry.circular(10),
                         ),
                       ),
-                      onPressed: () {},
-                      child: Text(
-                        isArabic ? "يتبع" : "Follow",
-                        style: isArabic
-                            ? AppStyle.arabictext.copyWith(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
+                      onPressed: () {
+                        isfollowing.value = !isfollowing.value;
+                      },
+                      child: Obx(
+                        () => isfollowing.value
+                            ? Text(
+                                isArabic ? "التالي" : "Following",
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      )
+                                    : TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
                               )
-                            : TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                                color: Colors.white,
+                            : Text(
+                                isArabic ? "يتبع" : "Follow",
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      )
+                                    : TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.white,
+                                      ),
                               ),
                       ),
                     ),
