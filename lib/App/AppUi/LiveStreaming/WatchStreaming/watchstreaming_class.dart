@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
@@ -13,6 +14,7 @@ class WatchstreamingClass extends StatefulWidget {
 }
 
 class _WatchstreamingClassState extends State<WatchstreamingClass> {
+  TextEditingController commentController = TextEditingController();
   final arg = Get.arguments as Map<String, dynamic>? ?? {};
   String get images => arg["images"] ?? "";
   String get namess => arg["names"] ?? "";
@@ -132,6 +134,29 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                       );
                     },
                     icon: Icon(Icons.close, color: Colors.white),
+                  ),
+                ],
+              ),
+            ),
+            Positioned(
+              bottom: 10,
+              left: 2,
+              right: 2,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: MyTextFormField(
+                      controller: commentController,
+                      keyboard: TextInputType.text,
+                      hintext: "TYPES",
+                    ),
+                  ),
+                  IconButton(
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.black54,
+                    ),
+                    onPressed: () {},
+                    icon: Icon(Icons.send_rounded, color: Colors.white),
                   ),
                 ],
               ),
