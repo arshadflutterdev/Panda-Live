@@ -31,11 +31,13 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
         ),
         child: Stack(
           children: [
-            Row(
-              children: [
-                CircleAvatar(radius: 20, backgroundImage: AssetImage(images)),
-                Text(isArabic ? arnames : namess),
-              ],
+            Positioned(
+              child: Row(
+                children: [
+                  CircleAvatar(radius: 20, backgroundImage: AssetImage(images)),
+                  Text(isArabic ? arnames : namess),
+                ],
+              ),
             ),
           ],
         ),
