@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class ChatScreen extends StatefulWidget {
-  const ChatScreen({super.key});
+class UpdatesScreen extends StatefulWidget {
+  const UpdatesScreen({super.key});
 
   @override
-  State<ChatScreen> createState() => _ChatScreenState();
+  State<UpdatesScreen> createState() => _UpdatesScreenState();
 }
 
-class _ChatScreenState extends State<ChatScreen> {
+class _UpdatesScreenState extends State<UpdatesScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: Center(child: Text("Chat")));

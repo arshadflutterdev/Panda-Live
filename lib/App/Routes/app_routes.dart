@@ -36,7 +36,7 @@ class AppRoutes {
   static const bottomnav = "/Bottomnavbar";
   static const language = "/ChangeLanguage";
   static const home = "/Homescreen";
-  static const chat = "/ChatScreen";
+  static const updates = "/UpdatesScreen";
   static const profile = "/ProfileScreen";
   static const watchstream = "/WatchstreamingClass";
 
@@ -58,7 +58,7 @@ class AppRoutes {
     GetPage(name: language, page: () => ChangeLanguage()),
     //screen from bottom to next
     GetPage(name: home, page: () => Homescreen()),
-    GetPage(name: chat, page: () => ChatScreen()),
+    GetPage(name: updates, page: () => UpdatesScreen()),
     GetPage(name: profile, page: () => ProfileScreen()),
     GetPage(name: watchstream, page: () => WatchstreamingClass()),
   ];
