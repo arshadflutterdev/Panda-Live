@@ -116,14 +116,13 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
             onTap: () {
               Get.toNamed(
                 AppRoutes.watchstream,
-                arguments: [
-                  "images",
-                  images[index],
-                  "names",
-                  usernames[index],
-                  "arabicnam",
-                  usernamesArabic[index],
-                ],
+                arguments: {
+                  "images": images[index],
+                  "names": usernames[index],
+                  "arabicnam": usernamesArabic[index],
+                  "country": countries[index],
+                  "views": views[index],
+                },
               );
             },
             child: Container(
