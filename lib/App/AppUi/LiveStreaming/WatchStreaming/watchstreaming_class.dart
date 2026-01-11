@@ -85,7 +85,52 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                     style: IconButton.styleFrom(
                       backgroundColor: Colors.black54,
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.defaultDialog(
+                        backgroundColor: Colors.white,
+                        radius: 12,
+                        title: "Leave Live Stream?",
+                        titleStyle: const TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                        ),
+                        content: const Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 8),
+                          child: Text(
+                            "You're watching a live stream.\n"
+                            "If you leave now, you might miss something exciting!",
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: 15),
+                          ),
+                        ),
+                        cancel: TextButton(
+                          onPressed: () {
+                            Get.back();
+                          },
+                          child: Text(
+                            "Stay",
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        confirm: TextButton(
+                          onPressed: () {
+                            Get.back();
+                            Get.back();
+                          },
+                          child: Text(
+                            "Leave",
+                            style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.red,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
                     icon: Icon(Icons.close, color: Colors.white),
                   ),
                 ],
