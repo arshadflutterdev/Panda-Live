@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 
@@ -36,36 +37,58 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
             Positioned(
               top: height * 0.040,
               left: 10,
+              right: 10,
 
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.red,
-                  borderRadius: BorderRadius.circular(5),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 3),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      CircleAvatar(
-                        radius: 20,
-                        backgroundImage: AssetImage(images),
+              child: Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                      color: Colors.black54,
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 3),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            radius: 20,
+                            backgroundImage: AssetImage(images),
+                          ),
+                          Gap(5),
+                          Text(
+                            isArabic ? arnames : namess,
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                  )
+                                : TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                          ),
+                          Gap(2),
+                          Image(
+                            image: AssetImage(country),
+                            height: 18,
+                            width: 18,
+                          ),
+                        ],
                       ),
-                      Gap(5),
-                      Text(
-                        isArabic ? arnames : namess,
-                        style: isArabic
-                            ? AppStyle.arabictext.copyWith(fontSize: 20)
-                            : TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w600,
-                              ),
-                      ),
-                      Image(image: AssetImage(country), height: 18, width: 18),
-                    ],
+                    ),
                   ),
-                ),
+                  Spacer(),
+                  IconButton(
+                    style: IconButton.styleFrom(
+                      backgroundColor: Colors.black54,
+                    ),
+                    onPressed: () {},
+                    icon: Icon(Icons.close, color: Colors.white),
+                  ),
+                ],
               ),
             ),
           ],
