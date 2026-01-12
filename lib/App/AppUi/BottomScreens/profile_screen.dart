@@ -146,22 +146,66 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
+          Gap(height * 0.030),
           Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               Container(
                 width: width * 0.45,
                 height: height * 0.080,
                 decoration: BoxDecoration(
                   color: Colors.amber.shade100,
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(15),
                 ),
-                child: Row(
-                  children: [
-                    Column(children: [Text("Coins"), Text("0")]),
-                  ],
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Row(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [Text("Coins"), Text("0")],
+                      ),
+                      Spacer(),
+                      Image(image: AssetImage(AppImages.coins)),
+                    ],
+                  ),
+                ),
+              ),
+              Container(
+                width: width * 0.45,
+                height: height * 0.080,
+                decoration: BoxDecoration(
+                  color: Colors.pink.shade100,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  child: Row(
+                    children: [
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [Text("Points"), Text("0")],
+                      ),
+                      Spacer(),
+                      Image(image: AssetImage(AppImages.dollar)),
+                    ],
+                  ),
                 ),
               ),
             ],
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+            child: Container(
+              height: height * 0.12,
+              width: width,
+              decoration: BoxDecoration(
+                color: Colors.red,
+                borderRadius: BorderRadius.circular(15),
+              ),
+            ),
           ),
         ],
       ),
