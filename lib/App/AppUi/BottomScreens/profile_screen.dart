@@ -146,6 +146,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
+          Row(
+            children: [
+              Container(
+                width: width * 0.45,
+                height: height * 0.080,
+                decoration: BoxDecoration(
+                  color: Colors.amber.shade100,
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Row(
+                  children: [
+                    Column(children: [Text("Coins"), Text("0")]),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
