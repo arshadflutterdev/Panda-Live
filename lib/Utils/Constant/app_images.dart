@@ -13,6 +13,7 @@ class AppImages {
   static const girl = "assets/images/girl.png";
   static const boy = "assets/images/boy.png";
   static const language = "assets/icons/travel.png";
+  static const bg = "assets/images/f86dd0a8-6ef9-47bf-b240-89adbfb81905.jpg";
   //below icons for live stream and bottomnav bar
   static const chat = "assets/icons/chat.png";
   static const golive = "assets/icons/live (1).png";

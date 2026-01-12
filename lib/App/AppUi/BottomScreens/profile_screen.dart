@@ -202,6 +202,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               height: height * 0.12,
               width: width,
               decoration: BoxDecoration(
+                image: DecorationImage(image: AssetImage(AppImages.bg)),
                 color: Colors.red,
                 borderRadius: BorderRadius.circular(15),
               ),
