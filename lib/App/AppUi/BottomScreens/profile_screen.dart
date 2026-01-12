@@ -18,7 +18,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     double width = AppHeightwidth.screenWidth(context);
     return Scaffold(
       appBar: AppBar(
-        title: Text("My Profile", style: AppStyle.btext),
+        title: Text("Me", style: AppStyle.btext),
         actions: [
           IconButton(
             onPressed: () {},
@@ -35,7 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.black38,
-                  backgroundImage: AssetImage(AppImages.girl),
+                  backgroundImage: AssetImage(AppImages.eman0),
                 ),
                 // Gap(10),
                 Padding(
