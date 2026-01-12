@@ -20,6 +20,8 @@ class AppImages {
   static const profile = "assets/icons/user (1).png";
   static const myprofile = "assets/icons/user (2).png";
   static const settings = "assets/icons/settings.png";
+  static const dollar = "assets/icons/dollar.png";
+  static const coins = "assets/icons/star (1).png";
   //more used image
   static String bgimage = "assets/images/PandaLivebg.png";
   static String halfbg = "assets/images/halfbg.png";
