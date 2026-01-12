@@ -226,7 +226,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               height: height * 0.070,
               width: width,
               decoration: BoxDecoration(
-                color: Colors.black45,
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage(AppImages.bg),
+                ),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Padding(
@@ -234,9 +237,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Row(
                   children: [
                     Image(
-                      height: 45,
+                      height: 40,
                       image: AssetImage(AppImages.invite),
-                      color: Colors.amber.shade500,
+                      color: Colors.limeAccent,
                     ),
                     Gap(10),
                     Text(
@@ -248,6 +251,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ],
                 ),
               ),
+            ),
+          ),
+
+          Expanded(
+            child: ListView.builder(
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 5,
+                  ),
+                  child: Container(
+                    height: height * 0.070,
+                    width: width,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        children: [
+                          Image(
+                            height: 45,
+                            image: AssetImage(AppImages.invite),
+                            color: Colors.amber.shade500,
+                          ),
+                          Gap(10),
+                          Text(
+                            "Invite a frined",
+                            style: AppStyle.tagline.copyWith(
+                              color: Colors.white,
+                            ),
+                          ),
+                          Spacer(),
+                          Icon(Icons.arrow_forward_ios, color: Colors.white),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
             ),
           ),
         ],
