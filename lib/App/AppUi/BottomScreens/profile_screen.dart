@@ -202,9 +202,51 @@ class _ProfileScreenState extends State<ProfileScreen> {
               height: height * 0.12,
               width: width,
               decoration: BoxDecoration(
-                image: DecorationImage(image: AssetImage(AppImages.bg)),
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage(AppImages.bg),
+                ),
                 color: Colors.red,
                 borderRadius: BorderRadius.circular(15),
+              ),
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 20),
+                  child: Text(
+                    "Your account details are private. Keep them safe.",
+                    style: AppStyle.btext.copyWith(fontSize: 25),
+                  ),
+                ),
+              ),
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+            child: Container(
+              height: height * 0.070,
+              width: width,
+              decoration: BoxDecoration(
+                color: Colors.black45,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 10),
+                child: Row(
+                  children: [
+                    Image(
+                      height: 45,
+                      image: AssetImage(AppImages.invite),
+                      color: Colors.amber.shade500,
+                    ),
+                    Gap(10),
+                    Text(
+                      "Invite a frined",
+                      style: AppStyle.tagline.copyWith(color: Colors.white),
+                    ),
+                    Spacer(),
+                    Icon(Icons.arrow_forward_ios, color: Colors.white),
+                  ],
+                ),
               ),
             ),
           ),

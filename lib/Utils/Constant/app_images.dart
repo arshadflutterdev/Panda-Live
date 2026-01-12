@@ -37,6 +37,7 @@ class AppImages {
   static String girl8 = "assets/images/girll8.jpg";
   static String girl9 = "assets/images/girll9.jpg";
   static String notfollow = "assets/images/nofollowed.png";
+  static String invite = "assets/icons/add-friend.png";
   //below images are related for live streamers
   static const eman = "assets/images/man.jpg";
   static const egirll = "assets/images/girl.jpg";
