@@ -17,7 +17,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text("Me", style: AppStyle.btext),
         actions: [
           IconButton(
@@ -101,6 +103,48 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ],
             ),
+          ),
+          Gap(height * 0.030),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              Column(
+                children: [
+                  Text("0", style: TextStyle(fontSize: 20)),
+                  Text(
+                    "Friends",
+                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Text("0", style: TextStyle(fontSize: 20)),
+                  Text(
+                    "Following",
+                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Text("0", style: TextStyle(fontSize: 20)),
+                  Text(
+                    "Followers",
+                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                  ),
+                ],
+              ),
+              Column(
+                children: [
+                  Text("0", style: TextStyle(fontSize: 20)),
+                  Text(
+                    "Visitors",
+                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                  ),
+                ],
+              ),
+            ],
           ),
         ],
       ),
