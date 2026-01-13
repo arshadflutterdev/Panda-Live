@@ -176,8 +176,14 @@ class _HelpScreenState extends State<HelpScreen> {
               child: MyElevatedButton(
                 width: width,
                 btext: Text(
-                  "Submit Issue",
-                  style: AppStyle.btext.copyWith(color: Colors.white),
+                  localization.submitissued,
+                  style: isArabic
+                      ? AppStyle.arabictext.copyWith(
+                          fontSize: 22,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                        )
+                      : AppStyle.btext.copyWith(color: Colors.white),
                 ),
                 onPressed: () {},
               ),
