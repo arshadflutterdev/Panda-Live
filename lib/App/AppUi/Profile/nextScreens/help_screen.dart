@@ -1,6 +1,9 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
+import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
+import 'package:pandlive/Utils/Constant/app_style.dart';
 
 class HelpScreen extends StatefulWidget {
   const HelpScreen({super.key});
@@ -49,7 +52,10 @@ class _HelpScreenState extends State<HelpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    double height = AppHeightwidth.screenHeight(context);
+    double width = AppHeightwidth.screenWidth(context);
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(title: const Text("Help & Support")),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -149,14 +155,13 @@ class _HelpScreenState extends State<HelpScreen> {
             SizedBox(
               width: double.infinity,
               height: 50,
-              child: ElevatedButton(
-                onPressed: submitHelp,
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                  ),
+              child: MyElevatedButton(
+                width: width,
+                btext: Text(
+                  "Submit Issue",
+                  style: AppStyle.btext.copyWith(color: Colors.white),
                 ),
-                child: const Text("Submit Issue"),
+                onPressed: () {},
               ),
             ),
           ],

@@ -41,8 +41,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     super.dispose();
   }
 
-  late int currendIndex;
-
   @override
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
@@ -346,13 +344,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: Colors.black38,
                             ),
                       onTap: () {
-                        if (currendIndex == 0) {
+                        if (index == 0) {
                           Get.toNamed(AppRoutes.help);
-                        } else if (currendIndex == 1) {
+                        } else if (index == 1) {
                           Get.toNamed(AppRoutes.level);
-                        } else if (currendIndex == 2) {
+                        } else if (index == 2) {
                           Get.toNamed(AppRoutes.followus);
-                        } else if (currendIndex == 3) {
+                        } else if (index == 3) {
                           Get.toNamed(AppRoutes.logout);
                         }
                       },
