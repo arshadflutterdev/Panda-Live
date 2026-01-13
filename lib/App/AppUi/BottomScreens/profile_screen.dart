@@ -1,5 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/state_manager.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
@@ -12,6 +15,29 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
+  final List<Map<String, dynamic>> menuItems = [
+    {"title": "Help", "icon": Icons.help_outline, "trailing": "24h"},
+    {"title": "Level", "icon": Icons.star_border},
+    {"title": "Follow Us", "icon": Icons.favorite_border, "social": true},
+    {"title": "Logout", "icon": Icons.logout, "danger": true},
+  ];
+  late final StreamSubscription bgstream;
+  List<String> infimages = [AppImages.girl, AppImages.girl1, AppImages.girl2];
+  RxInt currentbgindex = 0.obs;
+  void initState() {
+    super.initState();
+    bgstream = Stream.periodic(Duration(seconds: 4)).listen((_) {
+      if (!mounted) return;
+
+      currentbgindex.value = (currentbgindex.value + 1) % infimages.length;
+    });
+  }
+
+  void dispose() {
+    bgstream.cancel();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
@@ -196,30 +222,29 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
             ],
           ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-            child: Container(
-              height: height * 0.12,
-              width: width,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: AssetImage(AppImages.bg),
-                ),
-                color: Colors.red,
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child: Center(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 20),
-                  child: Text(
-                    "Your account details are private. Keep them safe.",
-                    style: AppStyle.btext.copyWith(fontSize: 25),
+          Obx(
+            () => Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
+              child: AnimatedSwitcher(
+                duration: Duration(milliseconds: 600),
+
+                child: Container(
+                  key: ValueKey(currentbgindex.value),
+                  height: height * 0.12,
+                  width: width,
+                  decoration: BoxDecoration(
+                    image: DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage(infimages[currentbgindex.value]),
+                    ),
+                    color: Colors.red,
+                    borderRadius: BorderRadius.circular(15),
                   ),
                 ),
               ),
             ),
           ),
+
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
             child: Container(
@@ -255,45 +280,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
 
           Expanded(
-            child: ListView.builder(
-              itemCount: 10,
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: 10,
-                    vertical: 5,
-                  ),
-                  child: Container(
-                    height: height * 0.070,
-                    width: width,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 10),
-                      child: Row(
-                        children: [
-                          Image(
-                            height: 45,
-                            image: AssetImage(AppImages.invite),
-                            color: Colors.amber.shade500,
-                          ),
-                          Gap(10),
-                          Text(
-                            "Invite a frined",
-                            style: AppStyle.tagline.copyWith(
-                              color: Colors.white,
-                            ),
-                          ),
-                          Spacer(),
-                          Icon(Icons.arrow_forward_ios, color: Colors.white),
-                        ],
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 10),
+              child: Container(
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: ListView.separated(
+                  itemCount: menuItems.length,
+                  separatorBuilder: (_, __) =>
+                      Divider(height: 1, color: Colors.grey.shade300),
+                  itemBuilder: (context, index) {
+                    final item = menuItems[index];
+
+                    return ListTile(
+                      leading: Icon(
+                        item["icon"],
+                        color: item["danger"] == true
+                            ? Colors.red
+                            : Colors.black54,
                       ),
-                    ),
-                  ),
-                );
-              },
+                      title: Text(
+                        item["title"],
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: item["danger"] == true
+                              ? Colors.red
+                              : Colors.black,
+                        ),
+                      ),
+                      trailing: item["social"] == true
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.facebook, color: Colors.blue),
+                                Gap(8),
+                                Icon(Icons.play_circle_fill, color: Colors.red),
+                              ],
+                            )
+                          : item["trailing"] != null
+                          ? Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text(
+                                  item["trailing"],
+                                  style: TextStyle(color: Colors.black45),
+                                ),
+                                Gap(6),
+                                Icon(
+                                  Icons.arrow_forward_ios,
+                                  size: 16,
+                                  color: Colors.black38,
+                                ),
+                              ],
+                            )
+                          : Icon(
+                              Icons.arrow_forward_ios,
+                              size: 16,
+                              color: Colors.black38,
+                            ),
+                      onTap: () {
+                        if (item["title"] == "Logout") {
+                          // TODO: logout logic
+                        }
+                      },
+                    );
+                  },
+                ),
+              ),
             ),
           ),
         ],
