@@ -92,7 +92,13 @@
   "help": "Help",
   "level": "Level",
   "followus": "Follow Us",
-  "logout": "Logout"
+  "logout": "Logout",
+
+  "topic": "Topic",
+  "issuedetail": "Issue Details",
+  "decribissue": "Describe your issue in details...",
+  "uploadimage": "Upload Images",
+  "submitissued": "Submit Issue"
 
 }
 

@@ -94,6 +94,13 @@
   "help": "يساعد",
   "level": "مستوى",
   "followus": "تابعنا",
-  "logout": "تسجيل الخروج"
+  "logout": "تسجيل الخروج",
+
+  
+  "topic": "عنوان",
+  "issuedetail": "تفاصيل المشكلة",
+  "decribissue": "صف مشكلتك بالتفصيل...",
+  "uploadimage": "تحميل الصور",
+  "submitissued": "إرسال المشكلة"
  
 }

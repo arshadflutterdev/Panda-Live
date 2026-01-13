@@ -19,11 +19,23 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-  final List<Map<String, dynamic>> menuItems = [
-    {"title": "Help", "icon": Icons.help_outline, "trailing": "24h"},
-    {"title": "Level", "icon": Icons.star_border},
-    {"title": "Follow Us", "icon": Icons.favorite_border, "social": true},
-    {"title": "Logout", "icon": Icons.logout, "danger": true},
+  late final List<Map<String, dynamic>> menuItems = [
+    {
+      "title": AppLocalizations.of(context)!.help,
+      "icon": Icons.help_outline,
+      "trailing": "24h",
+    },
+    {"title": AppLocalizations.of(context)!.level, "icon": Icons.star_border},
+    {
+      "title": AppLocalizations.of(context)!.followus,
+      "icon": Icons.favorite_border,
+      "social": true,
+    },
+    {
+      "title": AppLocalizations.of(context)!.followus,
+      "icon": Icons.logout,
+      "danger": true,
+    },
   ];
   late final StreamSubscription bgstream;
   List<String> infimages = [
@@ -64,7 +76,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
       backgroundColor: Colors.white,
       appBar: AppBar(
         backgroundColor: Colors.white,
-        title: Text("Me", style: AppStyle.btext),
+        title: Text(
+          isArabic ? "أنا" : "Me",
+          style: isArabic
+              ? AppStyle.arabictext.copyWith(
+                  fontSize: 22,
+                  fontWeight: FontWeight.w600,
+                )
+              : AppStyle.btext,
+        ),
         actions: [
           IconButton(
             onPressed: () {},
@@ -91,47 +111,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "Arshad Yahaya",
-                        style: AppStyle.logo.copyWith(
-                          fontSize: 20,
-                          height: 0.50,
-                        ),
+                        "أرشد يحيى",
+                        style: isArabic
+                            ? AppStyle.arabictext.copyWith(
+                                fontSize: 22,
+                                height: 0.50,
+                                fontWeight: FontWeight.bold,
+                              )
+                            : AppStyle.logo.copyWith(
+                                fontSize: 20,
+                                height: 0.50,
+                              ),
                       ),
                       Padding(
                         padding: const EdgeInsets.only(left: 10),
-                        child: Row(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            DecoratedBox(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: Colors.black38,
-                              ),
-                              child: Padding(
-                                padding: const EdgeInsets.all(2.0),
-                                child: Text(
-                                  "ID",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.white,
+                        child: Directionality(
+                          textDirection: TextDirection.ltr,
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              DecoratedBox(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  color: Colors.black38,
+                                ),
+                                child: Padding(
+                                  padding: const EdgeInsets.all(2.0),
+                                  child: Text(
+                                    "ID",
+                                    style: TextStyle(
+                                      fontSize: 14,
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            Gap(4),
-                            Text(
-                              "78491356",
-                              style: TextStyle(
-                                fontSize: 14,
-                                color: Colors.black,
+                              Gap(4),
+                              Text(
+                                "78491356",
+                                style: TextStyle(
+                                  fontSize: 14,
+                                  color: Colors.black,
+                                ),
                               ),
-                            ),
-                            IconButton(
-                              padding: EdgeInsets.zero,
-                              onPressed: () {},
-                              icon: Icon(Icons.copy, size: 17),
-                            ),
-                          ],
+                              IconButton(
+                                padding: EdgeInsets.zero,
+                                onPressed: () {},
+                                icon: Icon(Icons.copy, size: 17),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ],
@@ -170,8 +199,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   Text("0", style: TextStyle(fontSize: 20)),
                   Text(
-                    "Following",
-                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                    localization.following,
+                    style: isArabic
+                        ? AppStyle.arabictext.copyWith(
+                            fontSize: 18,
+                            color: Colors.black54,
+                          )
+                        : TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                 ],
               ),
@@ -179,8 +213,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   Text("0", style: TextStyle(fontSize: 20)),
                   Text(
-                    "Followers",
-                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                    localization.followers,
+                    style: isArabic
+                        ? AppStyle.arabictext.copyWith(
+                            fontSize: 18,
+                            color: Colors.black54,
+                          )
+                        : TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                 ],
               ),
@@ -188,8 +227,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   Text("0", style: TextStyle(fontSize: 20)),
                   Text(
-                    "Visitors",
-                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                    localization.visitors,
+                    style: isArabic
+                        ? AppStyle.arabictext.copyWith(
+                            fontSize: 18,
+                            color: Colors.black54,
+                          )
+                        : TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                 ],
               ),
@@ -207,13 +251,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Row(
                     children: [
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [Text("Coins"), Text("0")],
+                        children: [
+                          Text(
+                            localization.coins,
+                            style: isArabic ? AppStyle.arabictext : TextStyle(),
+                          ),
+                          Text("0"),
+                        ],
                       ),
                       Spacer(),
                       Image(image: AssetImage(AppImages.coins)),
@@ -229,13 +279,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 5),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Row(
                     children: [
                       Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [Text("Points"), Text("0")],
+                        children: [
+                          Text(
+                            localization.points,
+                            style: isArabic ? AppStyle.arabictext : TextStyle(),
+                          ),
+                          Text("0"),
+                        ],
                       ),
                       Spacer(),
                       Image(image: AssetImage(AppImages.dollar)),
@@ -289,11 +345,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                     Gap(10),
                     Text(
-                      "Invite a friend",
-                      style: AppStyle.tagline.copyWith(
-                        color: Colors.black54,
-                        fontSize: 18,
-                      ),
+                      localization.invitefriend,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(
+                              fontSize: 20,
+                              color: Colors.black54,
+                            )
+                          : AppStyle.tagline.copyWith(
+                              color: Colors.black54,
+                              fontSize: 18,
+                            ),
                     ),
                     Spacer(),
                     Icon(Icons.arrow_forward_ios, color: Colors.black54),
@@ -323,16 +384,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         item["icon"],
                         color: item["danger"] == true
                             ? Colors.red
-                            : Colors.black54,
+                            : Colors.black,
                       ),
                       title: Text(
                         item["title"],
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: item["danger"] == true
-                              ? Colors.red
-                              : Colors.black,
-                        ),
+                        style: isArabic
+                            ? AppStyle.arabictext.copyWith(fontSize: 20)
+                            : TextStyle(
+                                fontSize: 16,
+                                color: item["danger"] == true
+                                    ? Colors.red
+                                    : Colors.black,
+                              ),
                       ),
                       trailing: item["social"] == true
                           ? Row(

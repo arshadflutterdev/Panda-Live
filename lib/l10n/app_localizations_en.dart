@@ -250,4 +250,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logout => 'Logout';
+
+  @override
+  String get topic => 'Topic';
+
+  @override
+  String get issuedetail => 'Issue Details';
+
+  @override
+  String get decribissue => 'Describe your issue in details...';
+
+  @override
+  String get uploadimage => 'Upload Images';
+
+  @override
+  String get submitissued => 'Submit Issue';
 }

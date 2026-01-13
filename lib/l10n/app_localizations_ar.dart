@@ -250,4 +250,19 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get logout => 'تسجيل الخروج';
+
+  @override
+  String get topic => 'عنوان';
+
+  @override
+  String get issuedetail => 'تفاصيل المشكلة';
+
+  @override
+  String get decribissue => 'صف مشكلتك بالتفصيل...';
+
+  @override
+  String get uploadimage => 'تحميل الصور';
+
+  @override
+  String get submitissued => 'إرسال المشكلة';
 }

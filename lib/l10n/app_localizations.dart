@@ -580,6 +580,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Logout'**
   String get logout;
+
+  /// No description provided for @topic.
+  ///
+  /// In en, this message translates to:
+  /// **'Topic'**
+  String get topic;
+
+  /// No description provided for @issuedetail.
+  ///
+  /// In en, this message translates to:
+  /// **'Issue Details'**
+  String get issuedetail;
+
+  /// No description provided for @decribissue.
+  ///
+  /// In en, this message translates to:
+  /// **'Describe your issue in details...'**
+  String get decribissue;
+
+  /// No description provided for @uploadimage.
+  ///
+  /// In en, this message translates to:
+  /// **'Upload Images'**
+  String get uploadimage;
+
+  /// No description provided for @submitissued.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit Issue'**
+  String get submitissued;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

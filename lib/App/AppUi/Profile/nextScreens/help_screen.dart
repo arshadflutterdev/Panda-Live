@@ -43,6 +43,7 @@ class _HelpScreenState extends State<HelpScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isArabic = Get.locale?.languageCode == "ar";
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
     return Scaffold(
@@ -69,7 +70,7 @@ class _HelpScreenState extends State<HelpScreen> {
             TextField(
               controller: topicCtrl,
               decoration: InputDecoration(
-                hintText: "first Tell us topic",
+                hintText: "Topic",
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
