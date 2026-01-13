@@ -59,7 +59,7 @@ class AppImages {
   static const usa = "assets/images/usa.png";
   static const india = "assets/images/india.png";
   //here is note images profile screen
-  static const note = "assets/images/note1.png";
+  static const note = "assets/images/note1 (1).png";
   static const note1 = "assets/images/note2.png";
   static const note2 = "assets/images/note3.png";
   static const note3 = "assets/images/note4.png";

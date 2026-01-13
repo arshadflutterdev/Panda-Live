@@ -25,7 +25,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     {"title": "Logout", "icon": Icons.logout, "danger": true},
   ];
   late final StreamSubscription bgstream;
-  List<String> infimages = [AppImages.girl, AppImages.girl1, AppImages.girl2];
+  List<String> infimages = [
+    AppImages.note,
+    AppImages.note1,
+    AppImages.note2,
+    AppImages.note3,
+  ];
   RxInt currentbgindex = 0.obs;
   void initState() {
     super.initState();
