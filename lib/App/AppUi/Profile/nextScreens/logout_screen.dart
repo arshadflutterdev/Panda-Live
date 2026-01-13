@@ -3,12 +3,15 @@ import 'package:get/get.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
 
 class LogoutScreen extends StatelessWidget {
   const LogoutScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
+    bool isArabic = Get.locale?.languageCode == "ar";
+    final localization = AppLocalizations.of(context)!;
     double height = MediaQuery.of(context).size.height;
     double width = MediaQuery.of(context).size.width;
 
@@ -38,9 +41,13 @@ class LogoutScreen extends StatelessWidget {
               ),
               const SizedBox(height: 15),
               Text(
-                "Are you sure you want to logout?",
+                isArabic
+                    ? "هل أنت متأكد من رغبتك في تسجيل الخروج؟"
+                    : "Are you sure you want to logout?",
                 textAlign: TextAlign.center,
-                style: AppStyle.btext.copyWith(fontSize: 18),
+                style: isArabic
+                    ? AppStyle.arabictext.copyWith(fontSize: 20)
+                    : AppStyle.btext.copyWith(fontSize: 18),
               ),
               const SizedBox(height: 25),
               Row(
@@ -58,7 +65,10 @@ class LogoutScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text("Cancel"),
+                      child: Text(
+                        localization.bcancel,
+                        style: isArabic ? AppStyle.arabictext : TextStyle(),
+                      ),
                     ),
                   ),
                   const SizedBox(width: 15),
@@ -66,7 +76,7 @@ class LogoutScreen extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () {
                         // Logout logic: Navigate to Login Screen
-                        // Get.offAllNamed(AppRoutes.login);
+                        Get.offAllNamed(AppRoutes.authoptions);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.redAccent,
@@ -76,7 +86,10 @@ class LogoutScreen extends StatelessWidget {
                           borderRadius: BorderRadius.circular(12),
                         ),
                       ),
-                      child: const Text("Logout"),
+                      child: Text(
+                        isArabic ? "تسجيل الخروج" : "Logout",
+                        style: isArabic ? AppStyle.arabictext : TextStyle(),
+                      ),
                     ),
                   ),
                 ],
