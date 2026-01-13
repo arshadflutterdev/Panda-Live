@@ -100,7 +100,21 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
         backgroundColor: Colors.transparent,
         onPressed: () {
           Get.defaultDialog(
-            cancel: TextButton(onPressed: () {}, child: Text("Cancel")),
+            backgroundColor: Colors.white,
+            title: "Ready to Go Live?",
+            content: Text("Are You Ready To Go Live?", style: AppStyle.btext),
+            cancel: TextButton(
+              onPressed: () {
+                Get.back();
+              },
+              child: Text("Cancel"),
+            ),
+            confirm: TextButton(
+              onPressed: () {
+                Get.toNamed(AppRoutes.golive);
+              },
+              child: Text("Confirm"),
+            ),
           );
         },
         child: Image(image: AssetImage(AppImages.golive), color: Colors.white),
