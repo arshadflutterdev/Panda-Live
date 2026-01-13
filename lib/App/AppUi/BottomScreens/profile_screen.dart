@@ -33,8 +33,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   ];
   //Text on Info Images
   List<String> infoText = [
-    "If You Have Any Questions Please Contant Us Immediately",
-    "Keep your account information private at all times.",
+    "If You Have Any Questions \n Please Contant Us Immediately",
+    "Keep your account information\n private at all times.",
     "Offical Announcement Beaware of Scams",
     "Keep streams safe: No sexual or explicit conten",
   ];

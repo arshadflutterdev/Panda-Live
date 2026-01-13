@@ -59,8 +59,8 @@ class AppImages {
   static const usa = "assets/images/usa.png";
   static const india = "assets/images/india.png";
   //here is note images profile screen
-  static const note = "assets/images/5197434.jpg";
-  static const note1 = "assets/images/3540662.jpg";
-  static const note2 = "assets/images/cfd85132-1185-4bcc-a2e8-f0ca2e0458b0.jpg";
-  static const note3 = "assets/images/506f3354-d0ad-45c8-a36f-0637e6c5572a.jpg";
+  static const note = "assets/images/note1 (1).png";
+  static const note1 = "assets/images/note2 (1).png";
+  static const note2 = "assets/images/note3 (1).png";
+  static const note3 = "assets/images/note3 (1).png";
 }
