@@ -31,6 +31,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     AppImages.note2,
     AppImages.note3,
   ];
+  //Text on Info Images
+  List<String> infoText = [
+    "If You Have Any Questions Please Contant Us Immediately",
+    "Keep your account information private at all times.",
+    "Offical Announcement Beaware of Scams",
+    "Keep streams safe: No sexual or explicit conten",
+  ];
   RxInt currentbgindex = 0.obs;
   void initState() {
     super.initState();
@@ -242,10 +249,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   width: width,
                   decoration: BoxDecoration(
                     image: DecorationImage(
-                      fit: BoxFit.cover,
+                      fit: BoxFit.contain,
                       image: AssetImage(infimages[currentbgindex.value]),
                     ),
-                    color: Colors.red,
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(15),
                   ),
                 ),
@@ -259,10 +266,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
               height: height * 0.070,
               width: width,
               decoration: BoxDecoration(
-                image: DecorationImage(
-                  fit: BoxFit.cover,
-                  image: AssetImage(AppImages.bg),
-                ),
                 borderRadius: BorderRadius.circular(10),
               ),
               child: Padding(
@@ -270,17 +273,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 child: Row(
                   children: [
                     Image(
-                      height: 40,
+                      height: 30,
                       image: AssetImage(AppImages.invite),
-                      color: Colors.limeAccent,
+                      color: Colors.black54,
                     ),
                     Gap(10),
                     Text(
-                      "Invite a frined",
-                      style: AppStyle.tagline.copyWith(color: Colors.white),
+                      "Invite a friend",
+                      style: AppStyle.tagline.copyWith(
+                        color: Colors.black54,
+                        fontSize: 18,
+                      ),
                     ),
                     Spacer(),
-                    Icon(Icons.arrow_forward_ios, color: Colors.white),
+                    Icon(Icons.arrow_forward_ios, color: Colors.black54),
                   ],
                 ),
               ),
