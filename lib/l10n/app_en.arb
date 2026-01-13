@@ -80,7 +80,19 @@
   
   "explore": "Explore",
   "bnew": "New",
-  "following": "Following"
+  "following": "Following",
+
+  "friends": "Friends",
+  "following": "Following",
+  "followers": "Followers",
+  "visitors": "Visitors",
+  "coins": "Coins",
+  "points": "Points",
+  "invitefriend": "Invite a friend",
+  "help": "Help",
+  "level": "Level",
+  "followus": "Follow Us",
+  "logout": "Logout"
 
 }
 

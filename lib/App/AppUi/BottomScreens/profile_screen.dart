@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/get_utils/get_utils.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/state_manager.dart';
-import 'package:pandlive/App/AppUi/Profile/nextScreens/help_screen.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
@@ -31,12 +31,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
     AppImages.note2,
     AppImages.note3,
   ];
-  //Text on Info Images
-  List<String> infoText = [
-    "If You Have Any Questions \n Please Contant Us Immediately",
-    "Keep your account information\n private at all times.",
-    "Offical Announcement Beaware of Scams",
-    "Keep streams safe: No sexual or explicit conten",
+  //arabic on Info Images
+  List<String> infoarimages = [
+    AppImages.infoar2,
+    AppImages.infoar0,
+    AppImages.infoar1,
+    AppImages.infoar,
   ];
   RxInt currentbgindex = 0.obs;
   void initState() {
@@ -55,6 +55,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   @override
   Widget build(BuildContext context) {
+    bool isArabic = Get.locale?.languageCode == "ar";
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
     return Scaffold(
@@ -250,7 +251,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   decoration: BoxDecoration(
                     image: DecorationImage(
                       fit: BoxFit.contain,
-                      image: AssetImage(infimages[currentbgindex.value]),
+                      image: isArabic
+                          ? AssetImage(infoarimages[currentbgindex.value])
+                          : AssetImage(infimages[currentbgindex.value]),
                     ),
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(15),

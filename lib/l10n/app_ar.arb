@@ -82,6 +82,18 @@
 
   "explore": "يستكشف",
   "bnew": "جديد",
-  "following": "التالي"
+  "following": "التالي",
+
+    "friends": "أصدقاء",
+  "following": "التالي",
+  "followers": "المتابعون",
+  "visitors": "الزوار",
+  "coins": "عملات معدنية",
+  "points": "نقاط",
+  "invitefriend": "ادعُ صديقًا",
+  "help": "يساعد",
+  "level": "مستوى",
+  "followus": "تابعنا",
+  "logout": "تسجيل الخروج",
  
 }
