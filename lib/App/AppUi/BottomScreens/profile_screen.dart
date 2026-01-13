@@ -9,6 +9,7 @@ import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
 
 class ProfileScreen extends StatefulWidget {
   const ProfileScreen({super.key});
@@ -56,6 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   @override
   Widget build(BuildContext context) {
     bool isArabic = Get.locale?.languageCode == "ar";
+    final localization = AppLocalizations.of(context)!;
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
     return Scaffold(
@@ -154,8 +156,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 children: [
                   Text("0", style: TextStyle(fontSize: 20)),
                   Text(
-                    "Friends",
-                    style: TextStyle(fontSize: 16, color: Colors.black54),
+                    localization.friends,
+                    style: isArabic
+                        ? AppStyle.arabictext.copyWith(
+                            fontSize: 18,
+                            color: Colors.black54,
+                          )
+                        : TextStyle(fontSize: 16, color: Colors.black54),
                   ),
                 ],
               ),

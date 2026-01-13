@@ -220,4 +220,34 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get following => 'التالي';
+
+  @override
+  String get friends => 'أصدقاء';
+
+  @override
+  String get followers => 'المتابعون';
+
+  @override
+  String get visitors => 'الزوار';
+
+  @override
+  String get coins => 'عملات معدنية';
+
+  @override
+  String get points => 'نقاط';
+
+  @override
+  String get invitefriend => 'ادعُ صديقًا';
+
+  @override
+  String get help => 'يساعد';
+
+  @override
+  String get level => 'مستوى';
+
+  @override
+  String get followus => 'تابعنا';
+
+  @override
+  String get logout => 'تسجيل الخروج';
 }

@@ -220,4 +220,34 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get following => 'Following';
+
+  @override
+  String get friends => 'Friends';
+
+  @override
+  String get followers => 'Followers';
+
+  @override
+  String get visitors => 'Visitors';
+
+  @override
+  String get coins => 'Coins';
+
+  @override
+  String get points => 'Points';
+
+  @override
+  String get invitefriend => 'Invite a friend';
+
+  @override
+  String get help => 'Help';
+
+  @override
+  String get level => 'Level';
+
+  @override
+  String get followus => 'Follow Us';
+
+  @override
+  String get logout => 'Logout';
 }
