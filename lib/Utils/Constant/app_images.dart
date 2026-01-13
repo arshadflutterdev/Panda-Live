@@ -62,5 +62,5 @@ class AppImages {
   static const note = "assets/images/note1 (1).png";
   static const note1 = "assets/images/note2 (1).png";
   static const note2 = "assets/images/note3 (1).png";
-  static const note3 = "assets/images/note3 (1).png";
+  static const note3 = "assets/images/note4 (1).png";
 }
