@@ -5,6 +5,7 @@ import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
 
 class ExplorerScreen extends StatefulWidget {
   const ExplorerScreen({super.key});
@@ -95,25 +96,46 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
   @override
   Widget build(BuildContext context) {
     bool isArabic = Get.locale?.languageCode == "ar";
+    final localization = AppLocalizations.of(context)!;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.transparent,
         onPressed: () {
           Get.defaultDialog(
             backgroundColor: Colors.white,
-            title: "Ready to Go Live?",
-            content: Text("Are You Ready To Go Live?", style: AppStyle.btext),
+            title: isArabic
+                ? "هل أنت مستعد للبث المباشر؟"
+                : "Ready to Go Live?",
+            titleStyle: isArabic
+                ? AppStyle.arabictext.copyWith(fontSize: 22)
+                : TextStyle(),
+            content: Text(
+              isArabic
+                  ? "أضواء، كاميرا... ستبدأ البث المباشر!"
+                  : "Lights, Camera… You’re Going Live!",
+              textAlign: TextAlign.center, // ← ye add karo
+              style: isArabic
+                  ? AppStyle.arabictext.copyWith(fontSize: 22)
+                  : AppStyle.btext,
+            ),
+
             cancel: TextButton(
               onPressed: () {
                 Get.back();
               },
-              child: Text("Cancel"),
+              child: Text(
+                localization.bcancel,
+                style: isArabic ? AppStyle.arabictext : TextStyle(),
+              ),
             ),
             confirm: TextButton(
               onPressed: () {
                 Get.toNamed(AppRoutes.golive);
               },
-              child: Text("Confirm"),
+              child: Text(
+                isArabic ? "يتأكد" : "Confirm",
+                style: isArabic ? AppStyle.arabictext : TextStyle(),
+              ),
             ),
           );
         },
