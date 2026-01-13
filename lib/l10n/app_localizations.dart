@@ -610,6 +610,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Submit Issue'**
   String get submitissued;
+
+  /// No description provided for @helpsupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Support'**
+  String get helpsupport;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

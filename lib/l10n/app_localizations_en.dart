@@ -265,4 +265,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get submitissued => 'Submit Issue';
+
+  @override
+  String get helpsupport => 'Help & Support';
 }

@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/l10n/app_localizations.dart';
 
 class HelpScreen extends StatefulWidget {
   const HelpScreen({super.key});
@@ -44,6 +45,7 @@ class _HelpScreenState extends State<HelpScreen> {
   @override
   Widget build(BuildContext context) {
     bool isArabic = Get.locale?.languageCode == "ar";
+    final localization = AppLocalizations.of(context)!;
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
     return Scaffold(
@@ -56,7 +58,12 @@ class _HelpScreenState extends State<HelpScreen> {
           },
           icon: Icon(Icons.arrow_back_ios_new_outlined),
         ),
-        title: const Text("Help & Support"),
+        title: Text(
+          localization.helpsupport,
+          style: isArabic
+              ? AppStyle.arabictext.copyWith(fontSize: 24)
+              : TextStyle(),
+        ),
         backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
@@ -65,12 +72,15 @@ class _HelpScreenState extends State<HelpScreen> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             /// Topic
-            const Text("Topic"),
+            Text(
+              localization.topic,
+              style: isArabic ? AppStyle.arabictext : TextStyle(),
+            ),
             const SizedBox(height: 6),
             TextField(
               controller: topicCtrl,
               decoration: InputDecoration(
-                hintText: "Topic",
+                hintText: localization.topic,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -80,13 +90,16 @@ class _HelpScreenState extends State<HelpScreen> {
             const SizedBox(height: 16),
 
             /// Details
-            const Text("Issue Details"),
+            Text(
+              localization.issuedetail,
+              style: isArabic ? AppStyle.arabictext : TextStyle(),
+            ),
             const SizedBox(height: 6),
             TextField(
               controller: detailCtrl,
               maxLines: 5,
               decoration: InputDecoration(
-                hintText: "Describe your issue in detail...",
+                hintText: localization.decribissue,
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
@@ -99,7 +112,10 @@ class _HelpScreenState extends State<HelpScreen> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text("Upload Images"),
+                Text(
+                  localization.uploadimage,
+                  style: isArabic ? AppStyle.arabictext : TextStyle(),
+                ),
                 IconButton(
                   onPressed: pickImages,
                   icon: const Icon(Icons.add_a_photo),

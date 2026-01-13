@@ -265,4 +265,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get submitissued => 'إرسال المشكلة';
+
+  @override
+  String get helpsupport => 'المساعدة والدعم';
 }
