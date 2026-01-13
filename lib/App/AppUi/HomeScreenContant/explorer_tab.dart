@@ -98,7 +98,11 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.transparent,
-        onPressed: () {},
+        onPressed: () {
+          Get.defaultDialog(
+            cancel: TextButton(onPressed: () {}, child: Text("Cancel")),
+          );
+        },
         child: Image(image: AssetImage(AppImages.golive), color: Colors.white),
       ),
       backgroundColor: Colors.white,

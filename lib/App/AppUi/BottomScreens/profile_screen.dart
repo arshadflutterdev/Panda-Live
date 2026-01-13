@@ -25,14 +25,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       "icon": Icons.help_outline,
       "trailing": "24h",
     },
-    {"title": AppLocalizations.of(context)!.level, "icon": Icons.star_border},
+    // {"title": AppLocalizations.of(context)!.level, "icon": Icons.star_border},
     {
       "title": AppLocalizations.of(context)!.followus,
       "icon": Icons.favorite_border,
       "social": true,
     },
     {
-      "title": AppLocalizations.of(context)!.followus,
+      "title": AppLocalizations.of(context)!.logout,
       "icon": Icons.logout,
       "danger": true,
     },
@@ -111,7 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        "أرشد يحيى",
+                        isArabic ? "أرشد يحيى" : "Arshad Yahya",
                         style: isArabic
                             ? AppStyle.arabictext.copyWith(
                                 fontSize: 22,
