@@ -5,7 +5,10 @@ import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/profile_screen.dart';
 import 'package:pandlive/App/AppUi/LiveStreaming/WatchStreaming/watchstreaming_class.dart';
 import 'package:pandlive/App/AppUi/Profile/create_profile.dart';
+import 'package:pandlive/App/AppUi/Profile/nextScreens/follow_us.dart';
 import 'package:pandlive/App/AppUi/Profile/nextScreens/help_screen.dart';
+import 'package:pandlive/App/AppUi/Profile/nextScreens/logout_screen.dart';
+import 'package:pandlive/App/AppUi/Profile/nextScreens/my_level_screen.dart';
 import 'package:pandlive/App/AppUi/change_language.dart';
 import 'package:pandlive/App/AppUi/splash_screen.dart';
 import 'package:pandlive/App/AppUi/terms_services.dart';
@@ -43,6 +46,7 @@ class AppRoutes {
   static const help = "/HelpScreen";
   static const followus = "/FollowUs";
   static const level = "/MyLevelScreen";
+  static const logout = "/LogoutScreen";
 
   static final routes = [
     GetPage(name: splash, page: () => SplashScreen()),
@@ -67,5 +71,8 @@ class AppRoutes {
     GetPage(name: watchstream, page: () => WatchstreamingClass()),
     //in profile screen navigates
     GetPage(name: help, page: () => HelpScreen()),
+    GetPage(name: level, page: () => MyLevelScreen()),
+    GetPage(name: followus, page: () => FollowUs()),
+    GetPage(name: logout, page: () => LogoutScreen()),
   ];
 }

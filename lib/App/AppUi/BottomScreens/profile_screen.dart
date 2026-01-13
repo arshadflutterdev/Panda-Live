@@ -2,8 +2,10 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
+import 'package:get/route_manager.dart';
 import 'package:get/state_manager.dart';
 import 'package:pandlive/App/AppUi/Profile/nextScreens/help_screen.dart';
+import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
@@ -38,6 +40,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     bgstream.cancel();
     super.dispose();
   }
+
+  late int currendIndex;
 
   @override
   Widget build(BuildContext context) {
@@ -342,10 +346,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: Colors.black38,
                             ),
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => HelpScreen()),
-                        );
+                        if (currendIndex == 0) {
+                          Get.toNamed(AppRoutes.help);
+                        } else if (currendIndex == 1) {
+                          Get.toNamed(AppRoutes.level);
+                        } else if (currendIndex == 2) {
+                          Get.toNamed(AppRoutes.followus);
+                        } else if (currendIndex == 3) {
+                          Get.toNamed(AppRoutes.logout);
+                        }
                       },
                     );
                   },
