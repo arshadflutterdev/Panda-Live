@@ -87,7 +87,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
         ),
         actions: [
           IconButton(
-            onPressed: () {},
+            onPressed: () {
+              Get.toNamed(AppRoutes.language);
+            },
             icon: Image.asset(AppImages.settings, height: 25, width: 25),
           ),
         ],
@@ -431,10 +433,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         if (index == 0) {
                           Get.toNamed(AppRoutes.help);
                         } else if (index == 1) {
-                          Get.toNamed(AppRoutes.level);
-                        } else if (index == 2) {
                           Get.toNamed(AppRoutes.followus);
-                        } else if (index == 3) {
+                        } else if (index == 2) {
                           Get.toNamed(AppRoutes.logout);
                         }
                       },

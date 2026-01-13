@@ -105,7 +105,7 @@ class _AuthOptionsState extends State<AuthOptions> {
                           child: CircleAvatar(
                             radius: 14,
                             backgroundColor: Colors.white,
-                            backgroundImage: AssetImage(AppImages.language),
+                            backgroundImage: AssetImage(AppImages.settings),
                           ),
                         ),
                       ),

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
+import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 
 class UpdatesScreen extends StatefulWidget {
@@ -50,6 +52,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         elevation: 0,
         backgroundColor: Colors.white,
         title: Text(
@@ -62,9 +65,19 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
           ),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.search, size: 26),
-            onPressed: _openSearchDialog,
+          Row(
+            children: [
+              IconButton(
+                icon: Image(image: AssetImage(AppImages.settings), height: 28),
+                onPressed: () {
+                  Get.toNamed(AppRoutes.language);
+                },
+              ),
+              IconButton(
+                icon: const Icon(Icons.search, size: 26),
+                onPressed: _openSearchDialog,
+              ),
+            ],
           ),
         ],
       ),

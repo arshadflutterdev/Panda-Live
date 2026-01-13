@@ -85,7 +85,7 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      initialRoute: AppRoutes.bottomnav,
+      initialRoute: AppRoutes.splash,
       getPages: AppRoutes.routes,
       title: 'PandLive',
       theme: ThemeData(
