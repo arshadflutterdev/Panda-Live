@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
@@ -18,36 +19,26 @@ class _HelpScreenState extends State<HelpScreen> {
 
   final ImagePicker picker = ImagePicker();
   List<File> images = [];
+  bool isPicking = false;
 
   Future<void> pickImages() async {
-    final pickedFiles = await picker.pickMultiImage(imageQuality: 70);
-    if (pickedFiles.isNotEmpty) {
-      setState(() {
-        images.addAll(pickedFiles.map((e) => File(e.path)));
-      });
+    if (isPicking) return; // agar already open hai, do nothing
+    isPicking = true; // flag ON
+
+    try {
+      final pickedFiles = await picker.pickMultiImage(imageQuality: 70);
+
+      if (pickedFiles != null && pickedFiles.isNotEmpty) {
+        setState(() {
+          images.addAll(pickedFiles.map((e) => File(e.path)));
+        });
+      }
+    } catch (e) {
+      print("Image picker error: $e");
+      Get.snackbar("Error", "Cannot open camera/gallery");
+    } finally {
+      isPicking = false; // flag OFF
     }
-  }
-
-  void submitHelp() {
-    if (topicCtrl.text.isEmpty || detailCtrl.text.isEmpty) {
-      ScaffoldMessenger.of(
-        context,
-      ).showSnackBar(const SnackBar(content: Text("Please fill all fields")));
-      return;
-    }
-
-    // 🔥 Future: Firebase / API call
-    print("Topic: ${topicCtrl.text}");
-    print("Details: ${detailCtrl.text}");
-    print("Images: ${images.length}");
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text("Issue submitted successfully")),
-    );
-
-    topicCtrl.clear();
-    detailCtrl.clear();
-    setState(() => images.clear());
   }
 
   @override
@@ -56,7 +47,17 @@ class _HelpScreenState extends State<HelpScreen> {
     double width = AppHeightwidth.screenWidth(context);
     return Scaffold(
       backgroundColor: Colors.white,
-      appBar: AppBar(title: const Text("Help & Support")),
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(Icons.arrow_back_ios_new_outlined),
+        ),
+        title: const Text("Help & Support"),
+        backgroundColor: Colors.white,
+      ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
         child: Column(
@@ -68,7 +69,7 @@ class _HelpScreenState extends State<HelpScreen> {
             TextField(
               controller: topicCtrl,
               decoration: InputDecoration(
-                hintText: "e.g. Login issue, Payment problem",
+                hintText: "first Tell us topic",
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
                 ),
