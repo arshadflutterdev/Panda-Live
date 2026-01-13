@@ -52,9 +52,15 @@ class AppImages {
   static const egirl6 = "assets/images/girl6.jpg";
   static const egirll7 = "assets/images/girl7.jpg";
   //countries flag
+
   static const saudi = "assets/images/saudi.png";
   static const pak = "assets/images/pak.png";
   static const uae = "assets/images/uae.png";
   static const usa = "assets/images/usa.png";
   static const india = "assets/images/india.png";
+  //here is note images profile screen
+  static const note = "assets/images/note1.png";
+  static const note1 = "assets/images/note2.png";
+  static const note2 = "assets/images/note3.png";
+  static const note3 = "assets/images/note4.png";
 }
