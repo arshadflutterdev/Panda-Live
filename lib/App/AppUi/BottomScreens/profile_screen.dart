@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/state_manager.dart';
+import 'package:pandlive/App/AppUi/Profile/nextScreens/help_screen.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
@@ -341,9 +342,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               color: Colors.black38,
                             ),
                       onTap: () {
-                        if (item["title"] == "Logout") {
-                          // TODO: logout logic
-                        }
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => HelpScreen()),
+                        );
                       },
                     );
                   },

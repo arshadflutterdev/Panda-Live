@@ -5,6 +5,7 @@ import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/profile_screen.dart';
 import 'package:pandlive/App/AppUi/LiveStreaming/WatchStreaming/watchstreaming_class.dart';
 import 'package:pandlive/App/AppUi/Profile/create_profile.dart';
+import 'package:pandlive/App/AppUi/Profile/nextScreens/help_screen.dart';
 import 'package:pandlive/App/AppUi/change_language.dart';
 import 'package:pandlive/App/AppUi/splash_screen.dart';
 import 'package:pandlive/App/AppUi/terms_services.dart';
@@ -39,6 +40,9 @@ class AppRoutes {
   static const updates = "/UpdatesScreen";
   static const profile = "/ProfileScreen";
   static const watchstream = "/WatchstreamingClass";
+  static const help = "/HelpScreen";
+  static const followus = "/FollowUs";
+  static const level = "/MyLevelScreen";
 
   static final routes = [
     GetPage(name: splash, page: () => SplashScreen()),
@@ -61,5 +65,7 @@ class AppRoutes {
     GetPage(name: updates, page: () => UpdatesScreen()),
     GetPage(name: profile, page: () => ProfileScreen()),
     GetPage(name: watchstream, page: () => WatchstreamingClass()),
+    //in profile screen navigates
+    GetPage(name: help, page: () => HelpScreen()),
   ];
 }
