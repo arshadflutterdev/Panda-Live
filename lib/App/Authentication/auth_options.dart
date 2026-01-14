@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/DialogBox/terms_dialog.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
@@ -46,6 +47,19 @@ class _AuthOptionsState extends State<AuthOptions> {
   void dispose() {
     timer?.cancel();
     super.dispose();
+  }
+
+  //function to signin with google
+  Future<void> signinwithgoogle() async {
+    final GoogleSignIn gsignin = GoogleSignIn.instance;
+    try {
+      gsignin.initialize(
+        serverClientId:
+            "263336994953-7g76hb49aimv34b81cmmes3btt461f68.apps.googleusercontent.com",
+      );
+    } catch (e) {
+      print(e);
+    }
   }
 
   //here below to show dialogebox
