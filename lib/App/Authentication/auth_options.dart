@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:pandlive/App/Authentication/GoogleAuth/google_auth_controller.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/DialogBox/terms_dialog.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
@@ -51,45 +52,7 @@ class _AuthOptionsState extends State<AuthOptions> {
   }
 
   //function to signin with google
-  Future<UserCredential?> signingwithgoogle() async {
-    GoogleSignIn gsignin = GoogleSignIn.instance;
-    try {
-      gsignin.initialize(
-        serverClientId:
-            "263336994953-7g76hb49aimv34b81cmmes3btt461f68.apps.googleusercontent.com",
-      );
-      final GoogleSignInAccount? googleauth = await gsignin.authenticate();
-      if (googleauth == null) {
-        return null;
-      }
-
-      final GoogleSignInAuthentication? gsignauth =
-          await googleauth.authentication;
-      final credentials = GoogleAuthProvider.credential(
-        idToken: gsignauth?.idToken,
-      );
-      UserCredential? usercredential = await FirebaseAuth.instance
-          .signInWithCredential(credentials);
-      User? user = usercredential.user;
-      if (user != null) {
-        Get.toNamed(
-          AppRoutes.createprofile,
-          arguments: {
-            "userId": user.uid,
-            "username": user.displayName,
-            "userphoto": user.photoURL,
-          },
-        );
-        print("user id ${user.uid}");
-        print("username ${user.displayName}");
-        print("user phote ${user.photoURL}");
-      }
-    } catch (e) {
-      print(e);
-    }
-    return null;
-  }
-
+  GoogleAuthController gauthcontroller = Get.find<GoogleAuthController>();
   //here below to show dialogebox
   bool isNavigate = false;
   bool isArabic = Get.locale?.languageCode == "ar";
@@ -213,7 +176,7 @@ class _AuthOptionsState extends State<AuthOptions> {
 
                       child: GestureDetector(
                         onTap: () {
-                          signingwithgoogle();
+                          gauthcontroller.signingwithgoogle();
                         },
                         child: Container(
                           height: 50,
