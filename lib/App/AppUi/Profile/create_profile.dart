@@ -90,6 +90,9 @@ class _CreateProfileState extends State<CreateProfile> {
     final userId = argu["userId"];
     print("on profile screen id $userId");
     final username = argu['username'];
+    if (username != null) {
+      nameController.text = username;
+    }
     print("profile screen name $username");
     final userphoto = argu["userphoto"];
     print("prfile screen photo $userphoto");
