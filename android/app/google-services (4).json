@@ -1,0 +1,54 @@
+{
+  "project_info": {
+    "project_number": "263336994953",
+    "project_id": "panda-live-app",
+    "storage_bucket": "panda-live-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:263336994953:android:532b9e472e7e6911bb7e58",
+        "android_client_info": {
+          "package_name": "com.example.pandlive"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "263336994953-2764nu4o47lfli377kkr7t9k9g0upfrm.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.pandlive",
+            "certificate_hash": "3d4bb459ad0b961177bfe5bdea9bbcda5fbc8e65"
+          }
+        },
+        {
+          "client_id": "263336994953-7g76hb49aimv34b81cmmes3btt461f68.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCndv6uzC2zR77MxRuKvPctp9g4bS8h5Os"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "263336994953-7g76hb49aimv34b81cmmes3btt461f68.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "263336994953-3k2n8gjlkkaf1j0bmuqc2ds3mob6ehsn.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.pandlive"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

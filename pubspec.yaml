@@ -44,6 +44,8 @@ dependencies:
   intl: any
   shared_preferences: ^2.5.4
   url_launcher: ^6.3.2
+  firebase_core: ^4.3.0
+  firebase_auth: ^6.1.3
   
  
 
