@@ -72,6 +72,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     final localization = AppLocalizations.of(context)!;
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(

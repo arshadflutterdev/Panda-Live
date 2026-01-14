@@ -86,6 +86,13 @@ class _CreateProfileState extends State<CreateProfile> {
   bool isArabic = Get.locale?.languageCode == "ar";
   @override
   Widget build(BuildContext context) {
+    final argu = Get.arguments as Map<String, dynamic>;
+    final userId = argu["userId"];
+    print("on profile screen id $userId");
+    final username = argu['username'];
+    print("profile screen name $username");
+    final userphoto = argu["userphoto"];
+    print("prfile screen photo $userphoto");
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
     final localization = AppLocalizations.of(context)!;

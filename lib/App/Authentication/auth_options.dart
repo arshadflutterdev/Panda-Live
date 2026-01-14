@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -50,16 +51,43 @@ class _AuthOptionsState extends State<AuthOptions> {
   }
 
   //function to signin with google
-  Future<void> signinwithgoogle() async {
-    final GoogleSignIn gsignin = GoogleSignIn.instance;
+  Future<UserCredential?> signingwithgoogle() async {
+    GoogleSignIn gsignin = GoogleSignIn.instance;
     try {
       gsignin.initialize(
         serverClientId:
             "263336994953-7g76hb49aimv34b81cmmes3btt461f68.apps.googleusercontent.com",
       );
+      final GoogleSignInAccount? googleauth = await gsignin.authenticate();
+      if (googleauth == null) {
+        return null;
+      }
+
+      final GoogleSignInAuthentication? gsignauth =
+          await googleauth.authentication;
+      final credentials = GoogleAuthProvider.credential(
+        idToken: gsignauth?.idToken,
+      );
+      UserCredential? usercredential = await FirebaseAuth.instance
+          .signInWithCredential(credentials);
+      User? user = usercredential.user;
+      if (user != null) {
+        Get.toNamed(
+          AppRoutes.createprofile,
+          arguments: {
+            "userId": user.uid,
+            "username": user.displayName,
+            "userphoto": user.photoURL,
+          },
+        );
+        print("user id ${user.uid}");
+        print("username ${user.displayName}");
+        print("user phote ${user.photoURL}");
+      }
     } catch (e) {
       print(e);
     }
+    return null;
   }
 
   //here below to show dialogebox
@@ -183,43 +211,48 @@ class _AuthOptionsState extends State<AuthOptions> {
                         }
                       },
 
-                      child: Container(
-                        height: 50,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Directionality(
-                          textDirection: TextDirection.ltr,
-                          child: Row(
-                            children: [
-                              // Icon(CupertinoIcons.goog)
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 6,
-                                  vertical: 2,
+                      child: GestureDetector(
+                        onTap: () {
+                          signingwithgoogle();
+                        },
+                        child: Container(
+                          height: 50,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: Row(
+                              children: [
+                                // Icon(CupertinoIcons.goog)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
+                                  child: Image(
+                                    height: 30,
+                                    width: 40,
+                                    image: AssetImage(AppImages.google),
+                                  ),
                                 ),
-                                child: Image(
-                                  height: 30,
-                                  width: 40,
-                                  image: AssetImage(AppImages.google),
+                                Gap(width * 0.080),
+                                Text(
+                                  localization.google,
+                                  style: isArabic
+                                      ? AppStyle.arabictext.copyWith(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.blue,
+                                          fontSize: 20,
+                                        )
+                                      : AppStyle.btext.copyWith(
+                                          color: Colors.blue,
+                                        ),
                                 ),
-                              ),
-                              Gap(width * 0.080),
-                              Text(
-                                localization.google,
-                                style: isArabic
-                                    ? AppStyle.arabictext.copyWith(
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.blue,
-                                        fontSize: 20,
-                                      )
-                                    : AppStyle.btext.copyWith(
-                                        color: Colors.blue,
-                                      ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
