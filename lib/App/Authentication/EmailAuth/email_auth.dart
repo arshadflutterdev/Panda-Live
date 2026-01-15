@@ -49,6 +49,12 @@ class _EmailAuthState extends State<EmailAuth> {
             "email": user.email,
           },
         );
+        Get.snackbar(
+          "Email Verification Sent",
+          "We've sent a verification email to your inbox. Please check it and verify your account.",
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
+        );
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == 'email-already-in-use') {

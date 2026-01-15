@@ -1,14 +1,12 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
-import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
@@ -26,24 +24,30 @@ class _VerifyEmailState extends State<VerifyEmail> {
   TextEditingController passController = TextEditingController();
   RxBool isSMSEmtpy = false.obs;
   RxBool isCodeEmpty = false.obs;
-  RxInt seconds = 60.obs;
+  RxInt seconds = 120.obs;
   RxBool canResend = false.obs;
   bool isArabic = Get.locale?.languageCode == "ar";
   Timer? timr;
   RxBool isSecure = true.obs;
   final _formkey = GlobalKey<FormState>();
   void starttimer() {
-    seconds.value = 60;
-    canResend.value = false;
+    seconds.value = 120;
+    timr?.cancel();
+
     timr = Timer.periodic(Duration(seconds: 1), (Timer t) {
       if (seconds.value > 0) {
         seconds.value--;
       } else {
-        canResend.value = true;
         // Get.back();
         t.cancel();
       }
     });
+  }
+
+  String formatTime(int totalseconds) {
+    final minutes = (totalseconds ~/ 60).toString().padLeft(2, "0");
+    final seconds = (totalseconds % 60).toString().padLeft(2, "0");
+    return "$minutes:$seconds";
   }
 
   void resendemail() async {
@@ -116,6 +120,8 @@ class _VerifyEmailState extends State<VerifyEmail> {
                   child: IconButton(
                     onPressed: () async {
                       await FirebaseAuth.instance.currentUser!.delete();
+                      if (!mounted) return;
+
                       Get.back();
                     },
                     icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
@@ -242,7 +248,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                       Obx(
                         () => seconds.value != 0
                             ? Text(
-                                "Resend available in ${seconds.value.toString()}",
+                                "Resend available in ${formatTime(seconds.value)}",
                               )
                             : TextButton(
                                 onPressed: resendemail,
