@@ -37,7 +37,7 @@ class _EmailLoginState extends State<EmailLogin> {
           Get.locale?.languageCode == "ar"
               ? "تم تحديث كلمة المرور بنجاح"
               : "Your password has been reset successfully",
-          snackPosition: SnackPosition.BOTTOM,
+
           backgroundColor: Colors.black,
           colorText: Colors.white,
         );

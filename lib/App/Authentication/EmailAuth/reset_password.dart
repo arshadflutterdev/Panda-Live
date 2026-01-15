@@ -101,7 +101,9 @@ class _ResetPasswordState extends State<ResetPassword> {
                           : AppStyle.btext.copyWith(fontSize: 22),
                     ),
                     Text(
-                      localization.vcodesended,
+                      isArabic
+                          ? "لا تقلق! سنساعدك على إعادة تعيين كلمة المرور عبر البريد الإلكتروني."
+                          : "Don’t worry! We’ll help you reset your password via email.",
                       style: isArabic
                           ? AppStyle.arabictext.copyWith(color: Colors.black54)
                           : TextStyle(color: Colors.black54),
