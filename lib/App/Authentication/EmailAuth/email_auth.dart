@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -23,8 +24,32 @@ class _EmailAuthState extends State<EmailAuth> {
   RxBool isloading = false.obs;
   final _formkey = GlobalKey<FormState>();
   TextEditingController emailController = TextEditingController();
+  TextEditingController passwordController = TextEditingController();
   RxBool isEmailEmpty = false.obs;
   bool isArabic = Get.locale?.languageCode == "ar";
+
+  //here is function to signinwith email
+  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  Future<void> createAccountWithEmail() async {
+    final String email = emailController.text.trim();
+
+    try {
+      UserCredential usercredential = await firebaseAuth
+          .createUserWithEmailAndPassword(
+            email: email,
+            password: "temprery123",
+          );
+      User? user = usercredential.user;
+      await user!.sendEmailVerification();
+      if (user != null) {
+        Get.toNamed(AppRoutes.verifyemail);
+        print("user id ${user.uid}");
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
@@ -131,7 +156,7 @@ class _EmailAuthState extends State<EmailAuth> {
                       isloading.value = true;
                       Timer(Duration(seconds: 2), () {
                         isloading.value = false;
-                        Get.toNamed(AppRoutes.verifyemail);
+                        createAccountWithEmail();
                       });
                     }
                   },
