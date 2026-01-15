@@ -271,4 +271,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get verificationlink => 'verification link send to';
+
+  @override
+  String get createaccountwithemail => 'Create Account with Email';
 }

@@ -271,4 +271,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get verificationlink => 'أرسل رابط التحقق إلى';
+
+  @override
+  String get createaccountwithemail => 'إنشاء حساب بالبريد الإلكتروني';
 }

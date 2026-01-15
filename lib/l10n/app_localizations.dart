@@ -622,6 +622,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'verification link send to'**
   String get verificationlink;
+
+  /// No description provided for @createaccountwithemail.
+  ///
+  /// In en, this message translates to:
+  /// **'Create Account with Email'**
+  String get createaccountwithemail;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

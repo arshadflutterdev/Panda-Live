@@ -104,7 +104,8 @@
   "submitissued": "إرسال المشكلة",
     "helpsupport": "المساعدة والدعم",
     
-  "verificationlink": "أرسل رابط التحقق إلى"
+  "verificationlink": "أرسل رابط التحقق إلى",
+  "createaccountwithemail": "إنشاء حساب بالبريد الإلكتروني"
 
  
 }

@@ -101,7 +101,8 @@
   "submitissued": "Submit Issue",
   "helpsupport": "Help & Support",
 
-  "verificationlink": "verification link send to"
+  "verificationlink": "verification link send to",
+  "createaccountwithemail": "Create Account with Email"
 
 }
 
