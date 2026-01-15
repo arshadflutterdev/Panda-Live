@@ -61,6 +61,47 @@ class EmailLoginController extends GetxController {
           "",
           backgroundColor: Colors.red,
         );
+      } else if (e.code == "invalid-credential") {
+        Get.snackbar(
+          titleText: Text(
+            isArabic ? "فشل تسجيل الدخول" : "Login Failed",
+            style: isArabic
+                ? AppStyle.arabictext.copyWith(color: Colors.white)
+                : TextStyle(color: Colors.white),
+          ),
+          messageText: Text(
+            isArabic
+                ? "البريد الإلكتروني أو كلمة المرور غير صحيحة أو منتهية الصلاحية."
+                : "Email or password is incorrect or expired.",
+            style: isArabic
+                ? AppStyle.arabictext.copyWith(color: Colors.white)
+                : TextStyle(color: Colors.white),
+          ),
+
+          "",
+          "",
+          backgroundColor: Colors.red,
+        );
+      } else if (e.code == "too-many-requests") {
+        Get.snackbar(
+          titleText: Text(
+            isArabic ? "محاولات كثيرة جداً" : "Too Many Attempts",
+            style: isArabic
+                ? AppStyle.arabictext.copyWith(color: Colors.white)
+                : TextStyle(color: Colors.white),
+          ),
+          messageText: Text(
+            isArabic
+                ? "لقد حاولت مرات كثيرة جداً. حاول مرة أخرى لاحقاً."
+                : "You have tried too many times. Try again later.",
+            style: isArabic
+                ? AppStyle.arabictext.copyWith(color: Colors.white)
+                : TextStyle(color: Colors.white),
+          ),
+          "",
+          "",
+          backgroundColor: Colors.red,
+        );
       } else {
         print(e.toString());
       }
