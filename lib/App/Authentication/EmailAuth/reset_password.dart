@@ -222,10 +222,10 @@ class _ResetPasswordState extends State<ResetPassword> {
                                         ),
                                 ),
                         ),
-                        onPressed: () {
+                        onPressed: () async {
                           if (_formkey.currentState!.validate()) {
                             isloading.value = true;
-                            resetpassword.resetPassword();
+                            await resetpassword.resetPassword();
                             isloading.value = false;
                           }
                         },

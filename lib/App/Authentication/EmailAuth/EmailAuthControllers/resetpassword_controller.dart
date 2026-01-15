@@ -18,6 +18,8 @@ class ResetpasswordController extends GetxController {
             ? "تم إرسال رابط إعادة تعيين كلمة المرور"
             : "Password reset link sent to your email",
         snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
       );
 
       // ✅ Auto back after 2 seconds

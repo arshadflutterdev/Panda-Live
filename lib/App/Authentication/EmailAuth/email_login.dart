@@ -26,6 +26,22 @@ class _EmailLoginState extends State<EmailLogin> {
   RxBool isEmailEmpty = false.obs;
   //function to login
   final EmailLoginController loginController = Get.find();
+  @override
+  void initState() {
+    super.initState();
+
+    if (Get.arguments == "password_reset_success") {
+      Future.delayed(Duration.zero, () {
+        Get.snackbar(
+          Get.locale?.languageCode == "ar" ? "تم التحديث" : "Password Updated",
+          Get.locale?.languageCode == "ar"
+              ? "تم تحديث كلمة المرور بنجاح"
+              : "Your password has been reset successfully",
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
