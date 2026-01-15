@@ -85,10 +85,18 @@ class _VerifyEmailState extends State<VerifyEmail> {
   RxBool isLoading = false.obs;
   @override
   Widget build(BuildContext context) {
-    final arg = Get.arguments as Map<String, dynamic>;
-    final userid = arg["userId"];
-    final username = arg["userName"];
-    final email = arg["email"];
+    final arg = Get.arguments;
+    final userid = "";
+    final username = "";
+    final email = "";
+    if (arg != null && arg is Map<String, dynamic>) {
+      final userid = arg["userId"] ?? "";
+      final username = arg["userName"] ?? "";
+      print("here is email user name $username");
+      final email = arg["email"] ?? "";
+    } else {
+      print("No arguments found");
+    }
 
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);

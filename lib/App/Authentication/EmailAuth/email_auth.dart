@@ -147,11 +147,11 @@ class _EmailAuthState extends State<EmailAuth> {
                       : AppStyle.btext,
                 ),
               ),
-
+              Gap(8),
               Form(
                 key: _formkey,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: const EdgeInsets.symmetric(horizontal: 8),
                   child: Obx(
                     () => MyTextFormField(
                       keyboard: TextInputType.emailAddress,
@@ -181,6 +181,24 @@ class _EmailAuthState extends State<EmailAuth> {
                           : null,
                     ),
                   ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  Get.toNamed(AppRoutes.loginemail);
+                },
+                child: Text(
+                  localization.alreadyaccount,
+                  style: isArabic
+                      ? AppStyle.arabictext.copyWith(
+                          fontSize: 18,
+                          color: Colors.black,
+                        )
+                      : AppStyle.btext.copyWith(
+                          fontSize: 16,
+                          fontWeight: FontWeight.normal,
+                          color: Colors.black,
+                        ),
                 ),
               ),
               Gap(height * 0.020),
