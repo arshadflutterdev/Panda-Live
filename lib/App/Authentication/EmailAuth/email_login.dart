@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/Authentication/EmailAuth/EmailAuthControllers/email_login_controller.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
@@ -20,8 +21,6 @@ class EmailLogin extends StatefulWidget {
 }
 
 class _EmailLoginState extends State<EmailLogin> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passController = TextEditingController();
   final _formkey = GlobalKey<FormState>();
   RxBool isCodeEmpty = false.obs;
   RxBool isSecure = true.obs;
@@ -29,64 +28,7 @@ class _EmailLoginState extends State<EmailLogin> {
   bool isArabic = Get.locale?.languageCode == "ar";
   RxBool isEmailEmpty = false.obs;
   //function to login
-  Future<void> loginwithemail() async {
-    final email = emailController.text.trim();
-    final password = passController.text.trim();
-    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-    try {
-      UserCredential usercredential = await firebaseAuth
-          .signInWithEmailAndPassword(email: email, password: password);
-      User? user = usercredential.user;
-      if (user != null) {
-        Get.toNamed(AppRoutes.bottomnav);
-      }
-    } on FirebaseAuthException catch (e) {
-      if (e.code == "user-not-found") {
-        Get.snackbar(
-          titleText: Text(
-            isArabic ? "لم يتم العثور على الحساب" : "Account Not Found",
-            style: isArabic
-                ? AppStyle.arabictext.copyWith(color: Colors.white)
-                : TextStyle(color: Colors.white),
-          ),
-          messageText: Text(
-            isArabic
-                ? "عفواً! لم يتم تسجيل هذا البريد الإلكتروني بعد."
-                : "Oops! This email is not registered yet.",
-            style: isArabic
-                ? AppStyle.arabictext.copyWith(color: Colors.white)
-                : TextStyle(color: Colors.white),
-          ),
-
-          "",
-          "",
-          backgroundColor: Colors.red,
-        );
-      } else if (e.code == "wrong-password") {
-        Get.snackbar(
-          titleText: Text(
-            isArabic ? "كلمة المرور غير صحيحة" : "Incorrect Password",
-            style: isArabic
-                ? AppStyle.arabictext.copyWith(color: Colors.white)
-                : TextStyle(color: Colors.white),
-          ),
-          messageText: Text(
-            isArabic
-                ? "كلمة المرور التي أدخلتها غير صحيحة. يرجى المحاولة مرة أخرى."
-                : "The password you entered is incorrect. Please try again.",
-            style: isArabic
-                ? AppStyle.arabictext.copyWith(color: Colors.white)
-                : TextStyle(color: Colors.white),
-          ),
-          "",
-          "",
-          backgroundColor: Colors.red,
-        );
-      } else {
-        print(e.toString());
-      }
-    }
-  }
+  final EmailLoginController loginController = Get.find();
 
   @override
   Widget build(BuildContext context) {
@@ -136,21 +78,23 @@ class _EmailLoginState extends State<EmailLogin> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Gap(height * 0.050),
+                          Gap(height * 0.1),
                           Obx(
                             () => MyTextFormField(
                               keyboard: TextInputType.emailAddress,
                               validator: (value) {
-                                if (emailController.text.isEmpty) {
+                                if (loginController
+                                    .emailController
+                                    .text
+                                    .isEmpty) {
                                   return localization.enteremail;
-                                } else if (!emailController.text.contains(
-                                  "@gmail.com",
-                                )) {
+                                } else if (!loginController.emailController.text
+                                    .contains("@gmail.com")) {
                                   return localization.validemail;
                                 }
                                 return null;
                               },
-                              controller: emailController,
+                              controller: loginController.emailController,
                               hintext: localization.enteremail,
                               onChanged: (newValue) {
                                 isEmailEmpty.value = newValue.isNotEmpty;
@@ -158,7 +102,7 @@ class _EmailLoginState extends State<EmailLogin> {
                               suffix: isEmailEmpty.value
                                   ? IconButton(
                                       onPressed: () {
-                                        emailController.clear();
+                                        loginController.emailController.clear();
                                         isEmailEmpty.value = false;
                                       },
                                       icon: Icon(
@@ -178,15 +122,22 @@ class _EmailLoginState extends State<EmailLogin> {
                           Obx(
                             () => MyTextFormField(
                               validator: (value) {
-                                if (passController.text.isEmpty) {
+                                if (loginController
+                                    .passController
+                                    .text
+                                    .isEmpty) {
                                   return localization.enteryourpass;
-                                } else if (passController.text.length < 8) {
+                                } else if (loginController
+                                        .passController
+                                        .text
+                                        .length <
+                                    8) {
                                   return localization.code8digits;
                                 }
                                 return null;
                               },
                               obscure: isSecure.value,
-                              controller: passController,
+                              controller: loginController.passController,
                               keyboard: TextInputType.text,
                               hintext: localization.enteryourpass,
                               onChanged: (newValue) {
@@ -201,7 +152,7 @@ class _EmailLoginState extends State<EmailLogin> {
                                     IconButton(
                                       padding: EdgeInsets.zero,
                                       onPressed: () {
-                                        passController.clear();
+                                        loginController.passController.clear();
                                       },
                                       icon: isCodeEmpty.value
                                           ? Icon(
@@ -269,7 +220,7 @@ class _EmailLoginState extends State<EmailLogin> {
                       onPressed: () async {
                         if (_formkey.currentState!.validate()) {
                           isLoading.value = true;
-                          await loginwithemail();
+                          await loginController.loginwithemail();
                           isLoading.value = false;
                         }
                       },

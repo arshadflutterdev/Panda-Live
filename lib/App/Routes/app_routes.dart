@@ -65,7 +65,11 @@ class AppRoutes {
     GetPage(name: verifynumber, page: () => VerifyNumber()),
     GetPage(name: createprofile, page: () => CreateProfile()),
     GetPage(name: verifyemail, page: () => VerifyEmail()),
-    GetPage(name: loginemail, page: () => EmailLogin()),
+    GetPage(
+      binding: AuthBindings(),
+      name: loginemail,
+      page: () => EmailLogin(),
+    ),
     GetPage(name: resetpassword, page: () => ResetPassword()),
     GetPage(name: phonelogin, page: () => PhoneLogin()),
     GetPage(name: phonereset, page: () => PhoneResetPassword()),
