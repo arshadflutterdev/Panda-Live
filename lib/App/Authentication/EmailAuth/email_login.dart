@@ -1,6 +1,3 @@
-import 'dart:async';
-
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -113,6 +110,7 @@ class _EmailLoginState extends State<EmailLogin> {
                                   : null,
                             ),
                           ),
+
                           Gap(10),
                           Text(
                             localization.enter8pass,

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -51,6 +52,9 @@ class _ResetPasswordState extends State<ResetPassword> {
     });
   }
 
+  RxBool isEmailEmpty = false.obs;
+  TextEditingController loginController = TextEditingController();
+  TextEditingController emailController = TextEditingController();
   @override
   void initState() {
     super.initState();
@@ -134,32 +138,37 @@ class _ResetPasswordState extends State<ResetPassword> {
                         children: [
                           Obx(
                             () => MyTextFormField(
+                              keyboard: TextInputType.emailAddress,
                               validator: (value) {
-                                if (smsController.text.isEmpty) {
-                                  return localization.hint6ditis;
-                                } else if (!smsController.text.contains(
-                                  "128025",
+                                if (emailController.text.isEmpty) {
+                                  return localization.enteremail;
+                                } else if (!emailController.text.contains(
+                                  "@gmail.com",
                                 )) {
-                                  return localization.codeincorrect;
+                                  return localization.validemail;
                                 }
                                 return null;
                               },
-                              controller: smsController,
-                              keyboard: TextInputType.number,
-                              hintext: localization.hint6ditis,
+                              controller: emailController,
+                              hintext: localization.enteremail,
                               onChanged: (newValue) {
-                                isSMSEmtpy.value = newValue.isNotEmpty;
+                                isEmailEmpty.value = newValue.isNotEmpty;
                               },
-                              suffix: IconButton(
-                                onPressed: () {
-                                  smsController.clear();
-                                },
-                                icon: isSMSEmtpy.value
-                                    ? Icon(Icons.close, color: Colors.black54)
-                                    : SizedBox.shrink(),
-                              ),
+                              suffix: isEmailEmpty.value
+                                  ? IconButton(
+                                      onPressed: () {
+                                        emailController.clear();
+                                        isEmailEmpty.value = false;
+                                      },
+                                      icon: Icon(
+                                        Icons.close,
+                                        color: Colors.black54,
+                                      ),
+                                    )
+                                  : null,
                             ),
                           ),
+
                           Row(
                             children: [
                               Obx(() {
@@ -200,99 +209,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                               }),
                               Gap(4),
                             ],
-                          ),
-                          Align(
-                            alignment: isArabic
-                                ? Alignment.bottomRight
-                                : Alignment.bottomLeft,
-                            child: TextButton(
-                              onPressed: () {
-                                Get.offAllNamed(AppRoutes.authoptions);
-                              },
-                              child: Text(
-                                localization.tryanother,
-                                style: isArabic
-                                    ? AppStyle.arabictext.copyWith(
-                                        color: AppColours.blues,
-                                      )
-                                    : TextStyle(color: AppColours.blues),
-                              ),
-                            ),
-                          ),
-
-                          Obx(
-                            () => MyTextFormField(
-                              validator: (value) {
-                                if (passController.text.isEmpty) {
-                                  return localization.createpassword;
-                                } else if (passController.text.length < 8) {
-                                  return localization.code8digits;
-                                }
-                                return null;
-                              },
-                              obscure: isSecure.value,
-                              controller: passController,
-                              keyboard: TextInputType.text,
-                              hintext: localization.createpassword,
-                              onChanged: (newValue) {
-                                isCodeEmpty.value = newValue.isNotEmpty;
-                              },
-                              suffix: SizedBox(
-                                height: 20,
-                                width: width * 0.27,
-
-                                child: Row(
-                                  children: [
-                                    IconButton(
-                                      padding: EdgeInsets.zero,
-                                      onPressed: () {
-                                        passController.clear();
-                                      },
-                                      icon: isCodeEmpty.value
-                                          ? Icon(
-                                              Icons.close,
-                                              color: Colors.black54,
-                                            )
-                                          : SizedBox.shrink(),
-                                    ),
-                                    IconButton(
-                                      padding: EdgeInsets.zero,
-                                      onPressed: () {
-                                        isSecure.value = !isSecure.value;
-                                      },
-                                      icon: isSecure.value
-                                          ? Image(
-                                              height: 25,
-
-                                              image: AssetImage(
-                                                AppImages.eyesoff,
-                                              ),
-                                            )
-                                          : Image(
-                                              height: 25,
-                                              image: AssetImage(
-                                                AppImages.eyeson,
-                                              ),
-                                            ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ),
-
-                          Align(
-                            alignment: isArabic
-                                ? Alignment.topRight
-                                : Alignment.topLeft,
-                            child: Text(
-                              localization.setpassword,
-                              style: isArabic
-                                  ? AppStyle.arabictext.copyWith(
-                                      color: Colors.black54,
-                                    )
-                                  : TextStyle(color: Colors.black54),
-                            ),
                           ),
                         ],
                       ),
