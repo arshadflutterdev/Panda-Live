@@ -44,8 +44,9 @@ class _EmailAuthState extends State<EmailAuth> {
         Get.toNamed(
           AppRoutes.verifyemail,
           arguments: {
-            "userId": userCredential.user!.uid,
-            "userName": userCredential.user!.displayName,
+            "userId": user.uid,
+            "userName": user.displayName,
+            "email": user.email,
           },
         );
       }

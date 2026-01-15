@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -25,19 +27,44 @@ class _VerifyEmailState extends State<VerifyEmail> {
   RxBool isSMSEmtpy = false.obs;
   RxBool isCodeEmpty = false.obs;
   RxInt seconds = 60.obs;
+  RxBool canResend = false.obs;
   bool isArabic = Get.locale?.languageCode == "ar";
   Timer? timr;
   RxBool isSecure = true.obs;
   final _formkey = GlobalKey<FormState>();
   void starttimer() {
+    seconds.value = 60;
+    canResend.value = true;
     timr = Timer.periodic(Duration(seconds: 1), (Timer t) {
       if (seconds.value > 0) {
         seconds.value--;
       } else {
-        Get.back();
+        canResend.value = false;
+        // Get.back();
         t.cancel();
       }
     });
+  }
+
+  void resendemail() async {
+    FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+    final email = Get.arguments["email"];
+    try {
+      final user = firebaseAuth.currentUser;
+      if (user != null) {
+        await user.sendEmailVerification();
+        starttimer();
+        Get.snackbar(
+          colorText: Colors.white,
+          backgroundColor: Colors.black,
+
+          "Resended",
+          "Verification link sent again.",
+        );
+      }
+    } catch (e) {
+      print(e.toString());
+    }
   }
 
   @override
@@ -54,6 +81,10 @@ class _VerifyEmailState extends State<VerifyEmail> {
   RxBool isLoading = false.obs;
   @override
   Widget build(BuildContext context) {
+    final arg = Get.arguments as Map<String, dynamic>;
+    final userid = arg["userId"];
+    final username = arg["userName"];
+    final email = arg["email"];
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
     final localization = AppLocalizations.of(context)!;
@@ -110,11 +141,19 @@ class _VerifyEmailState extends State<VerifyEmail> {
                             )
                           : AppStyle.btext.copyWith(fontSize: 22),
                     ),
-                    Text(
-                      localization.verificationlink,
-                      style: isArabic
-                          ? AppStyle.arabictext.copyWith(color: Colors.black54)
-                          : TextStyle(color: Colors.black54),
+                    Row(
+                      children: [
+                        Text(
+                          localization.verificationlink,
+                          style: isArabic
+                              ? AppStyle.arabictext.copyWith(
+                                  color: Colors.black54,
+                                )
+                              : TextStyle(color: Colors.black54),
+                        ),
+                        Gap(2),
+                        Text(email),
+                      ],
                     ),
                     Gap(height * 0.030),
 
@@ -288,6 +327,14 @@ class _VerifyEmailState extends State<VerifyEmail> {
                           ),
                         ],
                       ),
+                    ),
+                    Obx(
+                      () => seconds.value != 0
+                          ? Text(seconds.value.toString())
+                          : TextButton(
+                              onPressed: resendemail,
+                              child: Text("Resend Link"),
+                            ),
                     ),
                     Gap(height * 0.030),
                     Center(
