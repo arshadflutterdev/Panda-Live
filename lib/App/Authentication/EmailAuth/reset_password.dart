@@ -29,26 +29,15 @@ class _ResetPasswordState extends State<ResetPassword> {
   Timer? timr;
   RxBool isSecure = true.obs;
   final _formkey = GlobalKey<FormState>();
-  void starttimer() {
-    timr = Timer.periodic(Duration(seconds: 1), (Timer t) {
-      if (seconds.value > 0) {
-        seconds.value--;
-      } else {
-        t.cancel();
-      }
-    });
-  }
-
-  void otp() {
-    Timer(Duration(seconds: 3), () {
-      Get.snackbar(
-        AppLocalizations.of(context)!.code,
-        AppLocalizations.of(context)!.isyourcode,
-        backgroundColor: AppColours.blues,
-        colorText: Colors.white,
-      );
-    });
-  }
+  // void starttimer() {
+  //   timr = Timer.periodic(Duration(seconds: 1), (Timer t) {
+  //     if (seconds.value > 0) {
+  //       seconds.value--;
+  //     } else {
+  //       t.cancel();
+  //     }
+  //   });
+  // }
 
   RxBool isEmailEmpty = false.obs;
   final ResetpasswordController resetpassword = Get.find();
@@ -56,8 +45,8 @@ class _ResetPasswordState extends State<ResetPassword> {
   @override
   void initState() {
     super.initState();
-    starttimer();
-    otp();
+    // starttimer();
+    // otp();
   }
 
   void dispose() {
@@ -169,47 +158,47 @@ class _ResetPasswordState extends State<ResetPassword> {
                             ),
                           ),
 
-                          Row(
-                            children: [
-                              Obx(() {
-                                if (seconds.value > 0) {
-                                  return Text(
-                                    "${seconds.value}s ${localization.lettersend},",
-                                    style: isArabic
-                                        ? AppStyle.arabictext
-                                        : TextStyle(),
-                                  );
-                                } else {
-                                  return TextButton(
-                                    onPressed: () {
-                                      seconds.value = 60;
-                                      starttimer();
+                          // Row(
+                          //   children: [
+                          //     Obx(() {
+                          //       if (seconds.value > 0) {
+                          //         return Text(
+                          //           "${seconds.value}s ${localization.lettersend},",
+                          //           style: isArabic
+                          //               ? AppStyle.arabictext
+                          //               : TextStyle(),
+                          //         );
+                          //       } else {
+                          //         return TextButton(
+                          //           onPressed: () {
+                          //             seconds.value = 60;
+                          //             starttimer();
 
-                                      Get.snackbar(
-                                        backgroundColor: AppColours.blues,
+                          //             Get.snackbar(
+                          //               backgroundColor: AppColours.blues,
 
-                                        localization.resms,
-                                        localization.smssended,
-                                        colorText: Colors.white,
-                                      );
-                                      Timer(Duration(seconds: 5), () {
-                                        otp();
-                                      });
-                                    },
-                                    child: Text(
-                                      localization.resms,
-                                      style: isArabic
-                                          ? AppStyle.arabictext.copyWith(
-                                              color: AppColours.blues,
-                                            )
-                                          : TextStyle(color: AppColours.blues),
-                                    ),
-                                  );
-                                }
-                              }),
-                              Gap(4),
-                            ],
-                          ),
+                          //               localization.resms,
+                          //               localization.smssended,
+                          //               colorText: Colors.white,
+                          //             );
+                          //             Timer(Duration(seconds: 5), () {
+                          //               otp();
+                          //             });
+                          //           },
+                          //           child: Text(
+                          //             localization.resms,
+                          //             style: isArabic
+                          //                 ? AppStyle.arabictext.copyWith(
+                          //                     color: AppColours.blues,
+                          //                   )
+                          //                 : TextStyle(color: AppColours.blues),
+                          //           ),
+                          //         );
+                          //       }
+                          //     }),
+                          //     Gap(4),
+                          //   ],
+                          // ),
                         ],
                       ),
                     ),
@@ -236,16 +225,8 @@ class _ResetPasswordState extends State<ResetPassword> {
                         onPressed: () {
                           if (_formkey.currentState!.validate()) {
                             isloading.value = true;
-                            Timer(Duration(seconds: 2), () {
-                              isloading.value = false;
-                              Get.toNamed(AppRoutes.bottomnav);
-                              Get.snackbar(
-                                localization.resetpass,
-                                localization.passresetsuccess,
-                                colorText: Colors.white,
-                                backgroundColor: AppColours.blues,
-                              );
-                            });
+                            resetpassword.resetPassword();
+                            isloading.value = false;
                           }
                         },
                       ),
