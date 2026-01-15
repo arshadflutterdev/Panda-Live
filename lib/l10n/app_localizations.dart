@@ -620,7 +620,7 @@ abstract class AppLocalizations {
   /// No description provided for @verificationlink.
   ///
   /// In en, this message translates to:
-  /// **'أرسل رابط التحقق إلى'**
+  /// **'verification link send to'**
   String get verificationlink;
 }
 
