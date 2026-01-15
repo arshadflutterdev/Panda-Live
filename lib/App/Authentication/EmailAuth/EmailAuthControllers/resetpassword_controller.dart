@@ -23,7 +23,7 @@ class ResetpasswordController extends GetxController {
       );
 
       // ✅ Auto back after 2 seconds
-      Future.delayed(const Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 5), () {
         Get.offAllNamed(
           AppRoutes.loginemail,
           arguments: "password_reset_success",

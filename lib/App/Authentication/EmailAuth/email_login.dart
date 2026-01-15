@@ -31,13 +31,15 @@ class _EmailLoginState extends State<EmailLogin> {
     super.initState();
 
     if (Get.arguments == "password_reset_success") {
-      Future.delayed(Duration.zero, () {
+      Future.delayed(Duration(seconds: 2), () {
         Get.snackbar(
           Get.locale?.languageCode == "ar" ? "تم التحديث" : "Password Updated",
           Get.locale?.languageCode == "ar"
               ? "تم تحديث كلمة المرور بنجاح"
               : "Your password has been reset successfully",
           snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.black,
+          colorText: Colors.white,
         );
       });
     }

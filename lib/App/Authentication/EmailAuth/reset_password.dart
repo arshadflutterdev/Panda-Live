@@ -7,7 +7,6 @@ import 'package:pandlive/App/Authentication/EmailAuth/EmailAuthControllers/reset
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
-import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
@@ -29,15 +28,6 @@ class _ResetPasswordState extends State<ResetPassword> {
   Timer? timr;
   RxBool isSecure = true.obs;
   final _formkey = GlobalKey<FormState>();
-  // void starttimer() {
-  //   timr = Timer.periodic(Duration(seconds: 1), (Timer t) {
-  //     if (seconds.value > 0) {
-  //       seconds.value--;
-  //     } else {
-  //       t.cancel();
-  //     }
-  //   });
-  // }
 
   RxBool isEmailEmpty = false.obs;
   final ResetpasswordController resetpassword = Get.find();
@@ -45,8 +35,6 @@ class _ResetPasswordState extends State<ResetPassword> {
   @override
   void initState() {
     super.initState();
-    // starttimer();
-    // otp();
   }
 
   void dispose() {
@@ -157,48 +145,6 @@ class _ResetPasswordState extends State<ResetPassword> {
                                   : null,
                             ),
                           ),
-
-                          // Row(
-                          //   children: [
-                          //     Obx(() {
-                          //       if (seconds.value > 0) {
-                          //         return Text(
-                          //           "${seconds.value}s ${localization.lettersend},",
-                          //           style: isArabic
-                          //               ? AppStyle.arabictext
-                          //               : TextStyle(),
-                          //         );
-                          //       } else {
-                          //         return TextButton(
-                          //           onPressed: () {
-                          //             seconds.value = 60;
-                          //             starttimer();
-
-                          //             Get.snackbar(
-                          //               backgroundColor: AppColours.blues,
-
-                          //               localization.resms,
-                          //               localization.smssended,
-                          //               colorText: Colors.white,
-                          //             );
-                          //             Timer(Duration(seconds: 5), () {
-                          //               otp();
-                          //             });
-                          //           },
-                          //           child: Text(
-                          //             localization.resms,
-                          //             style: isArabic
-                          //                 ? AppStyle.arabictext.copyWith(
-                          //                     color: AppColours.blues,
-                          //                   )
-                          //                 : TextStyle(color: AppColours.blues),
-                          //           ),
-                          //         );
-                          //       }
-                          //     }),
-                          //     Gap(4),
-                          //   ],
-                          // ),
                         ],
                       ),
                     ),
