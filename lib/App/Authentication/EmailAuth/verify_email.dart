@@ -161,7 +161,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                 : TextStyle(color: Colors.black54),
                           ),
                           Gap(2),
-                          Text(email),
+                          Text(email.toString()),
                         ],
                       ),
                       Gap(height * 0.030),
@@ -284,7 +284,14 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                 await user.updatePassword(
                                   passController.text.trim(),
                                 );
-                                Get.toNamed(AppRoutes.createprofile);
+                                Get.toNamed(
+                                  AppRoutes.createprofile,
+                                  arguments: {
+                                    "userId": userid,
+                                    "username": username,
+                                    "userpass": passController.text,
+                                  },
+                                );
                               } else {
                                 isLoading.value = false;
                                 Get.snackbar(
