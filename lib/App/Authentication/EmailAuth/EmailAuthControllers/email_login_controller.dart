@@ -17,7 +17,7 @@ class EmailLoginController extends GetxController {
           .signInWithEmailAndPassword(email: email, password: password);
       User? user = usercredential.user;
       if (user != null) {
-        Get.toNamed(AppRoutes.bottomnav);
+        Get.offAllNamed(AppRoutes.bottomnav);
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == "user-not-found") {
