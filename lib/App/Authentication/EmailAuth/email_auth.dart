@@ -50,8 +50,25 @@ class _EmailAuthState extends State<EmailAuth> {
           },
         );
         Get.snackbar(
-          "Email Verification Sent",
-          "We've sent a verification email to your inbox. Please check it and verify your account.",
+          "",
+          "",
+          titleText: Text(
+            isArabic
+                ? "تم إرسال تأكيد البريد الإلكتروني"
+                : "Email Verification Sent",
+            style: isArabic
+                ? AppStyle.arabictext.copyWith(color: Colors.white)
+                : TextStyle(),
+          ),
+          messageText: Text(
+            isArabic
+                ? "لقد أرسلنا بريدًا إلكترونيًا للتأكيد إلى صندوق بريدك الوارد. يرجى مراجعته وتأكيد حسابك."
+                : "We've sent a verification email to your inbox. Please check it and verify your account.",
+            style: isArabic
+                ? AppStyle.arabictext.copyWith(color: Colors.white)
+                : TextStyle(),
+          ),
+
           backgroundColor: Colors.black,
           colorText: Colors.white,
         );
@@ -61,8 +78,22 @@ class _EmailAuthState extends State<EmailAuth> {
         Get.snackbar(
           colorText: Colors.white,
           backgroundColor: Colors.black,
-          "Already exists",
-          "he account already exists for that email.",
+          titleText: Text(
+            isArabic ? "موجود بالفعل" : "Already exists",
+            style: isArabic
+                ? AppStyle.arabictext.copyWith(color: Colors.white)
+                : TextStyle(),
+          ),
+          messageText: Text(
+            isArabic
+                ? "الحساب موجود بالفعل لهذا البريد الإلكتروني."
+                : "he account already exists for that email.",
+            style: isArabic
+                ? AppStyle.arabictext.copyWith(color: Colors.white)
+                : TextStyle(),
+          ),
+          "",
+          "",
         );
       }
     }
@@ -107,7 +138,7 @@ class _EmailAuthState extends State<EmailAuth> {
                   horizontal: 10,
                 ),
                 child: Text(
-                  localization.loginwithemail,
+                  localization.createaccountwithemail,
                   style: isArabic
                       ? AppStyle.arabictext.copyWith(
                           fontSize: 22,

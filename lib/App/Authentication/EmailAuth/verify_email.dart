@@ -284,7 +284,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                 await user.updatePassword(
                                   passController.text.trim(),
                                 );
-                                Get.toNamed(
+                                Get.offAllNamed(
                                   AppRoutes.createprofile,
                                   arguments: {
                                     "userId": userid,
