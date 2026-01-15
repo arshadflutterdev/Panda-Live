@@ -270,5 +270,5 @@ class AppLocalizationsEn extends AppLocalizations {
   String get helpsupport => 'Help & Support';
 
   @override
-  String get verificationlink => 'verification link send to';
+  String get verificationlink => 'أرسل رابط التحقق إلى';
 }
