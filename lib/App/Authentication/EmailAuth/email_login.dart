@@ -93,7 +93,17 @@ class _EmailLoginState extends State<EmailLogin> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Gap(height * 0.1),
+                          Gap(height * 0.090),
+                          Text(
+                            localization.loginwithemail,
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    fontSize: 26,
+                                    fontWeight: FontWeight.w600,
+                                  )
+                                : AppStyle.btext.copyWith(fontSize: 24),
+                          ),
+                          Gap(8),
                           Obx(
                             () => MyTextFormField(
                               keyboard: TextInputType.emailAddress,
