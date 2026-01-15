@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -7,7 +6,6 @@ import 'package:get/get.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
-
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
@@ -31,7 +29,36 @@ class _EmailAuthState extends State<EmailAuth> {
   //here is function to signinwith email
   FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   Future<void> createaccountwithemail() async {
-    try {} catch (e) {}
+    try {
+      UserCredential userCredential = await firebaseAuth
+          .createUserWithEmailAndPassword(
+            email: emailController.text.trim(),
+            password: "temprory123",
+          );
+
+      User? user = userCredential.user;
+      if (user != null) {
+        if (!user.emailVerified) {
+          await user.sendEmailVerification();
+        }
+        Get.toNamed(
+          AppRoutes.verifyemail,
+          arguments: {
+            "userId": userCredential.user!.uid,
+            "userName": userCredential.user!.displayName,
+          },
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      if (e.code == 'email-already-in-use') {
+        Get.snackbar(
+          colorText: Colors.white,
+          backgroundColor: Colors.black,
+          "Already exists",
+          "he account already exists for that email.",
+        );
+      }
+    }
   }
 
   @override
@@ -135,13 +162,11 @@ class _EmailAuthState extends State<EmailAuth> {
                                 : AppStyle.btext.copyWith(color: Colors.white),
                           ),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formkey.currentState!.validate()) {
                       isloading.value = true;
-                      Timer(Duration(seconds: 2), () {
-                        isloading.value = false;
-                        Get.toNamed(AppRoutes.verifyemail);
-                      });
+                      await createaccountwithemail();
+                      isloading.value = false;
                     }
                   },
                 ),

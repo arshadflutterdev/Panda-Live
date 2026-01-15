@@ -34,19 +34,9 @@ class _VerifyEmailState extends State<VerifyEmail> {
       if (seconds.value > 0) {
         seconds.value--;
       } else {
+        Get.back();
         t.cancel();
       }
-    });
-  }
-
-  void otp() {
-    Timer(Duration(seconds: 3), () {
-      Get.snackbar(
-        AppLocalizations.of(context)!.code,
-        AppLocalizations.of(context)!.isyourcode,
-        backgroundColor: AppColours.blues,
-        colorText: Colors.white,
-      );
     });
   }
 
@@ -54,7 +44,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
   void initState() {
     super.initState();
     starttimer();
-    otp();
   }
 
   void dispose() {
@@ -128,12 +117,13 @@ class _VerifyEmailState extends State<VerifyEmail> {
                           : TextStyle(color: Colors.black54),
                     ),
                     Gap(height * 0.030),
-                    Text(
-                      localization.enter6digitcode,
-                      style: isArabic
-                          ? AppStyle.arabictext.copyWith(fontSize: 14)
-                          : TextStyle(),
-                    ),
+
+                    // Text(
+                    //   localization.enter6digitcode,
+                    //   style: isArabic
+                    //       ? AppStyle.arabictext.copyWith(fontSize: 14)
+                    //       : TextStyle(),
+                    // ),
                     Form(
                       key: _formkey,
                       child: Column(
@@ -166,65 +156,64 @@ class _VerifyEmailState extends State<VerifyEmail> {
                           //     ),
                           //   ),
                           // ),
-                          Row(
-                            children: [
-                              Obx(() {
-                                if (seconds.value > 0) {
-                                  return Text(
-                                    "${seconds.value}s ${localization.lettersend}",
-                                  );
-                                } else {
-                                  return TextButton(
-                                    onPressed: () {
-                                      seconds.value = 60;
-                                      starttimer();
+                          // Row(
+                          //   children: [
+                          //     Obx(() {
+                          //       if (seconds.value > 0) {
+                          //         return Text(
+                          //           "${seconds.value}s ${localization.lettersend}",
+                          //         );
+                          //       } else {
+                          //         return TextButton(
+                          //           onPressed: () {
+                          //             seconds.value = 60;
+                          //             starttimer();
 
-                                      Get.snackbar(
-                                        backgroundColor: AppColours.blues,
+                          //             Get.snackbar(
+                          //               backgroundColor: AppColours.blues,
 
-                                        localization.resms,
-                                        localization.smssended,
-                                        colorText: Colors.white,
-                                      );
-                                      Timer(Duration(seconds: 5), () {
-                                        otp();
-                                      });
-                                    },
-                                    child: Text(
-                                      localization.resms,
-                                      style: isArabic
-                                          ? AppStyle.arabictext.copyWith(
-                                              color: Colors.black,
-                                              fontWeight: FontWeight.w700,
-                                            )
-                                          : TextStyle(color: AppColours.blues),
-                                    ),
-                                  );
-                                }
-                              }),
-                              Gap(4),
-                            ],
-                          ),
-                          Align(
-                            alignment: isArabic
-                                ? Alignment.bottomRight
-                                : Alignment.bottomLeft,
-                            child: TextButton(
-                              onPressed: () {
-                                Get.offAllNamed(AppRoutes.authoptions);
-                              },
-                              child: Text(
-                                localization.tryanother,
-                                style: isArabic
-                                    ? AppStyle.arabictext.copyWith(
-                                        color: AppColours.blues,
-                                        fontWeight: FontWeight.w600,
-                                      )
-                                    : TextStyle(color: AppColours.blues),
-                              ),
-                            ),
-                          ),
-
+                          //               localization.resms,
+                          //               localization.smssended,
+                          //               colorText: Colors.white,
+                          //             );
+                          //             Timer(Duration(seconds: 5), () {
+                          //               otp();
+                          //             });
+                          //           },
+                          //           child: Text(
+                          //             localization.resms,
+                          //             style: isArabic
+                          //                 ? AppStyle.arabictext.copyWith(
+                          //                     color: Colors.black,
+                          //                     fontWeight: FontWeight.w700,
+                          //                   )
+                          //                 : TextStyle(color: AppColours.blues),
+                          //           ),
+                          //         );
+                          //       }
+                          //     }),
+                          //     Gap(4),
+                          //   ],
+                          // ),
+                          // Align(
+                          //   alignment: isArabic
+                          //       ? Alignment.bottomRight
+                          //       : Alignment.bottomLeft,
+                          //   child: TextButton(
+                          //     onPressed: () {
+                          //       Get.offAllNamed(AppRoutes.authoptions);
+                          //     },
+                          //     child: Text(
+                          //       localization.tryanother,
+                          //       style: isArabic
+                          //           ? AppStyle.arabictext.copyWith(
+                          //               color: AppColours.blues,
+                          //               fontWeight: FontWeight.w600,
+                          //             )
+                          //           : TextStyle(color: AppColours.blues),
+                          //     ),
+                          //   ),
+                          // ),
                           Obx(
                             () => MyTextFormField(
                               validator: (value) {
