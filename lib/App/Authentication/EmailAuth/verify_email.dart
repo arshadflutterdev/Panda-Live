@@ -119,7 +119,14 @@ class _VerifyEmailState extends State<VerifyEmail> {
                   ),
                   child: IconButton(
                     onPressed: () async {
-                      await FirebaseAuth.instance.currentUser!.delete();
+                      final user = FirebaseAuth.instance.currentUser;
+                      if (user != null) {
+                        try {
+                          await user.delete();
+                        } catch (e) {
+                          print("deleting user ${e.toString()}");
+                        }
+                      }
                       if (!mounted) return;
 
                       Get.back();
@@ -336,16 +343,6 @@ class _VerifyEmailState extends State<VerifyEmail> {
                             ),
                           ),
                         ],
-                      ),
-
-                      Align(
-                        alignment: Alignment.center,
-                        child: TextButton(
-                          onPressed: () {
-                            Get.toNamed(AppRoutes.loginemail);
-                          },
-                          child: Text(localization.alreadyaccount),
-                        ),
                       ),
                     ],
                   ),

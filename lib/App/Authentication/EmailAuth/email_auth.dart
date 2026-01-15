@@ -58,7 +58,7 @@ class _EmailAuthState extends State<EmailAuth> {
                 : "Email Verification Sent",
             style: isArabic
                 ? AppStyle.arabictext.copyWith(color: Colors.white)
-                : TextStyle(),
+                : TextStyle(color: Colors.white),
           ),
           messageText: Text(
             isArabic
@@ -66,7 +66,7 @@ class _EmailAuthState extends State<EmailAuth> {
                 : "We've sent a verification email to your inbox. Please check it and verify your account.",
             style: isArabic
                 ? AppStyle.arabictext.copyWith(color: Colors.white)
-                : TextStyle(),
+                : TextStyle(color: Colors.white),
           ),
 
           backgroundColor: Colors.black,
@@ -82,7 +82,7 @@ class _EmailAuthState extends State<EmailAuth> {
             isArabic ? "موجود بالفعل" : "Already exists",
             style: isArabic
                 ? AppStyle.arabictext.copyWith(color: Colors.white)
-                : TextStyle(),
+                : TextStyle(color: Colors.white),
           ),
           messageText: Text(
             isArabic
@@ -90,7 +90,7 @@ class _EmailAuthState extends State<EmailAuth> {
                 : "he account already exists for that email.",
             style: isArabic
                 ? AppStyle.arabictext.copyWith(color: Colors.white)
-                : TextStyle(),
+                : TextStyle(color: Colors.white),
           ),
           "",
           "",
