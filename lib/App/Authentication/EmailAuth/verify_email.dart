@@ -34,12 +34,12 @@ class _VerifyEmailState extends State<VerifyEmail> {
   final _formkey = GlobalKey<FormState>();
   void starttimer() {
     seconds.value = 60;
-    canResend.value = true;
+    canResend.value = false;
     timr = Timer.periodic(Duration(seconds: 1), (Timer t) {
       if (seconds.value > 0) {
         seconds.value--;
       } else {
-        canResend.value = false;
+        canResend.value = true;
         // Get.back();
         t.cancel();
       }
@@ -85,334 +85,266 @@ class _VerifyEmailState extends State<VerifyEmail> {
     final userid = arg["userId"];
     final username = arg["userName"];
     final email = arg["email"];
+
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
     final localization = AppLocalizations.of(context)!;
     // double keyboardHeight = MediaQuery.of(context).viewInsets.bottom;
-    return Scaffold(
-      backgroundColor: Colors.white,
-      resizeToAvoidBottomInset: true,
-      body: Column(
-        children: [
-          Container(
-            height: height * 0.27,
-            width: width,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              image: DecorationImage(
-                fit: BoxFit.cover,
-                image: AssetImage(AppImages.halfbg),
-              ),
-            ),
-            child: Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 12,
-                  horizontal: 6,
-                ),
-                child: IconButton(
-                  onPressed: () {
-                    Get.back();
-                  },
-                  icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+    return WillPopScope(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        resizeToAvoidBottomInset: true,
+        body: Column(
+          children: [
+            Container(
+              height: height * 0.27,
+              width: width,
+              decoration: BoxDecoration(
+                color: Colors.white,
+                image: DecorationImage(
+                  fit: BoxFit.cover,
+                  image: AssetImage(AppImages.halfbg),
                 ),
               ),
-            ),
-          ),
-          Expanded(
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(
-                  horizontal: 10,
-                  vertical: 2,
+              child: Align(
+                alignment: Alignment.topLeft,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    vertical: 12,
+                    horizontal: 6,
+                  ),
+                  child: IconButton(
+                    onPressed: () async {
+                      await FirebaseAuth.instance.currentUser!.delete();
+                      Get.back();
+                    },
+                    icon: Icon(Icons.arrow_back_ios_new, color: Colors.white),
+                  ),
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    // Gap(height * 0.5),
-                    Text(
-                      localization.verifyemail,
-                      style: isArabic
-                          ? AppStyle.arabictext.copyWith(
-                              fontSize: 24,
-                              fontWeight: FontWeight.w800,
-                            )
-                          : AppStyle.btext.copyWith(fontSize: 22),
-                    ),
-                    Row(
-                      children: [
-                        Text(
-                          localization.verificationlink,
-                          style: isArabic
-                              ? AppStyle.arabictext.copyWith(
-                                  color: Colors.black54,
-                                )
-                              : TextStyle(color: Colors.black54),
-                        ),
-                        Gap(2),
-                        Text(email),
-                      ],
-                    ),
-                    Gap(height * 0.030),
-
-                    // Text(
-                    //   localization.enter6digitcode,
-                    //   style: isArabic
-                    //       ? AppStyle.arabictext.copyWith(fontSize: 14)
-                    //       : TextStyle(),
-                    // ),
-                    Form(
-                      key: _formkey,
-                      child: Column(
+              ),
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 10,
+                    vertical: 2,
+                  ),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      // Gap(height * 0.5),
+                      Text(
+                        localization.verifyemail,
+                        style: isArabic
+                            ? AppStyle.arabictext.copyWith(
+                                fontSize: 24,
+                                fontWeight: FontWeight.w800,
+                              )
+                            : AppStyle.btext.copyWith(fontSize: 22),
+                      ),
+                      Row(
                         children: [
-                          // Obx(
-                          //   () => MyTextFormField(
-                          //     validator: (value) {
-                          //       if (smsController.text.isEmpty) {
-                          //         return localization.hint6ditis;
-                          //       } else if (!smsController.text.contains(
-                          //         "258012",
-                          //       )) {
-                          //         return localization.codeincorrect;
-                          //       }
-                          //       return null;
-                          //     },
-                          //     controller: smsController,
-                          //     keyboard: TextInputType.number,
-                          //     hintext: localization.hint6ditis,
-                          //     onChanged: (newValue) {
-                          //       isSMSEmtpy.value = newValue.isNotEmpty;
-                          //     },
-                          //     suffix: IconButton(
-                          //       onPressed: () {
-                          //         smsController.clear();
-                          //       },
-                          //       icon: isSMSEmtpy.value
-                          //           ? Icon(Icons.close, color: Colors.black54)
-                          //           : SizedBox.shrink(),
-                          //     ),
-                          //   ),
-                          // ),
-                          // Row(
-                          //   children: [
-                          //     Obx(() {
-                          //       if (seconds.value > 0) {
-                          //         return Text(
-                          //           "${seconds.value}s ${localization.lettersend}",
-                          //         );
-                          //       } else {
-                          //         return TextButton(
-                          //           onPressed: () {
-                          //             seconds.value = 60;
-                          //             starttimer();
+                          Text(
+                            localization.verificationlink,
+                            style: isArabic
+                                ? AppStyle.arabictext.copyWith(
+                                    color: Colors.black54,
+                                  )
+                                : TextStyle(color: Colors.black54),
+                          ),
+                          Gap(2),
+                          Text(email),
+                        ],
+                      ),
+                      Gap(height * 0.030),
 
-                          //             Get.snackbar(
-                          //               backgroundColor: AppColours.blues,
+                      Form(
+                        key: _formkey,
+                        child: Column(
+                          children: [
+                            Obx(
+                              () => MyTextFormField(
+                                validator: (value) {
+                                  if (passController.text.isEmpty) {
+                                    return localization.createpassword;
+                                  } else if (passController.text.length < 8) {
+                                    return localization.code8digits;
+                                  }
+                                  return null;
+                                },
+                                obscure: isSecure.value,
+                                controller: passController,
+                                keyboard: TextInputType.text,
+                                hintext: localization.createpassword,
+                                onChanged: (newValue) {
+                                  isCodeEmpty.value = newValue.isNotEmpty;
+                                },
+                                suffix: SizedBox(
+                                  height: 20,
+                                  width: width * 0.27,
 
-                          //               localization.resms,
-                          //               localization.smssended,
-                          //               colorText: Colors.white,
-                          //             );
-                          //             Timer(Duration(seconds: 5), () {
-                          //               otp();
-                          //             });
-                          //           },
-                          //           child: Text(
-                          //             localization.resms,
-                          //             style: isArabic
-                          //                 ? AppStyle.arabictext.copyWith(
-                          //                     color: Colors.black,
-                          //                     fontWeight: FontWeight.w700,
-                          //                   )
-                          //                 : TextStyle(color: AppColours.blues),
-                          //           ),
-                          //         );
-                          //       }
-                          //     }),
-                          //     Gap(4),
-                          //   ],
-                          // ),
-                          // Align(
-                          //   alignment: isArabic
-                          //       ? Alignment.bottomRight
-                          //       : Alignment.bottomLeft,
-                          //   child: TextButton(
-                          //     onPressed: () {
-                          //       Get.offAllNamed(AppRoutes.authoptions);
-                          //     },
-                          //     child: Text(
-                          //       localization.tryanother,
-                          //       style: isArabic
-                          //           ? AppStyle.arabictext.copyWith(
-                          //               color: AppColours.blues,
-                          //               fontWeight: FontWeight.w600,
-                          //             )
-                          //           : TextStyle(color: AppColours.blues),
-                          //     ),
-                          //   ),
-                          // ),
-                          Obx(
-                            () => MyTextFormField(
-                              validator: (value) {
-                                if (passController.text.isEmpty) {
-                                  return localization.createpassword;
-                                } else if (passController.text.length < 8) {
-                                  return localization.code8digits;
-                                }
-                                return null;
-                              },
-                              obscure: isSecure.value,
-                              controller: passController,
-                              keyboard: TextInputType.text,
-                              hintext: localization.createpassword,
-                              onChanged: (newValue) {
-                                isCodeEmpty.value = newValue.isNotEmpty;
-                              },
-                              suffix: SizedBox(
-                                height: 20,
-                                width: width * 0.27,
+                                  child: Row(
+                                    children: [
+                                      IconButton(
+                                        padding: EdgeInsets.zero,
+                                        onPressed: () {
+                                          passController.clear();
+                                        },
+                                        icon: isCodeEmpty.value
+                                            ? Icon(
+                                                Icons.close,
+                                                color: Colors.black54,
+                                              )
+                                            : SizedBox.shrink(),
+                                      ),
+                                      IconButton(
+                                        padding: EdgeInsets.zero,
+                                        onPressed: () {
+                                          isSecure.value = !isSecure.value;
+                                        },
+                                        icon: isSecure.value
+                                            ? Image(
+                                                height: 25,
 
-                                child: Row(
-                                  children: [
-                                    IconButton(
-                                      padding: EdgeInsets.zero,
-                                      onPressed: () {
-                                        passController.clear();
-                                      },
-                                      icon: isCodeEmpty.value
-                                          ? Icon(
-                                              Icons.close,
-                                              color: Colors.black54,
-                                            )
-                                          : SizedBox.shrink(),
-                                    ),
-                                    IconButton(
-                                      padding: EdgeInsets.zero,
-                                      onPressed: () {
-                                        isSecure.value = !isSecure.value;
-                                      },
-                                      icon: isSecure.value
-                                          ? Image(
-                                              height: 25,
-
-                                              image: AssetImage(
-                                                AppImages.eyesoff,
+                                                image: AssetImage(
+                                                  AppImages.eyesoff,
+                                                ),
+                                              )
+                                            : Image(
+                                                height: 25,
+                                                image: AssetImage(
+                                                  AppImages.eyeson,
+                                                ),
                                               ),
-                                            )
-                                          : Image(
-                                              height: 25,
-                                              image: AssetImage(
-                                                AppImages.eyeson,
-                                              ),
-                                            ),
-                                    ),
-                                  ],
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
+
+                            Align(
+                              alignment: Alignment.topLeft,
+                              child: Text(
+                                localization.setpassword,
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        color: Colors.black54,
+                                      )
+                                    : TextStyle(color: Colors.black54),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                      Obx(
+                        () => seconds.value != 0
+                            ? Text(
+                                "Resend available in ${seconds.value.toString()}",
+                              )
+                            : TextButton(
+                                onPressed: resendemail,
+                                child: Text("Resend verification email"),
+                              ),
+                      ),
+                      Gap(height * 0.030),
+                      Center(
+                        child: MyElevatedButton(
+                          width: width,
+                          btext: Obx(
+                            () => isLoading.value
+                                ? CircularProgressIndicator(color: Colors.white)
+                                : Text(
+                                    localization.buttonnext,
+                                    style: isArabic
+                                        ? AppStyle.arabictext.copyWith(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.white,
+                                          )
+                                        : AppStyle.btext.copyWith(
+                                            color: Colors.white,
+                                          ),
+                                  ),
+                          ),
+                          onPressed: () async {
+                            if (_formkey.currentState!.validate()) {
+                              isLoading.value = true;
+                              await FirebaseAuth.instance.currentUser!.reload();
+                              final user = FirebaseAuth.instance.currentUser;
+                              if (user != null && user.emailVerified) {
+                                isLoading.value = false;
+                                await user.updatePassword(
+                                  passController.text.trim(),
+                                );
+                                Get.toNamed(AppRoutes.createprofile);
+                              } else {
+                                isLoading.value = false;
+                                Get.snackbar(
+                                  "Email not verified",
+                                  "Please verify your email",
+                                  backgroundColor: Colors.red,
+                                  colorText: Colors.white,
+                                );
+                              }
+
+                              isLoading.value = false;
+                            }
+                          },
+                        ),
+                      ),
+                      Gap(height * 0.010),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Center(
+                            child: Text(
+                              localization.readAndAgree,
+                              style: isArabic
+                                  ? AppStyle.arabictext
+                                  : TextStyle(color: Colors.black),
+                            ),
                           ),
 
-                          Align(
-                            alignment: Alignment.topLeft,
+                          GestureDetector(
+                            onTap: () {
+                              Get.toNamed(AppRoutes.terms);
+                            },
                             child: Text(
-                              localization.setpassword,
+                              localization.pterms,
                               style: isArabic
                                   ? AppStyle.arabictext.copyWith(
-                                      color: Colors.black54,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.blue,
                                     )
-                                  : TextStyle(color: Colors.black54),
+                                  : TextStyle(color: Colors.blueAccent),
                             ),
                           ),
                         ],
                       ),
-                    ),
-                    Obx(
-                      () => seconds.value != 0
-                          ? Text(seconds.value.toString())
-                          : TextButton(
-                              onPressed: resendemail,
-                              child: Text("Resend Link"),
-                            ),
-                    ),
-                    Gap(height * 0.030),
-                    Center(
-                      child: MyElevatedButton(
-                        width: width,
-                        btext: Obx(
-                          () => isLoading.value
-                              ? CircularProgressIndicator(color: Colors.white)
-                              : Text(
-                                  localization.buttonnext,
-                                  style: isArabic
-                                      ? AppStyle.arabictext.copyWith(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.white,
-                                        )
-                                      : AppStyle.btext.copyWith(
-                                          color: Colors.white,
-                                        ),
-                                ),
-                        ),
-                        onPressed: () {
-                          if (_formkey.currentState!.validate()) {
-                            isLoading.value = true;
-                            Timer(Duration(seconds: 2), () {
-                              isLoading.value = false;
-                              Get.toNamed(AppRoutes.createprofile);
-                            });
-                          }
-                        },
-                      ),
-                    ),
-                    Gap(height * 0.010),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Center(
-                          child: Text(
-                            localization.readAndAgree,
-                            style: isArabic
-                                ? AppStyle.arabictext
-                                : TextStyle(color: Colors.black),
-                          ),
-                        ),
 
-                        GestureDetector(
-                          onTap: () {
-                            Get.toNamed(AppRoutes.terms);
+                      Align(
+                        alignment: Alignment.center,
+                        child: TextButton(
+                          onPressed: () {
+                            Get.toNamed(AppRoutes.loginemail);
                           },
-                          child: Text(
-                            localization.pterms,
-                            style: isArabic
-                                ? AppStyle.arabictext.copyWith(
-                                    fontWeight: FontWeight.w600,
-                                    color: Colors.blue,
-                                  )
-                                : TextStyle(color: Colors.blueAccent),
-                          ),
+                          child: Text(localization.alreadyaccount),
                         ),
-                      ],
-                    ),
-
-                    Align(
-                      alignment: Alignment.center,
-                      child: TextButton(
-                        onPressed: () {
-                          Get.toNamed(AppRoutes.loginemail);
-                        },
-                        child: Text(localization.alreadyaccount),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
+      onWillPop: () async {
+        return false;
+      },
     );
   }
 }
