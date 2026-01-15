@@ -99,7 +99,9 @@
   "decribissue": "Describe your issue in details...",
   "uploadimage": "Upload Images",
   "submitissued": "Submit Issue",
-  "helpsupport": "Help & Support"
+  "helpsupport": "Help & Support",
+
+  "verificationlink": "أرسل رابط التحقق إلى"
 
 }
 

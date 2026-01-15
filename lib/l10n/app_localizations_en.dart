@@ -268,4 +268,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get helpsupport => 'Help & Support';
+
+  @override
+  String get verificationlink => 'verification link send to';
 }

@@ -29,25 +29,9 @@ class _EmailAuthState extends State<EmailAuth> {
   bool isArabic = Get.locale?.languageCode == "ar";
 
   //here is function to signinwith email
-  final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
-  Future<void> createAccountWithEmail() async {
-    final String email = emailController.text.trim();
-
-    try {
-      UserCredential usercredential = await firebaseAuth
-          .createUserWithEmailAndPassword(
-            email: email,
-            password: "temprery123",
-          );
-      User? user = usercredential.user;
-      await user!.sendEmailVerification();
-      if (user != null) {
-        Get.toNamed(AppRoutes.verifyemail);
-        print("user id ${user.uid}");
-      }
-    } catch (e) {
-      print(e);
-    }
+  FirebaseAuth firebaseAuth = FirebaseAuth.instance;
+  Future<void> createaccountwithemail() async {
+    try {} catch (e) {}
   }
 
   @override
@@ -156,7 +140,7 @@ class _EmailAuthState extends State<EmailAuth> {
                       isloading.value = true;
                       Timer(Duration(seconds: 2), () {
                         isloading.value = false;
-                        createAccountWithEmail();
+                        Get.toNamed(AppRoutes.verifyemail);
                       });
                     }
                   },

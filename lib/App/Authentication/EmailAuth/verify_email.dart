@@ -122,7 +122,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
                           : AppStyle.btext.copyWith(fontSize: 22),
                     ),
                     Text(
-                      localization.vcodesended,
+                      localization.verificationlink,
                       style: isArabic
                           ? AppStyle.arabictext.copyWith(color: Colors.black54)
                           : TextStyle(color: Colors.black54),
@@ -138,34 +138,34 @@ class _VerifyEmailState extends State<VerifyEmail> {
                       key: _formkey,
                       child: Column(
                         children: [
-                          Obx(
-                            () => MyTextFormField(
-                              validator: (value) {
-                                if (smsController.text.isEmpty) {
-                                  return localization.hint6ditis;
-                                } else if (!smsController.text.contains(
-                                  "258012",
-                                )) {
-                                  return localization.codeincorrect;
-                                }
-                                return null;
-                              },
-                              controller: smsController,
-                              keyboard: TextInputType.number,
-                              hintext: localization.hint6ditis,
-                              onChanged: (newValue) {
-                                isSMSEmtpy.value = newValue.isNotEmpty;
-                              },
-                              suffix: IconButton(
-                                onPressed: () {
-                                  smsController.clear();
-                                },
-                                icon: isSMSEmtpy.value
-                                    ? Icon(Icons.close, color: Colors.black54)
-                                    : SizedBox.shrink(),
-                              ),
-                            ),
-                          ),
+                          // Obx(
+                          //   () => MyTextFormField(
+                          //     validator: (value) {
+                          //       if (smsController.text.isEmpty) {
+                          //         return localization.hint6ditis;
+                          //       } else if (!smsController.text.contains(
+                          //         "258012",
+                          //       )) {
+                          //         return localization.codeincorrect;
+                          //       }
+                          //       return null;
+                          //     },
+                          //     controller: smsController,
+                          //     keyboard: TextInputType.number,
+                          //     hintext: localization.hint6ditis,
+                          //     onChanged: (newValue) {
+                          //       isSMSEmtpy.value = newValue.isNotEmpty;
+                          //     },
+                          //     suffix: IconButton(
+                          //       onPressed: () {
+                          //         smsController.clear();
+                          //       },
+                          //       icon: isSMSEmtpy.value
+                          //           ? Icon(Icons.close, color: Colors.black54)
+                          //           : SizedBox.shrink(),
+                          //     ),
+                          //   ),
+                          // ),
                           Row(
                             children: [
                               Obx(() {

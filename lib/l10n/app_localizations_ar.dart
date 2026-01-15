@@ -268,4 +268,7 @@ class AppLocalizationsAr extends AppLocalizations {
 
   @override
   String get helpsupport => 'المساعدة والدعم';
+
+  @override
+  String get verificationlink => 'verification link send to';
 }

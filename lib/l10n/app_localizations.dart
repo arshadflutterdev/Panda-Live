@@ -616,6 +616,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Help & Support'**
   String get helpsupport;
+
+  /// No description provided for @verificationlink.
+  ///
+  /// In en, this message translates to:
+  /// **'verification link send to'**
+  String get verificationlink;
 }
 
 class _AppLocalizationsDelegate extends LocalizationsDelegate<AppLocalizations> {

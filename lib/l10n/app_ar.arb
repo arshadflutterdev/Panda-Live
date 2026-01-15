@@ -102,6 +102,8 @@
   "decribissue": "صف مشكلتك بالتفصيل...",
   "uploadimage": "تحميل الصور",
   "submitissued": "إرسال المشكلة",
-    "helpsupport": "المساعدة والدعم"
+    "helpsupport": "المساعدة والدعم",
+
+    "verificationlink": "verification link send to"
  
 }
