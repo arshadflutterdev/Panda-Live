@@ -1,9 +1,9 @@
 import 'dart:async';
 
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/Authentication/EmailAuth/EmailAuthControllers/resetpassword_controller.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
@@ -21,8 +21,6 @@ class ResetPassword extends StatefulWidget {
 }
 
 class _ResetPasswordState extends State<ResetPassword> {
-  TextEditingController smsController = TextEditingController();
-  TextEditingController passController = TextEditingController();
   RxBool isSMSEmtpy = false.obs;
   RxBool isCodeEmpty = false.obs;
   bool isArabic = Get.locale?.languageCode == "ar";
@@ -53,8 +51,8 @@ class _ResetPasswordState extends State<ResetPassword> {
   }
 
   RxBool isEmailEmpty = false.obs;
-  TextEditingController loginController = TextEditingController();
-  TextEditingController emailController = TextEditingController();
+  final ResetpasswordController resetpassword = Get.find();
+
   @override
   void initState() {
     super.initState();
@@ -140,16 +138,18 @@ class _ResetPasswordState extends State<ResetPassword> {
                             () => MyTextFormField(
                               keyboard: TextInputType.emailAddress,
                               validator: (value) {
-                                if (emailController.text.isEmpty) {
+                                if (resetpassword
+                                    .emailController
+                                    .text
+                                    .isEmpty) {
                                   return localization.enteremail;
-                                } else if (!emailController.text.contains(
-                                  "@gmail.com",
-                                )) {
+                                } else if (!resetpassword.emailController.text
+                                    .contains("@gmail.com")) {
                                   return localization.validemail;
                                 }
                                 return null;
                               },
-                              controller: emailController,
+                              controller: resetpassword.emailController,
                               hintext: localization.enteremail,
                               onChanged: (newValue) {
                                 isEmailEmpty.value = newValue.isNotEmpty;
@@ -157,7 +157,7 @@ class _ResetPasswordState extends State<ResetPassword> {
                               suffix: isEmailEmpty.value
                                   ? IconButton(
                                       onPressed: () {
-                                        emailController.clear();
+                                        resetpassword.emailController.clear();
                                         isEmailEmpty.value = false;
                                       },
                                       icon: Icon(

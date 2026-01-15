@@ -70,7 +70,11 @@ class AppRoutes {
       name: loginemail,
       page: () => EmailLogin(),
     ),
-    GetPage(name: resetpassword, page: () => ResetPassword()),
+    GetPage(
+      binding: AuthBindings(),
+      name: resetpassword,
+      page: () => ResetPassword(),
+    ),
     GetPage(name: phonelogin, page: () => PhoneLogin()),
     GetPage(name: phonereset, page: () => PhoneResetPassword()),
     GetPage(name: bottomnav, page: () => Bottomnavbar()),
