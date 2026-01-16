@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -53,9 +54,12 @@ class _AuthOptionsState extends State<AuthOptions> {
 
   //function to signin with google
   GoogleAuthController gauthcontroller = Get.find<GoogleAuthController>();
+  //function to sigin with facebook
+  Future<void> signinwithfacebook() async {}
   //here below to show dialogebox
   bool isNavigate = false;
   bool isArabic = Get.locale?.languageCode == "ar";
+
   @override
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
