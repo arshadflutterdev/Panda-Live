@@ -55,25 +55,66 @@ class _AuthOptionsState extends State<AuthOptions> {
   //function to signin with google
   GoogleAuthController gauthcontroller = Get.find<GoogleAuthController>();
   //function to sigin with facebook
-  Future<UserCredential?> signinwithfacebook() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
+
+  Future<User?> signinWithFacebook() async {
     try {
-      final LoginResult loginResult = await FacebookAuth.instance.login();
-      if (loginResult.status == LoginStatus.success &&
-          loginResult.accessToken != null) {
-        final OAuthCredential authCredential = FacebookAuthProvider.credential(
-          loginResult.accessToken!.tokenString,
+      // 1️⃣ Clear previous Facebook session (optional, fresh login)
+      await FacebookAuth.instance.logOut();
+
+      // 2️⃣ Trigger Facebook login
+      final LoginResult result = await FacebookAuth.instance.login(
+        permissions: ['email', 'public_profile'], // required permissions
+      );
+
+      // 3️⃣ Check login status
+      if (result.status == LoginStatus.success && result.accessToken != null) {
+        // 4️⃣ Create Firebase credential
+        final OAuthCredential credential = FacebookAuthProvider.credential(
+          result.accessToken!.tokenString,
         );
-        await auth.signInWithCredential(authCredential);
-        print("user successfully signin");
-      } else if (loginResult.status == LoginStatus.cancelled) {
-        print("User cancelled");
+
+        // 5️⃣ Sign in with Firebase
+        UserCredential userCredential = await FirebaseAuth.instance
+            .signInWithCredential(credential);
+
+        // 6️⃣ Print some info (optional, for debugging)
+        print("Facebook login successful!");
+        print("User: ${userCredential.user?.displayName}");
+        print("Email: ${userCredential.user?.email}");
+
+        return userCredential.user;
+      } else if (result.status == LoginStatus.cancelled) {
+        print("Facebook login cancelled by user.");
+        return null;
+      } else {
+        print("Facebook login failed: ${result.message}");
+        return null;
       }
     } catch (e) {
-      print(e.toString());
+      print("Error during Facebook login: $e");
+      return null;
     }
-    return null;
   }
+
+  // Future<UserCredential?> signinwithfacebook() async {
+  //   FirebaseAuth auth = FirebaseAuth.instance;
+  //   try {
+  //     final LoginResult loginResult = await FacebookAuth.instance.login();
+  //     if (loginResult.status == LoginStatus.success &&
+  //         loginResult.accessToken != null) {
+  //       final OAuthCredential authCredential = FacebookAuthProvider.credential(
+  //         loginResult.accessToken!.tokenString,
+  //       );
+  //       await auth.signInWithCredential(authCredential);
+  //       print("user successfully signin");
+  //     } else if (loginResult.status == LoginStatus.cancelled) {
+  //       print("User cancelled");
+  //     }
+  //   } catch (e) {
+  //     print(e.toString());
+  //   }
+  //   return null;
+  // }
 
   //here below to show dialogebox
   bool isNavigate = false;
@@ -265,13 +306,21 @@ class _AuthOptionsState extends State<AuthOptions> {
 
                       child: GestureDetector(
                         onTap: () async {
-                          await signinwithfacebook();
+                          User? user = await signinWithFacebook();
+                          if (user != null) {
+                            // Login successful → navigate to next screen
+                            Get.toNamed(AppRoutes.createprofile);
+                          } else {
+                            // Login failed or cancelled
+                            print("Login not completed");
+                          }
                         },
                         child: Container(
                           height: 50,
                           width: double.infinity,
                           decoration: BoxDecoration(
                             color: Colors.white,
+
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Directionality(
