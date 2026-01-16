@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_intl_phone_field/flutter_intl_phone_field.dart';
 import 'package:gap/gap.dart';
@@ -23,6 +24,38 @@ class _PhoneAuthState extends State<PhoneAuth> {
   TextEditingController phoneController = TextEditingController();
   bool isArabic = Get.locale?.languageCode == "ar";
   final _formkey = GlobalKey<FormState>();
+  //below function signinwithphone
+  Future<UserCredential?> signinwithphone() async {
+    final auth = FirebaseAuth.instance;
+    try {
+      await auth.verifyPhoneNumber(
+        phoneNumber: "+923012150555",
+        verificationCompleted: (PhoneAuthCredential credential) async {
+          await auth.signInWithCredential(credential);
+          Get.toNamed(AppRoutes.verifynumber);
+        },
+        verificationFailed: (FirebaseAuthException e) {
+          if (e.code == "invalid-phone-number") {
+            print('The provided phone number is not valid.');
+          }
+          print(e.toString());
+        },
+        codeSent: (String verificationId, int? resendToken) async {
+          String smscode = "123456";
+          PhoneAuthCredential phoneAuthCredential =
+              PhoneAuthProvider.credential(
+                verificationId: verificationId,
+                smsCode: smscode,
+              );
+          await auth.signInWithCredential(phoneAuthCredential);
+        },
+        timeout: Duration(seconds: 60),
+        codeAutoRetrievalTimeout: (verificationId) {},
+      );
+    } catch (e) {}
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
@@ -121,14 +154,13 @@ class _PhoneAuthState extends State<PhoneAuth> {
                     ),
                     fixedSize: Size(width * 0.60, 45),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formkey.currentState!.validate()) {
                       isloading.value = true;
-                      Timer(Duration(seconds: 2), () {
-                        isloading.value = false;
-                        Get.toNamed(AppRoutes.verifynumber);
-                        phoneController.clear();
-                      });
+                      await signinwithphone();
+                      isloading.value = false;
+
+                      phoneController.clear();
                     }
                   },
                   child: Obx(
