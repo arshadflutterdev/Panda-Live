@@ -55,7 +55,26 @@ class _AuthOptionsState extends State<AuthOptions> {
   //function to signin with google
   GoogleAuthController gauthcontroller = Get.find<GoogleAuthController>();
   //function to sigin with facebook
-  Future<void> signinwithfacebook() async {}
+  Future<UserCredential?> signinwithfacebook() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    try {
+      final LoginResult loginResult = await FacebookAuth.instance.login();
+      if (loginResult.status == LoginStatus.success &&
+          loginResult.accessToken != null) {
+        final OAuthCredential authCredential = FacebookAuthProvider.credential(
+          loginResult.accessToken!.tokenString,
+        );
+        await auth.signInWithCredential(authCredential);
+        print("user successfully signin");
+      } else if (loginResult.status == LoginStatus.cancelled) {
+        print("User cancelled");
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+    return null;
+  }
+
   //here below to show dialogebox
   bool isNavigate = false;
   bool isArabic = Get.locale?.languageCode == "ar";
@@ -244,43 +263,48 @@ class _AuthOptionsState extends State<AuthOptions> {
                         }
                       },
 
-                      child: Container(
-                        height: 50,
-                        width: double.infinity,
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Directionality(
-                          textDirection: TextDirection.ltr,
-                          child: Row(
-                            children: [
-                              // Icon(CupertinoIcons.goog)
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 6,
-                                  vertical: 2,
+                      child: GestureDetector(
+                        onTap: () async {
+                          await signinwithfacebook();
+                        },
+                        child: Container(
+                          height: 50,
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: Row(
+                              children: [
+                                // Icon(CupertinoIcons.goog)
+                                Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 6,
+                                    vertical: 2,
+                                  ),
+                                  child: Image(
+                                    height: 30,
+                                    width: 40,
+                                    image: AssetImage(AppImages.facebook),
+                                  ),
                                 ),
-                                child: Image(
-                                  height: 30,
-                                  width: 40,
-                                  image: AssetImage(AppImages.facebook),
+                                Gap(width * 0.050),
+                                Text(
+                                  localization.facebook,
+                                  style: isArabic
+                                      ? AppStyle.arabictext.copyWith(
+                                          color: Colors.blue,
+                                          fontWeight: FontWeight.w600,
+                                          fontSize: 20,
+                                        )
+                                      : AppStyle.btext.copyWith(
+                                          color: Colors.blue,
+                                        ),
                                 ),
-                              ),
-                              Gap(width * 0.050),
-                              Text(
-                                localization.facebook,
-                                style: isArabic
-                                    ? AppStyle.arabictext.copyWith(
-                                        color: Colors.blue,
-                                        fontWeight: FontWeight.w600,
-                                        fontSize: 20,
-                                      )
-                                    : AppStyle.btext.copyWith(
-                                        color: Colors.blue,
-                                      ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
                       ),
