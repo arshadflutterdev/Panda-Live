@@ -463,6 +463,11 @@ class _CreateProfileState extends State<CreateProfile> {
                         ),
                         onPressed: () async {
                           if (_formkey.currentState!.validate()) {
+                            if (pController.isSelected.value == 0) {
+                              genderError.value = "Please select your gender";
+                              return; // ❗ stop submit
+                            }
+
                             // 1. Check age
                             if (dobController.text.isNotEmpty) {
                               final parts = dobController.text.split(
