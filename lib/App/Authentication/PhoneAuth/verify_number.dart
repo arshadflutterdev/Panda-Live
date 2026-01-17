@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
@@ -325,9 +326,16 @@ class _VerifyNumberState extends State<VerifyNumber> {
                                   verificationId: widget.verificationId,
                                   smsCode: smsController.text.toString(),
                                 );
-                            await FirebaseAuth.instance.signInWithCredential(
-                              credential,
-                            );
+                            await FirebaseAuth.instance
+                                .signInWithCredential(credential)
+                                .then((Value) {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => Homescreen(),
+                                    ),
+                                  );
+                                });
                           } catch (e) {}
                         },
 
