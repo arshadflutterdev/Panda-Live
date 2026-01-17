@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -316,15 +317,29 @@ class _VerifyNumberState extends State<VerifyNumber> {
                                         ),
                                 ),
                         ),
-                        onPressed: () {
-                          if (_formkey.currentState!.validate()) {
-                            isloading.value = true;
-                            Timer(Duration(seconds: 2), () {
-                              isloading.value = false;
-                              Get.toNamed(AppRoutes.createprofile);
-                            });
-                          }
+
+                        onPressed: () async {
+                          try {
+                            PhoneAuthCredential credential =
+                                PhoneAuthProvider.credential(
+                                  verificationId: widget.verificationId,
+                                  smsCode: smsController.text.toString(),
+                                );
+                            await FirebaseAuth.instance.signInWithCredential(
+                              credential,
+                            );
+                          } catch (e) {}
                         },
+
+                        // onPressed: () {
+                        //   if (_formkey.currentState!.validate()) {
+                        //     isloading.value = true;
+                        //     Timer(Duration(seconds: 2), () {
+                        //       isloading.value = false;
+                        //       Get.toNamed(AppRoutes.createprofile);
+                        //     });
+                        //   }
+                        // },
                       ),
                     ),
                     Gap(height * 0.010),

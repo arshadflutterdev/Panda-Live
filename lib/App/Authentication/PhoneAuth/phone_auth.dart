@@ -44,7 +44,10 @@ class _PhoneAuthState extends State<PhoneAuth> {
         codeSent: (String verificationId, int? resendToken) async {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => VerifyNumber()),
+            MaterialPageRoute(
+              builder: (context) =>
+                  VerifyNumber(verificationId: verificationId),
+            ),
           );
         },
         timeout: Duration(seconds: 60),
