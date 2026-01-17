@@ -62,7 +62,10 @@ class AppRoutes {
     GetPage(name: emailauth, page: () => EmailAuth()),
     GetPage(name: userauth, page: () => UseridAuth()),
     GetPage(name: phoneauth, page: () => PhoneAuth()),
-    GetPage(name: verifynumber, page: () => VerifyNumber()),
+    GetPage(
+      name: verifynumber,
+      page: () => VerifyNumber(verificationId: ''),
+    ),
     GetPage(name: createprofile, page: () => CreateProfile()),
     GetPage(name: verifyemail, page: () => VerifyEmail()),
     GetPage(
