@@ -31,7 +31,7 @@ class _CreateProfileState extends State<CreateProfile> {
   TextEditingController nameController = TextEditingController();
   TextEditingController dobController = TextEditingController();
   TextEditingController countryController = TextEditingController();
-  final ProfileStoreController pController = Get.put(ProfileStoreController());
+  final pController = Get.find<ProfileStoreController>();
 
   RxString genderError = "".obs;
 
