@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -84,6 +85,13 @@ class _CreateProfileState extends State<CreateProfile> {
   }
 
   bool isArabic = Get.locale?.languageCode == "ar";
+  Future<void> storeuserprofile() async {
+    final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    try {
+      firestore.collection("userProfile");
+    } catch (e) {}
+  }
+
   @override
   Widget build(BuildContext context) {
     final argu = Get.arguments as Map<String, dynamic>;
