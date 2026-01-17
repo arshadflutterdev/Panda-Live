@@ -16,7 +16,12 @@ import 'package:pandlive/l10n/app_localizations.dart';
 
 class VerifyNumber extends StatefulWidget {
   final String verificationId;
-  const VerifyNumber({super.key, required this.verificationId});
+  const VerifyNumber({
+    super.key,
+    required this.verificationId,
+    int? resendToken,
+    required String phoneNumber,
+  });
 
   @override
   State<VerifyNumber> createState() => _VerifyNumberState();
