@@ -2,10 +2,12 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pandlive/App/AppUi/Profile/nextScreens/CreateProfileScreen/profile_store_controller.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/App/Widgets/DialogBox/country_picker_dialoge.dart';
@@ -29,11 +31,9 @@ class _CreateProfileState extends State<CreateProfile> {
   TextEditingController nameController = TextEditingController();
   TextEditingController dobController = TextEditingController();
   TextEditingController countryController = TextEditingController();
-  RxInt isSelected = 0.obs;
+  final ProfileStoreController pController = Get.put(ProfileStoreController());
+
   RxString genderError = "".obs;
-  //image picker
-  Rxn<File> image = Rxn<File>();
-  RxString userphoto = "".obs;
 
   Future<void> imagepic() async {
     ImagePicker picker = ImagePicker();
@@ -42,8 +42,8 @@ class _CreateProfileState extends State<CreateProfile> {
       return;
     }
 
-    image.value = File(images!.path);
-    print("here is image path $image");
+    pController.image.value = File(images!.path);
+    print("here is image path ${pController.image.value}");
     if (!mounted) {
       return;
     }
@@ -86,54 +86,23 @@ class _CreateProfileState extends State<CreateProfile> {
   }
 
   bool isArabic = Get.locale?.languageCode == "ar";
-  Future<void> storeuserprofile() async {
-    final FirebaseFirestore firestore = FirebaseFirestore.instance;
-    try {
-      final adduser = {
-        "name": nameController.text.toString(),
-        "dob": dobController.text.toString(),
-        "country": countryController.text.toString(),
-        "gender": isSelected.value == 1 ? "Male" : "Female",
-        "userimage": userphoto.value != null && userphoto.isNotEmpty
-            ? userphoto.value
-            : image.value!.path ?? "",
-        "createdAt": FieldValue.serverTimestamp(),
-      };
-      firestore.collection("userProfile").add(adduser);
-      Get.snackbar(
-        "Congratulation",
-        "All set! Your profile is now complete.",
-        backgroundColor: Colors.black,
-        colorText: Colors.white,
-      );
-    } catch (e) {
-      print(e.toString());
-      Get.snackbar(
-        "Error",
-        "Failed to save user information",
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
-    }
-  }
+  final user = FirebaseAuth.instance.currentUser!.uid;
 
-  final argu = Get.arguments as Map<String, dynamic>;
+  final argu = Get.arguments as Map<String, dynamic>? ?? {};
+  @override
   void initState() {
     super.initState();
 
-    userphoto.value = argu["userphoto"] ?? "";
+    pController.userphoto.value = argu["userphoto"] ?? "";
+    if (argu['username'] != null) {
+      nameController.text = argu['username'];
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    final argu = Get.arguments as Map<String, dynamic>? ?? {};
     final userId = argu["userId"] ?? "";
     print("on profile screen id $userId");
-    final username = argu['username'] ?? "";
-    if (username != null) {
-      nameController.text = username;
-    }
-    print("profile screen name $username");
 
     // print("prfile screen photo $userphoto") ?? "";
     double height = AppHeightwidth.screenHeight(context);
@@ -195,11 +164,15 @@ class _CreateProfileState extends State<CreateProfile> {
                                     image: DecorationImage(
                                       fit: BoxFit.cover,
                                       image:
-                                          (userphoto.value != null &&
-                                              userphoto.value.isNotEmpty)
-                                          ? NetworkImage(userphoto.value)
-                                          : image.value != null
-                                          ? FileImage(image.value!)
+                                          (pController
+                                              .userphoto
+                                              .value
+                                              .isNotEmpty)
+                                          ? NetworkImage(
+                                              pController.userphoto.value,
+                                            )
+                                          : pController.image.value != null
+                                          ? FileImage(pController.image.value!)
                                                 as ImageProvider
                                           : AssetImage(AppImages.girl),
                                     ),
@@ -325,6 +298,7 @@ class _CreateProfileState extends State<CreateProfile> {
                               if (countryController.text.isEmpty) {
                                 return localization.selectcontry;
                               }
+                              return null;
                             },
                             controller: countryController,
                             read: true,
@@ -372,7 +346,7 @@ class _CreateProfileState extends State<CreateProfile> {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              isSelected.value = 1;
+                              pController.isSelected.value = 1;
                               genderError.value = "";
                             },
                             child: Obx(
@@ -380,7 +354,7 @@ class _CreateProfileState extends State<CreateProfile> {
                                 height: height * 0.075,
                                 width: width * 0.45,
                                 decoration: BoxDecoration(
-                                  color: isSelected.value == 1
+                                  color: pController.isSelected.value == 1
                                       ? Colors.blue.shade100
                                       : AppColours.greycolour,
                                   borderRadius: BorderRadius.circular(10),
@@ -412,7 +386,7 @@ class _CreateProfileState extends State<CreateProfile> {
 
                           GestureDetector(
                             onTap: () {
-                              isSelected.value = 2;
+                              pController.isSelected.value = 2;
                               genderError.value = "";
                             },
                             child: Obx(
@@ -420,7 +394,7 @@ class _CreateProfileState extends State<CreateProfile> {
                                 height: height * 0.075,
                                 width: width * 0.45,
                                 decoration: BoxDecoration(
-                                  color: isSelected.value == 2
+                                  color: pController.isSelected.value == 2
                                       ? Colors.blue.shade100
                                       : AppColours.greycolour,
                                   borderRadius: BorderRadius.circular(10),
@@ -487,60 +461,60 @@ class _CreateProfileState extends State<CreateProfile> {
                                         ),
                                 ),
                         ),
-
-                        // onPressed: () {
-                        //   bool formValid = _formkey.currentState!.validate();
-
-                        //   if (isSelected.value == 0) {
-                        //     genderError.value = "Please select your gender";
-                        //     return;
-                        //   }
-
-                        //   if (formValid) {
-                        //     isloading.value = true;
-
-                        //     // ✅ STORED VALUES (Future use)
-                        //     String name = nameController.text;
-                        //     String dob = dobController.text;
-                        //     String country = countryController.text;
-
-                        //     String gender = isSelected.value == 1
-                        //         ? "male"
-                        //         : "female";
-
-                        //     print(name);
-                        //     print(dob);
-                        //     print(country);
-                        //     print(gender);
-
-                        //     Timer(const Duration(seconds: 2), () {
-                        //       isloading.value = false;
-                        //       Get.toNamed(AppRoutes.bottomnav);
-                        //       Get.snackbar(
-                        //         localization.mubark,
-                        //         localization.profiledone,
-                        //         colorText: Colors.white,
-                        //         backgroundColor: Colors.black,
-                        //       );
-                        //     });
-                        //   }
-                        // },
                         onPressed: () async {
                           if (_formkey.currentState!.validate()) {
+                            // 1. Check age
+                            if (dobController.text.isNotEmpty) {
+                              final parts = dobController.text.split(
+                                '-',
+                              ); // expecting dd-mm-yyyy
+                              final day = int.tryParse(parts[0]) ?? 1;
+                              final month = int.tryParse(parts[1]) ?? 1;
+                              final year = int.tryParse(parts[2]) ?? 1900;
+
+                              final dob = DateTime(year, month, day);
+                              final now = DateTime.now();
+                              final age =
+                                  now.year -
+                                  dob.year -
+                                  ((now.month < dob.month ||
+                                          (now.month == dob.month &&
+                                              now.day < dob.day))
+                                      ? 1
+                                      : 0);
+
+                              if (age < 16) {
+                                Get.snackbar(
+                                  "Oops!",
+                                  "You must be at least 16 to create a profile",
+                                  backgroundColor: Colors.red,
+                                  colorText: Colors.white,
+                                );
+                                return; // stop submission
+                              }
+                            }
+
                             isloading.value = true;
-                            await storeuserprofile();
-                            isloading.value = false;
-                            // Timer(Duration(seconds: 2), () {
-                            //   isloading.value = false;
-                            //   Get.snackbar(
-                            //     "Congratulations",
-                            //     "Your profile is done",
-                            //     colorText: Colors.white,
-                            //     backgroundColor: Colors.black,
-                            //   );
-                            // });
+                            try {
+                              await pController.storeuserprofile();
+                              Get.offAllNamed(AppRoutes.bottomnav);
+                            } finally {
+                              isloading.value = false;
+                            }
                           }
                         },
+
+                        // onPressed: () async {
+                        //   if (_formkey.currentState!.validate()) {
+                        //     isloading.value = true;
+                        //     try {
+                        //       await storeuserprofile();
+                        //       Get.offAllNamed(AppRoutes.bottomnav);
+                        //     } finally {
+                        //       isloading.value = false;
+                        //     }
+                        //   }
+                        // },
                       ),
                     ),
                     Gap(height * 0.020),

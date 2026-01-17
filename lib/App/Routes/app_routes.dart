@@ -5,7 +5,7 @@ import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/profile_screen.dart';
 import 'package:pandlive/App/AppUi/LiveStreaming/GoLiveStream/golive_screen.dart';
 import 'package:pandlive/App/AppUi/LiveStreaming/WatchStreaming/watchstreaming_class.dart';
-import 'package:pandlive/App/AppUi/Profile/create_profile.dart';
+import 'package:pandlive/App/AppUi/Profile/nextScreens/CreateProfileScreen/create_profile.dart';
 import 'package:pandlive/App/AppUi/Profile/nextScreens/follow_us.dart';
 import 'package:pandlive/App/AppUi/Profile/nextScreens/help_screen.dart';
 import 'package:pandlive/App/AppUi/Profile/nextScreens/logout_screen.dart';
