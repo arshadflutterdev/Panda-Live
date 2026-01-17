@@ -33,6 +33,7 @@ class _CreateProfileState extends State<CreateProfile> {
   RxString genderError = "".obs;
   //image picker
   Rxn<File> image = Rxn<File>();
+  RxString userphoto = "".obs;
 
   Future<void> imagepic() async {
     ImagePicker picker = ImagePicker();
@@ -93,11 +94,18 @@ class _CreateProfileState extends State<CreateProfile> {
         "dob": dobController.text.toString(),
         "country": countryController.text.toString(),
         "gender": isSelected.value == 1 ? "Male" : "Female",
-        "userimage": image.value!.path ?? "",
+        "userimage": userphoto.value != null && userphoto.isNotEmpty
+            ? userphoto.value
+            : image.value!.path ?? "",
         "createdAt": FieldValue.serverTimestamp(),
       };
       firestore.collection("userProfile").add(adduser);
-      Get.snackbar("Congratulation", "All set! Your profile is now complete.");
+      Get.snackbar(
+        "Congratulation",
+        "All set! Your profile is now complete.",
+        backgroundColor: Colors.black,
+        colorText: Colors.white,
+      );
     } catch (e) {
       print(e.toString());
       Get.snackbar(
@@ -109,9 +117,16 @@ class _CreateProfileState extends State<CreateProfile> {
     }
   }
 
+  final argu = Get.arguments as Map<String, dynamic>;
+  void initState() {
+    super.initState();
+
+    userphoto.value = argu["userphoto"] ?? "";
+  }
+
   @override
   Widget build(BuildContext context) {
-    final argu = Get.arguments as Map<String, dynamic>;
+    final argu = Get.arguments as Map<String, dynamic>? ?? {};
     final userId = argu["userId"] ?? "";
     print("on profile screen id $userId");
     final username = argu['username'] ?? "";
@@ -119,7 +134,7 @@ class _CreateProfileState extends State<CreateProfile> {
       nameController.text = username;
     }
     print("profile screen name $username");
-    final userphoto = argu["userphoto"] ?? "";
+
     // print("prfile screen photo $userphoto") ?? "";
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
@@ -179,8 +194,10 @@ class _CreateProfileState extends State<CreateProfile> {
                                     color: Colors.black26,
                                     image: DecorationImage(
                                       fit: BoxFit.cover,
-                                      image: userphoto != null
-                                          ? NetworkImage(userphoto)
+                                      image:
+                                          (userphoto.value != null &&
+                                              userphoto.value.isNotEmpty)
+                                          ? NetworkImage(userphoto.value)
                                           : image.value != null
                                           ? FileImage(image.value!)
                                                 as ImageProvider
