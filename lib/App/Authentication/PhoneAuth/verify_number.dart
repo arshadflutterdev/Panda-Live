@@ -688,7 +688,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
                                 ],
                               ),
                             ),
-                            keyboard: null,
+                            keyboard: TextInputType.number,
                           ),
                         ),
                         Align(
