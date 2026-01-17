@@ -88,8 +88,24 @@ class _CreateProfileState extends State<CreateProfile> {
   Future<void> storeuserprofile() async {
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     try {
-      firestore.collection("userProfile");
-    } catch (e) {}
+      final adduser = {
+        "name": nameController.text.toString(),
+        "dob": dobController.text.toString(),
+        "country": countryController.text.toString(),
+        "gender": isSelected == 1 ? "Male" : "Female",
+        "userimage": image.value!.path ?? "",
+        "createdAt": FieldValue.serverTimestamp(),
+      };
+      firestore.collection("userProfile").add(adduser);
+    } catch (e) {
+      print(e.toString());
+      Get.snackbar(
+        "Error",
+        "Failed to save user information",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
+    }
   }
 
   @override
