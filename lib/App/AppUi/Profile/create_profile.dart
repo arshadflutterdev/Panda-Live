@@ -92,11 +92,12 @@ class _CreateProfileState extends State<CreateProfile> {
         "name": nameController.text.toString(),
         "dob": dobController.text.toString(),
         "country": countryController.text.toString(),
-        "gender": isSelected == 1 ? "Male" : "Female",
+        "gender": isSelected.value == 1 ? "Male" : "Female",
         "userimage": image.value!.path ?? "",
         "createdAt": FieldValue.serverTimestamp(),
       };
       firestore.collection("userProfile").add(adduser);
+      Get.snackbar("Congratulation", "All set! Your profile is now complete.");
     } catch (e) {
       print(e.toString());
       Get.snackbar(
