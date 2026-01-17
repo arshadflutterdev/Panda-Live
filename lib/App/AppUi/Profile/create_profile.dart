@@ -178,7 +178,9 @@ class _CreateProfileState extends State<CreateProfile> {
                                     color: Colors.black26,
                                     image: DecorationImage(
                                       fit: BoxFit.cover,
-                                      image: image.value != null
+                                      image: userphoto != null
+                                          ? NetworkImage(userphoto)
+                                          : image.value != null
                                           ? FileImage(image.value!)
                                                 as ImageProvider
                                           : AssetImage(AppImages.girl),
