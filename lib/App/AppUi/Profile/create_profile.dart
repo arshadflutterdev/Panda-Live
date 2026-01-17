@@ -111,15 +111,15 @@ class _CreateProfileState extends State<CreateProfile> {
   @override
   Widget build(BuildContext context) {
     final argu = Get.arguments as Map<String, dynamic>;
-    final userId = argu["userId"];
+    final userId = argu["userId"] ?? "";
     print("on profile screen id $userId");
-    final username = argu['username'];
+    final username = argu['username'] ?? "";
     if (username != null) {
       nameController.text = username;
     }
     print("profile screen name $username");
-    final userphoto = argu["userphoto"];
-    print("prfile screen photo $userphoto");
+    final userphoto = argu["userphoto"] ?? "";
+    // print("prfile screen photo $userphoto") ?? "";
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
     final localization = AppLocalizations.of(context)!;
@@ -468,59 +468,59 @@ class _CreateProfileState extends State<CreateProfile> {
                                 ),
                         ),
 
-                        onPressed: () {
-                          bool formValid = _formkey.currentState!.validate();
-
-                          if (isSelected.value == 0) {
-                            genderError.value = "Please select your gender";
-                            return;
-                          }
-
-                          if (formValid) {
-                            isloading.value = true;
-
-                            // ✅ STORED VALUES (Future use)
-                            String name = nameController.text;
-                            String dob = dobController.text;
-                            String country = countryController.text;
-
-                            String gender = isSelected.value == 1
-                                ? "male"
-                                : "female";
-
-                            print(name);
-                            print(dob);
-                            print(country);
-                            print(gender);
-
-                            Timer(const Duration(seconds: 2), () {
-                              isloading.value = false;
-                              Get.toNamed(AppRoutes.bottomnav);
-                              Get.snackbar(
-                                localization.mubark,
-                                localization.profiledone,
-                                colorText: Colors.white,
-                                backgroundColor: Colors.black,
-                              );
-                            });
-                          }
-                        },
-
                         // onPressed: () {
-                        //   if (_formkey.currentState!.validate()) {
+                        //   bool formValid = _formkey.currentState!.validate();
+
+                        //   if (isSelected.value == 0) {
+                        //     genderError.value = "Please select your gender";
+                        //     return;
+                        //   }
+
+                        //   if (formValid) {
                         //     isloading.value = true;
-                        //     Timer(Duration(seconds: 2), () {
+
+                        //     // ✅ STORED VALUES (Future use)
+                        //     String name = nameController.text;
+                        //     String dob = dobController.text;
+                        //     String country = countryController.text;
+
+                        //     String gender = isSelected.value == 1
+                        //         ? "male"
+                        //         : "female";
+
+                        //     print(name);
+                        //     print(dob);
+                        //     print(country);
+                        //     print(gender);
+
+                        //     Timer(const Duration(seconds: 2), () {
                         //       isloading.value = false;
+                        //       Get.toNamed(AppRoutes.bottomnav);
                         //       Get.snackbar(
-                        //         "Congratulations",
-                        //         "Your profile is done",
+                        //         localization.mubark,
+                        //         localization.profiledone,
                         //         colorText: Colors.white,
                         //         backgroundColor: Colors.black,
                         //       );
                         //     });
-
                         //   }
                         // },
+                        onPressed: () async {
+                          if (_formkey.currentState!.validate()) {
+                            isloading.value = true;
+                            await storeuserprofile();
+                            isloading.value = false;
+                            // Timer(Duration(seconds: 2), () {
+                            //   isloading.value = false;
+                            //   Get.snackbar(
+                            //     "Congratulations",
+                            //     "Your profile is done",
+                            //     colorText: Colors.white,
+                            //     backgroundColor: Colors.black,
+                            //   );
+                            // });
+                          }
+                        },
                       ),
                     ),
                     Gap(height * 0.020),
