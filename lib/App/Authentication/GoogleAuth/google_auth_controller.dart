@@ -25,10 +25,13 @@ class GoogleAuthController extends GetxController {
       UserCredential? usercredential = await FirebaseAuth.instance
           .signInWithCredential(credentials);
       User? user = usercredential.user;
-      if (user != null) {
-        final doc = await FirebaseFirestore.instance
-            .collection("userProfile")
-            .get();
+      final doc = await FirebaseFirestore.instance
+          .collection("userProfile")
+          .doc(user!.uid)
+          .get();
+      if (doc.exists) {
+        Get.offAllNamed(AppRoutes.bottomnav);
+      } else {
         Get.toNamed(
           AppRoutes.createprofile,
           arguments: {
