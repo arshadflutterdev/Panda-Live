@@ -61,6 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
+  @override
   void dispose() {
     bgstream.cancel();
     super.dispose();
