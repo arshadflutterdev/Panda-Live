@@ -306,21 +306,13 @@ class _AuthOptionsState extends State<AuthOptions> {
 
                       child: GestureDetector(
                         onTap: () async {
-                          if (checkValue == true) {
-                            User? user = await signinWithFacebook();
-                            if (user != null) {
-                              Get.toNamed(AppRoutes.createprofile);
-                            }
+                          User? user = await signinWithFacebook();
+                          if (user != null) {
+                            // Login successful → navigate to next screen
+                            Get.toNamed(AppRoutes.createprofile);
                           } else {
-                            showDialog(
-                              context: context,
-                              builder: (context) => TermsDialog(
-                                onAccept: () {
-                                  Get.back();
-                                  Get.toNamed(AppRoutes.createprofile);
-                                },
-                              ),
-                            );
+                            // Login failed or cancelled
+                            print("Login not completed");
                           }
                         },
                         child: Container(
