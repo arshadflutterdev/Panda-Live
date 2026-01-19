@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -307,14 +308,37 @@ class _AuthOptionsState extends State<AuthOptions> {
                       child: GestureDetector(
                         onTap: () async {
                           User? user = await signinWithFacebook();
-                          if (user != null) {
-                            // Login successful → navigate to next screen
-                            Get.toNamed(AppRoutes.createprofile);
+                          if (user == null) {
+                            print("log not completed");
+                            return;
+                          }
+                          final uid = user.uid;
+                          final doc = await FirebaseFirestore.instance
+                              .collection("userProfile")
+                              .doc(uid)
+                              .get();
+                          if (doc.exists) {
+                            Get.toNamed(AppRoutes.bottomnav);
                           } else {
-                            // Login failed or cancelled
-                            print("Login not completed");
+                            Get.toNamed(AppRoutes.createprofile);
                           }
                         },
+
+                        // onTap: () async {
+                        //   User? user = await signinWithFacebook();
+                        //   if (user != null) {
+                        //     // Login successful → navigate to next screen
+                        //     if (FirebaseAuth.instance.currentUser ==
+                        //         FirebaseAuth.instance.currentUser!.uid) {
+                        //       Get.toNamed(AppRoutes.bottomnav);
+                        //     } else {
+                        //       Get.toNamed(AppRoutes.createprofile);
+                        //     }
+                        //   } else {
+                        //     // Login failed or cancelled
+                        //     print("Login not completed");
+                        //   }
+                        // },
                         child: Container(
                           height: 50,
                           width: double.infinity,
