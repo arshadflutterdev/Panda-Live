@@ -309,8 +309,17 @@ class _AuthOptionsState extends State<AuthOptions> {
                           User? user = await signinWithFacebook();
                           if (user != null) {
                             // Login successful → navigate to next screen
-                            Get.toNamed(AppRoutes.createprofile);
+                            if (checkValue == true) {}
                           } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) => TermsDialog(
+                                onAccept: () {
+                                  Get.back();
+                                  Get.toNamed(AppRoutes.createprofile);
+                                },
+                              ),
+                            );
                             // Login failed or cancelled
                             print("Login not completed");
                           }
