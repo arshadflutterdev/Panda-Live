@@ -54,6 +54,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     AppImages.infoar,
   ];
   RxInt currentbgindex = 0.obs;
+  final String username = "";
+  final String userimage = "";
+
   void initState() {
     super.initState();
     bgstream = Stream.periodic(Duration(seconds: 4)).listen((_) {
@@ -77,8 +80,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .doc(uid)
         .get();
     if (snapshot.exists) {
-      String name = snapshot["name"] ?? "no name";
-      print("user name $name");
+      String username = snapshot["name"] ?? "no name";
+      print("user name $username");
       String uid = snapshot["userId"] ?? "no id";
       print("user Id $uid");
       String userimage = snapshot["userimage"] ?? "no image";
@@ -111,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () {
               Get.toNamed(AppRoutes.language);
             },
-            icon: Image.asset(AppImages.settings, height: 25, width: 25),
+            icon: Image(image: NetworkImage(userimage ?? '')),
           ),
         ],
       ),
@@ -124,7 +127,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.black38,
-                  backgroundImage: AssetImage(AppImages.eman0),
+                  backgroundImage: userimage.isNotEmpty
+                      ? NetworkImage(userimage)
+                      : AssetImage(AppImages.girl),
                 ),
                 // Gap(10),
                 Padding(
