@@ -11,14 +11,15 @@ class GoliveScreen extends StatefulWidget {
 class _GoliveScreenState extends State<GoliveScreen> {
   final String appId = "9d3b775f339d4daf8b15f1c7d0cc7f3f";
   final String channelName = "testing_channel";
+  late final AgoraClient client;
   @override
   void initState() {
     super.initState();
 
-    final AgoraClient client = AgoraClient(
+    client = AgoraClient(
       agoraConnectionData: AgoraConnectionData(
-        appId: "9d3b775f339d4daf8b15f1c7d0cc7f3f",
-        channelName: "app_testing",
+        appId: appId,
+        channelName: channelName,
       ),
       enabledPermission: [Permission.camera, Permission.microphone],
     );
@@ -26,6 +27,6 @@ class _GoliveScreenState extends State<GoliveScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold();
+    return Scaffold(body: AgoraVideoViewer(client: client));
   }
 }

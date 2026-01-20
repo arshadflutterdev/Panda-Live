@@ -26,7 +26,7 @@ packages:
     source: hosted
     version: "1.6.3"
   agora_uikit:
-    dependency: "direct main"
+    dependency: "direct overridden"
     description:
       name: agora_uikit
       sha256: "2c06a3a12a1aeba6dda84c56bef66091fa6b87b11cc96dbff27c092d0697cef7"
