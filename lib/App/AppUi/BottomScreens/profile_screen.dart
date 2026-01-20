@@ -116,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () {
               Get.toNamed(AppRoutes.language);
             },
-            icon: Image(image: AssetImage(AppImages.language)),
+            icon: Image(image: AssetImage(AppImages.settings)),
           ),
         ],
       ),
@@ -142,7 +142,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     // mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        isArabic ? "أرشد يحيى" : "Arshad Yahya",
+                        username,
                         style: isArabic
                             ? AppStyle.arabictext.copyWith(
                                 fontSize: 22,

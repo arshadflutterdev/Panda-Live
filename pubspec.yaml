@@ -49,6 +49,7 @@ dependencies:
   google_sign_in: ^7.2.0
   cloud_firestore: ^6.1.1
   flutter_facebook_auth: ^7.1.5
+  agora_rtc_engine: ^6.5.3
   
  
 
