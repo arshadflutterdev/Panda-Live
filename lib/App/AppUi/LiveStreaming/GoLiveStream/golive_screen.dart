@@ -1,5 +1,5 @@
+import 'package:agora_uikit/agora_uikit.dart';
 import 'package:flutter/material.dart';
-// import 'package:permission_handler/permission_handler.dart';
 
 class GoliveScreen extends StatefulWidget {
   const GoliveScreen({super.key});
@@ -15,13 +15,13 @@ class _GoliveScreenState extends State<GoliveScreen> {
   void initState() {
     super.initState();
 
-    // final AgoraClient client = AgoraClient(
-    //       agoraConnectionData: AgoraConnectionData(
-    //         appId: "<--App Id-->",
-    //         channelName: "test",
-    //       ),
-    //       enabledPermission: [Permission.camera, Permission.microphone],
-    //     );
+    final AgoraClient client = AgoraClient(
+      agoraConnectionData: AgoraConnectionData(
+        appId: "9d3b775f339d4daf8b15f1c7d0cc7f3f",
+        channelName: "app_testing",
+      ),
+      enabledPermission: [Permission.camera, Permission.microphone],
+    );
   }
 
   @override
