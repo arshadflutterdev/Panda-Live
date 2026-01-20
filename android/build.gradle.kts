@@ -22,14 +22,3 @@ subprojects {
 tasks.register<Delete>("clean") {
     delete(rootProject.layout.buildDirectory)
 }
-subprojects {
-    project.extra.set("org.gradle.parallel", false) // Helps with evaluation order
-    
-    if (project.name == "agora_uikit") {
-        plugins.withType<com.android.build.gradle.LibraryPlugin> {
-            extensions.configure<com.android.build.gradle.LibraryExtension> {
-                namespace = "io.agora.uikit"
-            }
-        }
-    }
-}
