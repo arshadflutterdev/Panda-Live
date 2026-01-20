@@ -54,8 +54,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     AppImages.infoar,
   ];
   RxInt currentbgindex = 0.obs;
-  final String username = "";
-  final String userimage = "";
+  String username = "";
+  String userimage = "";
 
   void initState() {
     super.initState();
@@ -79,13 +79,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .collection("userProfile")
         .doc(uid)
         .get();
-    if (snapshot.exists) {
-      String username = snapshot["name"] ?? "no name";
-      print("user name $username");
-      String uid = snapshot["userId"] ?? "no id";
-      print("user Id $uid");
-      String userimage = snapshot["userimage"] ?? "no image";
-      print("user image $userimage");
+    if (snapshot.exists && snapshot.data() != null) {
+      setState(() {
+        username = snapshot.data()?["name"] ?? "no name";
+        print("user name $username");
+        String uid = snapshot.data()?["userId"] ?? "no id";
+        print("user Id $uid");
+        userimage = snapshot.data()?["userimage"] ?? "no image";
+        print("user image $userimage");
+      });
     }
   }
 
@@ -114,7 +116,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () {
               Get.toNamed(AppRoutes.language);
             },
-            icon: Image(image: NetworkImage(userimage ?? '')),
+            icon: Image(image: AssetImage(AppImages.language)),
           ),
         ],
       ),
@@ -127,9 +129,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 CircleAvatar(
                   radius: 30,
                   backgroundColor: Colors.black38,
-                  backgroundImage: userimage.isNotEmpty
+                  backgroundImage:
+                      userimage.isNotEmpty && userimage.startsWith("http")
                       ? NetworkImage(userimage)
-                      : AssetImage(AppImages.girl),
+                      : AssetImage(AppImages.girl) as ImageProvider,
                 ),
                 // Gap(10),
                 Padding(
