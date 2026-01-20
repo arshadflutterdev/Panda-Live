@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_utils/get_utils.dart';
@@ -60,6 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
       currentbgindex.value = (currentbgindex.value + 1) % infimages.length;
     });
+    getUserDetails();
   }
 
   @override
@@ -69,10 +71,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> getUserDetails() async {
-    final userdetails = FirebaseFirestore.instance
+    final uid = FirebaseAuth.instance.currentUser!.uid;
+    final snapshot = await FirebaseFirestore.instance
         .collection("userProfile")
-        .doc()
+        .doc(uid)
         .get();
+    if (snapshot.exists) {
+      snapshot["name"];
+      snapshot["userId"];
+      snapshot["userimage"];
+    }
   }
 
   @override
