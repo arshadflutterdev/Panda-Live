@@ -77,9 +77,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .doc(uid)
         .get();
     if (snapshot.exists) {
-      snapshot["name"];
-      snapshot["userId"];
-      snapshot["userimage"];
+      String name = snapshot["name"];
+      print("user name $name");
+      String uid = snapshot["userId"];
+      print("user Id $uid");
+      String userimage = snapshot["userimage"];
+      print("user image $userimage");
     }
   }
 
