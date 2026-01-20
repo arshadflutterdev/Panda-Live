@@ -241,7 +241,7 @@ class _AuthOptionsState extends State<AuthOptions> {
 
                       child: GestureDetector(
                         onTap: () {
-                          if (checkValue == true) {
+                          if (checkValue.value == true) {
                             gauthcontroller.signingwithgoogle();
                           } else {
                             showDialog(
@@ -319,7 +319,7 @@ class _AuthOptionsState extends State<AuthOptions> {
 
                       child: GestureDetector(
                         onTap: () async {
-                          if (checkValue == true) {
+                          if (checkValue.value == true) {
                             User? user = await signinWithFacebook();
                             if (user == null) {
                               print("log not completed");
