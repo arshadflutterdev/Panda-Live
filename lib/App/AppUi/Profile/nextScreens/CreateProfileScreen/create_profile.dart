@@ -161,18 +161,14 @@ class _CreateProfileState extends State<CreateProfile> {
                                     color: Colors.black26,
                                     image: DecorationImage(
                                       fit: BoxFit.cover,
-                                      image:
-                                          (pController
-                                              .userphoto
-                                              .value
-                                              .isNotEmpty)
+                                      image: pController.image.value != null
+                                          ? FileImage(pController.image.value!)
+                                          : (pController.userphoto.isNotEmpty)
                                           ? NetworkImage(
                                               pController.userphoto.value,
                                             )
-                                          : pController.image.value != null
-                                          ? FileImage(pController.image.value!)
-                                                as ImageProvider
-                                          : AssetImage(AppImages.girl),
+                                          : AssetImage(AppImages.girl)
+                                                as ImageProvider,
                                     ),
                                   ),
                                   child: Stack(

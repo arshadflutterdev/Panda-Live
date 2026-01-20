@@ -25,7 +25,7 @@ class ProfileStoreController extends GetxController {
             ? userphoto.value
             : image.value != null
             ? image.value!.path
-            : "",
+            : "there was no image",
         "createdAt": FieldValue.serverTimestamp(),
         "userId": user,
       };
