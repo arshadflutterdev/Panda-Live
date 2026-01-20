@@ -241,7 +241,19 @@ class _AuthOptionsState extends State<AuthOptions> {
 
                       child: GestureDetector(
                         onTap: () {
-                          gauthcontroller.signingwithgoogle();
+                          if (checkValue == true) {
+                            gauthcontroller.signingwithgoogle();
+                          } else {
+                            showDialog(
+                              context: context,
+                              builder: (context) => TermsDialog(
+                                onAccept: () {
+                                  Get.back();
+                                  gauthcontroller.signingwithgoogle();
+                                },
+                              ),
+                            );
+                          }
                         },
                         child: Container(
                           height: 50,
@@ -307,20 +319,26 @@ class _AuthOptionsState extends State<AuthOptions> {
 
                       child: GestureDetector(
                         onTap: () async {
-                          User? user = await signinWithFacebook();
-                          if (user == null) {
-                            print("log not completed");
-                            return;
-                          }
-                          final uid = user.uid;
-                          final doc = await FirebaseFirestore.instance
-                              .collection("userProfile")
-                              .doc(uid)
-                              .get();
-                          if (doc.exists) {
-                            Get.toNamed(AppRoutes.bottomnav);
+                          if (checkValue == true) {
+                            User? user = await signinWithFacebook();
+                            if (user == null) {
+                              print("log not completed");
+                              return;
+                            }
                           } else {
-                            Get.toNamed(AppRoutes.createprofile);
+                            showDialog(
+                              context: context,
+                              builder: (context) => TermsDialog(
+                                onAccept: () async {
+                                  Get.back();
+                                  User? user = await signinWithFacebook();
+                                  if (user == null) {
+                                    print("log not completed");
+                                    return;
+                                  }
+                                },
+                              ),
+                            );
                           }
                         },
 
