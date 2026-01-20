@@ -1,4 +1,3 @@
-import 'package:agora_uikit/agora_uikit.dart';
 import 'package:flutter/material.dart';
 
 class GoliveScreen extends StatefulWidget {
@@ -11,22 +10,22 @@ class GoliveScreen extends StatefulWidget {
 class _GoliveScreenState extends State<GoliveScreen> {
   final String appId = "9d3b775f339d4daf8b15f1c7d0cc7f3f";
   final String channelName = "testing_channel";
-  late final AgoraClient client;
+  // late final AgoraClient client;
   @override
   void initState() {
     super.initState();
 
-    client = AgoraClient(
-      agoraConnectionData: AgoraConnectionData(
-        appId: appId,
-        channelName: channelName,
-      ),
-      enabledPermission: [Permission.camera, Permission.microphone],
-    );
+    // client = AgoraClient(
+    //   agoraConnectionData: AgoraConnectionData(
+    //     appId: appId,
+    //     channelName: channelName,
+    //   ),
+    //   enabledPermission: [Permission.camera, Permission.microphone],
+    // );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(body: AgoraVideoViewer(client: client));
+    return Scaffold();
   }
 }
