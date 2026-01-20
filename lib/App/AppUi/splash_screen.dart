@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
@@ -14,11 +15,16 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   // final flocalization = FlutterLocalization.instance;
+  final currentuser = FirebaseAuth.instance.currentUser;
   @override
   void initState() {
     super.initState();
     Timer(Duration(seconds: 3), () {
-      Get.toNamed(AppRoutes.authoptions);
+      if (currentuser != null) {
+        Get.toNamed(AppRoutes.bottomnav);
+      } else {
+        Get.toNamed(AppRoutes.authoptions);
+      }
     });
   }
 
