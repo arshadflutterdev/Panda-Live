@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_utils/get_utils.dart';
@@ -65,6 +66,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void dispose() {
     bgstream.cancel();
     super.dispose();
+  }
+
+  Future<void> getUserDetails() async {
+    final userdetails = FirebaseFirestore.instance
+        .collection("userProfile")
+        .doc()
+        .get();
   }
 
   @override
