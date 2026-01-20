@@ -26,9 +26,7 @@ class CreateProfile extends StatefulWidget {
 class _CreateProfileState extends State<CreateProfile> {
   RxBool isloading = false.obs;
   final _formkey = GlobalKey<FormState>();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController dobController = TextEditingController();
-  TextEditingController countryController = TextEditingController();
+
   final pController = Get.find<ProfileStoreController>();
 
   RxString genderError = "".obs;
@@ -78,7 +76,7 @@ class _CreateProfileState extends State<CreateProfile> {
       String formattedDate =
           "${pickedDate.day.toString().padLeft(2, '0')}-${pickedDate.month.toString().padLeft(2, '0')}-${pickedDate.year}";
       setState(() {
-        dobController.text = formattedDate;
+        pController.dobController.text = formattedDate;
       });
     }
   }
@@ -93,7 +91,7 @@ class _CreateProfileState extends State<CreateProfile> {
 
     pController.userphoto.value = argu["userphoto"] ?? "";
     if (argu['username'] != null) {
-      nameController.text = argu['username'];
+      pController.nameController.text = argu['username'];
     }
   }
 
@@ -218,14 +216,18 @@ class _CreateProfileState extends State<CreateProfile> {
                         children: [
                           MyTextFormField(
                             validator: (value) {
-                              if (nameController.text.isEmpty) {
+                              if (pController.nameController.text.isEmpty) {
                                 return localization.entername;
-                              } else if (nameController.text.length < 6) {
+                              } else if (pController
+                                      .nameController
+                                      .text
+                                      .length <
+                                  6) {
                                 return localization.shortnam;
                               }
                               return null;
                             },
-                            controller: nameController,
+                            controller: pController.nameController,
                             keyboard: TextInputType.text,
                             hintext: localization.entername,
                           ),
@@ -249,7 +251,7 @@ class _CreateProfileState extends State<CreateProfile> {
                             ontapp: () {
                               pickDate();
                             },
-                            controller: dobController,
+                            controller: pController.dobController,
                             keyboard: TextInputType.datetime,
                             hintext: localization.date,
                             validator: (value) {
@@ -289,17 +291,17 @@ class _CreateProfileState extends State<CreateProfile> {
                           Gap(5),
                           MyTextFormField(
                             validator: (value) {
-                              if (countryController.text.isEmpty) {
+                              if (pController.countryController.text.isEmpty) {
                                 return localization.selectcontry;
                               }
                               return null;
                             },
-                            controller: countryController,
+                            controller: pController.countryController,
                             read: true,
                             ontapp: () {
                               CountryPickerDialog.show(
                                 context,
-                                countryController,
+                                pController.countryController,
                               );
                             },
                             keyboard: TextInputType.text,
@@ -463,10 +465,9 @@ class _CreateProfileState extends State<CreateProfile> {
                             }
 
                             // 1. Check age
-                            if (dobController.text.isNotEmpty) {
-                              final parts = dobController.text.split(
-                                '-',
-                              ); // expecting dd-mm-yyyy
+                            if (pController.dobController.text.isNotEmpty) {
+                              final parts = pController.dobController.text
+                                  .split('-'); // expecting dd-mm-yyyy
                               final day = int.tryParse(parts[0]) ?? 1;
                               final month = int.tryParse(parts[1]) ?? 1;
                               final year = int.tryParse(parts[2]) ?? 1900;
