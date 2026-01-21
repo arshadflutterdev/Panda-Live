@@ -72,7 +72,8 @@ class _GoliveScreenState extends State<GoliveScreen> {
 
   Future<void> joinChannel() async {
     _engine.joinChannel(
-      token: "",
+      token:
+          "007eJxTYLBTUEjz6NANly05L5OmbHQz74ZwMdsiJpML7PzuPoWn1iowWKYYJ5mbm6YZG1ummKQkplkkGZqmGSabpxgkJ5unGafxLi3IbAhkZPhYHM/MyACBID4fQ0lqcUlmXrpzRmJeXmoOAwMAIqYfsA==",
       channelId: channelName,
       uid: 0,
       options: ChannelMediaOptions(
