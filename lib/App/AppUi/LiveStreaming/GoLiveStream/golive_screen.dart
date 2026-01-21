@@ -118,9 +118,9 @@ class _GoliveScreenState extends State<GoliveScreen> {
   @override
   void initState() {
     super.initState();
-    channelId = data["channelId"];
-    hostname = data["hostname"];
-    hostphoto = data["hostphoto"];
+    channelId = data["channelId"] ?? "default channel";
+    hostname = data["hostname"] ?? "Guest";
+    hostphoto = data["hostphoto"] ?? "";
     initAgoraEngine(); // Starts Agora connection
 
     Timer.periodic(const Duration(seconds: 1), (timer) {

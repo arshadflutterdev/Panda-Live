@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
@@ -130,9 +131,20 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
               ),
             ),
             confirm: TextButton(
-              onPressed: () {
+              onPressed: () async {
                 final User? currentUser = FirebaseAuth.instance.currentUser;
                 if (currentUser != null) {
+                  await FirebaseFirestore.instance
+                      .collection("LiveStream")
+                      .doc(currentUser.uid)
+                      .set({
+                        "hostname": currentUser.displayName ?? 'Guest',
+                        "uid": currentUser.uid,
+                        "channelId": "testingChannel",
+                        "image": currentUser.photoURL ?? "",
+                        "views": 0,
+                        "startedAt": FieldValue.serverTimestamp(),
+                      });
                   Get.toNamed(
                     AppRoutes.golive,
                     arguments: {
@@ -143,6 +155,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                   );
                 }
               },
+
               child: Text(
                 isArabic ? "يتأكد" : "Confirm",
                 style: isArabic ? AppStyle.arabictext : TextStyle(),
