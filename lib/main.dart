@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/firebase_options.dart';
@@ -71,16 +72,21 @@ class _JoinadnWatchState extends State<JoinadnWatch> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.white,
-      body: Column(
-        children: [
-          ElevatedButton(
-            onPressed: () {
-              Get.toNamed(AppRoutes.golive);
-            },
-            child: Text("Start Live"),
-          ),
-          ElevatedButton(onPressed: () {}, child: Text("Watch Live")),
-        ],
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            ElevatedButton(
+              onPressed: () {
+                Get.toNamed(AppRoutes.golive);
+              },
+              child: Text("Start Live"),
+            ),
+            Gap(20),
+            ElevatedButton(onPressed: () {}, child: Text("Watch Live")),
+          ],
+        ),
       ),
     );
   }

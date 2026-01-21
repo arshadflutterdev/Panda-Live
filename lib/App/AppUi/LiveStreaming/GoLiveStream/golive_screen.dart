@@ -1,5 +1,6 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class GoliveScreen extends StatefulWidget {
   const GoliveScreen({super.key});
@@ -13,6 +14,12 @@ class _GoliveScreenState extends State<GoliveScreen> {
   final String appId = "5eda14d417924d9baf39e83613e8f8f5";
   final String channelName = "testingChannel";
   Future<void> initAgoraEngine() async {
+    //Requiest for Permission
+    Map<Permission, PermissionStatus> status = await [
+      Permission.camera,
+      Permission.microphone,
+    ].request();
+
     // create engine
     _engine = createAgoraRtcEngine();
     //initlize engine with appId
