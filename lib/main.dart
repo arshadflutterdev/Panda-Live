@@ -53,7 +53,35 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      // home: HostLiveScreen(),
+      home: JoinadnWatch(),
+    );
+  }
+}
+
+//join live and watch stream
+class JoinadnWatch extends StatefulWidget {
+  const JoinadnWatch({super.key});
+
+  @override
+  State<JoinadnWatch> createState() => _JoinadnWatchState();
+}
+
+class _JoinadnWatchState extends State<JoinadnWatch> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Column(
+        children: [
+          ElevatedButton(
+            onPressed: () {
+              Get.toNamed(AppRoutes.golive);
+            },
+            child: Text("Start Live"),
+          ),
+          ElevatedButton(onPressed: () {}, child: Text("Watch Live")),
+        ],
+      ),
     );
   }
 }
