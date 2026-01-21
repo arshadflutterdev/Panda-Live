@@ -16,13 +16,30 @@ class _GoliveScreenState extends State<GoliveScreen> {
     // create engine
     _engine = createAgoraRtcEngine();
     //initlize engine with appId
-    _engine.initialize(
+    await _engine.initialize(
       RtcEngineContext(
         appId: appId,
         channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
       ),
     );
+    await _engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
+    await _engine.setVideoEncoderConfiguration(
+      VideoEncoderConfiguration(
+        dimensions: VideoDimensions(width: 720, height: 1280),
+        frameRate: 30,
+        bitrate: 0, // 0 means standard bitrate
+        mirrorMode: VideoMirrorModeType.videoMirrorModeEnabled,
+      ),
+    );
     //Register the event handler to listen for callbacks
+    _engine.registerEventHandler(
+      RtcEngineEventHandler(
+        onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
+          debugPrint("Local user ${connection.localUid} joined");
+        },
+      ),
+    );
+    await _engine.enableVideo();
   }
 
   @override
