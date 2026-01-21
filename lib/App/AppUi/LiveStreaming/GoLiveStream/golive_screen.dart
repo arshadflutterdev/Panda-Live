@@ -19,7 +19,15 @@ class _GoliveScreenState extends State<GoliveScreen> {
       Permission.camera,
       Permission.microphone,
     ].request();
-
+    if (status[Permission.camera] != PermissionStatus.granted ||
+        status[Permission.microphone] != PermissionStatus.granted) {
+      debugPrint("Permission Not Granted . Connot start stream");
+      if (await Permission.camera.isDenied) {
+        await Permission.camera.request();
+      } else if (await Permission.camera.isPermanentlyDenied) {
+        openAppSettings();
+      }
+    }
     // create engine
     _engine = createAgoraRtcEngine();
     //initlize engine with appId
@@ -29,6 +37,7 @@ class _GoliveScreenState extends State<GoliveScreen> {
         channelProfile: ChannelProfileType.channelProfileLiveBroadcasting,
       ),
     );
+
     await _engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
     await _engine.enableVideo();
 
@@ -55,13 +64,38 @@ class _GoliveScreenState extends State<GoliveScreen> {
     );
   }
 
+  Future<void> joinChannel() async {
+    _engine.joinChannel(
+      token: "",
+      channelId: channelName,
+      uid: 0,
+      options: ChannelMediaOptions(
+        clientRoleType: ClientRoleType.clientRoleBroadcaster,
+        publishCameraTrack: true,
+        publishMicrophoneTrack: true,
+        autoSubscribeAudio: true,
+        autoSubscribeVideo: true,
+      ),
+    );
+  }
+
+  VideoViewController? _localviewController;
+  void setupVideoView() {
+    _localviewController = VideoViewController(
+      rtcEngine: _engine,
+      canvas: VideoCanvas(uid: 0),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
+    initAgoraEngine();
+    joinChannel();
   }
 
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(backgroundColor: Colors.white);
   }
 }
