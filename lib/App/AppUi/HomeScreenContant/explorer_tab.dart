@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -130,7 +131,17 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
             ),
             confirm: TextButton(
               onPressed: () {
-                Get.toNamed(AppRoutes.golive);
+                final User? currentUser = FirebaseAuth.instance.currentUser;
+                if (currentUser != null) {
+                  Get.toNamed(
+                    AppRoutes.golive,
+                    arguments: {
+                      "channelId": "testingChannel",
+                      "hostname": currentUser.displayName ?? "no name",
+                      "hostphoto": currentUser.photoURL ?? "",
+                    },
+                  );
+                }
               },
               child: Text(
                 isArabic ? "يتأكد" : "Confirm",

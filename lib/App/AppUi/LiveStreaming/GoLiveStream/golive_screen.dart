@@ -17,10 +17,15 @@ class GoliveScreen extends StatefulWidget {
 }
 
 class _GoliveScreenState extends State<GoliveScreen> {
+  var data = Get.arguments;
+  late String channelId;
+  late String hostname;
+  late String hostphoto;
+
   RxList<int> remoteUsers = <int>[].obs; // Stores UIDs of real viewers
   late RtcEngine _engine;
   final String appId = "5eda14d417924d9baf39e83613e8f8f5";
-  final String channelName = "testingChannel";
+  // final String channelName = "testingChannel";
   VideoViewController? _localviewController;
 
   Future<void> initAgoraEngine() async {
@@ -85,7 +90,7 @@ class _GoliveScreenState extends State<GoliveScreen> {
     await _engine.joinChannel(
       token:
           "007eJxTYLBTUEjz6NANly05L5OmbHQz74ZwMdsiJpML7PzuPoWn1iowWKYYJ5mbm6YZG1ummKQkplkkGZqmGSabpxgkJ5unGafxLi3IbAhkZPhYHM/MyACBID4fQ0lqcUlmXrpzRmJeXmoOAwMAIqYfsA==",
-      channelId: channelName,
+      channelId: channelId,
       uid: 0,
       options: const ChannelMediaOptions(
         clientRoleType: ClientRoleType.clientRoleBroadcaster,
@@ -113,6 +118,9 @@ class _GoliveScreenState extends State<GoliveScreen> {
   @override
   void initState() {
     super.initState();
+    channelId = data["channelId"];
+    hostname = data["hostname"];
+    hostphoto = data["hostphoto"];
     initAgoraEngine(); // Starts Agora connection
 
     Timer.periodic(const Duration(seconds: 1), (timer) {
