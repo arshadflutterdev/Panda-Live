@@ -105,6 +105,13 @@ class _GoliveScreenState extends State<GoliveScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(backgroundColor: Colors.white);
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: Center(
+        child: _isEngineInitialized && _localviewController != null
+            ? AgoraVideoView(controller: _localviewController!)
+            : CircularProgressIndicator(),
+      ),
+    );
   }
 }
