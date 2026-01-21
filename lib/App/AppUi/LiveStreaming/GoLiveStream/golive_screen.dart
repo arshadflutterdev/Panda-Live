@@ -13,6 +13,8 @@ class _GoliveScreenState extends State<GoliveScreen> {
   late RtcEngine _engine;
   final String appId = "5eda14d417924d9baf39e83613e8f8f5";
   final String channelName = "testingChannel";
+  VideoViewController? _localviewController;
+  bool _isEngineInitialized = false;
   Future<void> initAgoraEngine() async {
     //Requiest for Permission
     Map<Permission, PermissionStatus> status = await [
@@ -40,9 +42,8 @@ class _GoliveScreenState extends State<GoliveScreen> {
 
     await _engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
     await _engine.enableVideo();
-
-    // 2. Start Preview (Host sees themselves before joining)
     await _engine.startPreview();
+
     await _engine.setVideoEncoderConfiguration(
       VideoEncoderConfiguration(
         dimensions: VideoDimensions(width: 720, height: 1280),
@@ -62,6 +63,11 @@ class _GoliveScreenState extends State<GoliveScreen> {
         },
       ),
     );
+    setupVideoView();
+    joinChannel();
+    setState(() {
+      _isEngineInitialized = true;
+    });
   }
 
   Future<void> joinChannel() async {
@@ -73,13 +79,10 @@ class _GoliveScreenState extends State<GoliveScreen> {
         clientRoleType: ClientRoleType.clientRoleBroadcaster,
         publishCameraTrack: true,
         publishMicrophoneTrack: true,
-        autoSubscribeAudio: true,
-        autoSubscribeVideo: true,
       ),
     );
   }
 
-  VideoViewController? _localviewController;
   void setupVideoView() {
     _localviewController = VideoViewController(
       rtcEngine: _engine,
@@ -91,7 +94,13 @@ class _GoliveScreenState extends State<GoliveScreen> {
   void initState() {
     super.initState();
     initAgoraEngine();
-    joinChannel();
+  }
+
+  @override
+  void dispose() {
+    _engine.leaveChannel();
+    _engine.release();
+    super.dispose();
   }
 
   @override
