@@ -2,6 +2,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
@@ -47,6 +50,10 @@ class _GoliveScreenState extends State<GoliveScreen> {
         onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
           debugPrint("Local user ${connection.localUid} joined");
 
+          FirebaseFirestore.instance
+              .collection("LiveStream")
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .update({"agoraUid": connection.localUid});
           // STEP A: Create the controller ONLY when the connection is active
           _localviewController = VideoViewController(
             rtcEngine: _engine,
@@ -159,6 +166,14 @@ class _GoliveScreenState extends State<GoliveScreen> {
     _engine.leaveChannel();
     _engine.release();
     super.dispose();
+    removeLivestatus();
+  }
+
+  Future<void> removeLivestatus() async {
+    FirebaseFirestore.instance
+        .collection("LiveStream")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .delete();
   }
 
   @override
