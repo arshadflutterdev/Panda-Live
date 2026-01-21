@@ -47,13 +47,13 @@ class MyApp extends StatelessWidget {
         GlobalWidgetsLocalizations.delegate,
         GlobalCupertinoLocalizations.delegate,
       ],
-      // initialRoute: AppRoutes.splash,
-      // getPages: AppRoutes.routes,
+      initialRoute: AppRoutes.splash,
+      getPages: AppRoutes.routes,
       title: 'PandLive',
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
       ),
-      home: HostLiveScreen(),
+      // home: HostLiveScreen(),
     );
   }
 }
