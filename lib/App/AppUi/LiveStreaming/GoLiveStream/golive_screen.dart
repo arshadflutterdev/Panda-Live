@@ -23,6 +23,10 @@ class _GoliveScreenState extends State<GoliveScreen> {
       ),
     );
     await _engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
+    await _engine.enableVideo();
+
+    // 2. Start Preview (Host sees themselves before joining)
+    await _engine.startPreview();
     await _engine.setVideoEncoderConfiguration(
       VideoEncoderConfiguration(
         dimensions: VideoDimensions(width: 720, height: 1280),
@@ -37,9 +41,11 @@ class _GoliveScreenState extends State<GoliveScreen> {
         onJoinChannelSuccess: (RtcConnection connection, int elapsed) {
           debugPrint("Local user ${connection.localUid} joined");
         },
+        onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
+          debugPrint("Remote user $remoteUid joined");
+        },
       ),
     );
-    await _engine.enableVideo();
   }
 
   @override
