@@ -17,6 +17,7 @@ class GoliveScreen extends StatefulWidget {
 }
 
 class _GoliveScreenState extends State<GoliveScreen> {
+  RxList<int> remoteUsers = <int>[].obs; // Stores UIDs of real viewers
   late RtcEngine _engine;
   final String appId = "5eda14d417924d9baf39e83613e8f8f5";
   final String channelName = "testingChannel";
@@ -50,6 +51,19 @@ class _GoliveScreenState extends State<GoliveScreen> {
           // STEP B: Update GetX to rebuild the UI
           isJoined.value = true;
         },
+        onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
+          if (!remoteUsers.contains(remoteUid)) {
+            remoteUsers.add(remoteUid);
+          }
+        },
+        onUserOffline:
+            (
+              RtcConnection connection,
+              int remoteUid,
+              UserOfflineReasonType reason,
+            ) {
+              remoteUsers.remove(remoteUid);
+            },
         onError: (ErrorCodeType err, String msg) {
           debugPrint("Agora Error: $err - $msg");
         },
@@ -226,13 +240,14 @@ class _GoliveScreenState extends State<GoliveScreen> {
                                 Gap(3),
                                 Obx(
                                   () => Text(
-                                    fakeviews.value.toString(),
+                                    remoteUsers.length.toString(),
                                     style: TextStyle(
                                       fontSize: 18,
                                       color: Colors.white,
                                     ),
                                   ),
                                 ),
+                                Gap(3),
                               ],
                             ),
                           ),

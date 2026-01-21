@@ -84,7 +84,12 @@ class _JoinadnWatchState extends State<JoinadnWatch> {
               child: Text("Start Live"),
             ),
             Gap(20),
-            ElevatedButton(onPressed: () {}, child: Text("Watch Live")),
+            ElevatedButton(
+              onPressed: () {
+                Get.toNamed(AppRoutes.watchstream);
+              },
+              child: Text("Watch Live"),
+            ),
           ],
         ),
       ),
