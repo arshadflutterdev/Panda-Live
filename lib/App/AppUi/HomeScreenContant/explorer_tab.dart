@@ -17,83 +17,6 @@ class ExplorerScreen extends StatefulWidget {
 }
 
 class _ExplorerScreenState extends State<ExplorerScreen> {
-  List<String> images = [
-    AppImages.eman,
-    AppImages.egirl0,
-    AppImages.eman0,
-    AppImages.egirl2,
-    AppImages.egirl2,
-    AppImages.egirl3,
-    AppImages.eman1,
-    AppImages.egirl2,
-    AppImages.egirl4,
-    AppImages.egirl5,
-    AppImages.egirl6,
-    AppImages.eman0,
-    AppImages.egirl2,
-    AppImages.egirl3,
-    AppImages.eman1,
-    AppImages.egirl4,
-  ];
-  //live user list
-  List<String> usernames = [
-    "Ali",
-    "Emily",
-    "Usman",
-    "Sophia",
-    "Ayesha",
-    "Olivia",
-    "Hassan",
-    "Emma",
-    "Zara",
-    "Mia",
-    "Lily",
-    "Ahmed",
-    "Noor",
-    "Ava",
-    "Salman",
-    "Sofia",
-  ];
-  List<String> usernamesArabic = [
-    "علي", // Ali
-    "إميلي", // Emily
-    "عثمان", // Usman
-    "صوفيا", // Sophia
-    "عائشة", // Ayesha
-    "أوليفيا", // Olivia
-    "حسن", // Hassan
-    "إيما", // Emma
-    "زارا", // Zara
-    "ميا", // Mia
-    "ليلي", // Lily
-    "أحمد", // Ahmed
-    "نور", // Noor
-    "آفا", // Ava
-    "سلمان", // Salman
-    "صوفيا", // Sofia
-  ];
-
-  //list countries flag
-  List<String> countries = [
-    AppImages.pak,
-    AppImages.usa,
-    AppImages.saudi,
-    AppImages.uae,
-    AppImages.india,
-    AppImages.pak,
-    AppImages.usa,
-    AppImages.saudi,
-    AppImages.uae,
-    AppImages.india,
-    AppImages.pak,
-    AppImages.usa,
-    AppImages.saudi,
-    AppImages.uae,
-    AppImages.india,
-    AppImages.pak,
-  ];
-  //views
-  List<int> views = [10, 15, 20, 30, 5, 3, 25, 12, 18, 7, 22, 14, 9, 35, 8, 28];
   final liveStream = FirebaseFirestore.instance.collection("LiveStream");
   @override
   Widget build(BuildContext context) {
@@ -179,8 +102,11 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
           } else if (!snapshot.hasData) {
             return Text("There is no data");
           } else {
+            final docs = snapshot.data!.docs;
+            print("here is docs list ${docs.length}");
+
             return GridView.builder(
-              itemCount: images.length,
+              itemCount: docs.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisSpacing: 4,
                 mainAxisSpacing: 4,
@@ -188,16 +114,26 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                 childAspectRatio: 0.99,
               ),
               itemBuilder: (context, index) {
+                final data = docs[index].data() as Map<String, dynamic>;
                 return GestureDetector(
                   onTap: () {
+                    if (data["agoraUid"] == null) {
+                      Get.snackbar(
+                        "Wait",
+                        "Host is still connecting...",
+                        backgroundColor: Colors.white,
+                        colorText: Colors.white,
+                      );
+                      return;
+                    }
                     Get.toNamed(
                       AppRoutes.watchstream,
                       arguments: {
-                        "images": images[index],
-                        "names": usernames[index],
-                        "arabicnam": usernamesArabic[index],
-                        "country": countries[index],
-                        "views": views[index],
+                        "channelId": data["channelId"],
+                        "hostname": data["hostname"],
+                        "hostphoto": data["image"],
+                        "agoraUid":
+                            data["agoraUid"], // This is the ID we saved in GoLiveScreen
                       },
                     );
                   },
@@ -207,7 +143,9 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                       color: Colors.white,
                       image: DecorationImage(
                         fit: BoxFit.cover,
-                        image: AssetImage(images[index]),
+                        image: data["image"] != null
+                            ? NetworkImage(data["image"])
+                            : AssetImage(AppImages.bgimage) as ImageProvider,
                       ),
                     ),
                     child: Column(
@@ -233,9 +171,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                           child: Row(
                             children: [
                               Text(
-                                isArabic
-                                    ? usernamesArabic[index]
-                                    : usernames[index],
+                                data["hostname"] ?? "Guest",
                                 style: isArabic
                                     ? AppStyle.arabictext.copyWith(
                                         fontSize: 22,
@@ -249,7 +185,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                               ),
                               Gap(5),
                               Image(
-                                image: AssetImage(countries[index]),
+                                image: AssetImage(AppImages.pak),
                                 height: 20,
                                 width: 20,
                               ),
@@ -257,7 +193,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                               Icon(Icons.remove_red_eye, color: Colors.white),
                               Gap(3),
                               Text(
-                                views[index].toString(),
+                                (data["views"] ?? 0).toString(),
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.white,

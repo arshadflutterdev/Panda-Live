@@ -1,5 +1,7 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/route_manager.dart';
 
 class WatchstreamingClass extends StatefulWidget {
   const WatchstreamingClass({super.key});
@@ -9,6 +11,8 @@ class WatchstreamingClass extends StatefulWidget {
 }
 
 class _WatchstreamingClassState extends State<WatchstreamingClass> {
+  final arg = Get.arguments;
+
   late RtcEngine _engine;
   final String appId = "5eda14d417924d9baf39e83613e8f8f5";
   final String channelName = "testingChannel";
@@ -23,32 +27,53 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
     _engine.registerEventHandler(
       RtcEngineEventHandler(
         onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-          setState(() {
-            remoteviewController = VideoViewController.remote(
-              rtcEngine: _engine,
-              canvas: VideoCanvas(uid: remoteUid),
-              connection: connection,
-            );
-          });
+          if (remoteUid == arg["agoraUid"]) {
+            setState(() {
+              remoteviewController = VideoViewController.remote(
+                rtcEngine: _engine,
+                canvas: VideoCanvas(uid: remoteUid),
+                connection: connection,
+              );
+            });
+          }
         },
-        onUserOffline:
+
+        onRemoteVideoStateChanged:
+            (connection, remoteUid, state, reason, elapsed) {
+              if (remoteUid == arg["agoraUid"] &&
+                  state == RemoteVideoState.remoteVideoStateDecoding) {
+                if (remoteviewController == null) {
+                  setState(() {
+                    remoteviewController = VideoViewController.remote(
+                      rtcEngine: _engine,
+                      canvas: VideoCanvas(uid: remoteUid),
+                      connection: connection,
+                    );
+                  });
+                }
+              }
+            },
+        onUserOffline:hh
             (
               RtcConnection connection,
               int remoteUid,
               UserOfflineReasonType reason,
             ) {
-              setState(() {
-                remoteviewController = null;
-              });
+              if (remoteUid == arg["agoraUid"]) {
+                setState(() {
+                  remoteviewController = null;
+                });
+                Get.back();
+              }
             },
       ),
     );
     await _engine.joinChannel(
       token: appToken,
       channelId: channelName,
-      uid: 1,
+      uid: 0,
       options: ChannelMediaOptions(
-        clientRoleType: ClientRoleType.clientRoleBroadcaster,
+        clientRoleType: ClientRoleType.clientRoleAudience,
         publishCameraTrack: false,
         publishMicrophoneTrack: false,
         autoSubscribeAudio: true,
