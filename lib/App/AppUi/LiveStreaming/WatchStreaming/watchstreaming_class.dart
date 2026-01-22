@@ -191,10 +191,44 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
     }
   }
 
+  String commentuser = "Guest";
+  Future<void> commentUsers() async {
+    var doc = await FirebaseFirestore.instance
+        .collection("userProfile")
+        .doc(currenduser)
+        .get();
+    if (doc.exists) {
+      commentuser = doc.data()?["name"] ?? "No Name";
+    }
+  }
+
+  Future<void> sendComment() async {
+    if (commentController.text.isEmpty) return;
+    String comment = commentController.text.toString();
+    commentController.clear();
+    try {
+      await FirebaseFirestore.instance
+          .collection("LiveStream")
+          .doc(arg["uid"])
+          .collection("Comments")
+          .add({
+            "userName": commentuser,
+            "userId": currenduser,
+            "comment": comment,
+            "sendAt": FieldValue.serverTimestamp(),
+          });
+    } catch (e) {
+      debugPrint("Comment error: $e");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
-    checkFollowers();
+    Future.microtask(() async {
+      await commentUsers();
+      await checkFollowers();
+    });
 
     joinasaudi();
     updateviews(1);
@@ -411,7 +445,7 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                 IconButton(
                   style: IconButton.styleFrom(backgroundColor: Colors.black54),
                   onPressed: () {
-                    commentController.clear();
+                    sendComment();
                   },
                   icon: Icon(Icons.send_rounded, color: Colors.white),
                 ),
