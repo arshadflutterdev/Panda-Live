@@ -1,6 +1,7 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
+import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
 import 'package:get/route_manager.dart';
 
 class WatchstreamingClass extends StatefulWidget {
@@ -18,7 +19,8 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
   final String channelName = "testingChannel";
   final String appToken =
       "007eJxTYLBTUEjz6NANly05L5OmbHQz74ZwMdsiJpML7PzuPoWn1iowWKYYJ5mbm6YZG1ummKQkplkkGZqmGSabpxgkJ5unGafxLi3IbAhkZPhYHM/MyACBID4fQ0lqcUlmXrpzRmJeXmoOAwMAIqYfsA==";
-  VideoViewController? remoteviewController;
+
+  var remoteviewController = Rxn<VideoViewController>();
   Future<void> joinasaudi() async {
     _engine = createAgoraRtcEngine();
     await _engine.initialize(RtcEngineContext(appId: appId));
@@ -28,13 +30,11 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
       RtcEngineEventHandler(
         onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
           if (remoteUid == arg["agoraUid"]) {
-            setState(() {
-              remoteviewController = VideoViewController.remote(
-                rtcEngine: _engine,
-                canvas: VideoCanvas(uid: remoteUid),
-                connection: connection,
-              );
-            });
+            remoteviewController.value = VideoViewController.remote(
+              rtcEngine: _engine,
+              canvas: VideoCanvas(uid: remoteUid),
+              connection: connection,
+            );
           }
         },
 
@@ -42,27 +42,24 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
             (connection, remoteUid, state, reason, elapsed) {
               if (remoteUid == arg["agoraUid"] &&
                   state == RemoteVideoState.remoteVideoStateDecoding) {
-                if (remoteviewController == null) {
-                  setState(() {
-                    remoteviewController = VideoViewController.remote(
-                      rtcEngine: _engine,
-                      canvas: VideoCanvas(uid: remoteUid),
-                      connection: connection,
-                    );
-                  });
+                if (remoteviewController.value == null) {
+                  remoteviewController.value = VideoViewController.remote(
+                    rtcEngine: _engine,
+                    canvas: VideoCanvas(uid: remoteUid),
+                    connection: connection,
+                  );
                 }
               }
             },
-        onUserOffline:hh
+        onUserOffline:
             (
               RtcConnection connection,
               int remoteUid,
               UserOfflineReasonType reason,
             ) {
               if (remoteUid == arg["agoraUid"]) {
-                setState(() {
-                  remoteviewController = null;
-                });
+                remoteviewController.value = null;
+
                 Get.back();
               }
             },
@@ -99,9 +96,11 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Center(
-        child: remoteviewController != null
-            ? AgoraVideoView(controller: remoteviewController!)
-            : Text("No one live now"),
+        child: Obx(
+          () => remoteviewController.value != null
+              ? AgoraVideoView(controller: remoteviewController.value!)
+              : Text("No one live now"),
+        ),
       ),
     );
   }
