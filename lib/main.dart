@@ -6,7 +6,6 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
-import 'package:pandlive/fakecode.dart';
 import 'package:pandlive/firebase_options.dart';
 import 'package:pandlive/l10n/app_localizations.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -87,10 +86,7 @@ class _JoinadnWatchState extends State<JoinadnWatch> {
             Gap(20),
             ElevatedButton(
               onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => GoliveScreenfake()),
-                );
+                Get.toNamed(AppRoutes.watchstream);
               },
               child: Text("Watch Live"),
             ),
