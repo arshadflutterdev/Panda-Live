@@ -68,6 +68,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                         "views": 0,
                         "startedAt": FieldValue.serverTimestamp(),
                       });
+                  Get.back();
                   Get.toNamed(
                     AppRoutes.golive,
                     arguments: {
@@ -95,7 +96,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
-              child: CircularProgressIndicator(color: Colors.white),
+              child: CircularProgressIndicator(color: Colors.green),
             );
           } else if (snapshot.hasError) {
             return Text("Error in data");
@@ -121,8 +122,9 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                       Get.snackbar(
                         "Wait",
                         "Host is still connecting...",
-                        backgroundColor: Colors.white,
+                        backgroundColor: Colors.black87,
                         colorText: Colors.white,
+                        snackPosition: SnackPosition.BOTTOM,
                       );
                       return;
                     }

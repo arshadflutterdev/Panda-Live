@@ -385,10 +385,14 @@ class _GoliveScreenState extends State<GoliveScreen>
                                     ),
                             ),
                           ),
-                          IconButton(
-                            onPressed: () {},
-                            icon: Icon(
-                              isMute.value ? Icons.mic : Icons.mic_off,
+                          Obx(
+                            () => IconButton(
+                              onPressed: () {
+                                isMute.value = !isMute.value;
+                              },
+                              icon: Icon(
+                                isMute.value ? Icons.mic_off : Icons.mic,
+                              ),
                             ),
                           ),
                         ],
