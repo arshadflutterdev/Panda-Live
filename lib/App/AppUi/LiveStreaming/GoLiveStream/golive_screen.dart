@@ -200,223 +200,230 @@ class _GoliveScreenState extends State<GoliveScreen> {
     double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
     bool isArabic = Get.locale?.languageCode == "ar";
-    return Scaffold(
-      backgroundColor: Colors.white,
-      body: Center(
-        child: Obx(
-          () => Container(
-            child: Stack(
-              children: [
-                isJoined.value && _localviewController != null
-                    ? AgoraVideoView(controller: _localviewController!)
-                    : Obx(() {
-                        if (showCountdown.value || !isJoined.value) {
-                          return Container(
-                            color: Colors.black.withOpacity(0.6),
-                            child: Center(
-                              child: SizedBox(
-                                width: 120,
-                                height: 120,
-                                child: Stack(
-                                  alignment: Alignment.center,
-                                  children: [
-                                    CircularProgressIndicator(
-                                      value: countdown.value / 5,
-                                      color: Colors.red,
-                                      strokeWidth: 8,
-                                    ),
-                                    Text(
-                                      countdown.value.toString(),
-                                      style: TextStyle(
-                                        fontSize: 40,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.bold,
+    return WillPopScope(
+      child: Scaffold(
+        backgroundColor: Colors.white,
+        body: Center(
+          child: Obx(
+            () => Container(
+              child: Stack(
+                children: [
+                  isJoined.value && _localviewController != null
+                      ? AgoraVideoView(controller: _localviewController!)
+                      : Obx(() {
+                          if (showCountdown.value || !isJoined.value) {
+                            return Container(
+                              color: Colors.black.withOpacity(0.6),
+                              child: Center(
+                                child: SizedBox(
+                                  width: 120,
+                                  height: 120,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      CircularProgressIndicator(
+                                        value: countdown.value / 5,
+                                        color: Colors.red,
+                                        strokeWidth: 8,
                                       ),
-                                    ),
-                                  ],
+                                      Text(
+                                        countdown.value.toString(),
+                                        style: TextStyle(
+                                          fontSize: 40,
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
-                            ),
-                          );
-                        } else {
-                          return SizedBox.shrink();
-                        }
-                      }),
+                            );
+                          } else {
+                            return SizedBox.shrink();
+                          }
+                        }),
 
-                Positioned(
-                  top: height * 0.040,
-                  left: 10,
-                  right: 10,
-                  child: Row(
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black54,
-                          borderRadius: BorderRadius.circular(5),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(
-                            horizontal: 4,
-                            vertical: 2,
+                  Positioned(
+                    top: height * 0.040,
+                    left: 10,
+                    right: 10,
+                    child: Row(
+                      children: [
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black54,
+                            borderRadius: BorderRadius.circular(5),
                           ),
-                          child: Directionality(
-                            textDirection: TextDirection.ltr,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              children: [
-                                IconButton(
-                                  onPressed: () {
-                                    _engine.switchCamera();
-                                  },
-                                  icon: Icon(
-                                    Icons.cameraswitch,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 4,
+                              vertical: 2,
+                            ),
+                            child: Directionality(
+                              textDirection: TextDirection.ltr,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      _engine.switchCamera();
+                                    },
+                                    icon: Icon(
+                                      Icons.cameraswitch,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                  Icon(
+                                    Icons.remove_red_eye_outlined,
                                     color: Colors.white,
                                   ),
-                                ),
-                                Icon(
-                                  Icons.remove_red_eye_outlined,
+
+                                  Gap(3),
+                                  StreamBuilder(
+                                    stream: updateview.snapshots(),
+                                    builder: (context, snapshot) {
+                                      if (!snapshot.hasData ||
+                                          !snapshot.data!.exists) {
+                                        return const Text(
+                                          "0",
+                                          style: TextStyle(color: Colors.white),
+                                        );
+                                      }
+                                      var data =
+                                          snapshot.data!.data()
+                                              as Map<String, dynamic>;
+                                      int views = data["views"] ?? 0;
+                                      return Text(
+                                        views.toString(),
+                                        style: TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                  Gap(3),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        Spacer(),
+                        SizedBox(
+                          height: 38,
+                          child: TextButton(
+                            style: TextButton.styleFrom(
+                              backgroundColor: Colors.red,
+                              shape: ContinuousRectangleBorder(
+                                borderRadius: BorderRadiusGeometry.circular(10),
+                              ),
+                            ),
+                            onPressed: () {},
+                            child: Obx(
+                              () => Text(
+                                "Live $liveTime",
+                                style: TextStyle(
+                                  fontSize: 16,
                                   color: Colors.white,
                                 ),
-
-                                Gap(3),
-                                StreamBuilder(
-                                  stream: updateview.snapshots(),
-                                  builder: (context, snapshot) {
-                                    if (!snapshot.hasData ||
-                                        !snapshot.data!.exists) {
-                                      return const Text(
-                                        "0",
-                                        style: TextStyle(color: Colors.white),
-                                      );
-                                    }
-                                    var data =
-                                        snapshot.data!.data()
-                                            as Map<String, dynamic>;
-                                    int views = data["views"] ?? 0;
-                                    return Text(
-                                      views.toString(),
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                      ),
-                                    );
-                                  },
+                              ),
+                            ),
+                          ),
+                        ),
+                        Gap(5),
+                        IconButton(
+                          style: IconButton.styleFrom(
+                            backgroundColor: Colors.black54,
+                          ),
+                          onPressed: () {
+                            Get.defaultDialog(
+                              backgroundColor: Colors.white,
+                              radius: 12,
+                              title: isArabic
+                                  ? "هل تريد إنهاء البث المباشر؟"
+                                  : "End Live Stream?",
+                              titleStyle: isArabic
+                                  ? AppStyle.arabictext.copyWith(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    )
+                                  : const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                              content: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
                                 ),
-                                Gap(3),
-                              ],
-                            ),
-                          ),
+                                child: Text(
+                                  isArabic
+                                      ? "أنت على وشك إنهاء البث المباشر.\nسيتم إعلام المشاهدين بذلك."
+                                      : "You are about to end your live stream.\nViewers will be notified, dear.",
+                                  textAlign: TextAlign.center,
+                                  style: isArabic
+                                      ? AppStyle.arabictext.copyWith(
+                                          fontSize: 16,
+                                        )
+                                      : const TextStyle(fontSize: 15),
+                                ),
+                              ),
+                              cancel: TextButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: Text(
+                                  isArabic ? "ابقَ" : "Stay",
+                                  style: isArabic
+                                      ? AppStyle.arabictext.copyWith(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                        )
+                                      : const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                ),
+                              ),
+                              confirm: TextButton(
+                                onPressed: () {
+                                  Get.back();
+                                  Get.back();
+                                  Get.back();
+                                  // --- Optional: Add code here to notify viewers if using backend ---
+                                },
+                                child: Text(
+                                  isArabic ? "إنهاء" : "End",
+                                  style: isArabic
+                                      ? AppStyle.arabictext.copyWith(
+                                          fontSize: 18,
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.w600,
+                                        )
+                                      : const TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                ),
+                              ),
+                            );
+                          },
+                          icon: Icon(Icons.close, color: Colors.white),
                         ),
-                      ),
-                      Spacer(),
-                      SizedBox(
-                        height: 38,
-                        child: TextButton(
-                          style: TextButton.styleFrom(
-                            backgroundColor: Colors.red,
-                            shape: ContinuousRectangleBorder(
-                              borderRadius: BorderRadiusGeometry.circular(10),
-                            ),
-                          ),
-                          onPressed: () {},
-                          child: Obx(
-                            () => Text(
-                              "Live $liveTime",
-                              style: TextStyle(
-                                fontSize: 16,
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Gap(5),
-                      IconButton(
-                        style: IconButton.styleFrom(
-                          backgroundColor: Colors.black54,
-                        ),
-                        onPressed: () {
-                          Get.defaultDialog(
-                            backgroundColor: Colors.white,
-                            radius: 12,
-                            title: isArabic
-                                ? "هل تريد إنهاء البث المباشر؟"
-                                : "End Live Stream?",
-                            titleStyle: isArabic
-                                ? AppStyle.arabictext.copyWith(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  )
-                                : const TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                            content: Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 8,
-                              ),
-                              child: Text(
-                                isArabic
-                                    ? "أنت على وشك إنهاء البث المباشر.\nسيتم إعلام المشاهدين بذلك."
-                                    : "You are about to end your live stream.\nViewers will be notified, dear.",
-                                textAlign: TextAlign.center,
-                                style: isArabic
-                                    ? AppStyle.arabictext.copyWith(fontSize: 16)
-                                    : const TextStyle(fontSize: 15),
-                              ),
-                            ),
-                            cancel: TextButton(
-                              onPressed: () {
-                                Get.back();
-                              },
-                              child: Text(
-                                isArabic ? "ابقَ" : "Stay",
-                                style: isArabic
-                                    ? AppStyle.arabictext.copyWith(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                      )
-                                    : const TextStyle(
-                                        fontSize: 18,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                              ),
-                            ),
-                            confirm: TextButton(
-                              onPressed: () {
-                                Get.back();
-                                Get.back();
-                                Get.back();
-                                // --- Optional: Add code here to notify viewers if using backend ---
-                              },
-                              child: Text(
-                                isArabic ? "إنهاء" : "End",
-                                style: isArabic
-                                    ? AppStyle.arabictext.copyWith(
-                                        fontSize: 18,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w600,
-                                      )
-                                    : const TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.red,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                              ),
-                            ),
-                          );
-                        },
-                        icon: Icon(Icons.close, color: Colors.white),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),
       ),
+      onWillPop: () async {
+        return false;
+      },
     );
   }
 }
