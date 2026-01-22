@@ -57,6 +57,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
               onPressed: () async {
                 final User? currentUser = FirebaseAuth.instance.currentUser;
                 if (currentUser != null) {
+                  Get.back();
                   await FirebaseFirestore.instance
                       .collection("LiveStream")
                       .doc(currentUser.uid)
@@ -68,7 +69,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                         "views": 0,
                         "startedAt": FieldValue.serverTimestamp(),
                       });
-                  Get.back();
+
                   Get.toNamed(
                     AppRoutes.golive,
                     arguments: {
@@ -131,6 +132,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                     Get.toNamed(
                       AppRoutes.watchstream,
                       arguments: {
+                        "uid": data["uid"],
                         "channelId": data["channelId"],
                         "hostname": data["hostname"],
                         "hostphoto": data["image"],
@@ -172,30 +174,30 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: Row(
                             children: [
-                              Text(
-                                data["hostname"] ?? "Guest",
-                                style: isArabic
-                                    ? AppStyle.arabictext.copyWith(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.w600,
-                                        color: Colors.white,
-                                      )
-                                    : TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.white,
-                                      ),
+                              FittedBox(
+                                child: Text(
+                                  data["hostname"] ?? "Guest",
+                                  style: isArabic
+                                      ? AppStyle.arabictext.copyWith(
+                                          fontSize: 22,
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white,
+                                        )
+                                      : TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.white,
+                                        ),
+                                ),
                               ),
+
                               Gap(5),
-                              Image(
-                                image: AssetImage(AppImages.pak),
-                                height: 20,
-                                width: 20,
-                              ),
+
                               Spacer(),
                               Icon(Icons.remove_red_eye, color: Colors.white),
                               Gap(3),
                               Text(
                                 (data["views"] ?? 0).toString(),
+                                overflow: TextOverflow.ellipsis,
                                 style: TextStyle(
                                   fontSize: 16,
                                   color: Colors.white,

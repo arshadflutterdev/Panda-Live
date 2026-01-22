@@ -84,7 +84,7 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
     try {
       FirebaseFirestore.instance
           .collection("LiveStream")
-          .doc(arg["agoraUid"])
+          .doc(arg["uid"])
           .update({"views": FieldValue.increment(amount)});
     } catch (e) {
       debugPrint("views related issue $e");
