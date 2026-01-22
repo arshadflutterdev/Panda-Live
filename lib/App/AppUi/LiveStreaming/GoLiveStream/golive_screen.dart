@@ -4,12 +4,12 @@ import 'dart:math';
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
+import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -22,6 +22,7 @@ class GoliveScreen extends StatefulWidget {
 
 class _GoliveScreenState extends State<GoliveScreen>
     with WidgetsBindingObserver {
+  RxBool isMute = false.obs;
   var data = Get.arguments;
   late String channelId;
   late String hostname;
@@ -273,7 +274,127 @@ class _GoliveScreenState extends State<GoliveScreen>
                             return SizedBox.shrink();
                           }
                         }),
+                  //here I will handle the design
+                  Positioned(
+                    bottom: height * 0.020,
+                    left: 5,
+                    right: 5,
 
+                    child: Container(
+                      height: height * 0.0900,
+                      width: width,
+                      decoration: BoxDecoration(
+                        color: Colors.red,
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              _engine.switchCamera();
+                            },
+                            icon: Image(
+                              color: Colors.white,
+                              height: height * 0.035,
+                              image: AssetImage(AppImages.switchcamera),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Get.defaultDialog(
+                                backgroundColor: Colors.white,
+                                radius: 12,
+                                title: isArabic
+                                    ? "هل تريد إنهاء البث المباشر؟"
+                                    : "End Live Stream?",
+                                titleStyle: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      )
+                                    : const TextStyle(
+                                        fontSize: 20,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                content: Padding(
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 8,
+                                  ),
+                                  child: Text(
+                                    isArabic
+                                        ? "أنت على وشك إنهاء البث المباشر.\nسيتم إعلام المشاهدين بذلك."
+                                        : "You are about to end your live stream.\nViewers will be notified, dear.",
+                                    textAlign: TextAlign.center,
+                                    style: isArabic
+                                        ? AppStyle.arabictext.copyWith(
+                                            fontSize: 16,
+                                          )
+                                        : const TextStyle(fontSize: 15),
+                                  ),
+                                ),
+                                cancel: TextButton(
+                                  onPressed: () {
+                                    Get.back();
+                                  },
+                                  child: Text(
+                                    isArabic ? "ابقَ" : "Stay",
+                                    style: isArabic
+                                        ? AppStyle.arabictext.copyWith(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                          )
+                                        : const TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                  ),
+                                ),
+                                confirm: TextButton(
+                                  onPressed: () async {
+                                    await _shutdownHost();
+                                    Get.offAllNamed(AppRoutes.explore);
+                                    // --- Optional: Add code here to notify viewers if using backend ---
+                                  },
+                                  child: Text(
+                                    isArabic ? "إنهاء" : "End",
+                                    style: isArabic
+                                        ? AppStyle.arabictext.copyWith(
+                                            fontSize: 18,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w600,
+                                          )
+                                        : const TextStyle(
+                                            fontSize: 18,
+                                            color: Colors.red,
+                                            fontWeight: FontWeight.w600,
+                                          ),
+                                  ),
+                                ),
+                              );
+                            },
+                            child: Text(
+                              isArabic ? "نهاء البث" : "EndStream",
+                              style: isArabic
+                                  ? AppStyle.arabictext
+                                  : TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                      color: Colors.white,
+                                    ),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              isMute.value ? Icons.mic : Icons.mic_off,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
                   Positioned(
                     top: height * 0.040,
                     left: 10,
@@ -296,15 +417,6 @@ class _GoliveScreenState extends State<GoliveScreen>
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      _engine.switchCamera();
-                                    },
-                                    icon: Icon(
-                                      Icons.cameraswitch,
-                                      color: Colors.white,
-                                    ),
-                                  ),
                                   Icon(
                                     Icons.remove_red_eye_outlined,
                                     color: Colors.white,
@@ -363,84 +475,85 @@ class _GoliveScreenState extends State<GoliveScreen>
                           ),
                         ),
                         Gap(5),
-                        IconButton(
-                          style: IconButton.styleFrom(
-                            backgroundColor: Colors.black54,
-                          ),
-                          onPressed: () {
-                            Get.defaultDialog(
-                              backgroundColor: Colors.white,
-                              radius: 12,
-                              title: isArabic
-                                  ? "هل تريد إنهاء البث المباشر؟"
-                                  : "End Live Stream?",
-                              titleStyle: isArabic
-                                  ? AppStyle.arabictext.copyWith(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    )
-                                  : const TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                              content: Padding(
-                                padding: const EdgeInsets.symmetric(
-                                  horizontal: 8,
-                                ),
-                                child: Text(
-                                  isArabic
-                                      ? "أنت على وشك إنهاء البث المباشر.\nسيتم إعلام المشاهدين بذلك."
-                                      : "You are about to end your live stream.\nViewers will be notified, dear.",
-                                  textAlign: TextAlign.center,
-                                  style: isArabic
-                                      ? AppStyle.arabictext.copyWith(
-                                          fontSize: 16,
-                                        )
-                                      : const TextStyle(fontSize: 15),
-                                ),
-                              ),
-                              cancel: TextButton(
-                                onPressed: () {
-                                  Get.back();
-                                },
-                                child: Text(
-                                  isArabic ? "ابقَ" : "Stay",
-                                  style: isArabic
-                                      ? AppStyle.arabictext.copyWith(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600,
-                                        )
-                                      : const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                ),
-                              ),
-                              confirm: TextButton(
-                                onPressed: () async {
-                                  await _shutdownHost();
-                                  Get.offAllNamed(AppRoutes.explore);
-                                  // --- Optional: Add code here to notify viewers if using backend ---
-                                },
-                                child: Text(
-                                  isArabic ? "إنهاء" : "End",
-                                  style: isArabic
-                                      ? AppStyle.arabictext.copyWith(
-                                          fontSize: 18,
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.w600,
-                                        )
-                                      : const TextStyle(
-                                          fontSize: 18,
-                                          color: Colors.red,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                ),
-                              ),
-                            );
-                          },
-                          icon: Icon(Icons.close, color: Colors.white),
-                        ),
+
+                        // IconButton(
+                        //   style: IconButton.styleFrom(
+                        //     backgroundColor: Colors.black54,
+                        //   ),
+                        //   onPressed: () {
+                        //     Get.defaultDialog(
+                        //       backgroundColor: Colors.white,
+                        //       radius: 12,
+                        //       title: isArabic
+                        //           ? "هل تريد إنهاء البث المباشر؟"
+                        //           : "End Live Stream?",
+                        //       titleStyle: isArabic
+                        //           ? AppStyle.arabictext.copyWith(
+                        //               fontSize: 20,
+                        //               fontWeight: FontWeight.bold,
+                        //             )
+                        //           : const TextStyle(
+                        //               fontSize: 20,
+                        //               fontWeight: FontWeight.bold,
+                        //             ),
+                        //       content: Padding(
+                        //         padding: const EdgeInsets.symmetric(
+                        //           horizontal: 8,
+                        //         ),
+                        //         child: Text(
+                        //           isArabic
+                        //               ? "أنت على وشك إنهاء البث المباشر.\nسيتم إعلام المشاهدين بذلك."
+                        //               : "You are about to end your live stream.\nViewers will be notified, dear.",
+                        //           textAlign: TextAlign.center,
+                        //           style: isArabic
+                        //               ? AppStyle.arabictext.copyWith(
+                        //                   fontSize: 16,
+                        //                 )
+                        //               : const TextStyle(fontSize: 15),
+                        //         ),
+                        //       ),
+                        //       cancel: TextButton(
+                        //         onPressed: () {
+                        //           Get.back();
+                        //         },
+                        //         child: Text(
+                        //           isArabic ? "ابقَ" : "Stay",
+                        //           style: isArabic
+                        //               ? AppStyle.arabictext.copyWith(
+                        //                   fontSize: 18,
+                        //                   fontWeight: FontWeight.w600,
+                        //                 )
+                        //               : const TextStyle(
+                        //                   fontSize: 18,
+                        //                   fontWeight: FontWeight.w600,
+                        //                 ),
+                        //         ),
+                        //       ),
+                        //       confirm: TextButton(
+                        //         onPressed: () async {
+                        //           await _shutdownHost();
+                        //           Get.offAllNamed(AppRoutes.explore);
+                        //           // --- Optional: Add code here to notify viewers if using backend ---
+                        //         },
+                        //         child: Text(
+                        //           isArabic ? "إنهاء" : "End",
+                        //           style: isArabic
+                        //               ? AppStyle.arabictext.copyWith(
+                        //                   fontSize: 18,
+                        //                   color: Colors.red,
+                        //                   fontWeight: FontWeight.w600,
+                        //                 )
+                        //               : const TextStyle(
+                        //                   fontSize: 18,
+                        //                   color: Colors.red,
+                        //                   fontWeight: FontWeight.w600,
+                        //                 ),
+                        //         ),
+                        //       ),
+                        //     );
+                        //   },
+                        //   icon: Icon(Icons.close, color: Colors.white),
+                        // ),
                       ],
                     ),
                   ),
