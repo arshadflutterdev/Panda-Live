@@ -8,14 +8,14 @@ import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 
-class GoliveScreen extends StatefulWidget {
-  const GoliveScreen({super.key});
+class GoliveScreenfake extends StatefulWidget {
+  const GoliveScreenfake({super.key});
 
   @override
-  State<GoliveScreen> createState() => _GoliveScreenState();
+  State<GoliveScreenfake> createState() => _GoliveScreenfakeState();
 }
 
-class _GoliveScreenState extends State<GoliveScreen> {
+class _GoliveScreenfakeState extends State<GoliveScreenfake> {
   TextEditingController commentController = TextEditingController();
 
   //comments list
