@@ -3,18 +3,16 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
-import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 
-class WatchstreamingClassfake extends StatefulWidget {
-  const WatchstreamingClassfake({super.key});
+class WatchstreamingClass extends StatefulWidget {
+  const WatchstreamingClass({super.key});
 
   @override
-  State<WatchstreamingClassfake> createState() =>
-      _WatchstreamingClassfakeState();
+  State<WatchstreamingClass> createState() => _WatchstreamingClassState();
 }
 
-class _WatchstreamingClassfakeState extends State<WatchstreamingClassfake> {
+class _WatchstreamingClassState extends State<WatchstreamingClass> {
   TextEditingController commentController = TextEditingController();
   RxBool isfollowing = false.obs;
   final arg = Get.arguments as Map<String, dynamic>? ?? {};
@@ -57,10 +55,7 @@ class _WatchstreamingClassfakeState extends State<WatchstreamingClassfake> {
         height: height,
         width: width,
         decoration: BoxDecoration(
-          image: DecorationImage(
-            fit: BoxFit.cover,
-            image: AssetImage(AppImages.bg),
-          ),
+          image: DecorationImage(fit: BoxFit.cover, image: AssetImage(images)),
         ),
         child: Stack(
           children: [
@@ -84,7 +79,7 @@ class _WatchstreamingClassfakeState extends State<WatchstreamingClassfake> {
                         children: [
                           CircleAvatar(
                             radius: 20,
-                            backgroundImage: AssetImage(AppImages.girl),
+                            backgroundImage: AssetImage(images),
                           ),
                           Gap(5),
                           Text(
@@ -102,7 +97,7 @@ class _WatchstreamingClassfakeState extends State<WatchstreamingClassfake> {
                           ),
                           Gap(2),
                           Image(
-                            image: AssetImage(AppImages.pak),
+                            image: AssetImage(country),
                             height: 18,
                             width: 18,
                           ),
@@ -233,6 +228,7 @@ class _WatchstreamingClassfakeState extends State<WatchstreamingClassfake> {
                 ],
               ),
             ),
+
             Positioned(
               bottom: 10,
               left: 2,
@@ -260,6 +256,7 @@ class _WatchstreamingClassfakeState extends State<WatchstreamingClassfake> {
                 ],
               ),
             ),
+
             Positioned(
               left: 10,
               right: 10,

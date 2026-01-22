@@ -1,9 +1,13 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
-import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
-import 'package:get/route_manager.dart';
+import 'package:gap/gap.dart';
+import 'package:get/get.dart';
+import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
+
+import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
+import 'package:pandlive/Utils/Constant/app_images.dart';
+import 'package:pandlive/Utils/Constant/app_style.dart';
 
 class WatchstreamingClass extends StatefulWidget {
   const WatchstreamingClass({super.key});
@@ -14,6 +18,8 @@ class WatchstreamingClass extends StatefulWidget {
 
 class _WatchstreamingClassState extends State<WatchstreamingClass> {
   final arg = Get.arguments;
+  RxBool isfollowing = false.obs;
+  TextEditingController commentController = TextEditingController();
 
   late RtcEngine _engine;
   final String appId = "5eda14d417924d9baf39e83613e8f8f5";
@@ -109,13 +115,215 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
 
   @override
   Widget build(BuildContext context) {
+    double height = AppHeightwidth.screenHeight(context);
+    double width = AppHeightwidth.screenWidth(context);
+    bool isArabic = Get.locale?.languageCode == "ar";
     return Scaffold(
-      body: Center(
-        child: Obx(
-          () => remoteviewController.value != null
-              ? AgoraVideoView(controller: remoteviewController.value!)
-              : Text("No one live now"),
-        ),
+      body: Stack(
+        children: [
+          Center(
+            child: Obx(
+              () => remoteviewController.value != null
+                  ? AgoraVideoView(controller: remoteviewController.value!)
+                  : Text("No one live now"),
+            ),
+          ),
+          Positioned(
+            top: height * 0.040,
+            left: 10,
+            right: 10,
+
+            child: Row(
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: Colors.black54,
+                    borderRadius: BorderRadius.circular(5),
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 3),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 20,
+                          backgroundColor: Colors.white,
+                          backgroundImage: arg["image"] != null
+                              ? NetworkImage(arg["image"]) as ImageProvider
+                              : AssetImage(AppImages.coins),
+                        ),
+                        Gap(5),
+                        Text(
+                          arg["hostname"] ?? "no name",
+                          style: isArabic
+                              ? AppStyle.arabictext.copyWith(
+                                  fontSize: 20,
+                                  color: Colors.white,
+                                )
+                              : TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                        ),
+                        Gap(2),
+                        Image(
+                          image: AssetImage(AppImages.chat),
+                          height: 18,
+                          width: 18,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Spacer(),
+                SizedBox(
+                  height: 38,
+                  child: TextButton(
+                    style: TextButton.styleFrom(
+                      backgroundColor: Colors.red,
+                      shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadiusGeometry.circular(10),
+                      ),
+                    ),
+                    onPressed: () {
+                      isfollowing.value = !isfollowing.value;
+                    },
+                    child: Obx(
+                      () => isfollowing.value
+                          ? Text(
+                              isArabic ? "التالي" : "Following",
+                              style: isArabic
+                                  ? AppStyle.arabictext.copyWith(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    )
+                                  : TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                            )
+                          : Text(
+                              isArabic ? "يتبع" : "Follow",
+                              style: isArabic
+                                  ? AppStyle.arabictext.copyWith(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    )
+                                  : TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white,
+                                    ),
+                            ),
+                    ),
+                  ),
+                ),
+                Gap(5),
+                IconButton(
+                  style: IconButton.styleFrom(backgroundColor: Colors.black54),
+                  onPressed: () {
+                    Get.defaultDialog(
+                      backgroundColor: Colors.white,
+                      radius: 12,
+                      title: isArabic
+                          ? "هل تريد مغادرة البث المباشر؟"
+                          : "Leave Live Stream?",
+                      titleStyle: isArabic
+                          ? AppStyle.arabictext.copyWith(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            )
+                          : const TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                            ),
+                      content: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8),
+                        child: Text(
+                          isArabic
+                              ? "أنت تشاهد البث المباشر.\nإذا غادرت الآن، قد تفوت شيئًا ممتعًا!"
+                              : "You're watching a live stream.\nIf you leave now, you might miss something exciting!",
+                          textAlign: TextAlign.center,
+                          style: isArabic
+                              ? AppStyle.arabictext.copyWith(fontSize: 16)
+                              : const TextStyle(fontSize: 15),
+                        ),
+                      ),
+                      cancel: TextButton(
+                        onPressed: () {
+                          Get.back();
+                        },
+                        child: Text(
+                          isArabic ? "ابقَ" : "Stay",
+                          style: isArabic
+                              ? AppStyle.arabictext.copyWith(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                )
+                              : const TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                        ),
+                      ),
+                      confirm: TextButton(
+                        onPressed: () {
+                          Get.back();
+                          Get.back();
+                        },
+                        child: Text(
+                          isArabic ? "غادر" : "Leave",
+                          style: isArabic
+                              ? AppStyle.arabictext.copyWith(
+                                  fontSize: 18,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600,
+                                )
+                              : const TextStyle(
+                                  fontSize: 18,
+                                  color: Colors.red,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                        ),
+                      ),
+                    );
+                  },
+                  icon: Icon(Icons.close, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 10,
+            left: 2,
+            right: 2,
+            child: Row(
+              children: [
+                Expanded(
+                  child: MyTextFormField(
+                    controller: commentController,
+                    keyboard: TextInputType.text,
+                    hintext: isArabic
+                        ? "اكتب تعليقاً..."
+                        : "Write a comment...",
+                  ),
+                ),
+                IconButton(
+                  style: IconButton.styleFrom(backgroundColor: Colors.black54),
+                  onPressed: () {
+                    commentController.clear();
+                  },
+                  icon: Icon(Icons.send_rounded, color: Colors.white),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }
