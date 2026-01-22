@@ -63,10 +63,6 @@ class _GoliveScreenState extends State<GoliveScreen>
                 "isLive": true,
               }, SetOptions(merge: true));
           // STEP A: Create the controller ONLY when the connection is active
-          _localviewController = VideoViewController(
-            rtcEngine: _engine,
-            canvas: const VideoCanvas(uid: 0),
-          );
 
           // STEP B: Update GetX to rebuild the UI
           isJoined.value = true;
@@ -84,6 +80,24 @@ class _GoliveScreenState extends State<GoliveScreen>
             ) {
               remoteUsers.remove(remoteUid);
             },
+        onConnectionStateChanged:
+            (
+              RtcConnection connection,
+              ConnectionStateType state,
+              ConnectionChangedReasonType reason,
+            ) {
+              if (state == ConnectionStateType.connectionStateFailed) {
+                Get.snackbar(
+                  "Connection Failed",
+                  "Could not establish a connection. Please check your internet.",
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
+                );
+                _shutdownHost();
+                Get.offAllNamed(AppRoutes.explore);
+              }
+            },
+
         onError: (ErrorCodeType err, String msg) {
           debugPrint("Agora Error: $err - $msg");
         },
@@ -94,6 +108,10 @@ class _GoliveScreenState extends State<GoliveScreen>
     await _engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
     await _engine.enableVideo();
     await _engine.startPreview();
+    _localviewController = VideoViewController(
+      rtcEngine: _engine,
+      canvas: const VideoCanvas(uid: 0),
+    );
 
     // 5. Join Channel (Await it!)
     await joinChannel();
@@ -190,7 +208,11 @@ class _GoliveScreenState extends State<GoliveScreen>
     super.dispose();
   }
 
+  bool isShutdown = false;
   Future<void> _shutdownHost() async {
+    if (isShutdown) return;
+    isShutdown = true;
+    if (liveTimer.isActive) liveTimer.cancel();
     await _engine.leaveChannel();
     await _engine.release();
     await removeLivestatus(); // Delete Firestore doc
