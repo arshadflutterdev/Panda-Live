@@ -24,6 +24,9 @@ class _GoliveScreenState extends State<GoliveScreen> {
   late String channelId;
   late String hostname;
   late String hostphoto;
+  final updateview = FirebaseFirestore.instance
+      .collection("LiveStream")
+      .doc(FirebaseAuth.instance.currentUser!.uid);
 
   RxList<int> remoteUsers = <int>[].obs; // Stores UIDs of real viewers
   late RtcEngine _engine;
@@ -122,9 +125,22 @@ class _GoliveScreenState extends State<GoliveScreen> {
   late Timer viewss;
   RxInt fakeviews = 5.obs;
   RxBool isloading = false.obs;
+  //Real Cont update for viewrs
+  Future<void> updateviews(int amount) async {
+    try {
+      FirebaseFirestore.instance
+          .collection("LiveStream")
+          .doc(data["agoraUid"])
+          .update({"views": FieldValue.increment(amount)});
+    } catch (e) {
+      debugPrint("views related issue $e");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+
     channelId = data["channelId"] ?? "default channel";
     hostname = data["hostname"] ?? "Guest";
     hostphoto = data["hostphoto"] ?? "";
@@ -159,14 +175,17 @@ class _GoliveScreenState extends State<GoliveScreen> {
     viewss = Timer.periodic(const Duration(seconds: 4), (timer) {
       fakeviews.value += Random().nextInt(3);
     });
+    updateviews(1);
   }
 
   @override
   void dispose() {
     _engine.leaveChannel();
     _engine.release();
-    super.dispose();
+
     removeLivestatus();
+    updateviews(-1);
+    super.dispose();
   }
 
   Future<void> removeLivestatus() async {
@@ -261,14 +280,28 @@ class _GoliveScreenState extends State<GoliveScreen> {
                                 ),
 
                                 Gap(3),
-                                Obx(
-                                  () => Text(
-                                    remoteUsers.length.toString(),
-                                    style: TextStyle(
-                                      fontSize: 18,
-                                      color: Colors.white,
-                                    ),
-                                  ),
+                                StreamBuilder(
+                                  stream: updateview.snapshots(),
+                                  builder: (context, snapshot) {
+                                    if (!snapshot.hasData ||
+                                        !snapshot.data!.exists) {
+                                      return const Text(
+                                        "0",
+                                        style: TextStyle(color: Colors.white),
+                                      );
+                                    }
+                                    var data =
+                                        snapshot.data!.data()
+                                            as Map<String, dynamic>;
+                                    int views = data["views"] ?? 0;
+                                    return Text(
+                                      views.toString(),
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.white,
+                                      ),
+                                    );
+                                  },
                                 ),
                                 Gap(3),
                               ],
