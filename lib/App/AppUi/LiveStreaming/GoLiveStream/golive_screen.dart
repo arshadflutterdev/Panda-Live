@@ -34,6 +34,8 @@ class _GoliveScreenState extends State<GoliveScreen>
   RxList<int> remoteUsers = <int>[].obs; // Stores UIDs of real viewers
   late RtcEngine _engine;
   final String appId = "5eda14d417924d9baf39e83613e8f8f5";
+  final String tempToken =
+      "007eJxTYGiYa1Zzb+EvSU955zt1DCJf/iY+dlHPmzDDc4au6hT+KY4KDKapKYmGJikmhuaWRiYplkmJacaWqRbGZobGqRZpFmmmx/4VZjYEMjL8qb/BysgAgSA+H0NJanFJZl66c0ZiXl5qDgMDAH4iI9Q=";
   // final String channelName = "testingChannel";
   VideoViewController? _localviewController;
 
@@ -122,8 +124,7 @@ class _GoliveScreenState extends State<GoliveScreen>
 
   Future<void> joinChannel() async {
     await _engine.joinChannel(
-      token:
-          "007eJxTYLBTUEjz6NANly05L5OmbHQz74ZwMdsiJpML7PzuPoWn1iowWKYYJ5mbm6YZG1ummKQkplkkGZqmGSabpxgkJ5unGafxLi3IbAhkZPhYHM/MyACBID4fQ0lqcUlmXrpzRmJeXmoOAwMAIqYfsA==",
+      token: tempToken,
       channelId: channelId,
       uid: 0,
       options: const ChannelMediaOptions(
