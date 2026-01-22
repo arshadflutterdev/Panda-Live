@@ -8,6 +8,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -19,7 +20,8 @@ class GoliveScreen extends StatefulWidget {
   State<GoliveScreen> createState() => _GoliveScreenState();
 }
 
-class _GoliveScreenState extends State<GoliveScreen> {
+class _GoliveScreenState extends State<GoliveScreen>
+    with WidgetsBindingObserver {
   var data = Get.arguments;
   late String channelId;
   late String hostname;
@@ -56,7 +58,10 @@ class _GoliveScreenState extends State<GoliveScreen> {
           FirebaseFirestore.instance
               .collection("LiveStream")
               .doc(FirebaseAuth.instance.currentUser!.uid)
-              .update({"agoraUid": connection.localUid});
+              .set({
+                "agoraUid": connection.localUid,
+                "isLive": true,
+              }, SetOptions(merge: true));
           // STEP A: Create the controller ONLY when the connection is active
           _localviewController = VideoViewController(
             rtcEngine: _engine,
@@ -123,24 +128,14 @@ class _GoliveScreenState extends State<GoliveScreen> {
   }
 
   late Timer viewss;
-  RxInt fakeviews = 5.obs;
+
   RxBool isloading = false.obs;
   //Real Cont update for viewrs
-  Future<void> updateviews(int amount) async {
-    try {
-      FirebaseFirestore.instance
-          .collection("LiveStream")
-          .doc(data["agoraUid"])
-          .update({"views": FieldValue.increment(amount)});
-    } catch (e) {
-      debugPrint("views related issue $e");
-    }
-  }
 
   @override
   void initState() {
     super.initState();
-
+    WidgetsBinding.instance.addObserver(this);
     channelId = data["channelId"] ?? "default channel";
     hostname = data["hostname"] ?? "Guest";
     hostphoto = data["hostphoto"] ?? "";
@@ -166,26 +161,39 @@ class _GoliveScreenState extends State<GoliveScreen> {
     });
   }
 
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.paused) {
+      _engine.muteLocalVideoStream(
+        true,
+      ); // Stop sending video when app is minimized
+      _engine.muteLocalAudioStream(true);
+    } else if (state == AppLifecycleState.resumed) {
+      _engine.muteLocalVideoStream(false); // Resume video
+      _engine.muteLocalAudioStream(false);
+    }
+  }
+
   // Helper to start timers only when live
   void _startLiveTimers() {
     liveTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       liveSeconds.value++;
     });
-
-    viewss = Timer.periodic(const Duration(seconds: 4), (timer) {
-      fakeviews.value += Random().nextInt(3);
-    });
-    updateviews(1);
   }
 
   @override
   void dispose() {
-    _engine.leaveChannel();
-    _engine.release();
+    WidgetsBinding.instance.removeObserver(this);
+    if (liveTimer.isActive) liveTimer.cancel();
+    _shutdownHost();
 
-    removeLivestatus();
-    updateviews(-1);
     super.dispose();
+  }
+
+  Future<void> _shutdownHost() async {
+    await _engine.leaveChannel();
+    await _engine.release();
+    await removeLivestatus(); // Delete Firestore doc
   }
 
   Future<void> removeLivestatus() async {
@@ -387,10 +395,9 @@ class _GoliveScreenState extends State<GoliveScreen> {
                                 ),
                               ),
                               confirm: TextButton(
-                                onPressed: () {
-                                  Get.back();
-                                  Get.back();
-                                  Get.back();
+                                onPressed: () async {
+                                  await _shutdownHost();
+                                  Get.offAllNamed(AppRoutes.explore);
                                   // --- Optional: Add code here to notify viewers if using backend ---
                                 },
                                 child: Text(

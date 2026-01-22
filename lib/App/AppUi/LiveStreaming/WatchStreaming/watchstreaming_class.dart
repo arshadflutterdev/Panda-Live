@@ -1,4 +1,5 @@
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:get/get_state_manager/src/rx_flutter/rx_obx_widget.dart';
@@ -79,14 +80,28 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
     );
   }
 
+  Future<void> updateviews(int amount) async {
+    try {
+      FirebaseFirestore.instance
+          .collection("LiveStream")
+          .doc(arg["agoraUid"])
+          .update({"views": FieldValue.increment(amount)});
+    } catch (e) {
+      debugPrint("views related issue $e");
+    }
+  }
+
   @override
   void initState() {
     super.initState();
+
     joinasaudi();
+    updateviews(1);
   }
 
   @override
   void dispose() {
+    updateviews(-1);
     _engine.leaveChannel();
     _engine.release();
     super.dispose();
