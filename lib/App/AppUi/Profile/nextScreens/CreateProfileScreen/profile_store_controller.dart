@@ -21,11 +21,12 @@ class ProfileStoreController extends GetxController {
         "dob": dobController.text.toString(),
         "country": countryController.text.toString(),
         "gender": isSelected.value == 1 ? "Male" : "Female",
-        "userimage": userphoto.isNotEmpty
-            ? userphoto.value
-            : image.value != null
+        "userimage": image.value != null
             ? image.value!.path
-            : "there was no image",
+            : userphoto.isNotEmpty
+            ? userphoto.value
+            : "no phote",
+
         "createdAt": FieldValue.serverTimestamp(),
         "userId": user,
       };
