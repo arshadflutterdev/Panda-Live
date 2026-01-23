@@ -355,127 +355,137 @@ class _GoliveScreenState extends State<GoliveScreen>
                         }),
                   //here I will handle the design
                   Positioned(
-                    bottom: height * 0.020,
+                    bottom: height * 0.030,
                     left: 5,
                     right: 5,
 
-                    child: Container(
-                      height: height * 0.0900,
-                      width: width,
-                      decoration: BoxDecoration(
-                        color: Colors.red,
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              _engine.switchCamera();
-                            },
-                            icon: Image(
-                              color: Colors.white,
-                              height: height * 0.035,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            _engine.switchCamera();
+                          },
+                          child: CircleAvatar(
+                            backgroundColor: Colors.black,
+                            radius: 25,
+                            child: Image(
                               image: AssetImage(AppImages.switchcamera),
+                              color: Colors.white,
+                              height: 30,
                             ),
                           ),
-                          TextButton(
-                            onPressed: () {
-                              Get.defaultDialog(
-                                backgroundColor: Colors.white,
-                                radius: 12,
-                                title: isArabic
-                                    ? "هل تريد إنهاء البث المباشر؟"
-                                    : "End Live Stream?",
-                                titleStyle: isArabic
-                                    ? AppStyle.arabictext.copyWith(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      )
-                                    : const TextStyle(
-                                        fontSize: 20,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                content: Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 8,
-                                  ),
-                                  child: Text(
-                                    isArabic
-                                        ? "أنت على وشك إنهاء البث المباشر.\nسيتم إعلام المشاهدين بذلك."
-                                        : "You are about to end your live stream.\nViewers will be notified, dear.",
-                                    textAlign: TextAlign.center,
-                                    style: isArabic
-                                        ? AppStyle.arabictext.copyWith(
-                                            fontSize: 16,
-                                          )
-                                        : const TextStyle(fontSize: 15),
-                                  ),
-                                ),
-                                cancel: TextButton(
-                                  onPressed: () {
-                                    Get.back();
-                                  },
-                                  child: Text(
-                                    isArabic ? "ابقَ" : "Stay",
-                                    style: isArabic
-                                        ? AppStyle.arabictext.copyWith(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                          )
-                                        : const TextStyle(
-                                            fontSize: 18,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                  ),
-                                ),
-                                confirm: TextButton(
-                                  onPressed: () async {
-                                    await _shutdownHost();
-                                    Get.back();
-                                    // --- Optional: Add code here to notify viewers if using backend ---
-                                  },
-                                  child: Text(
-                                    isArabic ? "إنهاء" : "End",
-                                    style: isArabic
-                                        ? AppStyle.arabictext.copyWith(
-                                            fontSize: 18,
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.w600,
-                                          )
-                                        : const TextStyle(
-                                            fontSize: 18,
-                                            color: Colors.red,
-                                            fontWeight: FontWeight.w600,
-                                          ),
-                                  ),
-                                ),
-                              );
-                            },
-                            child: Text(
-                              isArabic ? "نهاء البث" : "EndStream",
-                              style: isArabic
-                                  ? AppStyle.arabictext
-                                  : TextStyle(
+                        ),
+                        Gap(5),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            shape: ContinuousRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onPressed: () {
+                            Get.defaultDialog(
+                              backgroundColor: Colors.white,
+                              radius: 12,
+                              title: isArabic
+                                  ? "هل تريد إنهاء البث المباشر؟"
+                                  : "End Live Stream?",
+                              titleStyle: isArabic
+                                  ? AppStyle.arabictext.copyWith(
                                       fontSize: 20,
                                       fontWeight: FontWeight.bold,
-                                      color: Colors.white,
+                                    )
+                                  : const TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                            ),
-                          ),
-                          Obx(
-                            () => IconButton(
-                              onPressed: () {
-                                isMute.value = !isMute.value;
-                              },
-                              icon: Icon(
-                                isMute.value ? Icons.mic_off : Icons.mic,
+                              content: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
+                                child: Text(
+                                  isArabic
+                                      ? "أنت على وشك إنهاء البث المباشر.\nسيتم إعلام المشاهدين بذلك."
+                                      : "You are about to end your live stream.\nViewers will be notified, dear.",
+                                  textAlign: TextAlign.center,
+                                  style: isArabic
+                                      ? AppStyle.arabictext.copyWith(
+                                          fontSize: 16,
+                                        )
+                                      : const TextStyle(fontSize: 15),
+                                ),
                               ),
+                              cancel: TextButton(
+                                onPressed: () {
+                                  Get.back();
+                                },
+                                child: Text(
+                                  isArabic ? "ابقَ" : "Stay",
+                                  style: isArabic
+                                      ? AppStyle.arabictext.copyWith(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                        )
+                                      : const TextStyle(
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                ),
+                              ),
+                              confirm: TextButton(
+                                onPressed: () async {
+                                  await _shutdownHost();
+                                  Get.back();
+                                  // --- Optional: Add code here to notify viewers if using backend ---
+                                },
+                                child: Text(
+                                  isArabic ? "إنهاء" : "End",
+                                  style: isArabic
+                                      ? AppStyle.arabictext.copyWith(
+                                          fontSize: 18,
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.w600,
+                                        )
+                                      : const TextStyle(
+                                          fontSize: 18,
+                                          color: Colors.red,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            isArabic ? "نهاء البث" : "EndStream",
+                            style: isArabic
+                                ? AppStyle.arabictext
+                                : TextStyle(
+                                    fontSize: 20,
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                  ),
+                          ),
+                        ),
+                        Gap(5),
+                        GestureDetector(
+                          onTap: () {
+                            isMute.value = !isMute.value;
+                            _engine.muteLocalAudioStream(isMute.value);
+                          },
+                          child: CircleAvatar(
+                            backgroundColor: Colors.black,
+                            radius: 25,
+
+                            child: Icon(
+                              isMute.value ? Icons.mic_off : Icons.mic,
+                              color: Colors.white,
+                              size: 32,
                             ),
                           ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                   Positioned(
