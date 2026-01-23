@@ -298,12 +298,6 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                                   fontWeight: FontWeight.w600,
                                 ),
                         ),
-                        Gap(2),
-                        Image(
-                          image: AssetImage(AppImages.chat),
-                          height: 18,
-                          width: 18,
-                        ),
                       ],
                     ),
                   ),
@@ -472,17 +466,27 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                 } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
                   return SizedBox();
                 }
-                return ListView.builder(
-                  reverse: true,
-                  itemCount: snapshot.data!.docs.length,
-                  itemBuilder: (context, index) {
-                    final data =
-                        snapshot.data!.docs[index].data()
-                            as Map<String, dynamic>;
-                    return Wrap(
-                      children: [Text(data["userName"]), Text(data["comment"])],
-                    );
-                  },
+                return Container(
+                  width: width,
+                  color: Colors.transparent,
+                  constraints: BoxConstraints(maxHeight: height * 0.4),
+                  child: Expanded(
+                    child: ListView.builder(
+                      reverse: true,
+                      itemCount: snapshot.data!.docs.length,
+                      itemBuilder: (context, index) {
+                        final data =
+                            snapshot.data!.docs[index].data()
+                                as Map<String, dynamic>;
+                        return Row(
+                          children: [
+                            Text(data["userName"]),
+                            Text(data["comment"]),
+                          ],
+                        );
+                      },
+                    ),
+                  ),
                 );
               },
             ),
