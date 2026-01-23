@@ -24,7 +24,7 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
   final String appId = "5eda14d417924d9baf39e83613e8f8f5";
   final String channelName = "testingChannel";
   final String appToken =
-      "007eJxTYGiYa1Zzb+EvSU955zt1DCJf/iY+dlHPmzDDc4au6hT+KY4KDKapKYmGJikmhuaWRiYplkmJacaWqRbGZobGqRZpFmmmx/4VZjYEMjL8qb/BysgAgSA+H0NJanFJZl66c0ZiXl5qDgMDAH4iI9Q=";
+      "007eJxTYDibmmPeJyS0L9I5avqitZY2J0sdQvZlfo9IvvrxdJfzHykFBssU4yRzc9M0Y2PLFJOUxDSLJEPTNMNk8xSD5GTzNOO0tKjizIZARoZlS8VYGRkgEMTnYyhJLS7JzEt3zkjMy0vNYWAAAKkwI8M=";
 
   var remoteviewController = Rxn<VideoViewController>();
   Future<void> joinasaudi() async {
@@ -128,9 +128,11 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
   void dispose() {
     updateviews(-1);
     remoteviewController.value = null;
+    Future.microtask(() async {
+      await _engine.leaveChannel();
+      await _engine.release();
+    });
 
-    _engine.leaveChannel();
-    _engine.release();
     streamcontroll.commentController.dispose();
     super.dispose();
   }
@@ -366,57 +368,56 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
 
   void _handleExit(BuildContext context) {
     bool isArabic = Get.locale?.languageCode == "ar";
-    void _handleExit(BuildContext context) {
-      // If host ended stream, don't ask, just leave.
-      if (_isStreamEndedByHost) {
-        Get.back();
-        return;
-      }
-      Get.defaultDialog(
-        backgroundColor: Colors.white,
-        radius: 12,
-        title: isArabic ? "هل تريد مغادرة البث المباشر؟" : "Leave Live Stream?",
-        titleStyle: isArabic
-            ? AppStyle.arabictext.copyWith(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              )
-            : const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-        content: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 8),
-          child: Text(
-            isArabic
-                ? "أنت تشاهد البث المباشر.\nإذا غادرت الآن، قد تفوت شيئًا ممتعًا!"
-                : "You're watching a live stream.\nIf you leave now, you might miss something exciting!",
-            textAlign: TextAlign.center,
-            style: isArabic
-                ? AppStyle.arabictext.copyWith(fontSize: 16)
-                : const TextStyle(fontSize: 15),
-          ),
-        ),
-        cancel: TextButton(
-          onPressed: () => Get.back(), // Closes only the dialog
-          child: Text(
-            isArabic ? "ابقَ" : "Stay",
-            style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
-          ),
-        ),
-        confirm: TextButton(
-          onPressed: () {
-            _isStreamEndedByHost = true;
-            Get.back(); // Close dialog
-            Get.back(); // Close the screen (this triggers dispose() and updateviews(-1))
-          },
-          child: Text(
-            isArabic ? "غادر" : "Leave",
-            style: const TextStyle(
-              fontSize: 18,
-              color: Colors.red,
-              fontWeight: FontWeight.w600,
-            ),
-          ),
-        ),
-      );
+
+    // If host ended stream, don't ask, just leave.
+    if (_isStreamEndedByHost) {
+      Get.back();
+      return;
     }
+    Get.defaultDialog(
+      backgroundColor: Colors.white,
+      radius: 12,
+      title: isArabic ? "هل تريد مغادرة البث المباشر؟" : "Leave Live Stream?",
+      titleStyle: isArabic
+          ? AppStyle.arabictext.copyWith(
+              fontSize: 20,
+              fontWeight: FontWeight.bold,
+            )
+          : const TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+      content: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 8),
+        child: Text(
+          isArabic
+              ? "أنت تشاهد البث المباشر.\nإذا غادرت الآن، قد تفوت شيئًا ممتعًا!"
+              : "You're watching a live stream.\nIf you leave now, you might miss something exciting!",
+          textAlign: TextAlign.center,
+          style: isArabic
+              ? AppStyle.arabictext.copyWith(fontSize: 16)
+              : const TextStyle(fontSize: 15),
+        ),
+      ),
+      cancel: TextButton(
+        onPressed: () => Get.back(), // Closes only the dialog
+        child: Text(
+          isArabic ? "ابقَ" : "Stay",
+          style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+        ),
+      ),
+      confirm: TextButton(
+        onPressed: () {
+          _isStreamEndedByHost = true;
+          Get.back(); // Close dialog
+          Get.back(); // Close the screen (this triggers dispose() and updateviews(-1))
+        },
+        child: Text(
+          isArabic ? "غادر" : "Leave",
+          style: const TextStyle(
+            fontSize: 18,
+            color: Colors.red,
+            fontWeight: FontWeight.w600,
+          ),
+        ),
+      ),
+    );
   }
 }
