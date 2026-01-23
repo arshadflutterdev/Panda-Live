@@ -68,4 +68,11 @@ class WatchStreamControllers extends GetxController {
       ),
     );
   }
+
+  @override
+  void onClose() {
+    engine.leaveChannel();
+    engine.release();
+    super.onClose();
+  }
 }

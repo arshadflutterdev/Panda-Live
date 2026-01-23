@@ -4,7 +4,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:pandlive/App/AppUi/LiveStreaming/WatchStreaming/watch_stream_controllers.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
@@ -20,12 +19,75 @@ class WatchstreamingClass extends StatefulWidget {
 
 class _WatchstreamingClassState extends State<WatchstreamingClass> {
   final arg = Get.arguments;
-  final joinasAud = Get.find<WatchStreamControllers>();
   RxBool isfollowing = false.obs;
   TextEditingController commentController = TextEditingController();
 
-  bool isLivecount = false;
+  late RtcEngine _engine;
+  final String appId = "5eda14d417924d9baf39e83613e8f8f5";
+  final String channelName = "testingChannel";
+  final String appToken =
+      "007eJxTYGiYa1Zzb+EvSU955zt1DCJf/iY+dlHPmzDDc4au6hT+KY4KDKapKYmGJikmhuaWRiYplkmJacaWqRbGZobGqRZpFmmmx/4VZjYEMjL8qb/BysgAgSA+H0NJanFJZl66c0ZiXl5qDgMDAH4iI9Q=";
 
+  var remoteviewController = Rxn<VideoViewController>();
+  Future<void> joinasaudi() async {
+    _engine = createAgoraRtcEngine();
+    await _engine.initialize(RtcEngineContext(appId: appId));
+    await _engine.setClientRole(role: ClientRoleType.clientRoleAudience);
+    await _engine.enableVideo();
+    _engine.registerEventHandler(
+      RtcEngineEventHandler(
+        onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
+          if (remoteUid.toString() == arg["agoraUid"].toString()) {
+            remoteviewController.value = VideoViewController.remote(
+              rtcEngine: _engine,
+              canvas: VideoCanvas(uid: remoteUid),
+              connection: connection,
+            );
+          }
+        },
+
+        onRemoteVideoStateChanged:
+            (connection, remoteUid, state, reason, elapsed) {
+              if (remoteUid.toString() == arg["agoraUid"].toString() &&
+                  state == RemoteVideoState.remoteVideoStateDecoding) {
+                if (remoteviewController.value == null) {
+                  remoteviewController.value = VideoViewController.remote(
+                    rtcEngine: _engine,
+                    canvas: VideoCanvas(uid: remoteUid),
+                    connection: connection,
+                  );
+                }
+              }
+            },
+        onUserOffline:
+            (
+              RtcConnection connection,
+              int remoteUid,
+              UserOfflineReasonType reason,
+            ) {
+              if (remoteUid.toString() == arg["agoraUid"].toString()) {
+                remoteviewController.value = null;
+
+                Get.back();
+              }
+            },
+      ),
+    );
+    await _engine.joinChannel(
+      token: appToken,
+      channelId: channelName,
+      uid: 0,
+      options: ChannelMediaOptions(
+        clientRoleType: ClientRoleType.clientRoleAudience,
+        publishCameraTrack: false,
+        publishMicrophoneTrack: false,
+        autoSubscribeAudio: true,
+        autoSubscribeVideo: true,
+      ),
+    );
+  }
+
+  bool isLivecount = false;
   Future<void> updateviews(int amount) async {
     if (amount > 0 && isLivecount) return;
     if (amount <= 0 && !isLivecount) return;
@@ -180,16 +242,16 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
         .collection("Comments")
         .orderBy("sendAt", descending: true)
         .snapshots();
-    joinasAud.joinasaudi();
+    joinasaudi();
     updateviews(1);
   }
 
   @override
   void dispose() {
     updateviews(-1);
-    joinasAud.remoteviewController.value = null;
-    joinasAud.remoteviewController.value = null;
-    joinasAud._engine.leaveChannel();
+    remoteviewController.value = null;
+
+    _engine.leaveChannel();
     _engine.release();
     commentController.dispose();
     super.dispose();
