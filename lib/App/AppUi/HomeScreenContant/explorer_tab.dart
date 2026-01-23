@@ -20,10 +20,14 @@ class ExplorerScreen extends StatefulWidget {
 
 class _ExplorerScreenState extends State<ExplorerScreen> {
   final liveStream = FirebaseFirestore.instance.collection("LiveStream");
+  late DateTime stableThreshold;
+  String? currentUserId;
 
   @override
   void initState() {
     super.initState();
+    currentUserId = FirebaseAuth.instance.currentUser?.uid;
+    stableThreshold = DateTime.now().subtract(const Duration(minutes: 1));
   }
 
   @override
@@ -31,8 +35,6 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
     super.dispose();
   }
 
-  DateTime get staleThreshold =>
-      DateTime.now().subtract(const Duration(minutes: 1));
   @override
   Widget build(BuildContext context) {
     bool isArabic = Get.locale?.languageCode == "ar";
@@ -110,7 +112,8 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
 
       body: StreamBuilder<QuerySnapshot>(
         stream: liveStream
-            .where("lastHeartbeat", isGreaterThan: staleThreshold)
+            .where("uid", isNotEqualTo: currentUserId)
+            .where("lastHeartbeat", isGreaterThan: stableThreshold)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -125,22 +128,24 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
             final docs = snapshot.data?.docs ?? [];
             print("here is docs list ${docs.length}");
             if (docs.isEmpty) {
-              return Column(
-                children: [
-                  Icon(
-                    Icons.video_camera_front_outlined,
-                    size: 80,
-                    color: Colors.grey[300],
-                  ),
-                  const Gap(10),
-                  Text(
-                    isArabic
-                        ? "لا يوجد بث مباشر حالياً"
-                        : "No one is live right now",
-                    style: TextStyle(color: Colors.grey[600], fontSize: 18),
-                  ),
-                  Text(isArabic ? "ابدأ بثك الخاص" : "Start your own stream"),
-                ],
+              return Center(
+                child: Column(
+                  children: [
+                    Icon(
+                      Icons.video_camera_front_outlined,
+                      size: 80,
+                      color: Colors.grey[300],
+                    ),
+                    const Gap(10),
+                    Text(
+                      isArabic
+                          ? "لا يوجد بث مباشر حالياً"
+                          : "No one is live right now",
+                      style: TextStyle(color: Colors.grey[600], fontSize: 18),
+                    ),
+                    Text(isArabic ? "ابدأ بثك الخاص" : "Start your own stream"),
+                  ],
+                ),
               );
             }
 
