@@ -86,7 +86,11 @@ class AppRoutes {
     GetPage(name: home, page: () => Homescreen()),
     GetPage(name: updates, page: () => UpdatesScreen()),
     GetPage(name: profile, page: () => ProfileScreen()),
-    GetPage(name: watchstream, page: () => WatchstreamingClass()),
+    GetPage(
+      name: watchstream,
+      binding: AuthBindings(),
+      page: () => WatchstreamingClass(),
+    ),
     GetPage(name: golive, page: () => GoliveScreen()),
     //in profile screen navigates
     GetPage(name: help, page: () => HelpScreen()),

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:pandlive/App/AppUi/LiveStreaming/WatchStreaming/watch_stream_controllers.dart';
 import 'package:pandlive/App/AppUi/Profile/nextScreens/CreateProfileScreen/profile_store_controller.dart';
 import 'package:pandlive/App/Authentication/EmailAuth/EmailAuthControllers/email_login_controller.dart';
 import 'package:pandlive/App/Authentication/EmailAuth/EmailAuthControllers/emailauth_controller.dart';
@@ -13,5 +14,6 @@ class AuthBindings extends Bindings {
     Get.lazyPut<EmailLoginController>(() => EmailLoginController());
     Get.lazyPut<ResetpasswordController>(() => ResetpasswordController());
     Get.lazyPut<ProfileStoreController>(() => ProfileStoreController());
+    Get.lazyPut<WatchStreamControllers>(() => WatchStreamControllers());
   }
 }
