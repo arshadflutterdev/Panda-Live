@@ -478,11 +478,33 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                         final data =
                             snapshot.data!.docs[index].data()
                                 as Map<String, dynamic>;
-                        return Row(
-                          children: [
-                            Text(data["userName"]),
-                            Text(data["comment"]),
-                          ],
+                        return Padding(
+                          padding: const EdgeInsets.only(bottom: 3),
+                          child: Row(
+                            children: [
+                              Text(
+                                data["userName"],
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.amber,
+                                ),
+                              ),
+                              Text(
+                                " : ",
+                                style: TextStyle(color: Colors.amber),
+                              ),
+                              DecoratedBox(
+                                decoration: BoxDecoration(
+                                  color: Colors.black12,
+                                ),
+
+                                child: Text(
+                                  data["comment"],
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                              ),
+                            ],
+                          ),
                         );
                       },
                     ),
