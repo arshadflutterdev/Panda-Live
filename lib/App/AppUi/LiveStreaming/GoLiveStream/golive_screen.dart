@@ -128,7 +128,7 @@ class _GoliveScreenState extends State<GoliveScreen>
                   colorText: Colors.white,
                 );
                 _shutdownHost();
-                Get.offAllNamed(AppRoutes.explore);
+                Get.back();
               }
             },
 
@@ -287,7 +287,7 @@ class _GoliveScreenState extends State<GoliveScreen>
       } finally {
         // 3. Force navigation even if network calls failed
         if (Get.currentRoute == AppRoutes.golive) {
-          Get.offAllNamed(AppRoutes.explore);
+          Get.back();
         }
       }
     }
@@ -433,7 +433,7 @@ class _GoliveScreenState extends State<GoliveScreen>
                                 confirm: TextButton(
                                   onPressed: () async {
                                     await _shutdownHost();
-                                    Get.offAllNamed(AppRoutes.explore);
+                                    Get.back();
                                     // --- Optional: Add code here to notify viewers if using backend ---
                                   },
                                   child: Text(

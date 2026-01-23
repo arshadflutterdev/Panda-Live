@@ -130,6 +130,8 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
             if (docs.isEmpty) {
               return Center(
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Icon(
                       Icons.video_camera_front_outlined,
