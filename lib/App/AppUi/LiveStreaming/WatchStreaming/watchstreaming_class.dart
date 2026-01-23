@@ -191,14 +191,14 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
     }
   }
 
-  String commentuser = "Guest";
+  RxString commentuser = "Guest".obs;
   Future<void> commentUsers() async {
     var doc = await FirebaseFirestore.instance
         .collection("userProfile")
         .doc(currenduser)
         .get();
     if (doc.exists) {
-      commentuser = doc.data()?["name"] ?? "No Name";
+      commentuser.value = doc.data()?["name"] ?? "No Name";
     }
   }
 
@@ -212,7 +212,7 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
           .doc(arg["uid"])
           .collection("Comments")
           .add({
-            "userName": commentuser,
+            "userName": commentuser.value,
             "userId": currenduser,
             "comment": comment,
             "sendAt": FieldValue.serverTimestamp(),
@@ -222,6 +222,8 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
     }
   }
 
+  //now get comment
+  var getComment = FirebaseFirestore.instance.collection("LiveStream");
   @override
   void initState() {
     super.initState();
@@ -450,6 +452,39 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                   icon: Icon(Icons.send_rounded, color: Colors.white),
                 ),
               ],
+            ),
+          ),
+          //comment section
+          Positioned(
+            left: 10,
+            right: 10,
+            bottom: height * 0.099,
+            child: StreamBuilder<QuerySnapshot>(
+              stream: FirebaseFirestore.instance
+                  .collection("LiveStream")
+                  .doc(arg["uid"])
+                  .collection("Comments")
+                  .orderBy("sendAt", descending: true)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return SizedBox();
+                } else if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
+                  return SizedBox();
+                }
+                return ListView.builder(
+                  reverse: true,
+                  itemCount: snapshot.data!.docs.length,
+                  itemBuilder: (context, index) {
+                    final data =
+                        snapshot.data!.docs[index].data()
+                            as Map<String, dynamic>;
+                    return Wrap(
+                      children: [Text(data["userName"]), Text(data["comment"])],
+                    );
+                  },
+                );
+              },
             ),
           ),
         ],
