@@ -93,7 +93,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
       backgroundColor: Colors.white,
 
       body: StreamBuilder<QuerySnapshot>(
-        stream: liveStream.snapshots(),
+        stream: liveStream.where("agoraUid", isNull: false).snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(

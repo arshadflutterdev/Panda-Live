@@ -77,19 +77,23 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
               UserOfflineReasonType reason,
             ) {
               if (remoteUid.toString() == arg["agoraUid"].toString()) {
-                if (reason == UserOfflineReasonType.userOfflineDropped) {
+                _isStreamEndedByHost = true;
+                String message =
+                    (reason == UserOfflineReasonType.userOfflineDropped)
+                    ? "The host lost connection."
+                    : "The stream has ended.";
+                {
                   Get.snackbar(
                     "Stream Ended",
-                    "The host lost connection.",
+                    "$message",
                     colorText: Colors.white,
                     backgroundColor: Colors.black,
                   );
                   Get.back(); // Kick viewer back to list
+                  return;
                 }
-                remoteviewController.value = null;
-                _isStreamEndedByHost = true;
-
-                Get.back();
+                // remoteviewController.value = null;
+                // _isStreamEndedByHost = true;
               }
             },
       ),
@@ -111,13 +115,24 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
   bool isLivecount = false;
   bool _isStreamEndedByHost = false;
   Future<void> updateviews(int amount) async {
+    if (_isStreamEndedByHost) return;
     if (amount > 0 && isLivecount) return;
     if (amount <= 0 && !isLivecount) return;
     try {
-      FirebaseFirestore.instance
+      final docRef = FirebaseFirestore.instance
           .collection("LiveStream")
-          .doc(arg["uid"])
-          .update({"views": FieldValue.increment(amount)});
+          .doc(arg["uid"]);
+
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        DocumentSnapshot snapshot = await transaction.get(docRef);
+        if (snapshot.exists) {
+          transaction.update(docRef, {"views": FieldValue.increment(amount)});
+        } else {
+          debugPrint("Ghost Stream: Document was already deleted.");
+          _isStreamEndedByHost = true;
+        }
+      });
+
       isLivecount = (amount > 0);
     } catch (e) {
       debugPrint("views related issue $e");
@@ -175,24 +190,30 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
         body: Stack(
           children: [
             Center(
-              child: Obx(
-                () => remoteviewController.value != null
-                    ? AgoraVideoView(controller: remoteviewController.value!)
-                    : Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Center(
-                            child: CircularProgressIndicator(color: Colors.red),
-                          ),
-                          Text(
-                            "Connecting to stream...",
-                            style: TextStyle(color: Colors.black),
-                          ),
-                        ],
+              child: Obx(() {
+                final Controller = remoteviewController.value;
+                if (Controller != null) {
+                  return AgoraVideoView(
+                    controller: remoteviewController.value!,
+                  );
+                } else {
+                  return Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Center(
+                        child: CircularProgressIndicator(color: Colors.red),
                       ),
-              ),
+                      Text(
+                        "Connecting to stream...",
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ],
+                  );
+                }
+              }),
             ),
+
             Positioned(
               top: height * 0.040,
               left: 10,
