@@ -33,7 +33,7 @@ class _GoliveScreenState extends State<GoliveScreen>
               .collection("LiveStream")
               .doc(FirebaseAuth.instance.currentUser!.uid)
               .update({
-                "lastSeen":
+                "lastHeartbeat":
                     FieldValue.serverTimestamp(), // This is the heartbeat
               });
         } catch (e) {
@@ -85,7 +85,6 @@ class _GoliveScreenState extends State<GoliveScreen>
               .set({
                 "agoraUid": connection.localUid,
                 "isLive": true,
-                "lastSeen": FieldValue.serverTimestamp(),
               }, SetOptions(merge: true));
           isJoined.value = true;
           // STEP A: Create the controller ONLY when the connection is active
@@ -259,6 +258,7 @@ class _GoliveScreenState extends State<GoliveScreen>
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
     heartbeatTimer?.cancel();
+    _backgroundExitTimer?.cancel();
     if (liveTimer?.isActive ?? false) {
       liveTimer?.cancel();
     }

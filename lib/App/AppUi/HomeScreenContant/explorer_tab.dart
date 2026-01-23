@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +20,19 @@ class ExplorerScreen extends StatefulWidget {
 
 class _ExplorerScreenState extends State<ExplorerScreen> {
   final liveStream = FirebaseFirestore.instance.collection("LiveStream");
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+  }
+
+  DateTime get staleThreshold =>
+      DateTime.now().subtract(const Duration(minutes: 1));
   @override
   Widget build(BuildContext context) {
     bool isArabic = Get.locale?.languageCode == "ar";
@@ -68,6 +83,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                         "image": currentUser.photoURL ?? "",
                         "views": 0,
                         "startedAt": FieldValue.serverTimestamp(),
+                        "lastHeartbeat": FieldValue.serverTimestamp(),
                       });
 
                   Get.toNamed(
@@ -93,7 +109,9 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
       backgroundColor: Colors.white,
 
       body: StreamBuilder<QuerySnapshot>(
-        stream: liveStream.where("agoraUid", isNull: false).snapshots(),
+        stream: liveStream
+            .where("lastHeartbeat", isGreaterThan: staleThreshold)
+            .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(
@@ -104,8 +122,27 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
           } else if (!snapshot.hasData) {
             return Text("There is no data");
           } else {
-            final docs = snapshot.data!.docs;
+            final docs = snapshot.data?.docs ?? [];
             print("here is docs list ${docs.length}");
+            if (docs.isEmpty) {
+              return Column(
+                children: [
+                  Icon(
+                    Icons.video_camera_front_outlined,
+                    size: 80,
+                    color: Colors.grey[300],
+                  ),
+                  const Gap(10),
+                  Text(
+                    isArabic
+                        ? "لا يوجد بث مباشر حالياً"
+                        : "No one is live right now",
+                    style: TextStyle(color: Colors.grey[600], fontSize: 18),
+                  ),
+                  Text(isArabic ? "ابدأ بثك الخاص" : "Start your own stream"),
+                ],
+              );
+            }
 
             return GridView.builder(
               itemCount: docs.length,
@@ -174,16 +211,19 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                           padding: const EdgeInsets.symmetric(horizontal: 8),
                           child: Row(
                             children: [
-                              FittedBox(
+                              Expanded(
                                 child: Text(
+                                  maxLines: 2,
+
                                   data["hostname"] ?? "Guest",
                                   style: isArabic
                                       ? AppStyle.arabictext.copyWith(
-                                          fontSize: 22,
+                                          fontSize: 18,
                                           fontWeight: FontWeight.w600,
                                           color: Colors.white,
                                         )
                                       : TextStyle(
+                                          overflow: TextOverflow.ellipsis,
                                           fontSize: 18,
                                           color: Colors.white,
                                         ),
