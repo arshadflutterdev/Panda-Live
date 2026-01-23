@@ -22,6 +22,27 @@ class GoliveScreen extends StatefulWidget {
 
 class _GoliveScreenState extends State<GoliveScreen>
     with WidgetsBindingObserver {
+  Timer? heartbeatTimer;
+
+  void _startHeartbeat() {
+    heartbeatTimer?.cancel();
+    heartbeatTimer = Timer.periodic(const Duration(seconds: 10), (timer) {
+      if (isJoined.value) {
+        try {
+          FirebaseFirestore.instance
+              .collection("LiveStream")
+              .doc(FirebaseAuth.instance.currentUser!.uid)
+              .update({
+                "lastSeen":
+                    FieldValue.serverTimestamp(), // This is the heartbeat
+              });
+        } catch (e) {
+          debugPrint("Heartbeat failed: $e");
+        }
+      }
+    });
+  }
+
   RxBool isMute = false.obs;
   var data = Get.arguments;
   late String channelId;
@@ -64,7 +85,9 @@ class _GoliveScreenState extends State<GoliveScreen>
               .set({
                 "agoraUid": connection.localUid,
                 "isLive": true,
+                "lastSeen": FieldValue.serverTimestamp(),
               }, SetOptions(merge: true));
+          isJoined.value = true;
           // STEP A: Create the controller ONLY when the connection is active
 
           // STEP B: Update GetX to rebuild the UI
@@ -89,6 +112,15 @@ class _GoliveScreenState extends State<GoliveScreen>
               ConnectionStateType state,
               ConnectionChangedReasonType reason,
             ) {
+              if (state == ConnectionStateType.connectionStateReconnecting) {
+                debugPrint("Host is losing internet...");
+                Get.snackbar(
+                  "Slow Connection",
+                  "Please check your internet.",
+                  backgroundColor: Colors.red,
+                  colorText: Colors.white,
+                );
+              }
               if (state == ConnectionStateType.connectionStateFailed) {
                 Get.snackbar(
                   "Connection Failed",
@@ -139,7 +171,7 @@ class _GoliveScreenState extends State<GoliveScreen>
   RxBool showCountdown = true.obs;
   RxBool isJoined = false.obs; // This is the key!
 
-  late Timer liveTimer;
+  Timer? liveTimer;
   RxInt liveSeconds = 0.obs;
   String get liveTime {
     final minutes = liveSeconds.value ~/ 60;
@@ -147,11 +179,13 @@ class _GoliveScreenState extends State<GoliveScreen>
     return "${minutes.toString().padLeft(2, '0')}:${seconds.toString().padLeft(2, '0')}";
   }
 
+  final arg = Get.arguments;
   late Timer viewss;
 
   RxBool isloading = false.obs;
   //Real Cont update for viewrs
-
+  var getComment = FirebaseFirestore.instance.collection("LiveStream");
+  late Stream<QuerySnapshot> _commentStream;
   @override
   void initState() {
     super.initState();
@@ -160,7 +194,12 @@ class _GoliveScreenState extends State<GoliveScreen>
     hostname = data["hostname"] ?? "Guest";
     hostphoto = data["hostphoto"] ?? "";
     initAgoraEngine(); // Starts Agora connection
-
+    _commentStream = FirebaseFirestore.instance
+        .collection("LiveStream")
+        .doc(FirebaseAuth.instance.currentUser!.uid)
+        .collection("Comments")
+        .orderBy("sendAt", descending: true)
+        .snapshots();
     Timer.periodic(const Duration(seconds: 1), (timer) {
       if (countdown.value > 1) {
         countdown.value--;
@@ -181,6 +220,7 @@ class _GoliveScreenState extends State<GoliveScreen>
     });
   }
 
+  Timer? _backgroundExitTimer;
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     if (state == AppLifecycleState.paused) {
@@ -188,14 +228,28 @@ class _GoliveScreenState extends State<GoliveScreen>
         true,
       ); // Stop sending video when app is minimized
       _engine.muteLocalAudioStream(true);
+      _backgroundExitTimer = Timer(Duration(seconds: 60), () {
+        _shutdownHost();
+      });
     } else if (state == AppLifecycleState.resumed) {
       _engine.muteLocalVideoStream(false); // Resume video
+      _engine.muteLocalAudioStream(false);
+    } else if (state == AppLifecycleState.detached) {
+      // Option B: The app is being killed. We MUST attempt to delete the doc.
+      // We don't await here because the OS might kill the process immediately,
+      // but calling it here gives it the best chance to fire off the request.
+      _shutdownHost();
+    } else if (state == AppLifecycleState.resumed) {
+      _backgroundExitTimer?.cancel();
+      // Back to the app
+      _engine.muteLocalVideoStream(false);
       _engine.muteLocalAudioStream(false);
     }
   }
 
   // Helper to start timers only when live
   void _startLiveTimers() {
+    _startHeartbeat();
     liveTimer = Timer.periodic(const Duration(seconds: 1), (timer) {
       liveSeconds.value++;
     });
@@ -204,7 +258,10 @@ class _GoliveScreenState extends State<GoliveScreen>
   @override
   void dispose() {
     WidgetsBinding.instance.removeObserver(this);
-    if (liveTimer.isActive) liveTimer.cancel();
+    heartbeatTimer?.cancel();
+    if (liveTimer?.isActive ?? false) {
+      liveTimer?.cancel();
+    }
     _shutdownHost();
 
     super.dispose();
@@ -214,17 +271,38 @@ class _GoliveScreenState extends State<GoliveScreen>
   Future<void> _shutdownHost() async {
     if (isShutdown) return;
     isShutdown = true;
-    if (liveTimer.isActive) liveTimer.cancel();
-    await _engine.leaveChannel();
-    await _engine.release();
-    await removeLivestatus(); // Delete Firestore doc
+    if (liveTimer?.isActive ?? false) {
+      liveTimer?.cancel();
+      heartbeatTimer?.cancel();
+
+      _backgroundExitTimer?.cancel();
+      try {
+        await Future.wait([
+          _engine.leaveChannel(),
+          _engine.release(),
+          removeLivestatus(),
+        ]).timeout(const Duration(seconds: 3));
+      } catch (e) {
+        debugPrint("Error during shutdown: $e");
+      } finally {
+        // 3. Force navigation even if network calls failed
+        if (Get.currentRoute == AppRoutes.golive) {
+          Get.offAllNamed(AppRoutes.explore);
+        }
+      }
+    }
+    // Delete Firestore doc
   }
 
   Future<void> removeLivestatus() async {
-    FirebaseFirestore.instance
-        .collection("LiveStream")
-        .doc(FirebaseAuth.instance.currentUser!.uid)
-        .delete();
+    final user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      await FirebaseFirestore.instance
+          .collection("LiveStream")
+          .doc(FirebaseAuth.instance.currentUser!.uid)
+          .delete();
+      debugPrint("Firestore doc deleted successfully");
+    }
   }
 
   @override
@@ -481,86 +559,69 @@ class _GoliveScreenState extends State<GoliveScreen>
                           ),
                         ),
                         Gap(5),
-
-                        // IconButton(
-                        //   style: IconButton.styleFrom(
-                        //     backgroundColor: Colors.black54,
-                        //   ),
-                        //   onPressed: () {
-                        //     Get.defaultDialog(
-                        //       backgroundColor: Colors.white,
-                        //       radius: 12,
-                        //       title: isArabic
-                        //           ? "هل تريد إنهاء البث المباشر؟"
-                        //           : "End Live Stream?",
-                        //       titleStyle: isArabic
-                        //           ? AppStyle.arabictext.copyWith(
-                        //               fontSize: 20,
-                        //               fontWeight: FontWeight.bold,
-                        //             )
-                        //           : const TextStyle(
-                        //               fontSize: 20,
-                        //               fontWeight: FontWeight.bold,
-                        //             ),
-                        //       content: Padding(
-                        //         padding: const EdgeInsets.symmetric(
-                        //           horizontal: 8,
-                        //         ),
-                        //         child: Text(
-                        //           isArabic
-                        //               ? "أنت على وشك إنهاء البث المباشر.\nسيتم إعلام المشاهدين بذلك."
-                        //               : "You are about to end your live stream.\nViewers will be notified, dear.",
-                        //           textAlign: TextAlign.center,
-                        //           style: isArabic
-                        //               ? AppStyle.arabictext.copyWith(
-                        //                   fontSize: 16,
-                        //                 )
-                        //               : const TextStyle(fontSize: 15),
-                        //         ),
-                        //       ),
-                        //       cancel: TextButton(
-                        //         onPressed: () {
-                        //           Get.back();
-                        //         },
-                        //         child: Text(
-                        //           isArabic ? "ابقَ" : "Stay",
-                        //           style: isArabic
-                        //               ? AppStyle.arabictext.copyWith(
-                        //                   fontSize: 18,
-                        //                   fontWeight: FontWeight.w600,
-                        //                 )
-                        //               : const TextStyle(
-                        //                   fontSize: 18,
-                        //                   fontWeight: FontWeight.w600,
-                        //                 ),
-                        //         ),
-                        //       ),
-                        //       confirm: TextButton(
-                        //         onPressed: () async {
-                        //           await _shutdownHost();
-                        //           Get.offAllNamed(AppRoutes.explore);
-                        //           // --- Optional: Add code here to notify viewers if using backend ---
-                        //         },
-                        //         child: Text(
-                        //           isArabic ? "إنهاء" : "End",
-                        //           style: isArabic
-                        //               ? AppStyle.arabictext.copyWith(
-                        //                   fontSize: 18,
-                        //                   color: Colors.red,
-                        //                   fontWeight: FontWeight.w600,
-                        //                 )
-                        //               : const TextStyle(
-                        //                   fontSize: 18,
-                        //                   color: Colors.red,
-                        //                   fontWeight: FontWeight.w600,
-                        //                 ),
-                        //         ),
-                        //       ),
-                        //     );
-                        //   },
-                        //   icon: Icon(Icons.close, color: Colors.white),
-                        // ),
                       ],
+                    ),
+                  ),
+                  Positioned(
+                    left: 10,
+                    right: 10,
+                    bottom:
+                        MediaQuery.of(context).viewInsets.bottom +
+                        height * 0.12,
+                    child: StreamBuilder<QuerySnapshot>(
+                      stream: _commentStream,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return SizedBox();
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.docs.isEmpty) {
+                          return SizedBox();
+                        }
+                        return Container(
+                          width: width,
+                          color: Colors.transparent,
+                          constraints: BoxConstraints(maxHeight: height * 0.4),
+                          child: ListView.builder(
+                            reverse: true,
+                            itemCount: snapshot.data!.docs.length,
+                            itemBuilder: (context, index) {
+                              final data =
+                                  snapshot.data!.docs[index].data()
+                                      as Map<String, dynamic>;
+                              return Padding(
+                                padding: const EdgeInsets.only(bottom: 2),
+                                child: Wrap(
+                                  children: [
+                                    Text(
+                                      data["userName"],
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w600,
+                                        color: Colors.amber,
+                                      ),
+                                    ),
+                                    Text(
+                                      " : ",
+                                      style: TextStyle(color: Colors.amber),
+                                    ),
+                                    DecoratedBox(
+                                      decoration: BoxDecoration(
+                                        color: Colors.black12,
+                                      ),
+
+                                      child: Text(
+                                        data["comment"],
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
                   ),
                 ],

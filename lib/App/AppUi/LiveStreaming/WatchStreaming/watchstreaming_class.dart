@@ -57,6 +57,19 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                 }
               }
             },
+        onError: (ErrorCodeType err, String msg) {
+          debugPrint("Agora Error: $err - $msg");
+          if (err == ErrorCodeType.errTokenExpired ||
+              err == ErrorCodeType.errInvalidToken) {
+            Get.snackbar(
+              "Connection Error",
+              "Stream token has expired. Please refresh.",
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+              snackPosition: SnackPosition.BOTTOM,
+            );
+          }
+        },
         onUserOffline:
             (
               RtcConnection connection,
@@ -64,6 +77,15 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
               UserOfflineReasonType reason,
             ) {
               if (remoteUid.toString() == arg["agoraUid"].toString()) {
+                if (reason == UserOfflineReasonType.userOfflineDropped) {
+                  Get.snackbar(
+                    "Stream Ended",
+                    "The host lost connection.",
+                    colorText: Colors.white,
+                    backgroundColor: Colors.black,
+                  );
+                  Get.back(); // Kick viewer back to list
+                }
                 remoteviewController.value = null;
                 _isStreamEndedByHost = true;
 
