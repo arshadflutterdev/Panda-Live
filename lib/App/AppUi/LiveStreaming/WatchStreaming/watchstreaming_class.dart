@@ -37,7 +37,7 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
     _engine.registerEventHandler(
       RtcEngineEventHandler(
         onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
-          if (remoteUid == arg["agoraUid"]) {
+          if (remoteUid.toString() == arg["agoraUid"].toString()) {
             remoteviewController.value = VideoViewController.remote(
               rtcEngine: _engine,
               canvas: VideoCanvas(uid: remoteUid),
@@ -48,7 +48,7 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
 
         onRemoteVideoStateChanged:
             (connection, remoteUid, state, reason, elapsed) {
-              if (remoteUid == arg["agoraUid"] &&
+              if (remoteUid.toString() == arg["agoraUid"].toString() &&
                   state == RemoteVideoState.remoteVideoStateDecoding) {
                 if (remoteviewController.value == null) {
                   remoteviewController.value = VideoViewController.remote(
@@ -65,7 +65,7 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
               int remoteUid,
               UserOfflineReasonType reason,
             ) {
-              if (remoteUid == arg["agoraUid"]) {
+              if (remoteUid.toString() == arg["agoraUid"].toString()) {
                 remoteviewController.value = null;
 
                 Get.back();
@@ -87,12 +87,16 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
     );
   }
 
+  bool isLivecount = false;
   Future<void> updateviews(int amount) async {
+    if (amount > 0 && isLivecount) return;
+    if (amount <= 0 && !isLivecount) return;
     try {
       FirebaseFirestore.instance
           .collection("LiveStream")
           .doc(arg["uid"])
           .update({"views": FieldValue.increment(amount)});
+      isLivecount = (amount > 0);
     } catch (e) {
       debugPrint("views related issue $e");
     }
@@ -224,6 +228,7 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
 
   //now get comment
   var getComment = FirebaseFirestore.instance.collection("LiveStream");
+  late Stream<QuerySnapshot> _commentStream;
   @override
   void initState() {
     super.initState();
@@ -231,7 +236,12 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
       await commentUsers();
       await checkFollowers();
     });
-
+    _commentStream = FirebaseFirestore.instance
+        .collection("LiveStream")
+        .doc(arg["uid"])
+        .collection("Comments")
+        .orderBy("sendAt", descending: true)
+        .snapshots();
     joinasaudi();
     updateviews(1);
   }
@@ -239,8 +249,11 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
   @override
   void dispose() {
     updateviews(-1);
+    remoteviewController.value = null;
+    remoteviewController.value = null;
     _engine.leaveChannel();
     _engine.release();
+    commentController.dispose();
     super.dispose();
   }
 
@@ -257,7 +270,19 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
             child: Obx(
               () => remoteviewController.value != null
                   ? AgoraVideoView(controller: remoteviewController.value!)
-                  : Text("No one live now"),
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: CircularProgressIndicator(color: Colors.red),
+                        ),
+                        Text(
+                          "Connecting to stream...",
+                          style: TextStyle(color: Colors.black),
+                        ),
+                      ],
+                    ),
             ),
           ),
           Positioned(
@@ -283,7 +308,7 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                           backgroundColor: Colors.white,
                           backgroundImage: arg["image"] != null
                               ? NetworkImage(arg["image"]) as ImageProvider
-                              : AssetImage(AppImages.coins),
+                              : AssetImage(AppImages.profile),
                         ),
                         Gap(5),
                         Text(
@@ -456,12 +481,7 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
             right: 10,
             bottom: MediaQuery.of(context).viewInsets.bottom + height * 0.090,
             child: StreamBuilder<QuerySnapshot>(
-              stream: FirebaseFirestore.instance
-                  .collection("LiveStream")
-                  .doc(arg["uid"])
-                  .collection("Comments")
-                  .orderBy("sendAt", descending: true)
-                  .snapshots(),
+              stream: _commentStream,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return SizedBox();
@@ -472,47 +492,38 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                   width: width,
                   color: Colors.transparent,
                   constraints: BoxConstraints(maxHeight: height * 0.4),
-                  child: Expanded(
-                    child: ListView.builder(
-                      reverse: true,
-                      itemCount: snapshot.data!.docs.length,
-                      itemBuilder: (context, index) {
-                        final data =
-                            snapshot.data!.docs[index].data()
-                                as Map<String, dynamic>;
-                        return Padding(
-                          padding: const EdgeInsets.only(bottom: 2),
-                          child: Wrap(
-                            children: [
-                              Text(
-                                data["userName"],
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.amber,
-                                ),
+                  child: ListView.builder(
+                    reverse: true,
+                    itemCount: snapshot.data!.docs.length,
+                    itemBuilder: (context, index) {
+                      final data =
+                          snapshot.data!.docs[index].data()
+                              as Map<String, dynamic>;
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 2),
+                        child: Wrap(
+                          children: [
+                            Text(
+                              data["userName"],
+                              style: TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.amber,
                               ),
-                              Text(
-                                " : ",
-                                style: TextStyle(color: Colors.amber),
-                              ),
-                              Expanded(
-                                child: DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    color: Colors.black12,
-                                  ),
+                            ),
+                            Text(" : ", style: TextStyle(color: Colors.amber)),
+                            DecoratedBox(
+                              decoration: BoxDecoration(color: Colors.black12),
 
-                                  child: Text(
-                                    data["comment"],
-                                    style: TextStyle(color: Colors.white),
-                                  ),
-                                ),
+                              child: Text(
+                                data["comment"],
+                                style: TextStyle(color: Colors.white),
                               ),
-                            ],
-                          ),
-                        );
-                      },
-                    ),
+                            ),
+                          ],
+                        ),
+                      );
+                    },
                   ),
                 );
               },
