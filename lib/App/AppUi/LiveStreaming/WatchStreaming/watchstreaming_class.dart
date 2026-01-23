@@ -250,6 +250,7 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
     double width = AppHeightwidth.screenWidth(context);
     bool isArabic = Get.locale?.languageCode == "ar";
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           Center(
@@ -424,9 +425,10 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
             ),
           ),
           Positioned(
-            bottom: 10,
+            bottom: MediaQuery.of(context).viewInsets.bottom + 10,
             left: 2,
             right: 2,
+
             child: Row(
               children: [
                 Expanded(
@@ -452,7 +454,7 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
           Positioned(
             left: 10,
             right: 10,
-            bottom: height * 0.099,
+            bottom: MediaQuery.of(context).viewInsets.bottom + height * 0.090,
             child: StreamBuilder<QuerySnapshot>(
               stream: FirebaseFirestore.instance
                   .collection("LiveStream")
@@ -479,13 +481,14 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                             snapshot.data!.docs[index].data()
                                 as Map<String, dynamic>;
                         return Padding(
-                          padding: const EdgeInsets.only(bottom: 3),
-                          child: Row(
+                          padding: const EdgeInsets.only(bottom: 2),
+                          child: Wrap(
                             children: [
                               Text(
                                 data["userName"],
                                 style: TextStyle(
                                   fontSize: 16,
+                                  fontWeight: FontWeight.w600,
                                   color: Colors.amber,
                                 ),
                               ),
@@ -493,14 +496,16 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                                 " : ",
                                 style: TextStyle(color: Colors.amber),
                               ),
-                              DecoratedBox(
-                                decoration: BoxDecoration(
-                                  color: Colors.black12,
-                                ),
+                              Expanded(
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    color: Colors.black12,
+                                  ),
 
-                                child: Text(
-                                  data["comment"],
-                                  style: TextStyle(color: Colors.white),
+                                  child: Text(
+                                    data["comment"],
+                                    style: TextStyle(color: Colors.white),
+                                  ),
                                 ),
                               ),
                             ],
