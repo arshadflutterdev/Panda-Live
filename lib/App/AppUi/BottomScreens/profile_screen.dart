@@ -101,6 +101,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         print("user image $userimage");
         followingCount = followingSnapshot.docs.length;
         print("here is following list=$followingCount");
+        FollowersCount = FollowerSnapshot.docs.length;
+        print("here is followers list count $FollowersCount");
       });
     }
   }
