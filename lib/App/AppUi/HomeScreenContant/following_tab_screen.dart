@@ -7,6 +7,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
+import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 import 'package:pandlive/l10n/app_localizations.dart';
@@ -38,6 +39,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
   @override
   Widget build(BuildContext context) {
     bool isArabic = Get.locale?.languageCode == "ar";
+    final height = AppHeightwidth.screenHeight(context);
     final localization = AppLocalizations.of(context)!;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -114,6 +116,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
         stream: liveStream
             .where("uid", isNotEqualTo: currentUserId)
             .where("lastHeartbeat", isGreaterThan: stableThreshold)
+            .where("totalFollowing")
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
@@ -133,16 +136,15 @@ class _FollowingScreenState extends State<FollowingScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Icon(
-                      Icons.video_camera_front_outlined,
-                      size: 80,
-                      color: Colors.grey[300],
+                    Image(
+                      image: AssetImage(AppImages.notfollow),
+                      height: height * 0.30,
                     ),
                     const Gap(10),
                     Text(
                       isArabic
                           ? "لا يوجد بث مباشر حالياً"
-                          : "No one is live right now",
+                          : "You havn't follow any one",
                       style: TextStyle(color: Colors.grey[600], fontSize: 18),
                     ),
                     Text(isArabic ? "ابدأ بثك الخاص" : "Start your own stream"),

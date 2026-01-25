@@ -141,7 +141,7 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
 
   final streamcontroll = Get.find<WatchStreamControllers>();
 
-  //now get comment
+  //now get commentFollowingScreen
   var getComment = FirebaseFirestore.instance.collection("LiveStream");
   late Stream<QuerySnapshot> _commentStream;
   @override
