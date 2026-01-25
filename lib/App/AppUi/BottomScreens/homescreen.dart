@@ -242,7 +242,7 @@ class Homescreen extends StatelessWidget {
                 } else if (controller.selectedIndex.value == 1) {
                   return ExplorerScreen();
                 } else {
-                  return NewUsersScreen();
+                  return NewUsersScreen(searchText: controller.searchText);
                 }
               }),
             ),

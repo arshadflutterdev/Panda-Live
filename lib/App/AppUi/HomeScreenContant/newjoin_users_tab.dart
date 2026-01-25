@@ -7,7 +7,8 @@ import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 
 class NewUsersScreen extends StatefulWidget {
-  const NewUsersScreen({super.key});
+  RxString searchText;
+  NewUsersScreen({super.key, required this.searchText});
 
   @override
   State<NewUsersScreen> createState() => _NewUsersScreenState();
