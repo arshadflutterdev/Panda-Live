@@ -31,6 +31,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
     super.initState();
     currentUserId = FirebaseAuth.instance.currentUser?.uid;
     stableThreshold = DateTime.now().subtract(const Duration(minutes: 1));
+    loadfollowusers();
   }
 
   Future<void> loadfollowusers() async {
@@ -42,6 +43,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
         .get();
     setState(() {
       followingIdsList = followingsnapshot.docs.map((doc) => doc.id).toList();
+      isloadingFollowing = false;
     });
   }
 
@@ -56,228 +58,174 @@ class _FollowingScreenState extends State<FollowingScreen> {
     final height = AppHeightwidth.screenHeight(context);
     final localization = AppLocalizations.of(context)!;
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Colors.transparent,
-        onPressed: () {
-          Get.defaultDialog(
-            backgroundColor: Colors.white,
-            title: isArabic
-                ? "هل أنت مستعد للبث المباشر؟"
-                : "Ready to Go Live?",
-            titleStyle: isArabic
-                ? AppStyle.arabictext.copyWith(fontSize: 22)
-                : TextStyle(),
-            content: Text(
-              isArabic
-                  ? "أضواء، كاميرا... ستبدأ البث المباشر!"
-                  : "Lights, Camera… You’re Going Live!",
-              textAlign: TextAlign.center, // ← ye add karo
-              style: isArabic
-                  ? AppStyle.arabictext.copyWith(fontSize: 22)
-                  : AppStyle.btext,
-            ),
-
-            cancel: TextButton(
-              onPressed: () {
-                Get.back();
-              },
-              child: Text(
-                localization.bcancel,
-                style: isArabic ? AppStyle.arabictext : TextStyle(),
-              ),
-            ),
-            confirm: TextButton(
-              onPressed: () async {
-                final User? currentUser = FirebaseAuth.instance.currentUser;
-                if (currentUser != null) {
-                  Get.back();
-                  await FirebaseFirestore.instance
-                      .collection("LiveStream")
-                      .doc(currentUser.uid)
-                      .set({
-                        "hostname": currentUser.displayName ?? 'Guest',
-                        "uid": currentUser.uid,
-                        "channelId": "testingChannel",
-                        "image": currentUser.photoURL ?? "",
-                        "views": 0,
-                        "startedAt": FieldValue.serverTimestamp(),
-                        "lastHeartbeat": FieldValue.serverTimestamp(),
-                      });
-
-                  Get.toNamed(
-                    AppRoutes.golive,
-                    arguments: {
-                      "channelId": "testingChannel",
-                      "hostname": currentUser.displayName ?? "no name",
-                      "hostphoto": currentUser.photoURL ?? "",
-                    },
-                  );
-                }
-              },
-
-              child: Text(
-                isArabic ? "يتأكد" : "Confirm",
-                style: isArabic ? AppStyle.arabictext : TextStyle(),
-              ),
-            ),
-          );
-        },
-        child: Image(image: AssetImage(AppImages.golive), color: Colors.white),
-      ),
       backgroundColor: Colors.white,
 
-      body: StreamBuilder<QuerySnapshot>(
-        stream: liveStream
-            .where("uid", isNotEqualTo: currentUserId)
-            .where("lastHeartbeat", isGreaterThan: stableThreshold)
-            .where("totalFollowing", isEqualTo: currentUserId)
-            .snapshots(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(
-              child: CircularProgressIndicator(color: Colors.green),
-            );
-          } else if (snapshot.hasError) {
-            return Text("Error in data");
-          } else if (!snapshot.hasData) {
-            return Text("There is no data");
-          } else {
-            final docs = snapshot.data?.docs ?? [];
-            print("here is docs list ${docs.length}");
-            if (docs.isEmpty) {
-              return Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image(
-                      image: AssetImage(AppImages.notfollow),
-                      height: height * 0.30,
-                    ),
-                    const Gap(10),
-                    Text(
-                      isArabic
-                          ? "لا يوجد بث مباشر حالياً"
-                          : "You havn't follow any one",
-                      style: TextStyle(color: Colors.grey[600], fontSize: 18),
-                    ),
-                    Text(isArabic ? "ابدأ بثك الخاص" : "Let's follow"),
-                  ],
-                ),
-              );
-            }
-
-            return GridView.builder(
-              itemCount: docs.length,
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisSpacing: 4,
-                mainAxisSpacing: 4,
-                crossAxisCount: 2,
-                childAspectRatio: 0.99,
-              ),
-              itemBuilder: (context, index) {
-                final data = docs[index].data() as Map<String, dynamic>;
-                return GestureDetector(
-                  onTap: () {
-                    if (data["agoraUid"] == null) {
-                      Get.snackbar(
-                        "Wait",
-                        "Host is still connecting...",
-                        backgroundColor: Colors.black87,
-                        colorText: Colors.white,
-                        snackPosition: SnackPosition.BOTTOM,
-                      );
-                      return;
-                    }
-                    Get.toNamed(
-                      AppRoutes.watchstream,
-                      arguments: {
-                        "uid": data["uid"],
-                        "channelId": data["channelId"],
-                        "hostname": data["hostname"],
-                        "hostphoto": data["image"],
-                        "agoraUid":
-                            data["agoraUid"], // This is the ID we saved in GoLiveScreen
-                      },
-                    );
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(12),
-                      color: Colors.white,
-                      image: DecorationImage(
-                        fit: BoxFit.cover,
-                        image: data["image"] != null
-                            ? NetworkImage(data["image"])
-                            : AssetImage(AppImages.bgimage) as ImageProvider,
-                      ),
-                    ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: DecoratedBox(
-                            decoration: BoxDecoration(
-                              color: AppColours.greycolour,
-                              borderRadius: BorderRadius.circular(3),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(2.0),
-                              child: Text(isArabic ? "عش الآن" : "Live now"),
+      body: isloadingFollowing
+          ? Center(child: CircularProgressIndicator())
+          : followingIdsList.isEmpty
+          ? Center(child: Text("there no streamer"))
+          : StreamBuilder<QuerySnapshot>(
+              stream: liveStream
+                  .where("uid", whereIn: followingIdsList)
+                  .where("lastHeartbeat", isGreaterThan: stableThreshold)
+                  .snapshots(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(
+                    child: CircularProgressIndicator(color: Colors.green),
+                  );
+                } else if (snapshot.hasError) {
+                  return Text("Error in data");
+                } else if (!snapshot.hasData) {
+                  return Text("There is no data");
+                } else {
+                  final docs = snapshot.data?.docs ?? [];
+                  print("here is docs list ${docs.length}");
+                  if (docs.isEmpty) {
+                    return Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Image(
+                            image: AssetImage(AppImages.notfollow),
+                            height: height * 0.30,
+                          ),
+                          const Gap(10),
+                          Text(
+                            isArabic
+                                ? "لا يوجد بث مباشر حالياً"
+                                : "You havn't follow any one",
+                            style: TextStyle(
+                              color: Colors.grey[600],
+                              fontSize: 18,
                             ),
                           ),
-                        ),
-                        Spacer(),
-                        Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  maxLines: 2,
+                          Text(isArabic ? "ابدأ بثك الخاص" : "Let's follow"),
+                        ],
+                      ),
+                    );
+                  }
 
-                                  data["hostname"] ?? "Guest",
-                                  style: isArabic
-                                      ? AppStyle.arabictext.copyWith(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w600,
-                                          color: Colors.white,
-                                        )
-                                      : TextStyle(
-                                          overflow: TextOverflow.ellipsis,
-                                          fontSize: 18,
-                                          color: Colors.white,
-                                        ),
+                  return GridView.builder(
+                    itemCount: docs.length,
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisSpacing: 4,
+                      mainAxisSpacing: 4,
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.99,
+                    ),
+                    itemBuilder: (context, index) {
+                      final data = docs[index].data() as Map<String, dynamic>;
+                      return GestureDetector(
+                        onTap: () {
+                          if (data["agoraUid"] == null) {
+                            Get.snackbar(
+                              "Wait",
+                              "Host is still connecting...",
+                              backgroundColor: Colors.black87,
+                              colorText: Colors.white,
+                              snackPosition: SnackPosition.BOTTOM,
+                            );
+                            return;
+                          }
+                          Get.toNamed(
+                            AppRoutes.watchstream,
+                            arguments: {
+                              "uid": data["uid"],
+                              "channelId": data["channelId"],
+                              "hostname": data["hostname"],
+                              "hostphoto": data["image"],
+                              "agoraUid":
+                                  data["agoraUid"], // This is the ID we saved in GoLiveScreen
+                            },
+                          );
+                        },
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(12),
+                            color: Colors.white,
+                            image: DecorationImage(
+                              fit: BoxFit.cover,
+                              image: data["image"] != null
+                                  ? NetworkImage(data["image"])
+                                  : AssetImage(AppImages.bgimage)
+                                        as ImageProvider,
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    color: AppColours.greycolour,
+                                    borderRadius: BorderRadius.circular(3),
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Text(
+                                      isArabic ? "عش الآن" : "Live now",
+                                    ),
+                                  ),
                                 ),
                               ),
-
-                              Gap(5),
-
                               Spacer(),
-                              Icon(Icons.remove_red_eye, color: Colors.white),
-                              Gap(3),
-                              Text(
-                                (data["views"] ?? 0).toString(),
-                                overflow: TextOverflow.ellipsis,
-                                style: TextStyle(
-                                  fontSize: 16,
-                                  color: Colors.white,
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: 8,
+                                ),
+                                child: Row(
+                                  children: [
+                                    Expanded(
+                                      child: Text(
+                                        maxLines: 2,
+
+                                        data["hostname"] ?? "Guest",
+                                        style: isArabic
+                                            ? AppStyle.arabictext.copyWith(
+                                                fontSize: 18,
+                                                fontWeight: FontWeight.w600,
+                                                color: Colors.white,
+                                              )
+                                            : TextStyle(
+                                                overflow: TextOverflow.ellipsis,
+                                                fontSize: 18,
+                                                color: Colors.white,
+                                              ),
+                                      ),
+                                    ),
+
+                                    Gap(5),
+
+                                    Spacer(),
+                                    Icon(
+                                      Icons.remove_red_eye,
+                                      color: Colors.white,
+                                    ),
+                                    Gap(3),
+                                    Text(
+                                      (data["views"] ?? 0).toString(),
+                                      overflow: TextOverflow.ellipsis,
+                                      style: TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                );
+                      );
+                    },
+                  );
+                }
               },
-            );
-          }
-        },
-      ),
+            ),
     );
   }
 }
