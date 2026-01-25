@@ -32,10 +32,10 @@ class _GoliveScreenState extends State<GoliveScreen>
           FirebaseFirestore.instance
               .collection("LiveStream")
               .doc(FirebaseAuth.instance.currentUser!.uid)
-              .update({
+              .set({
                 "lastHeartbeat":
                     FieldValue.serverTimestamp(), // This is the heartbeat
-              });
+              }, SetOptions(merge: true));
         } catch (e) {
           debugPrint("Heartbeat failed: $e");
         }
@@ -271,28 +271,53 @@ class _GoliveScreenState extends State<GoliveScreen>
   Future<void> _shutdownHost() async {
     if (isShutdown) return;
     isShutdown = true;
-    if (liveTimer?.isActive ?? false) {
-      liveTimer?.cancel();
-      heartbeatTimer?.cancel();
 
-      _backgroundExitTimer?.cancel();
-      try {
-        await Future.wait([
-          _engine.leaveChannel(),
-          _engine.release(),
-          removeLivestatus(),
-        ]).timeout(const Duration(seconds: 3));
-      } catch (e) {
-        debugPrint("Error during shutdown: $e");
-      } finally {
-        // 3. Force navigation even if network calls failed
-        if (Get.currentRoute == AppRoutes.golive) {
-          Get.back();
-        }
-      }
+    // Stop all timers regardless of whether they are active or not
+    liveTimer?.cancel();
+    heartbeatTimer?.cancel();
+    _backgroundExitTimer?.cancel();
+
+    try {
+      // Run these even if the timer wasn't active
+      await _engine.leaveChannel();
+      await _engine.release();
+      await removeLivestatus();
+      debugPrint("Cleanup complete");
+    } catch (e) {
+      debugPrint("Error during shutdown: $e");
     }
-    // Delete Firestore doc
+
+    // Ensure we go back to the previous screen
+    if (Get.currentRoute == AppRoutes.golive) {
+      Get.back();
+    }
   }
+  // Future<void> _shutdownHost() async {
+  //   if (isShutdown) return;
+  //   isShutdown = true;
+  //   if (liveTimer?.isActive ?? false) {
+  //     liveTimer?.cancel();
+  //     heartbeatTimer?.cancel();
+
+  //     _backgroundExitTimer?.cancel();
+  //     try {
+  //       await Future.wait([
+  //         _engine.leaveChannel(),
+  //         _engine.release(),
+  //         removeLivestatus(),
+  //       ]).timeout(const Duration(seconds: 3));
+  //     } catch (e) {
+  //       debugPrint("Error during shutdown: $e");
+  //     } finally {
+  //       // 3. Force navigation even if network calls failed
+  //       if (Get.currentRoute == AppRoutes.golive) {
+  //         Get.back();
+  //       }
+  //     }
+
+  //   }
+  //   // Delete Firestore doc
+  // }
 
   Future<void> removeLivestatus() async {
     final user = FirebaseAuth.instance.currentUser;
@@ -436,8 +461,9 @@ class _GoliveScreenState extends State<GoliveScreen>
                               ),
                               confirm: TextButton(
                                 onPressed: () async {
-                                  await _shutdownHost();
                                   Get.back();
+                                  await _shutdownHost();
+
                                   print("Stream shutdown successfully");
                                   // --- Optional: Add code here to notify viewers if using backend ---
                                 },
