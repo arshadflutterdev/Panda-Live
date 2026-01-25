@@ -292,32 +292,6 @@ class _GoliveScreenState extends State<GoliveScreen>
       Get.back();
     }
   }
-  // Future<void> _shutdownHost() async {
-  //   if (isShutdown) return;
-  //   isShutdown = true;
-  //   if (liveTimer?.isActive ?? false) {
-  //     liveTimer?.cancel();
-  //     heartbeatTimer?.cancel();
-
-  //     _backgroundExitTimer?.cancel();
-  //     try {
-  //       await Future.wait([
-  //         _engine.leaveChannel(),
-  //         _engine.release(),
-  //         removeLivestatus(),
-  //       ]).timeout(const Duration(seconds: 3));
-  //     } catch (e) {
-  //       debugPrint("Error during shutdown: $e");
-  //     } finally {
-  //       // 3. Force navigation even if network calls failed
-  //       if (Get.currentRoute == AppRoutes.golive) {
-  //         Get.back();
-  //       }
-  //     }
-
-  //   }
-  //   // Delete Firestore doc
-  // }
 
   Future<void> removeLivestatus() async {
     final user = FirebaseAuth.instance.currentUser;
