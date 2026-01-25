@@ -56,7 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   RxInt currentbgindex = 0.obs;
   String username = "";
   String userimage = "";
-
+  late Stream<QuerySnapshot> _commentStream;
   void initState() {
     super.initState();
     bgstream = Stream.periodic(Duration(seconds: 4)).listen((_) {
@@ -91,6 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     }
   }
 
+  @override
   @override
   Widget build(BuildContext context) {
     bool isArabic = Get.locale?.languageCode == "ar";
