@@ -6,6 +6,7 @@ import 'package:pandlive/App/AppUi/HomeScreenContant/following_tab_screen.dart';
 import 'package:pandlive/App/AppUi/HomeScreenContant/newjoin_users_tab.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
+import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 import 'package:pandlive/l10n/app_localizations.dart';
@@ -29,6 +30,7 @@ class Homescreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final localization = AppLocalizations.of(context)!;
     bool isArabic = Get.locale?.languageCode == "ar";
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea(
