@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/AppUi/HomeScreenContant/explorer_tab.dart';
 import 'package:pandlive/App/AppUi/HomeScreenContant/following_tab_screen.dart';
@@ -41,7 +42,7 @@ class Homescreen extends StatelessWidget {
                   Expanded(
                     child: Obx(
                       () => Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
                           GestureDetector(
                             onTap: () => controller.changeTab(0),
@@ -76,6 +77,7 @@ class Homescreen extends StatelessWidget {
                                     ),
                             ),
                           ),
+                          Gap(20),
                           GestureDetector(
                             onTap: () => controller.changeTab(1),
                             child: Text(
@@ -109,39 +111,40 @@ class Homescreen extends StatelessWidget {
                                     ),
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () => controller.changeTab(2),
-                            child: Text(
-                              isArabic ? localization.bnew : "New",
-                              style: isArabic
-                                  ? AppStyle.arabictext.copyWith(
-                                      fontSize:
-                                          controller.selectedIndex.value == 2
-                                          ? 24
-                                          : 20,
-                                      fontWeight:
-                                          controller.selectedIndex.value == 2
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                      color: controller.selectedIndex.value == 2
-                                          ? Colors.black
-                                          : Colors.grey,
-                                    )
-                                  : TextStyle(
-                                      fontSize:
-                                          controller.selectedIndex.value == 2
-                                          ? 20
-                                          : 18,
-                                      fontWeight:
-                                          controller.selectedIndex.value == 2
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                      color: controller.selectedIndex.value == 2
-                                          ? Colors.black
-                                          : Colors.grey,
-                                    ),
-                            ),
-                          ),
+
+                          // GestureDetector(
+                          //   onTap: () => controller.changeTab(2),
+                          //   child: Text(
+                          //     isArabic ? localization.bnew : "New",
+                          //     style: isArabic
+                          //         ? AppStyle.arabictext.copyWith(
+                          //             fontSize:
+                          //                 controller.selectedIndex.value == 2
+                          //                 ? 24
+                          //                 : 20,
+                          //             fontWeight:
+                          //                 controller.selectedIndex.value == 2
+                          //                 ? FontWeight.bold
+                          //                 : FontWeight.normal,
+                          //             color: controller.selectedIndex.value == 2
+                          //                 ? Colors.black
+                          //                 : Colors.grey,
+                          //           )
+                          //         : TextStyle(
+                          //             fontSize:
+                          //                 controller.selectedIndex.value == 2
+                          //                 ? 20
+                          //                 : 18,
+                          //             fontWeight:
+                          //                 controller.selectedIndex.value == 2
+                          //                 ? FontWeight.bold
+                          //                 : FontWeight.normal,
+                          //             color: controller.selectedIndex.value == 2
+                          //                 ? Colors.black
+                          //                 : Colors.grey,
+                          //           ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
