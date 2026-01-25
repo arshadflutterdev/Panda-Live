@@ -355,7 +355,7 @@ class _GoliveScreenState extends State<GoliveScreen>
                         }),
                   //here I will handle the design
                   Positioned(
-                    bottom: height * 0.030,
+                    bottom: height * 0.050,
                     left: 5,
                     right: 5,
 
