@@ -94,14 +94,23 @@ class _FollowingScreenState extends State<FollowingScreen> {
                           const Gap(10),
                           Text(
                             isArabic
-                                ? "لا يوجد بث مباشر حالياً"
-                                : "You havn't follow any one",
+                                ? "لا يوجد بث مباشر من المتابعين حالياً"
+                                : "No live streams from people you follow",
                             style: TextStyle(
                               color: Colors.grey[600],
-                              fontSize: 18,
+                              fontSize: 16,
                             ),
                           ),
-                          Text(isArabic ? "ابدأ بثك الخاص" : "Let's follow"),
+                          const SizedBox(height: 6),
+                          Text(
+                            isArabic
+                                ? "ابدأ بمتابعة منشئي المحتوى لمشاهدة البث المباشر"
+                                : "Follow creators to see their live streams",
+                            style: TextStyle(
+                              color: Colors.grey[500],
+                              fontSize: 12,
+                            ),
+                          ),
                         ],
                       ),
                     );
