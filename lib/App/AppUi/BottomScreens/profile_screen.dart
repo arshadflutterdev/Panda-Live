@@ -54,11 +54,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     AppImages.infoar,
   ];
   RxInt currentbgindex = 0.obs;
-  String username = "";
-  String userimage = "";
-  int followingCount = 0;
-  int FollowersCount = 0;
-  int frientsCount = 0;
+  RxString username = "".obs;
+  RxString userimage = "".obs;
+  RxInt followingCount = 0.obs;
+  RxInt FollowersCount = 0.obs;
+  RxInt frientsCount = 0.obs;
   late Stream<QuerySnapshot> _commentStream;
   void initState() {
     super.initState();
@@ -93,30 +93,28 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .collection("Followers")
         .get();
     if (snapshot.exists && snapshot.data() != null) {
-      setState(() {
-        username = snapshot.data()?["name"] ?? "no name";
-        print("user name $username");
-        String uid = snapshot.data()?["userId"] ?? "no id";
-        print("user Id $uid");
-        userimage = snapshot.data()?["userimage"] ?? "no image";
-        print("user image $userimage");
-        followingCount = followingSnapshot.docs.length;
-        print("here is following list=$followingCount");
-        FollowersCount = FollowerSnapshot.docs.length;
-        print("here is followers list count $FollowersCount");
+      username.value = snapshot.data()?["name"] ?? "no name";
+      print("user name $username");
+      String uid = snapshot.data()?["userId"] ?? "no id";
+      print("user Id $uid");
+      userimage.value = snapshot.data()?["userimage"] ?? "no image";
+      print("user image $userimage");
+      followingCount.value = followingSnapshot.docs.length;
+      print("here is following list=$followingCount");
+      FollowersCount.value = FollowerSnapshot.docs.length;
+      print("here is followers list count $FollowersCount");
 
-        //below related frients
-        Set<String> followingIds = followingSnapshot.docs
-            .map((doc) => doc.id)
-            .toSet();
-        Set<String> followersId = FollowerSnapshot.docs
-            .map((doc) => doc.id)
-            .toSet();
-        frientsCount = followingIds.intersection(followersId).length;
-        print("Friends $frientsCount");
-        followingCount = followersId.length;
-        FollowersCount = followingIds.length;
-      });
+      //below related frients
+      Set<String> followingIds = followingSnapshot.docs
+          .map((doc) => doc.id)
+          .toSet();
+      Set<String> followersId = FollowerSnapshot.docs
+          .map((doc) => doc.id)
+          .toSet();
+      frientsCount.value = followingIds.intersection(followersId).length;
+      print("Friends $frientsCount");
+      followingCount.value = followersId.length;
+      FollowersCount.value = followingIds.length;
     }
   }
 
@@ -131,6 +129,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         backgroundColor: Colors.white,
         title: Text(
           isArabic ? "أنا" : "Me",
@@ -152,160 +151,168 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: Column(
         children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-            child: Row(
-              children: [
-                CircleAvatar(
-                  radius: 30,
-                  backgroundColor: Colors.black38,
-                  backgroundImage:
-                      userimage.isNotEmpty && userimage.startsWith("http")
-                      ? NetworkImage(userimage)
-                      : AssetImage(AppImages.girl) as ImageProvider,
-                ),
-                // Gap(10),
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    // mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        username,
-                        style: isArabic
-                            ? AppStyle.arabictext.copyWith(
-                                fontSize: 22,
-                                height: 0.50,
-                                fontWeight: FontWeight.bold,
-                              )
-                            : AppStyle.logo.copyWith(
-                                fontSize: 20,
-                                height: 0.50,
-                              ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 10),
-                        child: Directionality(
-                          textDirection: TextDirection.ltr,
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              DecoratedBox(
-                                decoration: BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: Colors.black38,
+          Obx(
+            () => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+              child: Row(
+                children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundColor: Colors.black38,
+                    backgroundImage:
+                        userimage.isNotEmpty && userimage.startsWith("http")
+                        ? NetworkImage(userimage.value)
+                        : AssetImage(AppImages.girl) as ImageProvider,
+                  ),
+                  // Gap(10),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      // mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          username.value,
+                          style: isArabic
+                              ? AppStyle.arabictext.copyWith(
+                                  fontSize: 22,
+                                  height: 0.50,
+                                  fontWeight: FontWeight.bold,
+                                )
+                              : AppStyle.logo.copyWith(
+                                  fontSize: 20,
+                                  height: 0.50,
                                 ),
-                                child: Padding(
-                                  padding: const EdgeInsets.all(2.0),
-                                  child: Text(
-                                    "ID",
-                                    style: TextStyle(
-                                      fontSize: 14,
-                                      color: Colors.white,
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 10),
+                          child: Directionality(
+                            textDirection: TextDirection.ltr,
+                            child: Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                DecoratedBox(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.black38,
+                                  ),
+                                  child: Padding(
+                                    padding: const EdgeInsets.all(2.0),
+                                    child: Text(
+                                      "ID",
+                                      style: TextStyle(
+                                        fontSize: 14,
+                                        color: Colors.white,
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Gap(4),
-                              Text(
-                                "78491356",
-                                style: TextStyle(
-                                  fontSize: 14,
-                                  color: Colors.black,
+                                Gap(4),
+                                Text(
+                                  "78491356",
+                                  style: TextStyle(
+                                    fontSize: 14,
+                                    color: Colors.black,
+                                  ),
                                 ),
-                              ),
-                              IconButton(
-                                padding: EdgeInsets.zero,
-                                onPressed: () {},
-                                icon: Icon(Icons.copy, size: 17),
-                              ),
-                            ],
+                                IconButton(
+                                  padding: EdgeInsets.zero,
+                                  onPressed: () {},
+                                  icon: Icon(Icons.copy, size: 17),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
+                  Spacer(),
+                  IconButton(
+                    onPressed: () {},
+                    icon: Icon(
+                      Icons.arrow_forward_ios_rounded,
+                      color: Colors.black54,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Gap(height * 0.030),
+          Obx(
+            () => Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      frientsCount.toString(),
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      localization.friends,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(
+                              fontSize: 18,
+                              color: Colors.black54,
+                            )
+                          : TextStyle(fontSize: 16, color: Colors.black54),
+                    ),
+                  ],
                 ),
-                Spacer(),
-                IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.arrow_forward_ios_rounded,
-                    color: Colors.black54,
-                  ),
+                Column(
+                  children: [
+                    Text(
+                      followingCount.toString(),
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      localization.following,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(
+                              fontSize: 18,
+                              color: Colors.black54,
+                            )
+                          : TextStyle(fontSize: 16, color: Colors.black54),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text(
+                      FollowersCount.toString(),
+                      style: TextStyle(fontSize: 20),
+                    ),
+                    Text(
+                      localization.followers,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(
+                              fontSize: 18,
+                              color: Colors.black54,
+                            )
+                          : TextStyle(fontSize: 16, color: Colors.black54),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    Text("0", style: TextStyle(fontSize: 20)),
+                    Text(
+                      localization.visitors,
+                      style: isArabic
+                          ? AppStyle.arabictext.copyWith(
+                              fontSize: 18,
+                              color: Colors.black54,
+                            )
+                          : TextStyle(fontSize: 16, color: Colors.black54),
+                    ),
+                  ],
                 ),
               ],
             ),
           ),
-          Gap(height * 0.030),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Column(
-                children: [
-                  Text(frientsCount.toString(), style: TextStyle(fontSize: 20)),
-                  Text(
-                    localization.friends,
-                    style: isArabic
-                        ? AppStyle.arabictext.copyWith(
-                            fontSize: 18,
-                            color: Colors.black54,
-                          )
-                        : TextStyle(fontSize: 16, color: Colors.black54),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Text(
-                    followingCount.toString(),
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text(
-                    localization.following,
-                    style: isArabic
-                        ? AppStyle.arabictext.copyWith(
-                            fontSize: 18,
-                            color: Colors.black54,
-                          )
-                        : TextStyle(fontSize: 16, color: Colors.black54),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Text(
-                    FollowersCount.toString(),
-                    style: TextStyle(fontSize: 20),
-                  ),
-                  Text(
-                    localization.followers,
-                    style: isArabic
-                        ? AppStyle.arabictext.copyWith(
-                            fontSize: 18,
-                            color: Colors.black54,
-                          )
-                        : TextStyle(fontSize: 16, color: Colors.black54),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  Text("0", style: TextStyle(fontSize: 20)),
-                  Text(
-                    localization.visitors,
-                    style: isArabic
-                        ? AppStyle.arabictext.copyWith(
-                            fontSize: 18,
-                            color: Colors.black54,
-                          )
-                        : TextStyle(fontSize: 16, color: Colors.black54),
-                  ),
-                ],
-              ),
-            ],
-          ),
+
           Gap(height * 0.030),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
