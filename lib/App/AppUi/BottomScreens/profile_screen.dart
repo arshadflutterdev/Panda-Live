@@ -83,16 +83,18 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .collection("userProfile")
         .doc(uid)
         .get();
-    final followingSnapshot = await FirebaseFirestore.instance
-        .collection("userProfile")
-        .doc(uid)
-        .collection("Following")
-        .get();
-    final FollowerSnapshot = await FirebaseFirestore.instance
-        .collection("userProfile")
-        .doc(uid)
-        .collection("Followers")
-        .get();
+    followingCount = snapshot.data()?["followingCount"] ?? 0;
+    followersCount = snapshot.data()?["followersCount"] ?? 0;
+    // final followingSnapshot = await FirebaseFirestore.instance
+    //     .collection("userProfile")
+    //     .doc(uid)
+    //     .collection("Following")
+    //     .get();
+    // final FollowerSnapshot = await FirebaseFirestore.instance
+    //     .collection("userProfile")
+    //     .doc(uid)
+    //     .collection("Followers")
+    //     .get();
     if (snapshot.exists && snapshot.data() != null) {
       setState(() {
         username = snapshot.data()?["name"] ?? "no name";
@@ -101,21 +103,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         print("user Id $uid");
         userimage = snapshot.data()?["userimage"] ?? "no image";
         print("user image $userimage");
-        followingCount = followingSnapshot.docs.length;
-        print("here is following list=$followingCount");
-        followersCount = FollowerSnapshot.docs.length;
+        // followingCount = followingSnapshot.docs.length;
+        // print("here is following list=$followingCount");
+        // followersCount = FollowerSnapshot.docs.length;
         print("here is followers list count $followersCount");
 
         //below related frients
-        Set<String> followingIds = followingSnapshot.docs
-            .map((doc) => doc.id)
-            .toSet();
-        Set<String> followersId = FollowerSnapshot.docs
-            .map((doc) => doc.id)
-            .toSet();
-        friendsCount = followingIds.intersection(followersId).length;
-        followingCount = followersId.length;
-        followersCount = followingIds.length;
+        // Set<String> followingIds = followingSnapshot.docs
+        //     .map((doc) => doc.id)
+        //     .toSet();
+        // Set<String> followersId = FollowerSnapshot.docs
+        //     .map((doc) => doc.id)
+        //     .toSet();
+        // friendsCount = followingIds.intersection(followersId).length;
+
         this.friendsCount = friendsCount;
       });
     }
