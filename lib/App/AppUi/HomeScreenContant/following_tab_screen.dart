@@ -147,7 +147,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
                           : "You havn't follow any one",
                       style: TextStyle(color: Colors.grey[600], fontSize: 18),
                     ),
-                    Text(isArabic ? "ابدأ بثك الخاص" : "Start your own stream"),
+                    Text(isArabic ? "ابدأ بثك الخاص" : "Let's follow"),
                   ],
                 ),
               );
