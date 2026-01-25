@@ -438,6 +438,7 @@ class _GoliveScreenState extends State<GoliveScreen>
                                 onPressed: () async {
                                   await _shutdownHost();
                                   Get.back();
+                                  print("Stream shutdown successfully");
                                   // --- Optional: Add code here to notify viewers if using backend ---
                                 },
                                 child: Text(
