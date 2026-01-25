@@ -23,12 +23,26 @@ class _FollowingScreenState extends State<FollowingScreen> {
   final liveStream = FirebaseFirestore.instance.collection("LiveStream");
   late DateTime stableThreshold;
   String? currentUserId;
+  List<String> followingIdsList = [];
+  bool isloadingFollowing = true;
 
   @override
   void initState() {
     super.initState();
     currentUserId = FirebaseAuth.instance.currentUser?.uid;
     stableThreshold = DateTime.now().subtract(const Duration(minutes: 1));
+  }
+
+  Future<void> loadfollowusers() async {
+    if (currentUserId == null) return;
+    var followingsnapshot = await FirebaseFirestore.instance
+        .collection("userProfile")
+        .doc(currentUserId)
+        .collection("Following")
+        .get();
+    setState(() {
+      followingIdsList = followingsnapshot.docs.map((doc) => doc.id).toList();
+    });
   }
 
   @override
@@ -116,7 +130,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
         stream: liveStream
             .where("uid", isNotEqualTo: currentUserId)
             .where("lastHeartbeat", isGreaterThan: stableThreshold)
-            .where("totalFollowing")
+            .where("totalFollowing", isEqualTo: currentUserId)
             .snapshots(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
