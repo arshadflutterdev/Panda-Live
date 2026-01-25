@@ -57,8 +57,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String username = "";
   String userimage = "";
   int followingCount = 0;
-  int followersCount = 0;
-  int friendsCount = 0;
+  int FollowersCount = 0;
+  int frientsCount = 0;
   late Stream<QuerySnapshot> _commentStream;
   void initState() {
     super.initState();
@@ -78,23 +78,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> getUserDetails() async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
-
     final snapshot = await FirebaseFirestore.instance
         .collection("userProfile")
         .doc(uid)
         .get();
-    followingCount = snapshot.data()?["followingCount"] ?? 0;
-    followersCount = snapshot.data()?["followersCount"] ?? 0;
-    // final followingSnapshot = await FirebaseFirestore.instance
-    //     .collection("userProfile")
-    //     .doc(uid)
-    //     .collection("Following")
-    //     .get();
-    // final FollowerSnapshot = await FirebaseFirestore.instance
-    //     .collection("userProfile")
-    //     .doc(uid)
-    //     .collection("Followers")
-    //     .get();
+    final followingSnapshot = await FirebaseFirestore.instance
+        .collection("userProfile")
+        .doc(uid)
+        .collection("Following")
+        .get();
+    final FollowerSnapshot = await FirebaseFirestore.instance
+        .collection("userProfile")
+        .doc(uid)
+        .collection("Followers")
+        .get();
     if (snapshot.exists && snapshot.data() != null) {
       setState(() {
         username = snapshot.data()?["name"] ?? "no name";
@@ -103,21 +100,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
         print("user Id $uid");
         userimage = snapshot.data()?["userimage"] ?? "no image";
         print("user image $userimage");
-        // followingCount = followingSnapshot.docs.length;
-        // print("here is following list=$followingCount");
-        // followersCount = FollowerSnapshot.docs.length;
-        print("here is followers list count $followersCount");
+        followingCount = followingSnapshot.docs.length;
+        print("here is following list=$followingCount");
+        FollowersCount = FollowerSnapshot.docs.length;
+        print("here is followers list count $FollowersCount");
 
         //below related frients
-        // Set<String> followingIds = followingSnapshot.docs
-        //     .map((doc) => doc.id)
-        //     .toSet();
-        // Set<String> followersId = FollowerSnapshot.docs
-        //     .map((doc) => doc.id)
-        //     .toSet();
-        // friendsCount = followingIds.intersection(followersId).length;
-
-        this.friendsCount = friendsCount;
+        Set<String> followingIds = followingSnapshot.docs
+            .map((doc) => doc.id)
+            .toSet();
+        Set<String> followersId = FollowerSnapshot.docs
+            .map((doc) => doc.id)
+            .toSet();
+        frientsCount = followingIds.intersection(followersId).length;
+        print("Friends $frientsCount");
+        followingCount = followersId.length;
+        FollowersCount = followingIds.length;
       });
     }
   }
@@ -246,7 +244,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               Column(
                 children: [
-                  Text(friendsCount.toString(), style: TextStyle(fontSize: 20)),
+                  Text(frientsCount.toString(), style: TextStyle(fontSize: 20)),
                   Text(
                     localization.friends,
                     style: isArabic
@@ -278,7 +276,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               Column(
                 children: [
                   Text(
-                    followersCount.toString(),
+                    FollowersCount.toString(),
                     style: TextStyle(fontSize: 20),
                   ),
                   Text(
