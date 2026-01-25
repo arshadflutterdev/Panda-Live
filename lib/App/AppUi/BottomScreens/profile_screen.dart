@@ -56,6 +56,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   RxInt currentbgindex = 0.obs;
   String username = "";
   String userimage = "";
+  int followingCount = 0;
+  int FollowersCount = 0;
   late Stream<QuerySnapshot> _commentStream;
   void initState() {
     super.initState();
@@ -79,6 +81,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .collection("userProfile")
         .doc(uid)
         .get();
+    final followingSnapshot = await FirebaseFirestore.instance
+        .collection("userProfile")
+        .doc(uid)
+        .collection("Following")
+        .get();
+    final FollowerSnapshot = await FirebaseFirestore.instance
+        .collection("userProfile")
+        .doc(uid)
+        .collection("Followers")
+        .get();
     if (snapshot.exists && snapshot.data() != null) {
       setState(() {
         username = snapshot.data()?["name"] ?? "no name";
@@ -87,6 +99,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         print("user Id $uid");
         userimage = snapshot.data()?["userimage"] ?? "no image";
         print("user image $userimage");
+        followingCount = followingSnapshot.docs.length;
+        print("here is following list=$followingCount");
       });
     }
   }
@@ -229,7 +243,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Column(
                 children: [
-                  Text("0", style: TextStyle(fontSize: 20)),
+                  Text(
+                    followingCount.toString(),
+                    style: TextStyle(fontSize: 20),
+                  ),
                   Text(
                     localization.following,
                     style: isArabic
