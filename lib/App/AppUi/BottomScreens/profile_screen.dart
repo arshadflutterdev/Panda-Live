@@ -57,7 +57,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   String username = "";
   String userimage = "";
   int followingCount = 0;
-  int FollowersCount = 0;
+  int followersCount = 0;
+  int friendsCount = 0;
   late Stream<QuerySnapshot> _commentStream;
   void initState() {
     super.initState();
@@ -77,6 +78,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<void> getUserDetails() async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
+
     final snapshot = await FirebaseFirestore.instance
         .collection("userProfile")
         .doc(uid)
@@ -101,8 +103,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
         print("user image $userimage");
         followingCount = followingSnapshot.docs.length;
         print("here is following list=$followingCount");
-        FollowersCount = FollowerSnapshot.docs.length;
-        print("here is followers list count $FollowersCount");
+        followersCount = FollowerSnapshot.docs.length;
+        print("here is followers list count $followersCount");
+
+        //below related frients
+        Set<String> followingIds = followingSnapshot.docs
+            .map((doc) => doc.id)
+            .toSet();
+        Set<String> followersId = FollowerSnapshot.docs
+            .map((doc) => doc.id)
+            .toSet();
+        friendsCount = followingIds.intersection(followersId).length;
+        followingCount = followersId.length;
+        followersCount = followingIds.length;
+        this.friendsCount = friendsCount;
       });
     }
   }
@@ -231,7 +245,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             children: [
               Column(
                 children: [
-                  Text("0", style: TextStyle(fontSize: 20)),
+                  Text(friendsCount.toString(), style: TextStyle(fontSize: 20)),
                   Text(
                     localization.friends,
                     style: isArabic
@@ -262,7 +276,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Column(
                 children: [
-                  Text("0", style: TextStyle(fontSize: 20)),
+                  Text(
+                    followersCount.toString(),
+                    style: TextStyle(fontSize: 20),
+                  ),
                   Text(
                     localization.followers,
                     style: isArabic
