@@ -1,4 +1,5 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
+import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:pandlive/App/AppUi/BottomNavBar/bottomnavbar.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/updates_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
@@ -97,6 +98,9 @@ class AppRoutes {
     GetPage(name: level, page: () => MyLevelScreen()),
     GetPage(name: followus, page: () => FollowUs()),
     GetPage(name: logout, page: () => LogoutScreen()),
-    GetPage(name: explore, page: () => ExplorerScreen()),
+    GetPage(
+      name: explore,
+      page: () => ExplorerScreen(searchText: "".obs),
+    ),
   ];
 }
