@@ -23,7 +23,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
   final liveStream = FirebaseFirestore.instance.collection("LiveStream");
   late DateTime stableThreshold;
   String? currentUserId;
-  List<String> followingIdsList = [];
+  RxList<String> followingIdsList = <String>[].obs;
   bool isloadingFollowing = true;
 
   @override
@@ -41,10 +41,11 @@ class _FollowingScreenState extends State<FollowingScreen> {
         .doc(currentUserId)
         .collection("Following")
         .get();
-    setState(() {
-      followingIdsList = followingsnapshot.docs.map((doc) => doc.id).toList();
-      isloadingFollowing = false;
-    });
+
+    followingIdsList.value = followingsnapshot.docs
+        .map((doc) => doc.id)
+        .toList();
+    isloadingFollowing = false;
   }
 
   @override
