@@ -12,7 +12,8 @@ import 'package:pandlive/Utils/Constant/app_style.dart';
 import 'package:pandlive/l10n/app_localizations.dart';
 
 class ExplorerScreen extends StatefulWidget {
-  const ExplorerScreen({super.key});
+  final RxString searchText;
+  const ExplorerScreen({super.key, required this.searchText});
 
   @override
   State<ExplorerScreen> createState() => _ExplorerScreenState();
@@ -39,6 +40,8 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
   Widget build(BuildContext context) {
     bool isArabic = Get.locale?.languageCode == "ar";
     final localization = AppLocalizations.of(context)!;
+    final query = widget.searchText.value.toLowerCase();
+
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.transparent,

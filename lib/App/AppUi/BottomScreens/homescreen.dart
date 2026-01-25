@@ -118,39 +118,39 @@ class Homescreen extends StatelessWidget {
                             ),
                           ),
 
-                          GestureDetector(
-                            onTap: () => controller.changeTab(2),
-                            child: Text(
-                              isArabic ? localization.bnew : "New",
-                              style: isArabic
-                                  ? AppStyle.arabictext.copyWith(
-                                      fontSize:
-                                          controller.selectedIndex.value == 2
-                                          ? 24
-                                          : 20,
-                                      fontWeight:
-                                          controller.selectedIndex.value == 2
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                      color: controller.selectedIndex.value == 2
-                                          ? Colors.black
-                                          : Colors.grey,
-                                    )
-                                  : TextStyle(
-                                      fontSize:
-                                          controller.selectedIndex.value == 2
-                                          ? 20
-                                          : 18,
-                                      fontWeight:
-                                          controller.selectedIndex.value == 2
-                                          ? FontWeight.bold
-                                          : FontWeight.normal,
-                                      color: controller.selectedIndex.value == 2
-                                          ? Colors.black
-                                          : Colors.grey,
-                                    ),
-                            ),
-                          ),
+                          // GestureDetector(
+                          //   onTap: () => controller.changeTab(2),
+                          //   child: Text(
+                          //     isArabic ? localization.bnew : "New",
+                          //     style: isArabic
+                          //         ? AppStyle.arabictext.copyWith(
+                          //             fontSize:
+                          //                 controller.selectedIndex.value == 2
+                          //                 ? 24
+                          //                 : 20,
+                          //             fontWeight:
+                          //                 controller.selectedIndex.value == 2
+                          //                 ? FontWeight.bold
+                          //                 : FontWeight.normal,
+                          //             color: controller.selectedIndex.value == 2
+                          //                 ? Colors.black
+                          //                 : Colors.grey,
+                          //           )
+                          //         : TextStyle(
+                          //             fontSize:
+                          //                 controller.selectedIndex.value == 2
+                          //                 ? 20
+                          //                 : 18,
+                          //             fontWeight:
+                          //                 controller.selectedIndex.value == 2
+                          //                 ? FontWeight.bold
+                          //                 : FontWeight.normal,
+                          //             color: controller.selectedIndex.value == 2
+                          //                 ? Colors.black
+                          //                 : Colors.grey,
+                          //           ),
+                          //   ),
+                          // ),
                         ],
                       ),
                     ),
@@ -240,9 +240,9 @@ class Homescreen extends StatelessWidget {
                 if (controller.selectedIndex.value == 0) {
                   return FollowingScreen();
                 } else if (controller.selectedIndex.value == 1) {
-                  return ExplorerScreen();
+                  return ExplorerScreen(searchText: controller.searchText);
                 } else {
-                  return NewUsersScreen(searchText: controller.searchText);
+                  return NewUsersScreen();
                 }
               }),
             ),
