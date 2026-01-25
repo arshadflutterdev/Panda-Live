@@ -40,7 +40,6 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
   Widget build(BuildContext context) {
     bool isArabic = Get.locale?.languageCode == "ar";
     final localization = AppLocalizations.of(context)!;
-    final query = widget.searchText.value.toLowerCase();
 
     return Scaffold(
       floatingActionButton: FloatingActionButton(
@@ -129,8 +128,17 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
             return Text("There is no data");
           } else {
             final docs = snapshot.data?.docs ?? [];
+            final query = widget.searchText.toLowerCase();
+            final filteredDocs = docs.where((doc) {
+              final data = doc.data() as Map<String, dynamic>;
+              final hostname = (data["hostname"] ?? "")
+                  .toString()
+                  .toLowerCase();
+              return hostname.contains(query);
+            }).toList();
+
             print("here is docs list ${docs.length}");
-            if (docs.isEmpty) {
+            if (filteredDocs.isEmpty) {
               return Center(
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -155,7 +163,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
             }
 
             return GridView.builder(
-              itemCount: docs.length,
+              itemCount: filteredDocs.length,
               gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisSpacing: 4,
                 mainAxisSpacing: 4,
