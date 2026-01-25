@@ -13,7 +13,8 @@ import 'package:pandlive/Utils/Constant/app_style.dart';
 import 'package:pandlive/l10n/app_localizations.dart';
 
 class FollowingScreen extends StatefulWidget {
-  const FollowingScreen({super.key});
+  final RxString searchText;
+  const FollowingScreen({super.key, required this.searchText});
 
   @override
   State<FollowingScreen> createState() => _FollowingScreenState();

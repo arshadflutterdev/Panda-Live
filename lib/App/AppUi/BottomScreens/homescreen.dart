@@ -238,7 +238,7 @@ class Homescreen extends StatelessWidget {
             Expanded(
               child: Obx(() {
                 if (controller.selectedIndex.value == 0) {
-                  return FollowingScreen();
+                  return FollowingScreen(searchText: controller.searchText);
                 } else if (controller.selectedIndex.value == 1) {
                   return ExplorerScreen(searchText: controller.searchText);
                 } else {
