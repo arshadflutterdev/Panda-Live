@@ -6,16 +6,20 @@ import 'package:pandlive/App/AppUi/HomeScreenContant/following_tab_screen.dart';
 import 'package:pandlive/App/AppUi/HomeScreenContant/newjoin_users_tab.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
-import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 import 'package:pandlive/l10n/app_localizations.dart';
 
 class HomeController extends GetxController {
   var selectedIndex = 1.obs;
+  var searchText = "".obs;
 
   void changeTab(int index) {
     selectedIndex.value = index;
+  }
+
+  void search(String value) {
+    searchText.value = value.toLowerCase();
   }
 }
 
@@ -114,39 +118,39 @@ class Homescreen extends StatelessWidget {
                             ),
                           ),
 
-                          // GestureDetector(
-                          //   onTap: () => controller.changeTab(2),
-                          //   child: Text(
-                          //     isArabic ? localization.bnew : "New",
-                          //     style: isArabic
-                          //         ? AppStyle.arabictext.copyWith(
-                          //             fontSize:
-                          //                 controller.selectedIndex.value == 2
-                          //                 ? 24
-                          //                 : 20,
-                          //             fontWeight:
-                          //                 controller.selectedIndex.value == 2
-                          //                 ? FontWeight.bold
-                          //                 : FontWeight.normal,
-                          //             color: controller.selectedIndex.value == 2
-                          //                 ? Colors.black
-                          //                 : Colors.grey,
-                          //           )
-                          //         : TextStyle(
-                          //             fontSize:
-                          //                 controller.selectedIndex.value == 2
-                          //                 ? 20
-                          //                 : 18,
-                          //             fontWeight:
-                          //                 controller.selectedIndex.value == 2
-                          //                 ? FontWeight.bold
-                          //                 : FontWeight.normal,
-                          //             color: controller.selectedIndex.value == 2
-                          //                 ? Colors.black
-                          //                 : Colors.grey,
-                          //           ),
-                          //   ),
-                          // ),
+                          GestureDetector(
+                            onTap: () => controller.changeTab(2),
+                            child: Text(
+                              isArabic ? localization.bnew : "New",
+                              style: isArabic
+                                  ? AppStyle.arabictext.copyWith(
+                                      fontSize:
+                                          controller.selectedIndex.value == 2
+                                          ? 24
+                                          : 20,
+                                      fontWeight:
+                                          controller.selectedIndex.value == 2
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: controller.selectedIndex.value == 2
+                                          ? Colors.black
+                                          : Colors.grey,
+                                    )
+                                  : TextStyle(
+                                      fontSize:
+                                          controller.selectedIndex.value == 2
+                                          ? 20
+                                          : 18,
+                                      fontWeight:
+                                          controller.selectedIndex.value == 2
+                                          ? FontWeight.bold
+                                          : FontWeight.normal,
+                                      color: controller.selectedIndex.value == 2
+                                          ? Colors.black
+                                          : Colors.grey,
+                                    ),
+                            ),
+                          ),
                         ],
                       ),
                     ),
@@ -166,6 +170,9 @@ class Homescreen extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                               ),
                         content: MyTextFormField(
+                          onChanged: (value) {
+                            controller.search(value);
+                          },
                           controller: searchController,
                           keyboard: TextInputType.text,
                           hintext: isArabic ? "ابحث هنا.." : "Search here..",
