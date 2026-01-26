@@ -62,6 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   RxInt followersCount = 0.obs;
   RxInt frientsCount = 0.obs;
   RxList<Map<String, dynamic>> followerList = RxList<Map<String, dynamic>>();
+  RxList<Map<String, dynamic>> followingList = RxList<Map<String, dynamic>>();
   @override
   void initState() {
     super.initState();
@@ -91,6 +92,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .doc(uid)
         .collection("Following")
         .get();
+    followingList.value = followingSnapshot.docs.map((doc) {
+      Map<String, dynamic> mydata = doc.data();
+      return {
+        "hostname": mydata["hostname"] ?? "unknown",
+        "hostimage": mydata["hostimage"] ?? "",
+      };
+    }).toList();
+
     final followerSnapshot = await FirebaseFirestore.instance
         .collection("userProfile")
         .doc(uid)
@@ -111,7 +120,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print("user Id $uid");
       userimage.value = snapshot.data()?["userimage"] ?? "no image";
       print("user image $userimage");
-      followingCount.value = followingSnapshot.docs.length;
+      followingCount.value = followingList.length;
 
       print("here is following list=$followingCount");
       followersCount.value = followerList.length;
@@ -127,11 +136,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       frientsCount.value = followingIds.intersection(followersId).length;
       print("Friends $frientsCount");
       followingCount.value = followersId.length;
-      followersCount.value = followerList.length;
+      followersCount.value = followersId.length;
     }
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     bool isArabic = Get.locale?.languageCode == "ar";
@@ -278,7 +286,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () {
                     Get.toNamed(
                       AppRoutes.following,
-                      arguments: {"followingss": followingCount},
+                      arguments: {
+                        "followingss": followingCount,
+                        "followingList": followingList,
+                      },
                     );
                   },
                   child: Column(
