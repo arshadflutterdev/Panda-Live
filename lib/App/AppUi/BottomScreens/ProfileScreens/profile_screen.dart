@@ -57,9 +57,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   RxString username = "".obs;
   RxString userimage = "".obs;
   RxInt followingCount = 0.obs;
-  RxInt FollowersCount = 0.obs;
+  RxInt followersCount = 0.obs;
   RxInt frientsCount = 0.obs;
-  late Stream<QuerySnapshot> _commentStream;
+  @override
   void initState() {
     super.initState();
     bgstream = Stream.periodic(Duration(seconds: 4)).listen((_) {
@@ -101,8 +101,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print("user image $userimage");
       followingCount.value = followingSnapshot.docs.length;
       print("here is following list=$followingCount");
-      FollowersCount.value = FollowerSnapshot.docs.length;
-      print("here is followers list count $FollowersCount");
+      followersCount.value = FollowerSnapshot.docs.length;
+      print("here is followers list count $followersCount");
 
       //below related frients
       Set<String> followingIds = followingSnapshot.docs
@@ -114,7 +114,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       frientsCount.value = followingIds.intersection(followersId).length;
       print("Friends $frientsCount");
       followingCount.value = followersId.length;
-      FollowersCount.value = followingIds.length;
+      followersCount.value = followingIds.length;
     }
   }
 
@@ -290,13 +290,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () {
                     Get.toNamed(
                       AppRoutes.followers,
-                      arguments: {"followerss": FollowersCount},
+                      arguments: {"followerss": followersCount},
                     );
                   },
                   child: Column(
                     children: [
                       Text(
-                        FollowersCount.toString(),
+                        followersCount.toString(),
                         style: TextStyle(fontSize: 20),
                       ),
                       Text(
