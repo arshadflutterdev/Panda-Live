@@ -61,6 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   RxInt followingCount = 0.obs;
   RxInt followersCount = 0.obs;
   RxInt frientsCount = 0.obs;
+  RxList<Map<String, dynamic>> followerList = RxList<Map<String, dynamic>>();
   @override
   void initState() {
     super.initState();
@@ -84,6 +85,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .collection("userProfile")
         .doc(uid)
         .get();
+
     final followingSnapshot = await FirebaseFirestore.instance
         .collection("userProfile")
         .doc(uid)
@@ -94,6 +96,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .doc(uid)
         .collection("Followers")
         .get();
+    followerList.value = followerSnapshot.docs.map((doc) {
+      Map<String, dynamic> data = doc.data();
+      return {
+        "follower name": data["followername"] ?? "no name",
+        "followerimage": data["followerimage"] ?? "",
+      };
+    }).toList();
     if (snapshot.exists && snapshot.data() != null) {
       username.value = snapshot.data()?["name"] ?? "no name";
       print("user name $username");
@@ -104,7 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       followingCount.value = followingSnapshot.docs.length;
 
       print("here is following list=$followingCount");
-      followersCount.value = followerSnapshot.docs.length;
+      followersCount.value = followerList.length;
       print("here is followers list count $followersCount");
 
       //below related frients
