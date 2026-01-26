@@ -61,6 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   RxInt followingCount = 0.obs;
   RxInt followersCount = 0.obs;
   RxInt frientsCount = 0.obs;
+  RxBool isloading = false.obs;
   RxList<Map<String, dynamic>> followerList = RxList<Map<String, dynamic>>();
   RxList<Map<String, dynamic>> followingList = RxList<Map<String, dynamic>>();
   RxList<Map<String, dynamic>> friendsList = RxList<Map<String, dynamic>>();
@@ -82,99 +83,105 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<void> getUserDetails() async {
-    final uid = FirebaseAuth.instance.currentUser!.uid;
-    final snapshot = await FirebaseFirestore.instance
-        .collection("userProfile")
-        .doc(uid)
-        .get();
+    isloading.value = true;
+    try {
+      final uid = FirebaseAuth.instance.currentUser!.uid;
+      final snapshot = await FirebaseFirestore.instance
+          .collection("userProfile")
+          .doc(uid)
+          .get();
 
-    final followingSnapshot = await FirebaseFirestore.instance
-        .collection("userProfile")
-        .doc(uid)
-        .collection("Following")
-        .get();
-    followingList.value = followingSnapshot.docs.map((doc) {
-      Map<String, dynamic> mydata = doc.data();
-      return {
-        "uid": doc.id,
-        "hostname": mydata["hostname"] ?? "unknown",
-        "hostimage": mydata["hostimage"] ?? "",
-      };
-    }).toList();
+      final followingSnapshot = await FirebaseFirestore.instance
+          .collection("userProfile")
+          .doc(uid)
+          .collection("Following")
+          .get();
+      followingList.value = followingSnapshot.docs.map((doc) {
+        Map<String, dynamic> mydata = doc.data();
+        return {
+          "uid": doc.id,
+          "hostname": mydata["hostname"] ?? "unknown",
+          "hostimage": mydata["hostimage"] ?? "",
+        };
+      }).toList();
 
-    final followerSnapshot = await FirebaseFirestore.instance
-        .collection("userProfile")
-        .doc(uid)
-        .collection("Followers")
-        .get();
-    followerList.value = followerSnapshot.docs.map((doc) {
-      Map<String, dynamic> data = doc.data();
-      print("here is follower dataaaaa $data");
-      return {
-        "uid": doc.id,
-        "followername": data["followername"] ?? "no name",
-        "followerimage": data["followerimage"] ?? null,
-      };
-    }).toList();
-    //lets play with frinds
-    // --- Start of Friends Logic ---
-    friendsList.clear();
+      final followerSnapshot = await FirebaseFirestore.instance
+          .collection("userProfile")
+          .doc(uid)
+          .collection("Followers")
+          .get();
+      followerList.value = followerSnapshot.docs.map((doc) {
+        Map<String, dynamic> data = doc.data();
+        print("here is follower dataaaaa $data");
+        return {
+          "uid": doc.id,
+          "followername": data["followername"] ?? "no name",
+          "followerimage": data["followerimage"] ?? null,
+        };
+      }).toList();
+      //lets play with frinds
+      // --- Start of Friends Logic ---
+      friendsList.clear();
 
-    // 1. Following IDs nikalen (Mapping mein 'uid' add kiya hai)
-    Set<String> followingIds = followingList
-        .map((e) => e["uid"].toString())
-        .toSet();
-
-    // 2. Followers IDs nikalen (Mapping mein 'uid' add kiya hai)
-    Set<String> followerIds = followerList
-        .map((e) => e["uid"].toString())
-        .toSet();
-
-    // 3. Intersection (Jo dono lists mein common hain)
-    final commonIds = followingIds.intersection(followerIds);
-
-    // 4. Friends List populate karein
-    for (var id in commonIds) {
-      // Following list se us user ka data (name/image) uthayen
-      var friendData = followingList.firstWhere(
-        (element) => element["uid"] == id,
-      );
-
-      friendsList.add({
-        "uid": id,
-        "name": friendData["hostname"],
-        "image": friendData["hostimage"],
-      });
-    }
-
-    // 5. Count update karein
-    frientsCount.value = friendsList.length;
-    // --- End of Friends Logic ---
-    if (snapshot.exists && snapshot.data() != null) {
-      username.value = snapshot.data()?["name"] ?? "no name";
-      print("user name $username");
-      String uid = snapshot.data()?["userId"] ?? "no id";
-      print("user Id $uid");
-      userimage.value = snapshot.data()?["userimage"] ?? "no image";
-      print("user image $userimage");
-      followingCount.value = followingList.length;
-
-      print("here is following list=$followingCount");
-      followersCount.value = followerList.length;
-      print("here is followers list count $followersCount");
-
-      //below related frients
-      Set<String> followingIds = followingSnapshot.docs
-          .map((doc) => doc.id)
+      // 1. Following IDs nikalen (Mapping mein 'uid' add kiya hai)
+      Set<String> followingIds = followingList
+          .map((e) => e["uid"].toString())
           .toSet();
-      Set<String> followersId = followerSnapshot.docs
-          .map((doc) => doc.id)
+
+      // 2. Followers IDs nikalen (Mapping mein 'uid' add kiya hai)
+      Set<String> followerIds = followerList
+          .map((e) => e["uid"].toString())
           .toSet();
-      frientsCount.value = followingIds.intersection(followersId).length;
-      print("Friends $frientsCount");
+
+      // 3. Intersection (Jo dono lists mein common hain)
+      final commonIds = followingIds.intersection(followerIds);
+
+      // 4. Friends List populate karein
+      for (var id in commonIds) {
+        // Following list se us user ka data (name/image) uthayen
+        var friendData = followingList.firstWhere(
+          (element) => element["uid"] == id,
+        );
+
+        friendsList.add({
+          "uid": id,
+          "name": friendData["hostname"],
+          "image": friendData["hostimage"],
+        });
+      }
+
+      // 5. Count update karein
       frientsCount.value = friendsList.length;
-      followersCount.value = followerList.length;
-      followingCount.value = followingList.length;
+      // --- End of Friends Logic ---
+      if (snapshot.exists && snapshot.data() != null) {
+        username.value = snapshot.data()?["name"] ?? "no name";
+        print("user name $username");
+        String uid = snapshot.data()?["userId"] ?? "no id";
+        print("user Id $uid");
+        userimage.value = snapshot.data()?["userimage"] ?? "no image";
+        print("user image $userimage");
+        followingCount.value = followingList.length;
+
+        print("here is following list=$followingCount");
+        followersCount.value = followerList.length;
+        print("here is followers list count $followersCount");
+
+        //below related frients
+        Set<String> followingIds = followingSnapshot.docs
+            .map((doc) => doc.id)
+            .toSet();
+        Set<String> followersId = followerSnapshot.docs
+            .map((doc) => doc.id)
+            .toSet();
+        frientsCount.value = followingIds.intersection(followersId).length;
+        print("Friends $frientsCount");
+        frientsCount.value = friendsList.length;
+        followersCount.value = followerList.length;
+        followingCount.value = followingList.length;
+      }
+    } catch (e) {
+    } finally {
+      isloading.value = false;
     }
   }
 
@@ -208,393 +215,434 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         ],
       ),
-      body: Column(
-        children: [
-          Obx(
-            () => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-              child: Row(
+      body: Obx(
+        () => isloading.value
+            ? CircularProgressIndicator()
+            : Column(
                 children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundColor: Colors.black38,
-                    backgroundImage:
-                        userimage.isNotEmpty && userimage.startsWith("http")
-                        ? NetworkImage(userimage.value)
-                        : AssetImage(AppImages.girl) as ImageProvider,
-                  ),
-                  // Gap(10),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      // mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          username.value,
-                          style: isArabic
-                              ? AppStyle.arabictext.copyWith(
-                                  fontSize: 22,
-                                  height: 0.50,
-                                  fontWeight: FontWeight.bold,
-                                )
-                              : AppStyle.logo.copyWith(
-                                  fontSize: 20,
-                                  height: 0.50,
-                                ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 10),
-                          child: Directionality(
-                            textDirection: TextDirection.ltr,
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                  Obx(
+                    () => Padding(
+                      padding: const EdgeInsets.symmetric(
+                        vertical: 0,
+                        horizontal: 10,
+                      ),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 30,
+                            backgroundColor: Colors.black38,
+                            backgroundImage:
+                                userimage.isNotEmpty &&
+                                    userimage.startsWith("http")
+                                ? NetworkImage(userimage.value)
+                                : AssetImage(AppImages.girl) as ImageProvider,
+                          ),
+                          // Gap(10),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 20),
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              // mainAxisSize: MainAxisSize.min,
                               children: [
-                                DecoratedBox(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    color: Colors.black38,
-                                  ),
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(2.0),
-                                    child: Text(
-                                      "ID",
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        color: Colors.white,
-                                      ),
+                                Text(
+                                  username.value,
+                                  style: isArabic
+                                      ? AppStyle.arabictext.copyWith(
+                                          fontSize: 22,
+                                          height: 0.50,
+                                          fontWeight: FontWeight.bold,
+                                        )
+                                      : AppStyle.logo.copyWith(
+                                          fontSize: 20,
+                                          height: 0.50,
+                                        ),
+                                ),
+                                Padding(
+                                  padding: const EdgeInsets.only(left: 10),
+                                  child: Directionality(
+                                    textDirection: TextDirection.ltr,
+                                    child: Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.center,
+                                      children: [
+                                        DecoratedBox(
+                                          decoration: BoxDecoration(
+                                            shape: BoxShape.circle,
+                                            color: Colors.black38,
+                                          ),
+                                          child: Padding(
+                                            padding: const EdgeInsets.all(2.0),
+                                            child: Text(
+                                              "ID",
+                                              style: TextStyle(
+                                                fontSize: 14,
+                                                color: Colors.white,
+                                              ),
+                                            ),
+                                          ),
+                                        ),
+                                        Gap(4),
+                                        Text(
+                                          "78491356",
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: Colors.black,
+                                          ),
+                                        ),
+                                        IconButton(
+                                          padding: EdgeInsets.zero,
+                                          onPressed: () {},
+                                          icon: Icon(Icons.copy, size: 17),
+                                        ),
+                                      ],
                                     ),
                                   ),
                                 ),
-                                Gap(4),
-                                Text(
-                                  "78491356",
-                                  style: TextStyle(
-                                    fontSize: 14,
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                IconButton(
-                                  padding: EdgeInsets.zero,
-                                  onPressed: () {},
-                                  icon: Icon(Icons.copy, size: 17),
-                                ),
                               ],
                             ),
+                          ),
+                          Spacer(),
+                          IconButton(
+                            onPressed: () {},
+                            icon: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: Colors.black54,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Gap(height * 0.030),
+                  Obx(
+                    () => Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        GestureDetector(
+                          onTap: () {
+                            Get.toNamed(
+                              AppRoutes.friends,
+                              arguments: {
+                                "friendCount": frientsCount.value,
+                                "friendList": List.of(friendsList),
+                              },
+                            );
+                          },
+                          child: Column(
+                            children: [
+                              Text(
+                                frientsCount.toString(),
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              Text(
+                                localization.friends,
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        fontSize: 18,
+                                        color: Colors.black54,
+                                      )
+                                    : TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black54,
+                                      ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Get.toNamed(
+                              AppRoutes.following,
+                              arguments: {
+                                "followingss": followingCount.value,
+                                "followingList": List.from(followingList),
+                              },
+                            );
+                          },
+                          child: Column(
+                            children: [
+                              Text(
+                                followingCount.toString(),
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              Text(
+                                localization.following,
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        fontSize: 18,
+                                        color: Colors.black54,
+                                      )
+                                    : TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black54,
+                                      ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Get.toNamed(
+                              AppRoutes.followers,
+                              arguments: {
+                                "followerss": followersCount.value,
+                                "followersList": List.from(followerList),
+                              },
+                            );
+                          },
+                          child: Column(
+                            children: [
+                              Text(
+                                followersCount.toString(),
+                                style: TextStyle(fontSize: 20),
+                              ),
+                              Text(
+                                localization.followers,
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        fontSize: 18,
+                                        color: Colors.black54,
+                                      )
+                                    : TextStyle(
+                                        fontSize: 16,
+                                        color: Colors.black54,
+                                      ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Spacer(),
-                  IconButton(
-                    onPressed: () {},
-                    icon: Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      color: Colors.black54,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          Gap(height * 0.030),
-          Obx(
-            () => Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Get.toNamed(
-                      AppRoutes.friends,
-                      arguments: {
-                        "friendCount": frientsCount.value,
-                        "friendList": List.of(friendsList),
-                      },
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      Text(
-                        frientsCount.toString(),
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      Text(
-                        localization.friends,
-                        style: isArabic
-                            ? AppStyle.arabictext.copyWith(
-                                fontSize: 18,
-                                color: Colors.black54,
-                              )
-                            : TextStyle(fontSize: 16, color: Colors.black54),
-                      ),
-                    ],
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Get.toNamed(
-                      AppRoutes.following,
-                      arguments: {
-                        "followingss": followingCount.value,
-                        "followingList": List.from(followingList),
-                      },
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      Text(
-                        followingCount.toString(),
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      Text(
-                        localization.following,
-                        style: isArabic
-                            ? AppStyle.arabictext.copyWith(
-                                fontSize: 18,
-                                color: Colors.black54,
-                              )
-                            : TextStyle(fontSize: 16, color: Colors.black54),
-                      ),
-                    ],
-                  ),
-                ),
-                GestureDetector(
-                  onTap: () {
-                    Get.toNamed(
-                      AppRoutes.followers,
-                      arguments: {
-                        "followerss": followersCount.value,
-                        "followersList": List.from(followerList),
-                      },
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      Text(
-                        followersCount.toString(),
-                        style: TextStyle(fontSize: 20),
-                      ),
-                      Text(
-                        localization.followers,
-                        style: isArabic
-                            ? AppStyle.arabictext.copyWith(
-                                fontSize: 18,
-                                color: Colors.black54,
-                              )
-                            : TextStyle(fontSize: 16, color: Colors.black54),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
 
-          Gap(height * 0.030),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
-              Container(
-                width: width * 0.45,
-                height: height * 0.080,
-                decoration: BoxDecoration(
-                  color: Colors.amber.shade100,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
+                  Gap(height * 0.030),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            localization.coins,
-                            style: isArabic ? AppStyle.arabictext : TextStyle(),
+                      Container(
+                        width: width * 0.45,
+                        height: height * 0.080,
+                        decoration: BoxDecoration(
+                          color: Colors.amber.shade100,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Row(
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    localization.coins,
+                                    style: isArabic
+                                        ? AppStyle.arabictext
+                                        : TextStyle(),
+                                  ),
+                                  Text("0"),
+                                ],
+                              ),
+                              Spacer(),
+                              Image(image: AssetImage(AppImages.coins)),
+                            ],
                           ),
-                          Text("0"),
-                        ],
+                        ),
                       ),
-                      Spacer(),
-                      Image(image: AssetImage(AppImages.coins)),
-                    ],
-                  ),
-                ),
-              ),
-              Container(
-                width: width * 0.45,
-                height: height * 0.080,
-                decoration: BoxDecoration(
-                  color: Colors.pink.shade100,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 8),
-                  child: Row(
-                    children: [
-                      Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            localization.points,
-                            style: isArabic ? AppStyle.arabictext : TextStyle(),
+                      Container(
+                        width: width * 0.45,
+                        height: height * 0.080,
+                        decoration: BoxDecoration(
+                          color: Colors.pink.shade100,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 8),
+                          child: Row(
+                            children: [
+                              Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    localization.points,
+                                    style: isArabic
+                                        ? AppStyle.arabictext
+                                        : TextStyle(),
+                                  ),
+                                  Text("0"),
+                                ],
+                              ),
+                              Spacer(),
+                              Image(image: AssetImage(AppImages.dollar)),
+                            ],
                           ),
-                          Text("0"),
-                        ],
+                        ),
                       ),
-                      Spacer(),
-                      Image(image: AssetImage(AppImages.dollar)),
                     ],
                   ),
-                ),
-              ),
-            ],
-          ),
-          Obx(
-            () => Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-              child: AnimatedSwitcher(
-                duration: Duration(milliseconds: 600),
+                  Obx(
+                    () => Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 15,
+                        vertical: 10,
+                      ),
+                      child: AnimatedSwitcher(
+                        duration: Duration(milliseconds: 600),
 
-                child: Container(
-                  key: ValueKey(currentbgindex.value),
-                  height: height * 0.12,
-                  width: width,
-                  decoration: BoxDecoration(
-                    image: DecorationImage(
-                      fit: BoxFit.contain,
-                      image: isArabic
-                          ? AssetImage(infoarimages[currentbgindex.value])
-                          : AssetImage(infimages[currentbgindex.value]),
-                    ),
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15),
-                  ),
-                ),
-              ),
-            ),
-          ),
-
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
-            child: Container(
-              height: height * 0.070,
-              width: width,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Row(
-                  children: [
-                    Image(
-                      height: 30,
-                      image: AssetImage(AppImages.invite),
-                      color: Colors.black54,
-                    ),
-                    Gap(10),
-                    Text(
-                      localization.invitefriend,
-                      style: isArabic
-                          ? AppStyle.arabictext.copyWith(
-                              fontSize: 20,
-                              color: Colors.black54,
-                            )
-                          : AppStyle.tagline.copyWith(
-                              color: Colors.black54,
-                              fontSize: 18,
+                        child: Container(
+                          key: ValueKey(currentbgindex.value),
+                          height: height * 0.12,
+                          width: width,
+                          decoration: BoxDecoration(
+                            image: DecorationImage(
+                              fit: BoxFit.contain,
+                              image: isArabic
+                                  ? AssetImage(
+                                      infoarimages[currentbgindex.value],
+                                    )
+                                  : AssetImage(infimages[currentbgindex.value]),
                             ),
-                    ),
-                    Spacer(),
-                    Icon(Icons.arrow_forward_ios, color: Colors.black54),
-                  ],
-                ),
-              ),
-            ),
-          ),
-
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Container(
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(15),
-                ),
-                child: ListView.separated(
-                  itemCount: menuItems.length,
-                  separatorBuilder: (_, __) =>
-                      Divider(height: 1, color: Colors.grey.shade300),
-                  itemBuilder: (context, index) {
-                    final item = menuItems[index];
-
-                    return ListTile(
-                      leading: Icon(
-                        item["icon"],
-                        color: item["danger"] == true
-                            ? Colors.red
-                            : Colors.black,
+                            color: Colors.white,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                        ),
                       ),
-                      title: Text(
-                        item["title"],
-                        style: isArabic
-                            ? AppStyle.arabictext.copyWith(fontSize: 20)
-                            : TextStyle(
-                                fontSize: 16,
+                    ),
+                  ),
+
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 10,
+                      vertical: 10,
+                    ),
+                    child: Container(
+                      height: height * 0.070,
+                      width: width,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Row(
+                          children: [
+                            Image(
+                              height: 30,
+                              image: AssetImage(AppImages.invite),
+                              color: Colors.black54,
+                            ),
+                            Gap(10),
+                            Text(
+                              localization.invitefriend,
+                              style: isArabic
+                                  ? AppStyle.arabictext.copyWith(
+                                      fontSize: 20,
+                                      color: Colors.black54,
+                                    )
+                                  : AppStyle.tagline.copyWith(
+                                      color: Colors.black54,
+                                      fontSize: 18,
+                                    ),
+                            ),
+                            Spacer(),
+                            Icon(
+                              Icons.arrow_forward_ios,
+                              color: Colors.black54,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: ListView.separated(
+                          itemCount: menuItems.length,
+                          separatorBuilder: (_, __) =>
+                              Divider(height: 1, color: Colors.grey.shade300),
+                          itemBuilder: (context, index) {
+                            final item = menuItems[index];
+
+                            return ListTile(
+                              leading: Icon(
+                                item["icon"],
                                 color: item["danger"] == true
                                     ? Colors.red
                                     : Colors.black,
                               ),
+                              title: Text(
+                                item["title"],
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(fontSize: 20)
+                                    : TextStyle(
+                                        fontSize: 16,
+                                        color: item["danger"] == true
+                                            ? Colors.red
+                                            : Colors.black,
+                                      ),
+                              ),
+                              trailing: item["social"] == true
+                                  ? Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Icon(
+                                          Icons.facebook,
+                                          color: Colors.blue,
+                                        ),
+                                        Gap(8),
+                                        Icon(
+                                          Icons.play_circle_fill,
+                                          color: Colors.red,
+                                        ),
+                                      ],
+                                    )
+                                  : item["trailing"] != null
+                                  ? Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        Text(
+                                          item["trailing"],
+                                          style: TextStyle(
+                                            color: Colors.black45,
+                                          ),
+                                        ),
+                                        Gap(6),
+                                        Icon(
+                                          Icons.arrow_forward_ios,
+                                          size: 16,
+                                          color: Colors.black38,
+                                        ),
+                                      ],
+                                    )
+                                  : Icon(
+                                      Icons.arrow_forward_ios,
+                                      size: 16,
+                                      color: Colors.black38,
+                                    ),
+                              onTap: () {
+                                if (index == 0) {
+                                  Get.toNamed(AppRoutes.help);
+                                } else if (index == 1) {
+                                  Get.toNamed(AppRoutes.followus);
+                                } else if (index == 2) {
+                                  Get.toNamed(AppRoutes.logout);
+                                }
+                              },
+                            );
+                          },
+                        ),
                       ),
-                      trailing: item["social"] == true
-                          ? Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(Icons.facebook, color: Colors.blue),
-                                Gap(8),
-                                Icon(Icons.play_circle_fill, color: Colors.red),
-                              ],
-                            )
-                          : item["trailing"] != null
-                          ? Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  item["trailing"],
-                                  style: TextStyle(color: Colors.black45),
-                                ),
-                                Gap(6),
-                                Icon(
-                                  Icons.arrow_forward_ios,
-                                  size: 16,
-                                  color: Colors.black38,
-                                ),
-                              ],
-                            )
-                          : Icon(
-                              Icons.arrow_forward_ios,
-                              size: 16,
-                              color: Colors.black38,
-                            ),
-                      onTap: () {
-                        if (index == 0) {
-                          Get.toNamed(AppRoutes.help);
-                        } else if (index == 1) {
-                          Get.toNamed(AppRoutes.followus);
-                        } else if (index == 2) {
-                          Get.toNamed(AppRoutes.logout);
-                        }
-                      },
-                    );
-                  },
-                ),
+                    ),
+                  ),
+                ],
               ),
-            ),
-          ),
-        ],
       ),
     );
   }
