@@ -95,6 +95,17 @@ class _FollowingScreenState extends State<FollowingScreen> {
                     return Text("There is no data");
                   } else {
                     final docs = snapshot.data?.docs ?? [];
+                    final query = widget.searchText.value.toLowerCase();
+                    final filteredDocs = query.isEmpty
+                        ? docs
+                        : docs.where((doc) {
+                            final data = doc.data() as Map<String, dynamic>;
+                            final hostname = (data["hostname"] ?? "")
+                                .toString()
+                                .toLowerCase();
+                            return hostname.contains(query);
+                          }).toList();
+
                     print("here is docs list ${docs.length}");
                     if (docs.isEmpty) {
                       return Center(
@@ -132,7 +143,7 @@ class _FollowingScreenState extends State<FollowingScreen> {
                     }
 
                     return GridView.builder(
-                      itemCount: docs.length,
+                      itemCount: filteredDocs.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisSpacing: 4,
                         mainAxisSpacing: 4,
@@ -140,7 +151,8 @@ class _FollowingScreenState extends State<FollowingScreen> {
                         childAspectRatio: 0.99,
                       ),
                       itemBuilder: (context, index) {
-                        final data = docs[index].data() as Map<String, dynamic>;
+                        final data =
+                            filteredDocs[index].data() as Map<String, dynamic>;
                         return GestureDetector(
                           onTap: () {
                             if (data["agoraUid"] == null) {
