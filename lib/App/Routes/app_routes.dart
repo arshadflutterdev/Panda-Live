@@ -3,7 +3,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:pandlive/App/AppUi/BottomNavBar/bottomnavbar.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/updates_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
-import 'package:pandlive/App/AppUi/BottomScreens/profile_screen.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/profile_screen.dart';
 import 'package:pandlive/App/AppUi/HomeScreenContant/explorer_tab.dart';
 import 'package:pandlive/App/AppUi/LiveStreaming/GoLiveStream/golive_screen.dart';
 import 'package:pandlive/App/AppUi/LiveStreaming/WatchStreaming/watchstreaming_class.dart';
@@ -54,6 +54,8 @@ class AppRoutes {
   static const golive = "/GoliveScreen";
   //explored
   static const explore = "/ExplorerScreen";
+  static const followers="/FollowerListScreen";
+  static const following="/FollowingListScreen";
 
   static final routes = [
     GetPage(name: splash, page: () => SplashScreen()),
@@ -102,5 +104,7 @@ class AppRoutes {
       name: explore,
       page: () => ExplorerScreen(searchText: "".obs),
     ),
+    //below routes related profile screen
+    GetPage(name: , page: page)
   ];
 }
