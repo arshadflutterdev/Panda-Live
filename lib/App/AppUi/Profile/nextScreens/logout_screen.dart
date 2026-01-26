@@ -1,3 +1,5 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
@@ -74,9 +76,33 @@ class LogoutScreen extends StatelessWidget {
                   const SizedBox(width: 15),
                   Expanded(
                     child: ElevatedButton(
-                      onPressed: () {
-                        // Logout logic: Navigate to Login Screen
-                        Get.offAllNamed(AppRoutes.authoptions);
+                      onPressed: () async {
+                        try {
+                          // 1. Loading dikhayen
+                          Get.dialog(
+                            const Center(
+                              child: CircularProgressIndicator(
+                                color: Colors.redAccent,
+                              ),
+                            ),
+                            barrierDismissible: false,
+                          );
+
+                          // 2. Firebase se sign out karein
+                          await FirebaseAuth.instance.signOut();
+
+                          print("Signout successfully");
+
+                          // 3. Saare screens hata kar Auth screen par bhej dein
+                          Get.offAllNamed(AppRoutes.authoptions);
+                        } catch (e) {
+                          Get.back(); // Loader band karein
+                          Get.snackbar(
+                            "Error",
+                            "Logout failed: $e",
+                            snackPosition: SnackPosition.BOTTOM,
+                          );
+                        }
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.redAccent,
