@@ -102,6 +102,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       userimage.value = snapshot.data()?["userimage"] ?? "no image";
       print("user image $userimage");
       followingCount.value = followingSnapshot.docs.length;
+
       print("here is following list=$followingCount");
       followersCount.value = followerSnapshot.docs.length;
       print("here is followers list count $followersCount");
