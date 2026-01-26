@@ -1,6 +1,8 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:pandlive/App/AppUi/BottomNavBar/bottomnavbar.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/follower_list.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/following_list.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/updates_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/profile_screen.dart';
@@ -20,7 +22,6 @@ import 'package:pandlive/App/Authentication/EmailAuth/reset_password.dart';
 import 'package:pandlive/App/Authentication/EmailAuth/verify_email.dart';
 import 'package:pandlive/App/Authentication/PhoneAuth/phone_login.dart';
 import 'package:pandlive/App/Authentication/PhoneAuth/resetpassword_phone.dart';
-import 'package:pandlive/App/Authentication/PhoneAuth/verify_number.dart';
 import 'package:pandlive/App/Authentication/auth_options.dart';
 import 'package:pandlive/App/Authentication/EmailAuth/email_auth.dart';
 import 'package:pandlive/App/Authentication/PhoneAuth/phone_auth.dart';
@@ -54,8 +55,8 @@ class AppRoutes {
   static const golive = "/GoliveScreen";
   //explored
   static const explore = "/ExplorerScreen";
-  static const followers="/FollowerListScreen";
-  static const following="/FollowingListScreen";
+  static const followers = "/FollowerListScreen";
+  static const following = "/FollowingListScreen";
 
   static final routes = [
     GetPage(name: splash, page: () => SplashScreen()),
@@ -105,6 +106,7 @@ class AppRoutes {
       page: () => ExplorerScreen(searchText: "".obs),
     ),
     //below routes related profile screen
-    GetPage(name: , page: page)
+    GetPage(name: followers, page: () => FollowerListScreen()),
+    GetPage(name: following, page: () => FollowingListScreen()),
   ];
 }
