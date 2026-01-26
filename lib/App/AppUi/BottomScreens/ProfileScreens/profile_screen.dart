@@ -135,8 +135,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .toSet();
       frientsCount.value = followingIds.intersection(followersId).length;
       print("Friends $frientsCount");
-      followingCount.value = followingIds.length;
-      followersCount.value = followersId.length;
     }
   }
 
@@ -337,20 +335,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
-                ),
-                Column(
-                  children: [
-                    Text("0", style: TextStyle(fontSize: 20)),
-                    Text(
-                      localization.visitors,
-                      style: isArabic
-                          ? AppStyle.arabictext.copyWith(
-                              fontSize: 18,
-                              color: Colors.black54,
-                            )
-                          : TextStyle(fontSize: 16, color: Colors.black54),
-                    ),
-                  ],
                 ),
               ],
             ),

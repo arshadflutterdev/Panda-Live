@@ -3,6 +3,7 @@ import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:pandlive/App/AppUi/BottomNavBar/bottomnavbar.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/follower_list.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/following_list.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/friends_list.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/updates_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/profile_screen.dart';
@@ -57,6 +58,7 @@ class AppRoutes {
   static const explore = "/ExplorerScreen";
   static const followers = "/FollowerListScreen";
   static const following = "/FollowingListScreen";
+  static const friends = "/FriendsListScreen";
 
   static final routes = [
     GetPage(name: splash, page: () => SplashScreen()),
@@ -116,5 +118,6 @@ class AppRoutes {
       binding: AuthBindings(),
       page: () => FollowingListScreen(),
     ),
+    GetPage(name: friends, page: () => FriendsListScreen()),
   ];
 }
