@@ -263,7 +263,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
                 GestureDetector(
                   onTap: () {
-                    Get.toNamed(AppRoutes.following);
+                    Get.toNamed(
+                      AppRoutes.following,
+                      arguments: {"followingss": followingCount},
+                    );
                   },
                   child: Column(
                     children: [

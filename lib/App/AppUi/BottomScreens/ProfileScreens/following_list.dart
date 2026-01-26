@@ -9,6 +9,7 @@ class FollowingListScreen extends StatefulWidget {
 }
 
 class _FollowingListScreenState extends State<FollowingListScreen> {
+  final arg = Get.arguments;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -20,7 +21,7 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
           },
           icon: Icon(Icons.arrow_back_ios_new),
         ),
-        title: Text("Following"),
+        title: Text("Following ${arg["followingss"]}"),
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
