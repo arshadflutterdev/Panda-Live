@@ -63,6 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   RxInt frientsCount = 0.obs;
   RxList<Map<String, dynamic>> followerList = RxList<Map<String, dynamic>>();
   RxList<Map<String, dynamic>> followingList = RxList<Map<String, dynamic>>();
+  RxList<Map<String, dynamic>> friendsList = RxList<Map<String, dynamic>>();
   @override
   void initState() {
     super.initState();
@@ -265,7 +266,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: [
                 GestureDetector(
                   onTap: () {
-                    Get.toNamed(AppRoutes.friends);
+                    Get.toNamed(
+                      AppRoutes.friends,
+                      arguments: {"friendCount": frientsCount.value},
+                    );
                   },
                   child: Column(
                     children: [

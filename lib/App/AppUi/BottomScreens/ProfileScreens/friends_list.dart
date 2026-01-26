@@ -9,11 +9,13 @@ class FriendsListScreen extends StatefulWidget {
 }
 
 class _FriendsListScreenState extends State<FriendsListScreen> {
+  final dynamic arg = Get.arguments;
   @override
   Widget build(BuildContext context) {
+    final friends = arg["friendCount"];
     return Scaffold(
       appBar: AppBar(
-        title: Text("Friends"),
+        title: Text("Friends $friends"),
         centerTitle: true,
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
@@ -31,6 +33,8 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
 
         itemBuilder: (context, index) {
           return ListTile(
+            title: Text("Friend name"),
+            subtitle: Text("Your friend"),
             leading: CircleAvatar(radius: 25, backgroundColor: Colors.red),
           );
         },
