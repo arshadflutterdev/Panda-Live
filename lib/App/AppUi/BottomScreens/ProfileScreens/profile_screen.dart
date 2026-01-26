@@ -217,7 +217,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ),
       body: Obx(
         () => isloading.value
-            ? CircularProgressIndicator()
+            ? Center(child: CircularProgressIndicator(color: Colors.green))
             : Column(
                 children: [
                   Obx(
