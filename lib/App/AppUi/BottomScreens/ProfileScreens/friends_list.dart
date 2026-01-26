@@ -10,9 +10,11 @@ class FriendsListScreen extends StatefulWidget {
 
 class _FriendsListScreenState extends State<FriendsListScreen> {
   final dynamic arg = Get.arguments;
+
   @override
   Widget build(BuildContext context) {
     final friends = arg["friendCount"];
+    final List friendList = arg?["friendList"] ?? [];
     return Scaffold(
       appBar: AppBar(
         title: Text("Friends $friends"),
