@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 class FollowingListScreen extends StatefulWidget {
   const FollowingListScreen({super.key});
@@ -14,7 +15,9 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         leading: IconButton(
-          onPressed: () {},
+          onPressed: () {
+            Get.back();
+          },
           icon: Icon(Icons.arrow_back_ios_new),
         ),
         title: Text("Following"),
