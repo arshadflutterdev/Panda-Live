@@ -31,12 +31,16 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
       ),
       backgroundColor: Colors.white,
       body: ListView.builder(
-        itemCount: 10,
+        itemCount: friendList.length,
 
         itemBuilder: (context, index) {
+          final data = friendList[index];
           return ListTile(
-            title: Text("Friend name"),
-            subtitle: Text("Your friend"),
+            title: Text("${data["name"]}"),
+            subtitle: Text(
+              "Your friend",
+              style: TextStyle(color: Colors.black54),
+            ),
             leading: CircleAvatar(radius: 25, backgroundColor: Colors.red),
           );
         },
