@@ -110,7 +110,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print("here is follower dataaaaa $data");
       return {
         "followername": data["followername"] ?? "no name",
-        "followerimage": data["followerimage"] ?? "",
+        "followerimage": data["followerimage"] ?? null,
       };
     }).toList();
     if (snapshot.exists && snapshot.data() != null) {
