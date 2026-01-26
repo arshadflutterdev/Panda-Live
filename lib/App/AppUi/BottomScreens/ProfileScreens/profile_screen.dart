@@ -135,7 +135,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .toSet();
       frientsCount.value = followingIds.intersection(followersId).length;
       print("Friends $frientsCount");
-      followingCount.value = followersId.length;
+      followingCount.value = followingIds.length;
       followersCount.value = followersId.length;
     }
   }
@@ -287,8 +287,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Get.toNamed(
                       AppRoutes.following,
                       arguments: {
-                        "followingss": followingCount,
-                        "followingList": followingList,
+                        "followingss": followingCount.value,
+                        "followingList": List.from(followingList),
                       },
                     );
                   },
@@ -315,8 +315,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Get.toNamed(
                       AppRoutes.followers,
                       arguments: {
-                        "followerss": followersCount,
-                        "followersList": followerList,
+                        "followerss": followersCount.value,
+                        "followersList": List.from(followerList),
                       },
                     );
                   },
