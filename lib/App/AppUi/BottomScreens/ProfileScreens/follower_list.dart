@@ -18,7 +18,7 @@ class _FollowerListScreenState extends State<FollowerListScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text("${arg["followerss"]}"),
+        title: Text("Followers ${arg["followerss"]}"),
         centerTitle: true,
         backgroundColor: Colors.white,
         automaticallyImplyLeading: false,
@@ -29,6 +29,36 @@ class _FollowerListScreenState extends State<FollowerListScreen> {
           icon: Icon(Icons.arrow_back_ios_new),
         ),
       ),
+      backgroundColor: Colors.white,
+      body: followingList.isEmpty
+          ? Text("You haven't follow")
+          : ListView.builder(
+              itemCount: 10,
+              itemBuilder: (context, index) {
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.green,
+                    radius: 25,
+                  ),
+                  title: Text("FollowerName"),
+                  subtitle: Text("Following you"),
+                  trailing: SizedBox(
+                    height: 30,
+
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                      ),
+                      onPressed: () {},
+                      child: Text(
+                        "Follow back",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
     );
   }
 }
