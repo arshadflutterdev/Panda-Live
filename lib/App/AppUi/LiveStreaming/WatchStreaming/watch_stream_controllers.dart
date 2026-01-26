@@ -39,8 +39,8 @@ class WatchStreamControllers extends GetxController {
         var mydata = mydoc.data();
         // Add me to the Host's "Followers" list
         await hostFollowersSub.set({
-          "followername": mydata!["name"],
-          "followerimage": mydata["userimage"],
+          "followername": mydata!["name"] ?? "no name",
+          "followerimage": mydata["userimage"] ?? "",
           "followerId": currenduser,
           "followAt": FieldValue.serverTimestamp(),
         });
