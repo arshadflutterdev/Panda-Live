@@ -53,22 +53,6 @@ class _FollowerListScreenState extends State<FollowerListScreen> {
                   ),
                   title: Text(follower["followername"] ?? "Unknown"),
                   subtitle: Text("Following you"),
-                  trailing: SizedBox(
-                    height: 34,
-
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.red,
-                      ),
-                      onPressed: () {
-                        streamcontroll.toggleFollow();
-                      },
-                      child: Text(
-                        isFriend.value ? "Friends" : "Follow back",
-                        style: TextStyle(color: Colors.white),
-                      ),
-                    ),
-                  ),
                 );
               },
             ),
