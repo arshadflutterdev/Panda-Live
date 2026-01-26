@@ -13,11 +13,16 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
+        leading: IconButton(
+          onPressed: () {},
+          icon: Icon(Icons.arrow_back_ios_new),
+        ),
         title: Text("Following"),
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.white,
+      body: ListTile(),
     );
   }
 }
