@@ -12,10 +12,12 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.white,
         title: Text("Following"),
         centerTitle: true,
         automaticallyImplyLeading: false,
       ),
+      backgroundColor: Colors.white,
     );
   }
 }
