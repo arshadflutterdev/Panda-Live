@@ -211,7 +211,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             onPressed: () {
               Get.toNamed(AppRoutes.language);
             },
-            icon: Image(image: AssetImage(AppImages.settings)),
+            icon: Image(image: AssetImage(AppImages.settings), height: 30),
           ),
         ],
       ),
