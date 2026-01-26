@@ -263,22 +263,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
             () => Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                Column(
-                  children: [
-                    Text(
-                      frientsCount.toString(),
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      localization.friends,
-                      style: isArabic
-                          ? AppStyle.arabictext.copyWith(
-                              fontSize: 18,
-                              color: Colors.black54,
-                            )
-                          : TextStyle(fontSize: 16, color: Colors.black54),
-                    ),
-                  ],
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed(AppRoutes.friends);
+                  },
+                  child: Column(
+                    children: [
+                      Text(
+                        frientsCount.toString(),
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Text(
+                        localization.friends,
+                        style: isArabic
+                            ? AppStyle.arabictext.copyWith(
+                                fontSize: 18,
+                                color: Colors.black54,
+                              )
+                            : TextStyle(fontSize: 16, color: Colors.black54),
+                      ),
+                    ],
+                  ),
                 ),
                 GestureDetector(
                   onTap: () {
