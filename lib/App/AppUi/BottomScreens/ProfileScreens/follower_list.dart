@@ -9,9 +9,13 @@ class FollowerListScreen extends StatefulWidget {
 }
 
 class _FollowerListScreenState extends State<FollowerListScreen> {
-  final arg = Get.arguments;
+  final dynamic arg = Get.arguments;
+
   @override
   Widget build(BuildContext context) {
+    final List followingList = arg["followersList"] ?? [];
+    print("data in following List$followingList");
+
     return Scaffold(
       appBar: AppBar(
         title: Text("${arg["followerss"]}"),
