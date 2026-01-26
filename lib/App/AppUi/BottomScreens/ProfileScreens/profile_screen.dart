@@ -1,3 +1,5 @@
+// ignore_for_file: avoid_print
+
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -87,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .doc(uid)
         .collection("Following")
         .get();
-    final FollowerSnapshot = await FirebaseFirestore.instance
+    final followerSnapshot = await FirebaseFirestore.instance
         .collection("userProfile")
         .doc(uid)
         .collection("Followers")
@@ -101,14 +103,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
       print("user image $userimage");
       followingCount.value = followingSnapshot.docs.length;
       print("here is following list=$followingCount");
-      followersCount.value = FollowerSnapshot.docs.length;
+      followersCount.value = followerSnapshot.docs.length;
       print("here is followers list count $followersCount");
 
       //below related frients
       Set<String> followingIds = followingSnapshot.docs
           .map((doc) => doc.id)
           .toSet();
-      Set<String> followersId = FollowerSnapshot.docs
+      Set<String> followersId = followerSnapshot.docs
           .map((doc) => doc.id)
           .toSet();
       frientsCount.value = followingIds.intersection(followersId).length;
