@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/Utils/Constant/app_images.dart';
 
 class FriendsListScreen extends StatefulWidget {
   const FriendsListScreen({super.key});
@@ -41,7 +42,13 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
               "Your friend",
               style: TextStyle(color: Colors.black54),
             ),
-            leading: CircleAvatar(radius: 25, backgroundColor: Colors.red),
+            leading: CircleAvatar(
+              radius: 25,
+              backgroundColor: Colors.red,
+              backgroundImage: data["image"].toString().startsWith("http")
+                  ? NetworkImage(data["image"])
+                  : AssetImage(AppImages.profile),
+            ),
           );
         },
       ),
