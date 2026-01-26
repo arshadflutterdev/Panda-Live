@@ -42,7 +42,7 @@ class _FollowerListScreenState extends State<FollowerListScreen> {
                 final follower = followergList[index];
                 return ListTile(
                   leading: CircleAvatar(
-                    backgroundColor: Colors.white,
+                    backgroundColor: Colors.red,
                     backgroundImage:
                         follower["followerimage"].toString().startsWith("http")
                         ? NetworkImage(follower["followerimage"])

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/Utils/Constant/app_images.dart';
 
 class FollowingListScreen extends StatefulWidget {
   const FollowingListScreen({super.key});
@@ -29,11 +30,19 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
       ),
       backgroundColor: Colors.white,
       body: ListView.builder(
-        itemCount: 10,
+        itemCount: followingList.length,
         itemBuilder: (context, index) {
+          final following = followingList[index];
           return ListTile(
-            leading: CircleAvatar(backgroundColor: Colors.red, radius: 25),
-            title: Text("FollowingNmae"),
+            leading: CircleAvatar(
+              backgroundColor: Colors.red,
+              radius: 25,
+              backgroundImage:
+                  following["hostimage"].toString().startsWith("http")
+                  ? NetworkImage(following["hostimage"])
+                  : AssetImage(AppImages.profile),
+            ),
+            title: Text("${following["hostname"]}"),
             subtitle: Text("You’re following"),
           );
         },
