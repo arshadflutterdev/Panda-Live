@@ -13,6 +13,19 @@ class _FollowerListScreenState extends State<FollowerListScreen> {
   final arg = Get.arguments;
   @override
   Widget build(BuildContext context) {
-    return Scaffold(appBar: AppBar(title: Text("${arg["followerss"]}")));
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("${arg["followerss"]}"),
+        centerTitle: true,
+        backgroundColor: Colors.white,
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(Icons.arrow_back_ios_new),
+        ),
+      ),
+    );
   }
 }
