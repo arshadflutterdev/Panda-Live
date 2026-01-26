@@ -98,6 +98,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         .get();
     followerList.value = followerSnapshot.docs.map((doc) {
       Map<String, dynamic> data = doc.data();
+      print("here is follower dataaaaa $data");
       return {
         "follower name": data["followername"] ?? "no name",
         "followerimage": data["followerimage"] ?? "",
