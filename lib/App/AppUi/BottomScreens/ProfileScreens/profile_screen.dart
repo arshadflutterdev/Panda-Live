@@ -100,7 +100,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Map<String, dynamic> data = doc.data();
       print("here is follower dataaaaa $data");
       return {
-        "follower name": data["followername"] ?? "no name",
+        "followername": data["followername"] ?? "no name",
         "followerimage": data["followerimage"] ?? "",
       };
     }).toList();
@@ -127,7 +127,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       frientsCount.value = followingIds.intersection(followersId).length;
       print("Friends $frientsCount");
       followingCount.value = followersId.length;
-      followersCount.value = followingIds.length;
+      followersCount.value = followerList.length;
     }
   }
 
@@ -303,7 +303,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () {
                     Get.toNamed(
                       AppRoutes.followers,
-                      arguments: {"followerss": followersCount},
+                      arguments: {
+                        "followerss": followersCount,
+                        "followersList": followerList,
+                      },
                     );
                   },
                   child: Column(
