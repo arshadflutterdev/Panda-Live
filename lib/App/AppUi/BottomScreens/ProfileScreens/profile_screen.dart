@@ -261,39 +261,49 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ],
                 ),
-                Column(
-                  children: [
-                    Text(
-                      followingCount.toString(),
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      localization.following,
-                      style: isArabic
-                          ? AppStyle.arabictext.copyWith(
-                              fontSize: 18,
-                              color: Colors.black54,
-                            )
-                          : TextStyle(fontSize: 16, color: Colors.black54),
-                    ),
-                  ],
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed(AppRoutes.following);
+                  },
+                  child: Column(
+                    children: [
+                      Text(
+                        followingCount.toString(),
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Text(
+                        localization.following,
+                        style: isArabic
+                            ? AppStyle.arabictext.copyWith(
+                                fontSize: 18,
+                                color: Colors.black54,
+                              )
+                            : TextStyle(fontSize: 16, color: Colors.black54),
+                      ),
+                    ],
+                  ),
                 ),
-                Column(
-                  children: [
-                    Text(
-                      FollowersCount.toString(),
-                      style: TextStyle(fontSize: 20),
-                    ),
-                    Text(
-                      localization.followers,
-                      style: isArabic
-                          ? AppStyle.arabictext.copyWith(
-                              fontSize: 18,
-                              color: Colors.black54,
-                            )
-                          : TextStyle(fontSize: 16, color: Colors.black54),
-                    ),
-                  ],
+                GestureDetector(
+                  onTap: () {
+                    Get.toNamed(AppRoutes.followers);
+                  },
+                  child: Column(
+                    children: [
+                      Text(
+                        FollowersCount.toString(),
+                        style: TextStyle(fontSize: 20),
+                      ),
+                      Text(
+                        localization.followers,
+                        style: isArabic
+                            ? AppStyle.arabictext.copyWith(
+                                fontSize: 18,
+                                color: Colors.black54,
+                              )
+                            : TextStyle(fontSize: 16, color: Colors.black54),
+                      ),
+                    ],
+                  ),
                 ),
                 Column(
                   children: [
