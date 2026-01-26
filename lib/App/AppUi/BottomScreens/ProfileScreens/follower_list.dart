@@ -13,9 +13,7 @@ class FollowerListScreen extends StatefulWidget {
 }
 
 class _FollowerListScreenState extends State<FollowerListScreen> {
-  final streamcontroll = Get.find<WatchStreamControllers>();
   final dynamic arg = Get.arguments;
-  RxBool isFriend = false.obs;
 
   @override
   Widget build(BuildContext context) {

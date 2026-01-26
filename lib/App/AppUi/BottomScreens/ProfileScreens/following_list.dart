@@ -9,9 +9,11 @@ class FollowingListScreen extends StatefulWidget {
 }
 
 class _FollowingListScreenState extends State<FollowingListScreen> {
-  final arg = Get.arguments;
+  final dynamic arg = Get.arguments;
   @override
   Widget build(BuildContext context) {
+    final List followingList = arg?["followingList"] ?? [];
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -26,7 +28,16 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
         automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.white,
-      body: ListTile(),
+      body: ListView.builder(
+        itemCount: 10,
+        itemBuilder: (context, index) {
+          return ListTile(
+            leading: CircleAvatar(backgroundColor: Colors.red, radius: 25),
+            title: Text("FollowingNmae"),
+            subtitle: Text("You’re following"),
+          );
+        },
+      ),
     );
   }
 }
