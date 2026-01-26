@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/state_manager.dart';
+import 'package:pandlive/App/AppUi/LiveStreaming/WatchStreaming/watch_stream_controllers.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 
 class FollowerListScreen extends StatefulWidget {
@@ -11,6 +13,7 @@ class FollowerListScreen extends StatefulWidget {
 }
 
 class _FollowerListScreenState extends State<FollowerListScreen> {
+  final streamcontroll = Get.find<WatchStreamControllers>();
   final dynamic arg = Get.arguments;
   RxBool isFriend = false.obs;
 
@@ -53,18 +56,16 @@ class _FollowerListScreenState extends State<FollowerListScreen> {
                   trailing: SizedBox(
                     height: 34,
 
-                    child: Obx(
-                      () => ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
-                        ),
-                        onPressed: () {
-                          isFriend.value = !isFriend.value;
-                        },
-                        child: Text(
-                          isFriend.value ? "Friends" : "Follow back",
-                          style: TextStyle(color: Colors.white),
-                        ),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.red,
+                      ),
+                      onPressed: () {
+                        streamcontroll.toggleFollow();
+                      },
+                      child: Text(
+                        isFriend.value ? "Friends" : "Follow back",
+                        style: TextStyle(color: Colors.white),
                       ),
                     ),
                   ),

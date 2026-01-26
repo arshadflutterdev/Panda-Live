@@ -106,7 +106,15 @@ class AppRoutes {
       page: () => ExplorerScreen(searchText: "".obs),
     ),
     //below routes related profile screen
-    GetPage(name: followers, page: () => FollowerListScreen()),
-    GetPage(name: following, page: () => FollowingListScreen()),
+    GetPage(
+      name: followers,
+      binding: AuthBindings(),
+      page: () => FollowerListScreen(),
+    ),
+    GetPage(
+      name: following,
+      binding: AuthBindings(),
+      page: () => FollowingListScreen(),
+    ),
   ];
 }
