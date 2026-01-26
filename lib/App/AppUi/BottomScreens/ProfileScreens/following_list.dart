@@ -10,6 +10,12 @@ class FollowingListScreen extends StatefulWidget {
 class _FollowingListScreenState extends State<FollowingListScreen> {
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Following"),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+      ),
+    );
   }
 }
