@@ -43,6 +43,7 @@ class WatchStreamControllers extends GetxController {
           "followerimage": mydata["userimage"] ?? "",
           "followerId": currenduser,
           "followAt": FieldValue.serverTimestamp(),
+          "userUid": currenduser,
         });
         // Add the Host to my "Following" list
         await myFollowingSub.set({

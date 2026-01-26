@@ -96,6 +96,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     followingList.value = followingSnapshot.docs.map((doc) {
       Map<String, dynamic> mydata = doc.data();
       return {
+        "uid": doc.id,
         "hostname": mydata["hostname"] ?? "unknown",
         "hostimage": mydata["hostimage"] ?? "",
       };
@@ -110,10 +111,45 @@ class _ProfileScreenState extends State<ProfileScreen> {
       Map<String, dynamic> data = doc.data();
       print("here is follower dataaaaa $data");
       return {
+        "uid": doc.id,
         "followername": data["followername"] ?? "no name",
         "followerimage": data["followerimage"] ?? null,
       };
     }).toList();
+    //lets play with frinds
+    // --- Start of Friends Logic ---
+    friendsList.clear();
+
+    // 1. Following IDs nikalen (Mapping mein 'uid' add kiya hai)
+    Set<String> followingIds = followingList
+        .map((e) => e["uid"].toString())
+        .toSet();
+
+    // 2. Followers IDs nikalen (Mapping mein 'uid' add kiya hai)
+    Set<String> followerIds = followerList
+        .map((e) => e["uid"].toString())
+        .toSet();
+
+    // 3. Intersection (Jo dono lists mein common hain)
+    final commonIds = followingIds.intersection(followerIds);
+
+    // 4. Friends List populate karein
+    for (var id in commonIds) {
+      // Following list se us user ka data (name/image) uthayen
+      var friendData = followingList.firstWhere(
+        (element) => element["uid"] == id,
+      );
+
+      friendsList.add({
+        "uid": id,
+        "name": friendData["hostname"],
+        "image": friendData["hostimage"],
+      });
+    }
+
+    // 5. Count update karein
+    frientsCount.value = friendsList.length;
+    // --- End of Friends Logic ---
     if (snapshot.exists && snapshot.data() != null) {
       username.value = snapshot.data()?["name"] ?? "no name";
       print("user name $username");
@@ -136,6 +172,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
           .toSet();
       frientsCount.value = followingIds.intersection(followersId).length;
       print("Friends $frientsCount");
+      frientsCount.value = friendsList.length;
+      followersCount.value = followerList.length;
+      followingCount.value = followingList.length;
     }
   }
 
@@ -268,7 +307,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onTap: () {
                     Get.toNamed(
                       AppRoutes.friends,
-                      arguments: {"friendCount": frientsCount.value},
+                      arguments: {
+                        "friendCount": frientsCount.value,
+                        "friendList": List.of(friendsList),
+                      },
                     );
                   },
                   child: Column(
