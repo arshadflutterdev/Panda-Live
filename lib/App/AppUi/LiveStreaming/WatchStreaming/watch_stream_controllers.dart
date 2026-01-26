@@ -12,6 +12,12 @@ class WatchStreamControllers extends GetxController {
   Future<void> toggleFollow() async {
     // 1. Instantly flip the UI button state
     isfollowing.toggle();
+    //here is current user details
+    final QuerySnapshot = await FirebaseFirestore.instance
+        .doc(currenduser)
+        .collection("userProfile")
+        .get();
+    final data = QuerySnapshot.docs.map((doc) => doc.data()).toList();
 
     // 2. Setup references for the Host (The person being watched)
     var hostProfileRef = FirebaseFirestore.instance
