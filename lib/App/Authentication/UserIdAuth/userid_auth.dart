@@ -1,10 +1,10 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
-import 'package:pandlive/App/Controllers/loading_controller.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
@@ -21,6 +21,7 @@ class UseridAuth extends StatefulWidget {
 }
 
 class _UseridAuthState extends State<UseridAuth> {
+  RxInt shortId = 0.obs;
   // final LoadingController isloading = Get.put(LoadingController());
   RxBool isLoading = false.obs;
   bool isArabic = Get.locale?.languageCode == "ar";
@@ -28,6 +29,28 @@ class _UseridAuthState extends State<UseridAuth> {
   final _formkey = GlobalKey<FormState>();
   RxBool isUserIdEmpty = false.obs;
   TextEditingController userController = TextEditingController();
+
+  final arg = Get.arguments;
+  Future<void> loginwithId() async {
+    final snapshot = await FirebaseFirestore.instance
+        .collection("userProfile")
+        .where("shortId", isEqualTo: int.tryParse(userController.text))
+        .limit(1)
+        .get();
+    if (snapshot.docs.isNotEmpty) {
+      Get.toNamed(AppRoutes.bottomnav);
+    } else {
+      Get.snackbar(
+        "ooOps",
+        "UserId didn't match",
+        colorText: Colors.white,
+        backgroundColor: Colors.red,
+      );
+    }
+  }
+
+  //let't try to login
+
   @override
   Widget build(BuildContext context) {
     double height = AppHeightwidth.screenHeight(context);
@@ -118,13 +141,11 @@ class _UseridAuthState extends State<UseridAuth> {
                     ),
                     fixedSize: Size(width * 0.60, 45),
                   ),
-                  onPressed: () {
+                  onPressed: () async {
                     if (_formkey.currentState!.validate()) {
                       isLoading.value = true;
-                      Timer(Duration(seconds: 2), () {
-                        isLoading.value = false;
-                        Get.toNamed(AppRoutes.bottomnav);
-                      });
+                      await loginwithId();
+                      isLoading.value = false;
                     }
                   },
                   child: Obx(
