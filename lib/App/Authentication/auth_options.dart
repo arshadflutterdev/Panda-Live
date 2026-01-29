@@ -429,29 +429,29 @@ class _AuthOptionsState extends State<AuthOptions> {
                               backgroundImage: AssetImage(AppImages.email),
                             ),
                           ),
-                          Gap(20),
-                          GestureDetector(
-                            onTap: () {
-                              if (checkValue.value == true) {
-                                Get.toNamed(AppRoutes.userauth);
-                              } else {
-                                showDialog(
-                                  context: context,
-                                  builder: (context) => TermsDialog(
-                                    onAccept: () {
-                                      Get.back();
-                                      Get.toNamed(AppRoutes.userauth);
-                                    },
-                                  ),
-                                );
-                              }
-                            },
 
-                            child: CircleAvatar(
-                              backgroundImage: AssetImage(AppImages.userId),
-                            ),
-                          ),
+                          // Gap(20),
+                          // GestureDetector(
+                          //   onTap: () {
+                          //     if (checkValue.value == true) {
+                          //       Get.toNamed(AppRoutes.userauth);
+                          //     } else {
+                          //       showDialog(
+                          //         context: context,
+                          //         builder: (context) => TermsDialog(
+                          //           onAccept: () {
+                          //             Get.back();
+                          //             Get.toNamed(AppRoutes.userauth);
+                          //           },
+                          //         ),
+                          //       );
+                          //     }
+                          //   },
 
+                          //   child: CircleAvatar(
+                          //     backgroundImage: AssetImage(AppImages.userId),
+                          //   ),
+                          // ),
                           Gap(20),
                           GestureDetector(
                             onTap: () {
