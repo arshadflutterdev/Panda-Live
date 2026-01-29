@@ -61,6 +61,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   RxInt followingCount = 0.obs;
   RxInt followersCount = 0.obs;
   RxInt frientsCount = 0.obs;
+  RxInt userId = 0.obs;
   RxBool isloading = false.obs;
   RxList<Map<String, dynamic>> followerList = RxList<Map<String, dynamic>>();
   RxList<Map<String, dynamic>> followingList = RxList<Map<String, dynamic>>();
@@ -154,6 +155,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       frientsCount.value = friendsList.length;
       // --- End of Friends Logic ---
       if (snapshot.exists && snapshot.data() != null) {
+        userId.value = snapshot.data()?["shortId"] ?? "123456";
         username.value = snapshot.data()?["name"] ?? "no name";
         print("user name $username");
         String uid = snapshot.data()?["userId"] ?? "no id";
@@ -232,8 +234,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             radius: 30,
                             backgroundColor: Colors.black38,
                             backgroundImage:
-                                userimage.isNotEmpty &&
-                                    userimage.startsWith("http")
+                                userimage.value.isNotEmpty &&
+                                    userimage.value.startsWith("http")
                                 ? NetworkImage(userimage.value)
                                 : AssetImage(AppImages.girl) as ImageProvider,
                           ),
@@ -283,7 +285,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                         Gap(4),
                                         Text(
-                                          "78491356",
+                                          userId.value.toString(),
                                           style: TextStyle(
                                             fontSize: 14,
                                             color: Colors.black,
