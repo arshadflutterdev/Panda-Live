@@ -62,6 +62,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   RxInt followingCount = 0.obs;
   RxInt followersCount = 0.obs;
   RxInt frientsCount = 0.obs;
+  RxInt awardCoins = 0.obs;
+
   RxInt userId = 0.obs;
   RxBool isloading = false.obs;
   RxList<Map<String, dynamic>> followerList = RxList<Map<String, dynamic>>();
@@ -156,6 +158,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       frientsCount.value = friendsList.length;
       // --- End of Friends Logic ---
       if (snapshot.exists && snapshot.data() != null) {
+        awardCoins.value = snapshot.data()?["coins"] ?? 0;
         userId.value = snapshot.data()?["shortId"] ?? "123456";
         username.value = snapshot.data()?["name"] ?? "no name";
         print("user name $username");
@@ -458,7 +461,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ? AppStyle.arabictext
                                         : TextStyle(),
                                   ),
-                                  Text("0"),
+                                  Text(awardCoins.value.toString()),
                                 ],
                               ),
                               Spacer(),

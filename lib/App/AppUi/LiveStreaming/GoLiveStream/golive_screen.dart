@@ -45,7 +45,7 @@ class _GoliveScreenState extends State<GoliveScreen>
 
   //here is function to earn coins
   Timer? coinstimer;
-  final int coinsperminute = 10;
+  final int coinsperminute = 50;
   void startCoinsTimer() {
     coinstimer?.cancel();
     coinstimer = Timer.periodic(Duration(minutes: 1), (_) => awardCoins());
