@@ -35,7 +35,7 @@ class _FollowerListScreenState extends State<FollowerListScreen> {
       ),
       backgroundColor: Colors.white,
       body: followergList.isEmpty
-          ? Text("You haven't follow")
+          ? Center(child: Text("You don't have any followers yet 😢"))
           : ListView.builder(
               itemCount: followergList.length,
               itemBuilder: (context, index) {

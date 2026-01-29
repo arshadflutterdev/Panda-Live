@@ -31,27 +31,29 @@ class _FriendsListScreenState extends State<FriendsListScreen> {
         ),
       ),
       backgroundColor: Colors.white,
-      body: ListView.builder(
-        itemCount: friendList.length,
+      body: friendList.isEmpty
+          ? Center(child: Text("You’re flying solo for now 😎"))
+          : ListView.builder(
+              itemCount: friendList.length,
 
-        itemBuilder: (context, index) {
-          final data = friendList[index];
-          return ListTile(
-            title: Text("${data["name"]}"),
-            subtitle: Text(
-              "Your friend",
-              style: TextStyle(color: Colors.black54),
+              itemBuilder: (context, index) {
+                final data = friendList[index];
+                return ListTile(
+                  title: Text("${data["name"]}"),
+                  subtitle: Text(
+                    "Your friend",
+                    style: TextStyle(color: Colors.black54),
+                  ),
+                  leading: CircleAvatar(
+                    radius: 25,
+                    backgroundColor: Colors.red,
+                    backgroundImage: data["image"].toString().startsWith("http")
+                        ? NetworkImage(data["image"])
+                        : AssetImage(AppImages.profile),
+                  ),
+                );
+              },
             ),
-            leading: CircleAvatar(
-              radius: 25,
-              backgroundColor: Colors.red,
-              backgroundImage: data["image"].toString().startsWith("http")
-                  ? NetworkImage(data["image"])
-                  : AssetImage(AppImages.profile),
-            ),
-          );
-        },
-      ),
     );
   }
 }

@@ -29,24 +29,26 @@ class _FollowingListScreenState extends State<FollowingListScreen> {
         automaticallyImplyLeading: false,
       ),
       backgroundColor: Colors.white,
-      body: ListView.builder(
-        itemCount: followingList.length,
-        itemBuilder: (context, index) {
-          final following = followingList[index];
-          return ListTile(
-            leading: CircleAvatar(
-              backgroundColor: Colors.red,
-              radius: 25,
-              backgroundImage:
-                  following["hostimage"].toString().startsWith("http")
-                  ? NetworkImage(following["hostimage"])
-                  : AssetImage(AppImages.profile),
+      body: followingList.isEmpty
+          ? Center(child: Text("You haven't followed anyone yet!"))
+          : ListView.builder(
+              itemCount: followingList.length,
+              itemBuilder: (context, index) {
+                final following = followingList[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                    backgroundColor: Colors.red,
+                    radius: 25,
+                    backgroundImage:
+                        following["hostimage"].toString().startsWith("http")
+                        ? NetworkImage(following["hostimage"])
+                        : AssetImage(AppImages.profile),
+                  ),
+                  title: Text("${following["hostname"]}"),
+                  subtitle: Text("You’re following"),
+                );
+              },
             ),
-            title: Text("${following["hostname"]}"),
-            subtitle: Text("You’re following"),
-          );
-        },
-      ),
     );
   }
 }
