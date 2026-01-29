@@ -43,6 +43,11 @@ class _GoliveScreenState extends State<GoliveScreen>
     });
   }
 
+  //here is function to earn coins
+  Timer? coinstimer;
+  final int coinsperminute = 10;
+  Future<void>
+
   RxBool isMute = false.obs;
   var data = Get.arguments;
   late String channelId;
