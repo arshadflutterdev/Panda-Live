@@ -46,7 +46,7 @@ class _GoliveScreenState extends State<GoliveScreen>
   //here is function to earn coins
   Timer? coinstimer;
   final int coinsperminute = 10;
-  void startTimer() {
+  void startCoinsTimer() {
     coinstimer?.cancel();
     coinstimer = Timer.periodic(Duration(minutes: 1), (_) => awardCoins());
   }
@@ -57,16 +57,41 @@ class _GoliveScreenState extends State<GoliveScreen>
       final userDoc = FirebaseFirestore.instance
           .collection("userProfile")
           .doc(userId);
+
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         final snapshot = await transaction.get(userDoc);
-        int coins = snapshot.data()?["coins"] ?? 0;
-        transaction.update(userDoc, {"coins": coins + coinsperminute});
+
+        if (!snapshot.exists) {
+          // Agar document pehle nahi hai, create kar do with 10 coins
+          transaction.set(userDoc, {"coins": coinsperminute});
+        } else {
+          int coins = snapshot.data()?["coins"] ?? 0;
+          transaction.update(userDoc, {"coins": coins + coinsperminute});
+        }
       });
+
       debugPrint("Host awarded $coinsperminute coins!");
     } catch (e) {
-      debugPrint("error is here $e");
+      debugPrint("error awarding coins: $e");
     }
   }
+
+  // Future<void> awardCoins() async {
+  //   try {
+  //     final userId = FirebaseAuth.instance.currentUser!.uid;
+  //     final userDoc = FirebaseFirestore.instance
+  //         .collection("userProfile")
+  //         .doc(userId);
+  //     await FirebaseFirestore.instance.runTransaction((transaction) async {
+  //       final snapshot = await transaction.get(userDoc);
+  //       int coins = snapshot.data()?["coins"] ?? 0;
+  //       transaction.update(userDoc, {"coins": coins + coinsperminute});
+  //     });
+  //     debugPrint("Host awarded $coinsperminute coins!");
+  //   } catch (e) {
+  //     debugPrint("error is here $e");
+  //   }
+  // }
 
   RxBool isMute = false.obs;
   var data = Get.arguments;
@@ -112,16 +137,19 @@ class _GoliveScreenState extends State<GoliveScreen>
                 "isLive": true,
               }, SetOptions(merge: true));
           isJoined.value = true;
+          startCoinsTimer();
           // STEP A: Create the controller ONLY when the connection is active
 
           // STEP B: Update GetX to rebuild the UI
           isJoined.value = true;
         },
+
         onUserJoined: (RtcConnection connection, int remoteUid, int elapsed) {
           if (!remoteUsers.contains(remoteUid)) {
             remoteUsers.add(remoteUid);
           }
         },
+
         onUserOffline:
             (
               RtcConnection connection,
