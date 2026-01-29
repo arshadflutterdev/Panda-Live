@@ -5,6 +5,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:get/route_manager.dart';
@@ -293,7 +294,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ),
                                         IconButton(
                                           padding: EdgeInsets.zero,
-                                          onPressed: () {},
+                                          onPressed: () {
+                                            Clipboard.setData(
+                                              ClipboardData(
+                                                text: userId.toString(),
+                                              ),
+                                            );
+                                            ScaffoldMessenger.of(
+                                              context,
+                                            ).showSnackBar(
+                                              SnackBar(
+                                                content: Text(
+                                                  "User ID copied $userId",
+                                                ),
+                                              ),
+                                            );
+                                          },
                                           icon: Icon(Icons.copy, size: 17),
                                         ),
                                       ],
