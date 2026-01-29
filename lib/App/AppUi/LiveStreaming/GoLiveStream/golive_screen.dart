@@ -46,7 +46,27 @@ class _GoliveScreenState extends State<GoliveScreen>
   //here is function to earn coins
   Timer? coinstimer;
   final int coinsperminute = 10;
-  Future<void>
+  void startTimer() {
+    coinstimer?.cancel();
+    coinstimer = Timer.periodic(Duration(minutes: 1), (_) => awardCoins());
+  }
+
+  Future<void> awardCoins() async {
+    try {
+      final userId = FirebaseAuth.instance.currentUser!.uid;
+      final userDoc = FirebaseFirestore.instance
+          .collection("userProfile")
+          .doc(userId);
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final snapshot = await transaction.get(userDoc);
+        int coins = snapshot.data()?["coins"] ?? 0;
+        transaction.update(userDoc, {"coins": coins + coinsperminute});
+      });
+      debugPrint("Host awarded $coinsperminute coins!");
+    } catch (e) {
+      debugPrint("error is here $e");
+    }
+  }
 
   RxBool isMute = false.obs;
   var data = Get.arguments;
@@ -274,6 +294,7 @@ class _GoliveScreenState extends State<GoliveScreen>
 
   bool isShutdown = false;
   Future<void> _shutdownHost() async {
+    coinstimer?.cancel();
     if (isShutdown) return;
     isShutdown = true;
 
