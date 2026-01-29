@@ -35,8 +35,8 @@ class MyTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       minLines: 1,
-      maxLines: 10,
 
+      // maxLines: 10,
       onTap: ontapp,
 
       readOnly: read ?? false,

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -299,12 +300,15 @@ class _VerifyEmailState extends State<VerifyEmail> {
                                 await user.updatePassword(
                                   passController.text.trim(),
                                 );
+                                final shortUserId =
+                                    Random().nextInt(900000) + 100000;
                                 Get.offAllNamed(
                                   AppRoutes.createprofile,
                                   arguments: {
                                     "userId": userid,
                                     "username": username,
                                     "userpass": passController.text,
+                                    "shortId": shortUserId,
                                   },
                                 );
                               } else {
