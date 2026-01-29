@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:get/get.dart';
@@ -25,6 +27,7 @@ class GoogleAuthController extends GetxController {
       UserCredential? usercredential = await FirebaseAuth.instance
           .signInWithCredential(credentials);
       User? user = usercredential.user;
+
       final doc = await FirebaseFirestore.instance
           .collection("userProfile")
           .doc(user!.uid)
@@ -32,14 +35,18 @@ class GoogleAuthController extends GetxController {
       if (doc.exists) {
         Get.offAllNamed(AppRoutes.bottomnav);
       } else {
+        int shortId = Random().nextInt(900000) + 100000;
+
         Get.toNamed(
           AppRoutes.createprofile,
           arguments: {
             "userId": user.uid,
             "username": user.displayName,
             "userphoto": user.photoURL,
+            "shortId": shortId,
           },
         );
+        print("here is short Id  $shortId");
         print("user id ${user.uid}");
         print("username ${user.displayName}");
         print("user phote ${user.photoURL}");
