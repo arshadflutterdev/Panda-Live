@@ -171,7 +171,7 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                   crossAxisSpacing: 4,
                   mainAxisSpacing: 4,
                   crossAxisCount: 2,
-                  childAspectRatio: 0.1,
+                  childAspectRatio: 1.1,
                 ),
                 itemBuilder: (context, index) {
                   final data =

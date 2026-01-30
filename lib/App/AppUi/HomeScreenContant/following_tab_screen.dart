@@ -73,7 +73,13 @@ class _FollowingScreenState extends State<FollowingScreen> {
         () => isloadingFollowing.value
             ? Center(child: CircularProgressIndicator())
             : followingIdsList.isEmpty
-            ? Center(child: Text("there no streamer"))
+            ? Center(
+                child: Text(
+                  isArabic
+                      ? "لا يبثّ اللاعبون الذين تتابعهم مباشرةً الآن"
+                      : "Streamers you follow are not live right now",
+                ),
+              )
             : StreamBuilder<QuerySnapshot>(
                 stream: liveStream
                     .where("uid", whereIn: followingIdsList)
