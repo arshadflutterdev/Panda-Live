@@ -139,7 +139,7 @@ class _GoliveScreenState extends State<GoliveScreen>
               }, SetOptions(merge: true));
           isJoined.value = true;
           startCoinsTimer();
-          _startLiveTimers();
+          // _startLiveTimers();
           // STEP A: Create the controller ONLY when the connection is active
 
           // STEP B: Update GetX to rebuild the UI
@@ -226,7 +226,6 @@ class _GoliveScreenState extends State<GoliveScreen>
   RxBool isJoined = false.obs; // This is the key!
 
   Timer? liveTimer;
-  final int maxDailySeconds = 3 * 60 * 60;
   RxInt liveSeconds = 0.obs;
   String get liveTime {
     final minutes = liveSeconds.value ~/ 60;
@@ -304,45 +303,11 @@ class _GoliveScreenState extends State<GoliveScreen>
 
   // Helper to start timers only when live
   void _startLiveTimers() async {
-    final userId = FirebaseAuth.instance.currentUser!.uid;
-    final userDoc = FirebaseFirestore.instance
-        .collection("userProfile")
-        .doc(userId);
-    final snapshot = await userDoc.get();
-    int dailyLiveSeconds = 0;
-    String today = DateTime.now().toIso8601String().split('T')[0];
-    if (snapshot.exists) {
-      String lastDate = snapshot.data()?["lastLiveDate"] ?? "";
-      if (lastDate == today) {
-        dailyLiveSeconds = snapshot.data()?["dailyLiveSeconds"] ?? 0;
-      } else {
-        dailyLiveSeconds = 0;
-      }
-    }
     _startHeartbeat();
 
     liveTimer = Timer.periodic(const Duration(seconds: 1), (timer) async {
-      dailyLiveSeconds++;
       liveSeconds.value++;
-      await userDoc.set({
-        "dailyLiveSeconds": dailyLiveSeconds,
-        "lastLiveDate": today,
-      }, SetOptions(merge: true));
-      if (dailyLiveSeconds >= maxDailySeconds) {
-        timer.cancel();
-        stopLiveAutomatically();
-      }
     });
-  }
-
-  void stopLiveAutomatically() async {
-    Get.snackbar(
-      "Limit Reached",
-      "You can live only 3 hours per day.",
-      backgroundColor: Colors.red,
-      colorText: Colors.white,
-    );
-    _shutdownHost();
   }
 
   @override
@@ -361,11 +326,12 @@ class _GoliveScreenState extends State<GoliveScreen>
   bool isShutdown = false;
   Future<void> _shutdownHost() async {
     coinstimer?.cancel();
+    liveTimer?.cancel();
+
     if (isShutdown) return;
     isShutdown = true;
 
     // Stop all timers regardless of whether they are active or not
-    liveTimer?.cancel();
     heartbeatTimer?.cancel();
     _backgroundExitTimer?.cancel();
 
