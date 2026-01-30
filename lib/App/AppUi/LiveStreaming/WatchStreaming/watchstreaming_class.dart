@@ -89,9 +89,11 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
                     colorText: Colors.white,
                     backgroundColor: Colors.black,
                   );
-                  Get.back(); // Kick viewer back to list
-                  return;
+                  Future.delayed(Duration(seconds: 2), () {
+                    Get.back(); // Kick viewer back to list
+                  });
                 }
+                return;
                 // remoteviewController.value = null;
                 // _isStreamEndedByHost = true;
               }

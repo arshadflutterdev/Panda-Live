@@ -117,6 +117,7 @@ class _GoliveScreenState extends State<GoliveScreen>
 
     // 2. Initialize Engine
     _engine = createAgoraRtcEngine();
+
     await _engine.initialize(
       RtcEngineContext(
         appId: appId,
@@ -195,6 +196,16 @@ class _GoliveScreenState extends State<GoliveScreen>
 
     // 4. Config Hardware
     await _engine.setClientRole(role: ClientRoleType.clientRoleBroadcaster);
+    await _engine.enableAudio();
+    await _engine.setAudioProfile(
+      profile: AudioProfileType.audioProfileSpeechStandard,
+      scenario: AudioScenarioType.audioScenarioDefault,
+    );
+
+    // Noise suppression, echo cancellation, auto gain control
+    await _engine.setParameters('{"che.audio.enableNoiseSuppression":true}');
+    await _engine.setParameters('{"che.audio.enableAEC":true}');
+    await _engine.setParameters('{"che.audio.enableAGC":true}');
     await _engine.enableVideo();
     await _engine.startPreview();
     _localviewController = VideoViewController(
