@@ -1,32 +1,28 @@
-/**
- * Import function triggers from their respective submodules:
- *
- * const {onCall} = require("firebase-functions/v2/https");
- * const {onDocumentWritten} = require("firebase-functions/v2/firestore");
- *
- * See a full list of supported triggers at https://firebase.google.com/docs/functions
- */
+const functions = require("firebase-functions");
+const { RtcTokenBuilder, RtcRole } = require("agora-token");
 
-const {setGlobalOptions} = require("firebase-functions");
-const {onRequest} = require("firebase-functions/https");
-const logger = require("firebase-functions/logger");
+// Yeh function Flutter app call karegi
+exports.getAgoraToken = functions.https.onCall((data, context) => {
+    // Screenshot se dekh kar yahan sahi values likhein
+    const appId = "9d3b775f339d4daf8b15f1c7d0cc7f3f";
+    const appCertificate = "72981b59bb0e41d2a18d3aa293bc7350";
 
-// For cost control, you can set the maximum number of containers that can be
-// running at the same time. This helps mitigate the impact of unexpected
-// traffic spikes by instead downgrading performance. This limit is a
-// per-function limit. You can override the limit for each function using the
-// `maxInstances` option in the function's options, e.g.
-// `onRequest({ maxInstances: 5 }, (req, res) => { ... })`.
-// NOTE: setGlobalOptions does not apply to functions using the v1 API. V1
-// functions should each use functions.runWith({ maxInstances: 10 }) instead.
-// In the v1 API, each function can only serve one request per container, so
-// this will be the maximum concurrent request count.
-setGlobalOptions({ maxInstances: 10 });
+    const channelName = data.channelName;
+    const uid = data.uid || 0;
+    const role = RtcRole.PUBLISHER; // Broadcaster/Host ke liye
 
-// Create and deploy your first functions
-// https://firebase.google.com/docs/functions/get-started
+    const expirationTimeInSeconds = 3600; // 1 ghanta valid rahega
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const privilegeExpiredTs = currentTimestamp + expirationTimeInSeconds;
 
-// exports.helloWorld = onRequest((request, response) => {
-//   logger.info("Hello logs!", {structuredData: true});
-//   response.send("Hello from Firebase!");
-// });
+    const token = RtcTokenBuilder.buildTokenWithUid(
+        appId,
+        appCertificate,
+        channelName,
+        uid,
+        role,
+        privilegeExpiredTs
+    );
+
+    return { token: token };
+});
