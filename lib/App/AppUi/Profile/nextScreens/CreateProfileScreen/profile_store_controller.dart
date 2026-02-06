@@ -15,6 +15,7 @@ class ProfileStoreController extends GetxController {
   final user = FirebaseAuth.instance.currentUser!.uid;
   RxString userphoto = "".obs;
   Rxn<File> image = Rxn<File>();
+
   Future<void> storeuserprofile() async {
     final shortId = arg["shortId"];
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
