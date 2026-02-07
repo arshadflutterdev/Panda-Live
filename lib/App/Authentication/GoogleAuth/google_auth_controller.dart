@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
@@ -33,6 +34,19 @@ class GoogleAuthController extends GetxController {
           .doc(user!.uid)
           .get();
       if (doc.exists) {
+        var data = doc.data() as Map<String, dynamic>;
+        if (data["blockStatus"] == "blocked") {
+          await FirebaseAuth.instance.signOut();
+          await gsignin.signOut();
+
+          Get.snackbar(
+            "Access Denied",
+            "Your account is blocked by the admin. You cannot log in.",
+            backgroundColor: Colors.red,
+            colorText: Colors.white,
+          );
+          return null;
+        }
         Get.offAllNamed(AppRoutes.bottomnav);
       } else {
         int shortId = Random().nextInt(900000) + 100000;

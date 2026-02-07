@@ -33,8 +33,8 @@ class _SplashScreenState extends State<SplashScreen> {
               await FirebaseAuth.instance.signOut();
               Get.offAllNamed(AppRoutes.authoptions);
               Get.snackbar(
-                "Account Blocked",
-                "Aapka account block kar diya gaya hai.",
+                "Account Suspended",
+                "Your account has been blocked by the admin. Please contact support for further details.",
                 backgroundColor: Colors.red,
                 colorText: Colors.white,
               );
@@ -49,7 +49,7 @@ class _SplashScreenState extends State<SplashScreen> {
           Get.offAllNamed(AppRoutes.authoptions);
         }
       } else {
-        Get.toNamed(AppRoutes.authoptions);
+        Get.offAllNamed(AppRoutes.authoptions);
       }
     });
   }
