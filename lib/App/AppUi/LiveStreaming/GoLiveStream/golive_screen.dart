@@ -107,7 +107,7 @@ class _GoliveScreenState extends State<GoliveScreen>
   late RtcEngine _engine;
   final String appId = "5eda14d417924d9baf39e83613e8f8f5";
   final String tempToken =
-      "007eJxTYLj+6dy8P7+qr0ovSwqOO8idLGN/0jF1Ma8v+5KC26cFf69VYLBMMU4yNzdNMza2TDFJSUyzSDI0TTNMNk8xSE42TzNOCxdpy2wIZGQw/HuHhZEBAkF8PoaS1OKSzLx054zEvLzUHAYGAD33JTM=";
+      "007eJxTYHhpXpfS+v0ht9yjOZXsNdukeVL8Fvt8VZ18hktuftOpgA4FBssU4yRzc9M0Y2PLFJOUxDSLJEPTNMNk8xSD5GTzNOO0RxLtmQ2BjAyZVgEsjAwQCOLzMZSkFpdk5qU7ZyTm5aXmMDAAAHbrItE=";
   // final String channelName = "testingChannel";
   VideoViewController? _localviewController;
 
