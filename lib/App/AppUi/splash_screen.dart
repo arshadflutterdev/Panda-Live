@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
@@ -19,9 +20,34 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    Timer(Duration(seconds: 3), () {
+    Timer(Duration(seconds: 3), () async {
       if (currentuser != null) {
-        Get.toNamed(AppRoutes.bottomnav);
+        try {
+          DocumentSnapshot userData = await FirebaseFirestore.instance
+              .collection("userProfile")
+              .doc(currentuser!.uid)
+              .get();
+          if (userData.exists) {
+            var data = userData.data() as Map<String, dynamic>;
+            if (data["blockStatus"] == "blocked") {
+              await FirebaseAuth.instance.signOut();
+              Get.offAllNamed(AppRoutes.authoptions);
+              Get.snackbar(
+                "Account Blocked",
+                "Aapka account block kar diya gaya hai.",
+                backgroundColor: Colors.red,
+                colorText: Colors.white,
+              );
+            } else {
+              Get.offAllNamed(AppRoutes.bottomnav);
+            }
+          } else {
+            Get.offAllNamed(AppRoutes.authoptions);
+          }
+        } catch (e) {
+          debugPrint("Error: $e");
+          Get.offAllNamed(AppRoutes.authoptions);
+        }
       } else {
         Get.toNamed(AppRoutes.authoptions);
       }
