@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -17,7 +18,28 @@ class EmailLoginController extends GetxController {
           .signInWithEmailAndPassword(email: email, password: password);
       User? user = usercredential.user;
       if (user != null) {
-        Get.offAllNamed(AppRoutes.bottomnav);
+        final doc = await FirebaseFirestore.instance
+            .collection("userProfile")
+            .doc(user.uid)
+            .get();
+        if (doc.exists) {
+          var data = doc.data() as Map<String, dynamic>;
+          if (data["blockStatus"] == "blocked") {
+            await FirebaseAuth.instance.signOut();
+            Get.offAllNamed(AppRoutes.authoptions);
+
+            Get.snackbar(
+              "Access Denied",
+              "Your account is blocked by the admin. You cannot log in.",
+              backgroundColor: Colors.red,
+              colorText: Colors.white,
+            );
+            return;
+          }
+          Get.offAllNamed(AppRoutes.bottomnav);
+        } else {
+          Get.toNamed(AppRoutes.createprofile, arguments: {"userId": user.uid});
+        }
       }
     } on FirebaseAuthException catch (e) {
       if (e.code == "user-not-found") {
