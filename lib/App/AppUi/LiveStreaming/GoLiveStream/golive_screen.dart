@@ -55,18 +55,20 @@ class _GoliveScreenState extends State<GoliveScreen>
     try {
       final user = FirebaseAuth.instance.currentUser;
       if (user == null) return;
-      final userId = FirebaseAuth.instance.currentUser!.uid;
+      final userId = user.uid;
 
       final userDoc = FirebaseFirestore.instance
           .collection("userProfile")
           .doc(userId);
       DateTime now = DateTime.now();
-      String today = "${now.year}-${now.month}-${now.day}";
+      String today =
+          "${now.year}-${now.month.toString().padLeft(2, '0')}-${now.day.toString().padLeft(2, '0')}";
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         final snapshot = await transaction.get(userDoc);
-        if (!snapshot.exists) return;
 
-        if (!snapshot.exists) {
+        if (!snapshot.exists ||
+            snapshot.data() == null ||
+            snapshot.data()?["coins"] == null) {
           // Agar document pehle nahi hai, create kar do with 10 coins
           transaction.set(userDoc, {
             "coins": coinsperminute,
@@ -74,6 +76,7 @@ class _GoliveScreenState extends State<GoliveScreen>
             "lastAwardDate": today,
             "cycleStartDate": today,
           }, SetOptions(merge: true));
+          debugPrint("Fields initialized for the first time!");
           return;
         }
         Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
