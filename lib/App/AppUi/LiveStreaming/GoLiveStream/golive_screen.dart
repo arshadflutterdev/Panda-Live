@@ -64,6 +64,7 @@ class _GoliveScreenState extends State<GoliveScreen>
       String today = "${now.year}-${now.month}-${now.day}";
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         final snapshot = await transaction.get(userDoc);
+        if (!snapshot.exists) return;
 
         if (!snapshot.exists) {
           // Agar document pehle nahi hai, create kar do with 10 coins
@@ -71,6 +72,7 @@ class _GoliveScreenState extends State<GoliveScreen>
             "coins": coinsperminute,
             "dailyCoinsEarned": coinsperminute,
             "lastAwardDate": today,
+            "cycleStartDate": today,
           }, SetOptions(merge: true));
           return;
         }
@@ -78,6 +80,26 @@ class _GoliveScreenState extends State<GoliveScreen>
         int totalCoins = data["coins"] ?? 0;
         int dailyEarned = data["dailyCoinsEarned"] ?? 0;
         String lastDate = data["lastAwardDate"] ?? "";
+        String cycleStartedDatestr = data["cycleStartDate"] ?? today;
+        DateTime cycleStart = DateTime.parse(cycleStartedDatestr);
+        // Sirf date compare karne ke liye midnight normalize karna zaruri hai
+        int daysDifference = DateTime(now.year, now.month, now.day)
+            .difference(
+              DateTime(cycleStart.year, cycleStart.month, cycleStart.day),
+            )
+            .inDays;
+        if (daysDifference >= 5) {
+          if (totalCoins < 45000) {
+            totalCoins = 0; // Target poora nahi hua, coins zero
+            debugPrint(
+              "Target missed ($totalCoins < 45000). Resetting coins to 0.",
+            );
+          } else {
+            debugPrint("Target Achieved! Coins Safe.");
+          }
+          cycleStartedDatestr = today;
+          dailyEarned = 0;
+        }
         if (lastDate != today) {
           dailyEarned = 0;
         }
@@ -90,6 +112,7 @@ class _GoliveScreenState extends State<GoliveScreen>
             "coins": totalCoins + coinsToAdd,
             "dailyCoinsEarned": dailyEarned + coinsToAdd,
             "lastAwardDate": today,
+            "cycleStartDate": cycleStartedDatestr,
           });
           debugPrint(
             "Host awarded $coinsToAdd coins. Daily total: ${dailyEarned + coinsToAdd}",
