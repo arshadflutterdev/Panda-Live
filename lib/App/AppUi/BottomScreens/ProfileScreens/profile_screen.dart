@@ -475,6 +475,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     );
                                   }
                                 } else {
+                                  Get.back();
                                   Get.snackbar(
                                     "Low Balance",
                                     "Coins less then 100 Please Go Live to earn more",
