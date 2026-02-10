@@ -442,7 +442,56 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
-                          Get.defaultDialog();
+                          Get.defaultDialog(
+                            backgroundColor: Colors.white,
+                            title: "Radeem Your Coins",
+                            titleStyle: TextStyle(fontSize: 18),
+                            middleText: "Convert 45k Coins To 45\$",
+                            confirm: TextButton(
+                              onPressed: () async {
+                                if (awardCoins.value >= 100) {
+                                  try {
+                                    final uid =
+                                        FirebaseAuth.instance.currentUser!.uid;
+                                    await FirebaseFirestore.instance
+                                        .collection("userProfile")
+                                        .doc(uid)
+                                        .update({
+                                          "coins": FieldValue.increment(-100),
+                                          "dollars": FieldValue.increment(1),
+                                        });
+                                    awardCoins.value -= 100;
+                                    Get.back();
+                                    Get.snackbar(
+                                      "Success",
+                                      "100 Coins redeemed! 1\$ added to your account.",
+                                      backgroundColor: Colors.green,
+                                      colorText: Colors.white,
+                                    );
+                                  } catch (e) {
+                                    Get.snackbar(
+                                      "Error",
+                                      "Transaction failed: $e",
+                                    );
+                                  }
+                                } else {
+                                  Get.snackbar(
+                                    "Low Balance",
+                                    "Coins less then 100 Please Go Live to earn more",
+                                    backgroundColor: Colors.red,
+                                    colorText: Colors.white,
+                                  );
+                                }
+                              },
+                              child: Text("Radeem"),
+                            ),
+                            cancel: TextButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              child: Text("Not now"),
+                            ),
+                          );
                         },
                         child: Container(
                           width: width * 0.45,
