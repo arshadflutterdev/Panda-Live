@@ -107,23 +107,6 @@ class _GoliveScreenState extends State<GoliveScreen>
     }
   }
 
-  // Future<void> awardCoins() async {
-  //   try {
-  //     final userId = FirebaseAuth.instance.currentUser!.uid;
-  //     final userDoc = FirebaseFirestore.instance
-  //         .collection("userProfile")
-  //         .doc(userId);
-  //     await FirebaseFirestore.instance.runTransaction((transaction) async {
-  //       final snapshot = await transaction.get(userDoc);
-  //       int coins = snapshot.data()?["coins"] ?? 0;
-  //       transaction.update(userDoc, {"coins": coins + coinsperminute});
-  //     });
-  //     debugPrint("Host awarded $coinsperminute coins!");
-  //   } catch (e) {
-  //     debugPrint("error is here $e");
-  //   }
-  // }
-
   RxBool isMute = false.obs;
   var data = Get.arguments;
   late String channelId;
