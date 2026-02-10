@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:math';
 
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -54,20 +53,51 @@ class _GoliveScreenState extends State<GoliveScreen>
 
   Future<void> awardCoins() async {
     try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user == null) return;
       final userId = FirebaseAuth.instance.currentUser!.uid;
+
       final userDoc = FirebaseFirestore.instance
           .collection("userProfile")
           .doc(userId);
-
+      DateTime now = DateTime.now();
+      String today = "${now.year}-${now.month}-${now.day}";
       await FirebaseFirestore.instance.runTransaction((transaction) async {
         final snapshot = await transaction.get(userDoc);
 
         if (!snapshot.exists) {
           // Agar document pehle nahi hai, create kar do with 10 coins
-          transaction.set(userDoc, {"coins": coinsperminute});
+          transaction.set(userDoc, {
+            "coins": coinsperminute,
+            "dailyCoinsEarned": coinsperminute,
+            "lastAwardDate": today,
+          }, SetOptions(merge: true));
+          return;
+        }
+        Map<String, dynamic> data = snapshot.data() as Map<String, dynamic>;
+        int totalCoins = data["coins"] ?? 0;
+        int dailyEarned = data["dailyCoinsEarned"] ?? 0;
+        String lastDate = data["lastAwardDate"] ?? "";
+        if (lastDate != today) {
+          dailyEarned = 0;
+        }
+        if (dailyEarned < 9000) {
+          int remainingCoins = 9000 - dailyEarned;
+          int coinsToAdd = (remainingCoins >= coinsperminute)
+              ? coinsperminute
+              : remainingCoins;
+          transaction.update(userDoc, {
+            "coins": totalCoins + coinsToAdd,
+            "dailyCoinsEarned": dailyEarned + coinsToAdd,
+            "lastAwardDate": today,
+          });
+          debugPrint(
+            "Host awarded $coinsToAdd coins. Daily total: ${dailyEarned + coinsToAdd}",
+          );
         } else {
-          int coins = snapshot.data()?["coins"] ?? 0;
-          transaction.update(userDoc, {"coins": coins + coinsperminute});
+          // int coins = snapshot.data()?["coins"] ?? 0;
+          // transaction.update(userDoc, {"coins": coins + coinsperminute});
+          debugPrint("Daily limit reached. No more coins for today.");
         }
       });
 
