@@ -252,73 +252,75 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               // mainAxisSize: MainAxisSize.min,
                               children: [
-                                Text(
-                                  username.value,
-                                  style: isArabic
-                                      ? AppStyle.arabictext.copyWith(
-                                          fontSize: 22,
-                                          height: 0.50,
-                                          fontWeight: FontWeight.bold,
-                                        )
-                                      : AppStyle.logo.copyWith(
-                                          fontSize: 20,
-                                          height: 0.50,
-                                        ),
-                                ),
                                 Padding(
-                                  padding: const EdgeInsets.only(left: 10),
-                                  child: Directionality(
-                                    textDirection: TextDirection.ltr,
-                                    child: Row(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        DecoratedBox(
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            color: Colors.black38,
+                                  padding: const EdgeInsets.symmetric(
+                                    horizontal: 4,
+                                  ),
+                                  child: Text(
+                                    username.value,
+                                    style: isArabic
+                                        ? AppStyle.arabictext.copyWith(
+                                            fontSize: 22,
+                                            height: 0.50,
+                                            fontWeight: FontWeight.w600,
+                                          )
+                                        : AppStyle.logo.copyWith(
+                                            fontSize: 20,
+                                            height: 0.50,
                                           ),
-                                          child: Padding(
-                                            padding: const EdgeInsets.all(2.0),
-                                            child: Text(
-                                              "ID",
-                                              style: TextStyle(
-                                                fontSize: 14,
-                                                color: Colors.white,
-                                              ),
+                                  ),
+                                ),
+                                Directionality(
+                                  textDirection: TextDirection.ltr,
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      DecoratedBox(
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.black38,
+                                        ),
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(2.0),
+                                          child: Text(
+                                            "ID",
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                              color: Colors.white,
                                             ),
                                           ),
                                         ),
-                                        Gap(4),
-                                        Text(
-                                          userId.value.toString(),
-                                          style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.black,
-                                          ),
+                                      ),
+                                      Gap(4),
+                                      Text(
+                                        userId.value.toString(),
+                                        style: TextStyle(
+                                          fontSize: 14,
+                                          color: Colors.black,
                                         ),
-                                        IconButton(
-                                          padding: EdgeInsets.zero,
-                                          onPressed: () {
-                                            Clipboard.setData(
-                                              ClipboardData(
-                                                text: userId.toString(),
+                                      ),
+                                      IconButton(
+                                        padding: EdgeInsets.zero,
+                                        onPressed: () {
+                                          Clipboard.setData(
+                                            ClipboardData(
+                                              text: userId.toString(),
+                                            ),
+                                          );
+                                          ScaffoldMessenger.of(
+                                            context,
+                                          ).showSnackBar(
+                                            SnackBar(
+                                              content: Text(
+                                                "User ID copied $userId",
                                               ),
-                                            );
-                                            ScaffoldMessenger.of(
-                                              context,
-                                            ).showSnackBar(
-                                              SnackBar(
-                                                content: Text(
-                                                  "User ID copied $userId",
-                                                ),
-                                              ),
-                                            );
-                                          },
-                                          icon: Icon(Icons.copy, size: 17),
-                                        ),
-                                      ],
-                                    ),
+                                            ),
+                                          );
+                                        },
+                                        icon: Icon(Icons.copy, size: 17),
+                                      ),
+                                    ],
                                   ),
                                 ),
                               ],
@@ -527,33 +529,55 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                         ),
                       ),
-                      Container(
-                        width: width * 0.45,
-                        height: height * 0.080,
-                        decoration: BoxDecoration(
-                          color: Colors.pink.shade100,
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 8),
-                          child: Row(
-                            children: [
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    isArabic ? "دولار" : "Dollar",
-                                    style: isArabic
-                                        ? AppStyle.arabictext
-                                        : TextStyle(),
-                                  ),
-                                  Text(dollars.value.toString()),
-                                ],
-                              ),
-                              Spacer(),
-                              Image(image: AssetImage(AppImages.dollar)),
-                            ],
+                      GestureDetector(
+                        onTap: () {
+                          Get.defaultDialog(
+                            backgroundColor: Colors.white,
+                            title: "Withdrawal Request",
+                            titleStyle: TextStyle(fontSize: 18),
+                            middleText:
+                                "You can proceed to withdraw your available balance.Please confirm to continue.",
+
+                            cancel: TextButton(
+                              onPressed: () {
+                                Get.back();
+                              },
+                              child: Text("Cancel"),
+                            ),
+                            confirm: TextButton(
+                              onPressed: () {},
+                              child: Text("Proceed"),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: width * 0.45,
+                          height: height * 0.080,
+                          decoration: BoxDecoration(
+                            color: Colors.pink.shade100,
+                            borderRadius: BorderRadius.circular(15),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            child: Row(
+                              children: [
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      isArabic ? "دولار" : "Dollar",
+                                      style: isArabic
+                                          ? AppStyle.arabictext
+                                          : TextStyle(),
+                                    ),
+                                    Text(dollars.value.toString()),
+                                  ],
+                                ),
+                                Spacer(),
+                                Image(image: AssetImage(AppImages.dollar)),
+                              ],
+                            ),
                           ),
                         ),
                       ),
