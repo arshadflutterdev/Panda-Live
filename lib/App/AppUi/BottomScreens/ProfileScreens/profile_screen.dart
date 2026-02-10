@@ -63,6 +63,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   RxInt followersCount = 0.obs;
   RxInt frientsCount = 0.obs;
   RxInt awardCoins = 0.obs;
+  RxInt dollars = 0.obs;
 
   RxInt userId = 0.obs;
   RxBool isloading = false.obs;
@@ -159,6 +160,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       // --- End of Friends Logic ---
       if (snapshot.exists && snapshot.data() != null) {
         awardCoins.value = snapshot.data()?["coins"] ?? 0;
+        dollars.value = snapshot.data()?["dollars"] ?? 0;
         userId.value = snapshot.data()?["shortId"] ?? "123456";
         username.value = snapshot.data()?["name"] ?? "no name";
         print("user name $username");
@@ -546,7 +548,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         ? AppStyle.arabictext
                                         : TextStyle(),
                                   ),
-                                  Text("0"),
+                                  Text(dollars.value.toString()),
                                 ],
                               ),
                               Spacer(),
