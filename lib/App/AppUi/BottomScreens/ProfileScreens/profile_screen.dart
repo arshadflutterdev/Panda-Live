@@ -541,7 +541,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 children: [
                                   Text(
-                                    localization.points,
+                                    isArabic ? "دولار" : "Dollar",
                                     style: isArabic
                                         ? AppStyle.arabictext
                                         : TextStyle(),
