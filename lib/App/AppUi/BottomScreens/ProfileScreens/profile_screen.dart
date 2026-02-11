@@ -545,7 +545,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Text("Cancel"),
                             ),
                             confirm: TextButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                if (dollars.value >= 2) {
+                                } else {
+                                  Get.snackbar(
+                                    "Low",
+                                    "Your Balance is less then 2 dollars",
+                                    backgroundColor: Colors.red,
+                                  );
+                                }
+                              },
                               child: Text("Proceed"),
                             ),
                           );
