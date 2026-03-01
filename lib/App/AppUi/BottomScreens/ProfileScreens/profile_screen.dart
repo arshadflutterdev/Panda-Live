@@ -565,6 +565,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     backgroundColor: Colors.green,
                                     colorText: Colors.white,
                                   );
+                                  Get.back();
+                                  await getUserDetails();
                                 } else {
                                   Get.snackbar(
                                     "Low",
