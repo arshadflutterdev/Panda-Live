@@ -147,7 +147,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
         var friendData = followingList.firstWhere(
           (element) => element["uid"] == id,
         );
-
         friendsList.add({
           "uid": id,
           "name": friendData["hostname"],
