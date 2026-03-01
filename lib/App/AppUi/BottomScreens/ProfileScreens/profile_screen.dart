@@ -465,6 +465,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         });
                                     awardCoins.value -= 100;
                                     Get.back();
+                                    await getUserDetails();
                                     Get.snackbar(
                                       "Success",
                                       "100 Coins redeemed! 1\$ added to your account.",
@@ -479,6 +480,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   }
                                 } else {
                                   Get.back();
+
                                   Get.snackbar(
                                     "Low Balance",
                                     "Coins less then 100 Please Go Live to earn more",
