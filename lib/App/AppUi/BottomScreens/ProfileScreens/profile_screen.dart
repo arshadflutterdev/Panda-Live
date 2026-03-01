@@ -554,7 +554,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   await FirebaseFirestore.instance
                                       .collection("userProfile")
                                       .doc(uid)
-                                      .update({
+                                      .set({
                                         "withdrawlstatus":
                                             "Pending ($requiestammount\$)",
                                         "dollars": "0",
