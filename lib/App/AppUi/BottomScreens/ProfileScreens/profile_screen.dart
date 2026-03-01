@@ -559,14 +559,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             "Pending ($requiestammount\$)",
                                         "dollars": "0",
                                       });
+                                  dollars.value = 0;
+                                  Get.back();
+                                  await getUserDetails();
                                   Get.snackbar(
                                     "Congratulation",
                                     "Your requiest submitted successfully",
                                     backgroundColor: Colors.green,
                                     colorText: Colors.white,
                                   );
-                                  Get.back();
-                                  await getUserDetails();
                                 } else {
                                   Get.snackbar(
                                     "Low",
