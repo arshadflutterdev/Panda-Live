@@ -559,8 +559,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                             "Pending ($requiestammount\$)",
                                         "dollars": "0",
                                       });
-                                  dollars.value = 0;
                                   Get.back();
+                                  dollars.value = 0;
+
                                   await getUserDetails();
                                   Get.snackbar(
                                     "Congratulation",
@@ -569,6 +570,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     colorText: Colors.white,
                                   );
                                 } else {
+                                  Get.back();
                                   Get.snackbar(
                                     "Low",
                                     "Your Balance is less then 2 dollars",
