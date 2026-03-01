@@ -21,38 +21,38 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   void initState() {
     super.initState();
-    // Timer(Duration(seconds: 3), () async {
-    //   if (currentuser != null) {
-    //     try {
-    //       DocumentSnapshot userData = await FirebaseFirestore.instance
-    //           .collection("userProfile")
-    //           .doc(currentuser!.uid)
-    //           .get();
-    //       if (userData.exists) {
-    //         var data = userData.data() as Map<String, dynamic>;
-    //         if (data["blockStatus"] == "blocked") {
-    //           await FirebaseAuth.instance.signOut();
-    //           Get.offAllNamed(AppRoutes.authoptions);
-    //           Get.snackbar(
-    //             "Account Suspended",
-    //             "Your account has been blocked by the admin. Please contact support for further details.",
-    //             backgroundColor: Colors.red,
-    //             colorText: Colors.white,
-    //           );
-    //         } else {
-    //           Get.offAllNamed(AppRoutes.bottomnav);
-    //         }
-    //       } else {
-    //         Get.offAllNamed(AppRoutes.authoptions);
-    //       }
-    //     } catch (e) {
-    //       debugPrint("Error: $e");
-    //       Get.offAllNamed(AppRoutes.authoptions);
-    //     }
-    //   } else {
-    //     Get.offAllNamed(AppRoutes.authoptions);
-    //   }
-    // });
+    Timer(Duration(seconds: 3), () async {
+      if (currentuser != null) {
+        try {
+          DocumentSnapshot userData = await FirebaseFirestore.instance
+              .collection("userProfile")
+              .doc(currentuser!.uid)
+              .get();
+          if (userData.exists) {
+            var data = userData.data() as Map<String, dynamic>;
+            if (data["blockStatus"] == "blocked") {
+              await FirebaseAuth.instance.signOut();
+              Get.offAllNamed(AppRoutes.authoptions);
+              Get.snackbar(
+                "Account Suspended",
+                "Your account has been blocked by the admin. Please contact support for further details.",
+                backgroundColor: Colors.red,
+                colorText: Colors.white,
+              );
+            } else {
+              Get.offAllNamed(AppRoutes.bottomnav);
+            }
+          } else {
+            Get.offAllNamed(AppRoutes.authoptions);
+          }
+        } catch (e) {
+          debugPrint("Error: $e");
+          Get.offAllNamed(AppRoutes.authoptions);
+        }
+      } else {
+        Get.offAllNamed(AppRoutes.authoptions);
+      }
+    });
   }
 
   @override
