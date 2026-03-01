@@ -546,10 +546,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               child: Text("Cancel"),
                             ),
                             confirm: TextButton(
-                              onPressed: () {
+                              onPressed: () async {
                                 if (dollars.value >= 2) {
                                   final uid =
                                       FirebaseAuth.instance.currentUser!.uid;
+                                  await FirebaseFirestore.instance
+                                      .collection("userProfile")
+                                      .doc(uid)
+                                      .update({"withdrawlstatus": "Pending"});
                                 } else {
                                   Get.snackbar(
                                     "Low",
