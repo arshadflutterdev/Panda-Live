@@ -548,16 +548,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             confirm: TextButton(
                               onPressed: () async {
                                 if (dollars.value >= 2) {
-                                  final requiestammount = dollars.value;
                                   final uid =
                                       FirebaseAuth.instance.currentUser!.uid;
+                                  final doc = await FirebaseFirestore.instance
+                                      .collection('userProfile')
+                                      .doc(uid)
+                                      .get();
+                                  if (doc.exists &&
+                                      doc
+                                          .data()!['withdrawlstatus']
+                                          .toString()
+                                          .contains("Pending")) {
+                                    // Agar status mein "Pending" mil gaya to yahin ruk jayein
+                                    Get.snackbar(
+                                      "Error",
+                                      "Aapki ek request pehle se Pending hai!",
+                                    );
+                                    return;
+                                  }
+                                  final requiestammount = dollars.value;
+
                                   await FirebaseFirestore.instance
                                       .collection("userProfile")
                                       .doc(uid)
-                                      .set({
+                                      .update({
                                         "withdrawlstatus":
                                             "Pending ($requiestammount\$)",
-                                        "dollars": "0",
+                                        "dollars": 0,
                                       });
                                   Get.back();
                                   dollars.value = 0;
