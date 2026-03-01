@@ -25,7 +25,7 @@ class AppImages {
   static const coins = "assets/icons/star (1).png";
   static const switchcamera = "assets/icons/switchcamera.png";
   //splash screen image
-  static String splashScren = "assets/images/PandaLive.png";
+  static String splashScren = "assets/images/splashpandda.png";
   //more used image
   static String bgimage = "assets/images/PandaLivebg.png";
   static String halfbg = "assets/images/halfbg.png";
