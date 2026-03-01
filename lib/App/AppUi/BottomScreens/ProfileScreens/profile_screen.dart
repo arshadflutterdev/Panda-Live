@@ -548,12 +548,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             confirm: TextButton(
                               onPressed: () async {
                                 if (dollars.value >= 2) {
+                                  final requiestammount = dollars.value;
                                   final uid =
                                       FirebaseAuth.instance.currentUser!.uid;
                                   await FirebaseFirestore.instance
                                       .collection("userProfile")
                                       .doc(uid)
-                                      .update({"withdrawlstatus": "Pending"});
+                                      .update({
+                                        "withdrawlstatus":
+                                            "Pending ($requiestammount\$)",
+                                        "dollars": "0",
+                                      });
+                                  Get.snackbar(
+                                    "Congratulation",
+                                    "Your requiest submitted successfully",
+                                    backgroundColor: Colors.green,
+                                    colorText: Colors.white,
+                                  );
                                 } else {
                                   Get.snackbar(
                                     "Low",
