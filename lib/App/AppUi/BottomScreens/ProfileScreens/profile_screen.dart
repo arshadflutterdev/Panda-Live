@@ -548,6 +548,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             confirm: TextButton(
                               onPressed: () {
                                 if (dollars.value >= 2) {
+                                  final uid =
+                                      FirebaseAuth.instance.currentUser!.uid;
                                 } else {
                                   Get.snackbar(
                                     "Low",
