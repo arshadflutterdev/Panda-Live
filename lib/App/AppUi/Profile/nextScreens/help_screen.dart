@@ -80,10 +80,16 @@ class _HelpScreenState extends State<HelpScreen> {
             ),
             const SizedBox(height: 6),
             TextField(
+              cursorColor: Colors.black,
               controller: topicCtrl,
               decoration: InputDecoration(
                 hintText: localization.topic,
                 border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.green),
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
@@ -98,11 +104,17 @@ class _HelpScreenState extends State<HelpScreen> {
             ),
             const SizedBox(height: 6),
             TextField(
+              cursorColor: Colors.black,
               controller: detailCtrl,
               maxLines: 5,
               decoration: InputDecoration(
                 hintText: localization.decribissue,
                 border: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.black),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.green),
                   borderRadius: BorderRadius.circular(12),
                 ),
               ),
