@@ -452,7 +452,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             middleText: "Convert 45k Coins To 45\$",
                             confirm: TextButton(
                               onPressed: () async {
-                                if (awardCoins.value >= 100) {
+                                if (awardCoins.value >= 45000) {
                                   try {
                                     final uid =
                                         FirebaseAuth.instance.currentUser!.uid;
@@ -483,13 +483,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                                   Get.snackbar(
                                     "Low Balance",
-                                    "Coins less then 100 Please Go Live to earn more",
+                                    "Coins less then 45k Please Go Live to earn more",
                                     backgroundColor: Colors.red,
                                     colorText: Colors.white,
                                   );
                                 }
                               },
-                              child: Text("Radeem"),
+                              child: Text("Redeem"),
                             ),
                             cancel: TextButton(
                               onPressed: () {
