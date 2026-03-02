@@ -93,13 +93,14 @@ class HelpController extends GetxController {
     required String detail,
     required dynamic images,
   }) async {
-    // 1. Validation Check
+    // 1. Khali fields check karein
     if (topic.isEmpty || detail.isEmpty) {
       Get.snackbar(
-        "Khali Field",
-        "Meherbani karke saari maloomat darj karein.",
+        "Adhoori Maloomat",
+        "Meherbani karke topic aur detail lazmi likhein.",
         backgroundColor: Colors.orange,
         colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
       );
       return;
     }
@@ -107,29 +108,31 @@ class HelpController extends GetxController {
     try {
       isLoading.value = true;
 
+      // 2. User login hai ya nahi?
       String? uid = FirebaseAuth.instance.currentUser?.uid;
       if (uid == null) {
-        Get.snackbar("Error", "User login nahi hai.");
+        Get.snackbar("Error", "Aap login nahi hain.");
         return;
       }
 
-      // 2. Fetch User Profile
+      // 3. User ka profile data nikaalein (Name, ID, Country)
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('userProfile')
           .doc(uid)
           .get();
 
-      if (!userDoc.exists) {
-        Get.snackbar("Error", "User profile nahi mil rahi.");
-        return;
+      String userName = "Unknown User";
+      int shortId = 0;
+      String country = "Not Specified";
+
+      if (userDoc.exists) {
+        Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
+        userName = userData['name'] ?? "Unknown";
+        shortId = userData['shortId'] ?? 0;
+        country = userData['country'] ?? "Not Specified";
       }
 
-      Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
-      String userName = userData['name'] ?? "Unknown";
-      int shortId = userData['shortId'] ?? 0;
-      String country = userData['country'] ?? "Not Specified";
-
-      // 3. Save to Firestore
+      // 4. Firestore mein Data Save karein
       await FirebaseFirestore.instance
           .collection('userProfile')
           .doc(uid)
@@ -141,36 +144,38 @@ class HelpController extends GetxController {
             'country': country,
             'topic': topic,
             'detail': detail,
-            'images': [],
+            'images': [], // Abhi storage off hai isliye empty list
             'status': 'pending',
             'createdAt': FieldValue.serverTimestamp(),
           });
 
-      // --- SUCCESS MESSAGE ---
+      // 5. Success Message dikhaein
       Get.snackbar(
         "Shukriya",
         "Aapki request submit ho gayi hai!",
-        snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,
         colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
         icon: const Icon(Icons.check_circle, color: Colors.white),
+        duration: const Duration(seconds: 2),
       );
 
-      // Submit hone ke baad screen wapas le jayein
+      // 6. Thoda wait karein taake user snackbar dekh sake, phir back jayein
+      await Future.delayed(const Duration(seconds: 2));
       Get.back();
     } catch (e) {
-      // --- INTERNET / SERVER ERROR MESSAGE ---
+      // 7. Internet ya kisi aur error ka message
       print("Firestore Error: $e");
       Get.snackbar(
         "Submit Nahi Hua",
-        "Internet ka masla hai ya server busy hai. Dobara try karein.",
-        snackPosition: SnackPosition.BOTTOM,
+        "Internet ka masla hai. Dobara koshish karein.",
         backgroundColor: Colors.red,
         colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
         icon: const Icon(Icons.wifi_off, color: Colors.white),
       );
     } finally {
-      // Spinner ko har haal mein band karna hai
+      // Spinner band karein
       isLoading.value = false;
     }
   }
