@@ -689,32 +689,37 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 10),
-                        child: Row(
-                          children: [
-                            Image(
-                              height: 30,
-                              image: AssetImage(AppImages.invite),
-                              color: Colors.black54,
-                            ),
-                            Gap(10),
-                            Text(
-                              localization.invitefriend,
-                              style: isArabic
-                                  ? AppStyle.arabictext.copyWith(
-                                      fontSize: 20,
-                                      color: Colors.black54,
-                                    )
-                                  : AppStyle.tagline.copyWith(
-                                      color: Colors.black54,
-                                      fontSize: 18,
-                                    ),
-                            ),
-                            Spacer(),
-                            Icon(
-                              Icons.arrow_forward_ios,
-                              color: Colors.black54,
-                            ),
-                          ],
+                        child: GestureDetector(
+                          onTap: () {
+                            Get.toNamed(AppRoutes.invitefriend);
+                          },
+                          child: Row(
+                            children: [
+                              Image(
+                                height: 30,
+                                image: AssetImage(AppImages.invite),
+                                color: Colors.black54,
+                              ),
+                              Gap(10),
+                              Text(
+                                localization.invitefriend,
+                                style: isArabic
+                                    ? AppStyle.arabictext.copyWith(
+                                        fontSize: 20,
+                                        color: Colors.black54,
+                                      )
+                                    : AppStyle.tagline.copyWith(
+                                        color: Colors.black54,
+                                        fontSize: 18,
+                                      ),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.arrow_forward_ios,
+                                color: Colors.black54,
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
