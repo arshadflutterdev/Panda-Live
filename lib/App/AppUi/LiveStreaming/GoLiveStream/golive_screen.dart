@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -45,7 +44,7 @@ class _GoliveScreenState extends State<GoliveScreen>
 
   //here is function to earn coins
   Timer? coinstimer;
-  final int coinsperminute = 50;
+  final int coinsperminute = 500;
   void startCoinsTimer() {
     coinstimer?.cancel();
     coinstimer = Timer.periodic(Duration(minutes: 1), (_) => awardCoins());
