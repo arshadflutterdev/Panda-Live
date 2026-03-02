@@ -561,8 +561,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           .contains("Pending")) {
                                     // Agar status mein "Pending" mil gaya to yahin ruk jayein
                                     Get.snackbar(
-                                      "Error",
-                                      "Aapki ek request pehle se Pending hai!",
+                                      "Please Wait",
+                                      "Your request is already pending.",
+                                      snackPosition: SnackPosition.BOTTOM,
+                                      backgroundColor: Color(
+                                        0xFFE3F2FD,
+                                      ), // Light Blue
+                                      colorText: Color(0xFF0D47A1), // Dark Blue
+                                      icon: Icon(
+                                        Icons.hourglass_top,
+                                        color: Color(0xFF0D47A1),
+                                      ),
+                                      margin: EdgeInsets.all(16),
+                                      borderRadius: 12,
+                                      duration: Duration(seconds: 3),
+                                      isDismissible: true,
+                                      forwardAnimationCurve: Curves.easeOut,
                                     );
                                     return;
                                   }
