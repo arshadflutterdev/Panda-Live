@@ -93,11 +93,12 @@ class HelpController extends GetxController {
     required String detail,
     required dynamic images,
   }) async {
+    // 1. Validation Check
     if (topic.isEmpty || detail.isEmpty) {
       Get.snackbar(
-        "Error",
-        "Please fill all fields",
-        backgroundColor: Colors.red,
+        "Khali Field",
+        "Meherbani karke saari maloomat darj karein.",
+        backgroundColor: Colors.orange,
         colorText: Colors.white,
       );
       return;
@@ -106,59 +107,70 @@ class HelpController extends GetxController {
     try {
       isLoading.value = true;
 
-      // 1. Get Current User UID
       String? uid = FirebaseAuth.instance.currentUser?.uid;
       if (uid == null) {
-        Get.snackbar("Error", "User not logged in");
+        Get.snackbar("Error", "User login nahi hai.");
         return;
       }
 
-      // 2. Fetch User Profile Data from Firestore
+      // 2. Fetch User Profile
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection('userProfile')
           .doc(uid)
           .get();
 
       if (!userDoc.exists) {
-        Get.snackbar("Error", "User profile not found");
+        Get.snackbar("Error", "User profile nahi mil rahi.");
         return;
       }
 
-      // Extract data from document
       Map<String, dynamic> userData = userDoc.data() as Map<String, dynamic>;
       String userName = userData['name'] ?? "Unknown";
       int shortId = userData['shortId'] ?? 0;
       String country = userData['country'] ?? "Not Specified";
 
-      // 3. Save Issue to Subcollection with User Details
+      // 3. Save to Firestore
       await FirebaseFirestore.instance
           .collection('userProfile')
           .doc(uid)
           .collection('help_requests')
           .add({
-            'userId': uid, // UID for tracking
-            'userName': userName, // User ka naam
-            'shortId': shortId, // User ki ID
-            'country': country, // User ki country
+            'userId': uid,
+            'userName': userName,
+            'shortId': shortId,
+            'country': country,
             'topic': topic,
             'detail': detail,
-            'images': [], // Currently empty because storage is off
+            'images': [],
             'status': 'pending',
             'createdAt': FieldValue.serverTimestamp(),
           });
 
+      // --- SUCCESS MESSAGE ---
       Get.snackbar(
-        "Success",
-        "Issue submitted by $userName",
+        "Shukriya",
+        "Aapki request submit ho gayi hai!",
+        snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.green,
         colorText: Colors.white,
+        icon: const Icon(Icons.check_circle, color: Colors.white),
       );
 
+      // Submit hone ke baad screen wapas le jayein
       Get.back();
     } catch (e) {
+      // --- INTERNET / SERVER ERROR MESSAGE ---
       print("Firestore Error: $e");
-      Get.snackbar("Error", "Check your internet connection.");
+      Get.snackbar(
+        "Submit Nahi Hua",
+        "Internet ka masla hai ya server busy hai. Dobara try karein.",
+        snackPosition: SnackPosition.BOTTOM,
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+        icon: const Icon(Icons.wifi_off, color: Colors.white),
+      );
     } finally {
+      // Spinner ko har haal mein band karna hai
       isLoading.value = false;
     }
   }

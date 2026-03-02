@@ -188,7 +188,9 @@ class _HelpScreenState extends State<HelpScreen> {
                 width: double.infinity,
                 height: 50,
                 child: _helpController.isLoading.value
-                    ? const Center(child: CircularProgressIndicator())
+                    ? const Center(
+                        child: CircularProgressIndicator(color: Colors.green),
+                      )
                     : MyElevatedButton(
                         width: width,
                         btext: Text(
