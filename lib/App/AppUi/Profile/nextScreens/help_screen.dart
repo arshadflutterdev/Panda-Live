@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pandlive/App/AppUi/Profile/nextScreens/CreateProfileScreen/helpscreen_controller.dart';
 import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
@@ -15,16 +16,20 @@ class HelpScreen extends StatefulWidget {
 }
 
 class _HelpScreenState extends State<HelpScreen> {
+  // 1. Controllers
+  final HelpController _helpController = Get.put(HelpController());
   final TextEditingController topicCtrl = TextEditingController();
   final TextEditingController detailCtrl = TextEditingController();
 
+  // 2. Image Picking Variables
   final ImagePicker picker = ImagePicker();
   List<File> images = [];
   bool isPicking = false;
 
+  // 3. The pickImages Function (This was missing or misplaced)
   Future<void> pickImages() async {
-    if (isPicking) return; // agar already open hai, do nothing
-    isPicking = true; // flag ON
+    if (isPicking) return;
+    isPicking = true;
 
     try {
       final pickedFiles = await picker.pickMultiImage(imageQuality: 70);
@@ -35,10 +40,9 @@ class _HelpScreenState extends State<HelpScreen> {
         });
       }
     } catch (e) {
-      print("Image picker error: $e");
-      Get.snackbar("Error", "Cannot open camera/gallery");
+      Get.snackbar("Error", "Cannot open gallery: $e");
     } finally {
-      isPicking = false; // flag OFF
+      isPicking = false;
     }
   }
 
@@ -46,23 +50,21 @@ class _HelpScreenState extends State<HelpScreen> {
   Widget build(BuildContext context) {
     bool isArabic = Get.locale?.languageCode == "ar";
     final localization = AppLocalizations.of(context)!;
-    double height = AppHeightwidth.screenHeight(context);
     double width = AppHeightwidth.screenWidth(context);
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
-          onPressed: () {
-            Get.back();
-          },
-          icon: Icon(Icons.arrow_back_ios_new_outlined),
+          onPressed: () => Get.back(),
+          icon: const Icon(Icons.arrow_back_ios_new_outlined),
         ),
         title: Text(
           localization.helpsupport,
           style: isArabic
               ? AppStyle.arabictext.copyWith(fontSize: 24)
-              : TextStyle(),
+              : const TextStyle(),
         ),
         backgroundColor: Colors.white,
       ),
@@ -71,10 +73,10 @@ class _HelpScreenState extends State<HelpScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            /// Topic
+            /// Topic Input
             Text(
               localization.topic,
-              style: isArabic ? AppStyle.arabictext : TextStyle(),
+              style: isArabic ? AppStyle.arabictext : const TextStyle(),
             ),
             const SizedBox(height: 6),
             TextField(
@@ -89,10 +91,10 @@ class _HelpScreenState extends State<HelpScreen> {
 
             const SizedBox(height: 16),
 
-            /// Details
+            /// Details Input
             Text(
               localization.issuedetail,
-              style: isArabic ? AppStyle.arabictext : TextStyle(),
+              style: isArabic ? AppStyle.arabictext : const TextStyle(),
             ),
             const SizedBox(height: 6),
             TextField(
@@ -108,21 +110,22 @@ class _HelpScreenState extends State<HelpScreen> {
 
             const SizedBox(height: 16),
 
-            /// Upload Images
+            /// Image Upload Row
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   localization.uploadimage,
-                  style: isArabic ? AppStyle.arabictext : TextStyle(),
+                  style: isArabic ? AppStyle.arabictext : const TextStyle(),
                 ),
                 IconButton(
-                  onPressed: pickImages,
+                  onPressed: pickImages, // This will now work!
                   icon: const Icon(Icons.add_a_photo),
                 ),
               ],
             ),
 
+            /// Image Preview List
             if (images.isNotEmpty)
               SizedBox(
                 height: 90,
@@ -147,9 +150,7 @@ class _HelpScreenState extends State<HelpScreen> {
                           top: 2,
                           right: 6,
                           child: GestureDetector(
-                            onTap: () {
-                              setState(() => images.removeAt(index));
-                            },
+                            onTap: () => setState(() => images.removeAt(index)),
                             child: const CircleAvatar(
                               radius: 12,
                               backgroundColor: Colors.black54,
@@ -169,23 +170,33 @@ class _HelpScreenState extends State<HelpScreen> {
 
             const SizedBox(height: 24),
 
-            /// Submit Button
-            SizedBox(
-              width: double.infinity,
-              height: 50,
-              child: MyElevatedButton(
-                width: width,
-                btext: Text(
-                  localization.submitissued,
-                  style: isArabic
-                      ? AppStyle.arabictext.copyWith(
-                          fontSize: 22,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
-                        )
-                      : AppStyle.btext.copyWith(color: Colors.white),
-                ),
-                onPressed: () {},
+            /// Submit Button with Loading State
+            Obx(
+              () => SizedBox(
+                width: double.infinity,
+                height: 50,
+                child: _helpController.isLoading.value
+                    ? const Center(child: CircularProgressIndicator())
+                    : MyElevatedButton(
+                        width: width,
+                        btext: Text(
+                          localization.submitissued,
+                          style: isArabic
+                              ? AppStyle.arabictext.copyWith(
+                                  fontSize: 22,
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                )
+                              : AppStyle.btext.copyWith(color: Colors.white),
+                        ),
+                        onPressed: () {
+                          _helpController.submitIssue(
+                            topic: topicCtrl.text.trim(),
+                            detail: detailCtrl.text.trim(),
+                            images: images,
+                          );
+                        },
+                      ),
               ),
             ),
           ],
