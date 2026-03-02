@@ -96,8 +96,8 @@ class HelpController extends GetxController {
     // 1. Khali fields check karein
     if (topic.isEmpty || detail.isEmpty) {
       Get.snackbar(
-        "Adhoori Maloomat",
-        "Meherbani karke topic aur detail lazmi likhein.",
+        "Incomplete Submission",
+        "Please complete all required fields before submitting",
         backgroundColor: Colors.orange,
         colorText: Colors.white,
         snackPosition: SnackPosition.BOTTOM,
@@ -111,7 +111,7 @@ class HelpController extends GetxController {
       // 2. User login hai ya nahi?
       String? uid = FirebaseAuth.instance.currentUser?.uid;
       if (uid == null) {
-        Get.snackbar("Error", "Aap login nahi hain.");
+        Get.snackbar("Error", "App not logged In.");
         return;
       }
 
@@ -151,8 +151,8 @@ class HelpController extends GetxController {
 
       // 5. Success Message dikhaein
       Get.snackbar(
-        "Shukriya",
-        "Aapki request submit ho gayi hai!",
+        "All Set!",
+        "Your request was submitted successfully. We’ll update you soon.",
         backgroundColor: Colors.green,
         colorText: Colors.white,
         snackPosition: SnackPosition.BOTTOM,
@@ -167,8 +167,8 @@ class HelpController extends GetxController {
       // 7. Internet ya kisi aur error ka message
       print("Firestore Error: $e");
       Get.snackbar(
-        "Submit Nahi Hua",
-        "Internet ka masla hai. Dobara koshish karein.",
+        "Submission Failed",
+        "There seems to be an internet connection issue. Please try again.",
         backgroundColor: Colors.red,
         colorText: Colors.white,
         snackPosition: SnackPosition.BOTTOM,
