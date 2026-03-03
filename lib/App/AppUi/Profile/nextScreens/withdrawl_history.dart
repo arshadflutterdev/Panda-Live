@@ -85,10 +85,12 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[100],
+      backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+
         title: const Text(
-          "Withdrawal History",
+          "Withdrawal Records",
           style: TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,

@@ -681,7 +681,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         Gap(10),
                         Text(
-                          "Withdrawal History",
+                          "Withdrawal Records",
                           style: TextStyle(color: Colors.white),
                         ),
                       ],
