@@ -10,6 +10,7 @@ import 'package:get/get_utils/get_utils.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/state_manager.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
+import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
@@ -645,7 +646,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
-
+                  MyElevatedButton(
+                    width: width,
+                    btext: Text("lashari"),
+                    onPressed: () {},
+                  ),
                   Obx(
                     () => Padding(
                       padding: const EdgeInsets.symmetric(
