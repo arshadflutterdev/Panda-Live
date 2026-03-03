@@ -12,7 +12,7 @@ class WithdrawlHistory extends StatefulWidget {
 class _WithdrawlHistoryState extends State<WithdrawlHistory> {
   final String uid = FirebaseAuth.instance.currentUser!.uid;
 
-  // Status color logic
+  // Status ke hisaab se color decide karne ka function
   Color getStatusColor(String status) {
     String s = status.toLowerCase();
     if (s.contains("pending")) return Colors.orange.shade800;
@@ -21,10 +21,9 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
     return Colors.grey;
   }
 
-  // Request cancel karne aur dollars wapas add karne ka function
+  // Request cancel karne ka function
   Future<void> cancelRequest(String currentStatus) async {
     try {
-      // 1. Amount nikalna
       RegExp regExp = RegExp(r'\d+');
       var match = regExp.firstMatch(currentStatus);
 
@@ -40,7 +39,7 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
                 ),
                 title: const Text("Confirm Cancel"),
                 content: Text(
-                  "Kya aap \$${refundAmount} refund lena chahte hain?",
+                  "Kya aap \$$refundAmount refund lena chahte hain?",
                 ),
                 actions: [
                   TextButton(
@@ -60,7 +59,6 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
             false;
 
         if (confirm) {
-          // 2. Firebase Update
           await FirebaseFirestore.instance
               .collection('userProfile')
               .doc(uid)
@@ -72,18 +70,15 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text("\$${refundAmount} wapas bhej diye gaye hain."),
+                content: Text("\$$refundAmount wapas bhej diye gaye hain."),
               ),
             );
-
-            // 3. Auto-Back to Profile Page
-            // Ye line user ko wapas profile page par le jayegi jahan balance update ho chuka hoga
-            Navigator.pop(context);
+            Navigator.pop(context); // Wapas Profile Page par bhejne ke liye
           }
         }
       }
     } catch (e) {
-      print("Error: $e");
+      debugPrint("Error: $e");
     }
   }
 
@@ -115,7 +110,6 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
             var userData = snapshot.data!.data() as Map<String, dynamic>;
             String status = userData['withdrawlstatus'] ?? "";
 
-            // Agar koi request na ho
             if (status.isEmpty || status == "No Request") {
               return const Center(
                 child: Text(
@@ -131,7 +125,7 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const Text(
-                    "ACTIVE REQUEST",
+                    "WITHDRAWAL STATUS",
                     style: TextStyle(
                       letterSpacing: 1.2,
                       fontSize: 12,
@@ -141,25 +135,27 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
                   ),
                   const SizedBox(height: 10),
                   Container(
+                    width: double.infinity,
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(15),
-                      boxShadow: [
+                      boxShadow: const [
                         BoxShadow(color: Colors.black12, blurRadius: 10),
                       ],
                     ),
                     child: Column(
                       children: [
+                        // --- Upper Row (Status Badge) ---
                         Padding(
                           padding: const EdgeInsets.all(20.0),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
                               const Text(
-                                "Status",
+                                "Current Status",
                                 style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.black87,
+                                  fontWeight: FontWeight.w500,
                                 ),
                               ),
                               Container(
@@ -174,7 +170,6 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
                                   borderRadius: BorderRadius.circular(8),
                                   border: Border.all(
                                     color: getStatusColor(status),
-                                    width: 1,
                                   ),
                                 ),
                                 child: Text(
@@ -189,8 +184,10 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
                           ),
                         ),
                         const Divider(height: 0),
-                        // Cancel Button
-                        // Sirf 'Pending' wali request cancel ho sakti hai
+
+                        // --- Lower Section (Dynamic Messages) ---
+
+                        // 1. Case: PENDING
                         if (status.toLowerCase().contains("pending"))
                           Padding(
                             padding: const EdgeInsets.all(15.0),
@@ -204,9 +201,6 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
                                   backgroundColor: Colors.red.shade50,
                                   foregroundColor: Colors.red,
                                   elevation: 0,
-                                  padding: const EdgeInsets.symmetric(
-                                    vertical: 12,
-                                  ),
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10),
                                     side: BorderSide(
@@ -217,15 +211,80 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
                               ),
                             ),
                           )
-                        else
-                          const Padding(
-                            padding: EdgeInsets.all(15.0),
-                            child: Text(
-                              "This request cannot be cancelled",
-                              style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12,
+                        // 2. Case: COMPLETE (Accept)
+                        else if (status.toLowerCase().contains("complete"))
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.green.shade50,
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(15),
+                                bottomRight: Radius.circular(15),
                               ),
+                            ),
+                            child: Column(
+                              children: [
+                                const Icon(
+                                  Icons.stars,
+                                  color: Colors.green,
+                                  size: 40,
+                                ),
+                                const SizedBox(height: 10),
+                                const Text(
+                                  "Congratulations!",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.green,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  "Your payment has been successfully processed and sent.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                    color: Colors.green.shade700,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          )
+                        // 3. Case: REJECT
+                        else if (status.toLowerCase().contains("reject"))
+                          Container(
+                            width: double.infinity,
+                            padding: const EdgeInsets.all(20),
+                            decoration: BoxDecoration(
+                              color: Colors.red.shade50,
+                              borderRadius: const BorderRadius.only(
+                                bottomLeft: Radius.circular(15),
+                                bottomRight: Radius.circular(15),
+                              ),
+                            ),
+                            child: Column(
+                              children: [
+                                const Icon(
+                                  Icons.cancel,
+                                  color: Colors.red,
+                                  size: 40,
+                                ),
+                                const SizedBox(height: 10),
+                                const Text(
+                                  "Request Rejected",
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.red,
+                                    fontSize: 18,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  "Your request was rejected by the admin. Please contact support if you have questions.",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: Colors.red.shade700),
+                                ),
+                              ],
                             ),
                           ),
                       ],
@@ -235,7 +294,6 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
               ),
             );
           }
-
           return const Center(child: Text("No data found"));
         },
       ),
