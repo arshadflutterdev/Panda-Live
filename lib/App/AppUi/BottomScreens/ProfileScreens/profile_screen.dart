@@ -330,7 +330,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             onPressed: () async {
                               await getUserDetails();
                             },
-                            icon: Icon(Icons.refresh),
+                            icon: Image.asset(
+                              AppImages.refresh,
+                              color: Colors.green,
+                              height: 25,
+                            ),
                           ),
 
                           IconButton(
@@ -656,6 +660,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Gap(10),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
+                      fixedSize: Size(210, 40),
                       shape: ContinuousRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
@@ -664,9 +669,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onPressed: () {
                       Get.toNamed(AppRoutes.withdrawlhistory);
                     },
-                    child: Text(
-                      "Withdrawal History",
-                      style: TextStyle(color: Colors.white),
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          height: 30,
+
+                          child: Image(
+                            image: AssetImage(AppImages.history),
+                            color: Colors.white,
+                          ),
+                        ),
+                        Gap(10),
+                        Text(
+                          "Withdrawal History",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ],
                     ),
                   ),
                   Obx(
