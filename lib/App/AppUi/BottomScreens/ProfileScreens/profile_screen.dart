@@ -650,7 +650,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Color(0xFF1A73E8),
                     ),
-                    onPressed: () {},
+                    onPressed: () {
+                      Get.toNamed(AppRoutes.withdrawlhistory);
+                    },
                     child: Text("Withdrawal History"),
                   ),
                   Obx(
