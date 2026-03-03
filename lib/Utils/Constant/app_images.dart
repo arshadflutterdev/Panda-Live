@@ -42,6 +42,8 @@ class AppImages {
   static String notfollow = "assets/images/nofollowed.png";
   static String invite = "assets/icons/add-friend.png";
   static String yt = "assets/icons/youtube.png";
+  static String history = "assets/icons/history.png";
+  static String refresh = "assets/icons/refresh.png";
   //below images are related for live streamers
   static const eman = "assets/images/man.jpg";
   static const egirll = "assets/images/girl.jpg";
