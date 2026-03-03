@@ -660,7 +660,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   Gap(10),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      fixedSize: Size(210, 40),
+                      fixedSize: Size(220, 40),
                       shape: ContinuousRectangleBorder(
                         borderRadius: BorderRadius.circular(10),
                       ),
