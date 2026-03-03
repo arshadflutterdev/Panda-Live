@@ -646,10 +646,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
-                  MyElevatedButton(
-                    width: width,
-                    btext: Text("lashari"),
+                  ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color(0xFF1A73E8),
+                    ),
                     onPressed: () {},
+                    child: Text("Withdrawal History"),
                   ),
                   Obx(
                     () => Padding(
