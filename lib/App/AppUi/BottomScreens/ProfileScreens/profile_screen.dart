@@ -327,14 +327,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
                           Spacer(),
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () async {
+                              await getUserDetails();
+                            },
                             icon: Icon(Icons.refresh),
                           ),
 
                           IconButton(
-                            onPressed: () async {
-                              await getUserDetails();
-                            },
+                            onPressed: () {},
                             icon: Icon(
                               Icons.arrow_forward_ios_rounded,
                               color: Colors.black54,
