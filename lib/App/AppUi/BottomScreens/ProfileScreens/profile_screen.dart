@@ -646,9 +646,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
+                  Gap(10),
                   ElevatedButton(
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: Color(0xFF1A73E8),
+                      shape: ContinuousRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      backgroundColor: Colors.grey.shade800,
                     ),
                     onPressed: () {
                       Get.toNamed(AppRoutes.withdrawlhistory);
