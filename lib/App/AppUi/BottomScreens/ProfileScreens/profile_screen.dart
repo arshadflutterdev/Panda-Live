@@ -657,7 +657,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     onPressed: () {
                       Get.toNamed(AppRoutes.withdrawlhistory);
                     },
-                    child: Text("Withdrawal History"),
+                    child: Text(
+                      "Withdrawal History",
+                      style: TextStyle(color: Colors.white),
+                    ),
                   ),
                   Obx(
                     () => Padding(
