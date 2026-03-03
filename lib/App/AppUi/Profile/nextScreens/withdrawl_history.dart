@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_utils/src/extensions/internacionalization.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class WithdrawlHistory extends StatefulWidget {
   const WithdrawlHistory({super.key});
@@ -84,14 +87,18 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
 
   @override
   Widget build(BuildContext context) {
+    bool isArabic = Get.locale?.languageCode == "ar";
+
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
         automaticallyImplyLeading: false,
 
-        title: const Text(
-          "Withdrawal Records",
-          style: TextStyle(fontWeight: FontWeight.bold),
+        title: Text(
+          isArabic ? "سجلات السحب" : "Withdrawal Records",
+          style: isArabic
+              ? GoogleFonts.amiri(fontWeight: FontWeight.bold)
+              : TextStyle(fontWeight: FontWeight.bold),
         ),
         centerTitle: true,
         backgroundColor: Colors.white,
@@ -113,10 +120,12 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
             String status = userData['withdrawlstatus'] ?? "";
 
             if (status.isEmpty || status == "No Request") {
-              return const Center(
+              return Center(
                 child: Text(
-                  "No request submitted",
-                  style: TextStyle(color: Colors.grey, fontSize: 16),
+                  isArabic ? "لم يتم تقديم أي طلب" : "No request submitted",
+                  style: isArabic
+                      ? GoogleFonts.amiri(color: Colors.grey, fontSize: 18)
+                      : TextStyle(color: Colors.grey, fontSize: 16),
                 ),
               );
             }

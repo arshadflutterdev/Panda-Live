@@ -9,6 +9,7 @@ import 'package:gap/gap.dart';
 import 'package:get/get_utils/get_utils.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/state_manager.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
@@ -681,8 +682,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         Gap(10),
                         Text(
-                          "Withdrawal Records",
-                          style: TextStyle(color: Colors.white),
+                          isArabic ? "سجلات السحب" : "Withdrawal Records",
+                          style: isArabic
+                              ? GoogleFonts.amiri(color: Colors.white)
+                              : TextStyle(color: Colors.white),
                         ),
                       ],
                     ),
