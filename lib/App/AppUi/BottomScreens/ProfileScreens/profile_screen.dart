@@ -645,6 +645,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ],
                   ),
+
                   Obx(
                     () => Padding(
                       padding: const EdgeInsets.symmetric(
