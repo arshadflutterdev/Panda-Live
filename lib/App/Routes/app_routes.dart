@@ -16,6 +16,7 @@ import 'package:pandlive/App/AppUi/Profile/nextScreens/help_screen.dart';
 import 'package:pandlive/App/AppUi/Profile/nextScreens/invite_friend_screen.dart';
 import 'package:pandlive/App/AppUi/Profile/nextScreens/logout_screen.dart';
 import 'package:pandlive/App/AppUi/Profile/nextScreens/my_level_screen.dart';
+import 'package:pandlive/App/AppUi/Profile/nextScreens/withdrawl_history.dart';
 import 'package:pandlive/App/AppUi/change_language.dart';
 import 'package:pandlive/App/AppUi/splash_screen.dart';
 import 'package:pandlive/App/AppUi/terms_services.dart';
@@ -56,6 +57,7 @@ class AppRoutes {
   static const logout = "/LogoutScreen";
   static const golive = "/GoliveScreen";
   static const invitefriend = "/InviteFriendScreen";
+  static const withdrawlhistory = "/WithdrawlHistory";
   //explored
   static const explore = "/ExplorerScreen";
   static const followers = "/FollowerListScreen";
@@ -95,6 +97,7 @@ class AppRoutes {
     GetPage(name: updates, page: () => UpdatesScreen()),
     GetPage(name: profile, page: () => ProfileScreen()),
     GetPage(name: invitefriend, page: () => InviteFriendScreen()),
+    GetPage(name: withdrawlhistory, page: () => WithdrawlHistory()),
     GetPage(
       name: watchstream,
       binding: AuthBindings(),
