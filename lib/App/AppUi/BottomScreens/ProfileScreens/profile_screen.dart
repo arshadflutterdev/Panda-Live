@@ -465,8 +465,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 : "Redeem Your Coins",
                             titleStyle: TextStyle(fontSize: 18),
                             middleText: isArabic
-                                ? "تحويل 45 ألف عملة إلى 45 دولارًا"
-                                : "Convert 45k Coins To 45\$",
+                                ? "تحويل 45000 ألف عملة إلى 45 دولارًا"
+                                : "Convert 45000 Coins To 45\$",
                             confirm: TextButton(
                               onPressed: () async {
                                 if (awardCoins.value >= 45000) {
@@ -522,7 +522,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               onPressed: () {
                                 Get.back();
                               },
-                              child: Text("Not now"),
+                              child: Text(
+                                isArabic ? "ليس الآن" : "Not now",
+                                style: TextStyle(fontSize: 16),
+                              ),
                             ),
                           );
                         },
