@@ -11,7 +11,6 @@ import 'package:get/route_manager.dart';
 import 'package:get/state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
-import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
@@ -313,7 +312,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ).showSnackBar(
                                             SnackBar(
                                               content: Text(
-                                                "User ID copied $userId",
+                                                isArabic
+                                                    ? "تم نسخ معرف المستخدم: $userId" // Arabic: User ID copied
+                                                    : "User ID copied: $userId", // English
                                               ),
                                             ),
                                           );
@@ -459,9 +460,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onTap: () {
                           Get.defaultDialog(
                             backgroundColor: Colors.white,
-                            title: "Radeem Your Coins",
+                            title: isArabic
+                                ? "استبدال العملات الخاصة بك"
+                                : "Redeem Your Coins",
                             titleStyle: TextStyle(fontSize: 18),
-                            middleText: "Convert 45k Coins To 45\$",
+                            middleText: isArabic
+                                ? "تحويل 45 ألف عملة إلى 45 دولارًا"
+                                : "Convert 45k Coins To 45\$",
                             confirm: TextButton(
                               onPressed: () async {
                                 if (awardCoins.value >= 45000) {
@@ -479,23 +484,33 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     Get.back();
                                     await getUserDetails();
                                     Get.snackbar(
-                                      "Success",
-                                      "100 Coins redeemed! 1\$ added to your account.",
+                                      isArabic ? "نجاح" : "Success",
+                                      isArabic
+                                          ? "تم استبدال 100 عملة! تمت إضافة 1 دولار إلى حسابك."
+                                          : "100 Coins redeemed! 1\$ added to your account.",
                                       backgroundColor: Colors.green,
                                       colorText: Colors.white,
+                                      snackPosition: SnackPosition
+                                          .BOTTOM, // Optional: neechay dikhanay ke liye
                                     );
                                   } catch (e) {
                                     Get.snackbar(
-                                      "Error",
-                                      "Transaction failed: $e",
+                                      isArabic ? "خطأ" : "Error",
+                                      isArabic
+                                          ? "فشلت العملية: $e"
+                                          : "Transaction failed: $e",
+                                      backgroundColor: Colors.red,
+                                      colorText: Colors.white,
                                     );
                                   }
                                 } else {
                                   Get.back();
 
                                   Get.snackbar(
-                                    "Low Balance",
-                                    "Coins less then 45k Please Go Live to earn more",
+                                    isArabic ? "رصيد منخفض" : "Low Balance",
+                                    isArabic
+                                        ? "العملات أقل من 45 ألف. يرجى الذهاب للبث المباشر لكسب المزيد"
+                                        : "Coins less than 45k. Please Go Live to earn more",
                                     backgroundColor: Colors.red,
                                     colorText: Colors.white,
                                   );
