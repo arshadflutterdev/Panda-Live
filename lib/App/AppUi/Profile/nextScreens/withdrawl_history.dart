@@ -26,6 +26,7 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
 
   // Request cancel karne ka function
   Future<void> cancelRequest(String currentStatus) async {
+    bool isArabic = Get.locale?.languageCode == "ar";
     try {
       RegExp regExp = RegExp(r'\d+');
       var match = regExp.firstMatch(currentStatus);
@@ -73,7 +74,12 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
           if (mounted) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(
-                content: Text("\$$refundAmount wapas bhej diye gaye hain."),
+                content: Text(
+                  isArabic
+                      ? "تمت إعادة مبلغ \$$refundAmount." // Arabic version
+                      : "\$$refundAmount has been refunded.", // English version
+                  style: TextStyle(fontSize: 16),
+                ),
               ),
             );
             Navigator.pop(context); // Wapas Profile Page par bhejne ke liye
