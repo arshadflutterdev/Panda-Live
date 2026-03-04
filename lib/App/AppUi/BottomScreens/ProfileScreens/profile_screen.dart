@@ -516,7 +516,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   );
                                 }
                               },
-                              child: Text("Redeem"),
+                              child: Text(isArabic ? "استبدال" : "Redeem"),
                             ),
                             cancel: TextButton(
                               onPressed: () {
@@ -561,16 +561,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         onTap: () {
                           Get.defaultDialog(
                             backgroundColor: Colors.white,
-                            title: "Withdrawal Request",
+                            title: isArabic ? "طلب سحب" : "Withdrawal Request",
                             titleStyle: TextStyle(fontSize: 18),
-                            middleText:
-                                "You can proceed to withdraw your available balance.Please confirm to continue.",
+                            middleText: isArabic
+                                ? "يمكنك المتابعة لسحب رصيدك المتاح. يرجى التأكيد للاستمرار."
+                                : "You can proceed to withdraw your available balance. Please confirm to continue.",
 
                             cancel: TextButton(
                               onPressed: () {
                                 Get.back();
                               },
-                              child: Text("Cancel"),
+                              child: Text(isArabic ? "إلغاء" : "Cancel"),
                             ),
                             confirm: TextButton(
                               onPressed: () async {
@@ -588,8 +589,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           .contains("Pending")) {
                                     // Agar status mein "Pending" mil gaya to yahin ruk jayein
                                     Get.snackbar(
-                                      "Please Wait",
-                                      "Your request is already pending.",
+                                      isArabic
+                                          ? "يرجى الانتظار"
+                                          : "Please Wait",
+                                      isArabic
+                                          ? "طلبك قيد الانتظار بالفعل."
+                                          : "Your request is already pending.",
                                       snackPosition: SnackPosition.BOTTOM,
                                       backgroundColor: Color(
                                         0xFFE3F2FD,
@@ -605,6 +610,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                       isDismissible: true,
                                       forwardAnimationCurve: Curves.easeOut,
                                     );
+
                                     return;
                                   }
                                   final requiestammount = dollars.value;
@@ -622,21 +628,26 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                                   await getUserDetails();
                                   Get.snackbar(
-                                    "Congratulation",
-                                    "Your requiest submitted successfully",
+                                    isArabic ? "تهانينا" : "Congratulations",
+                                    isArabic
+                                        ? "تم تقديم طلبك بنجاح"
+                                        : "Your request submitted successfully",
                                     backgroundColor: Colors.green,
                                     colorText: Colors.white,
                                   );
                                 } else {
                                   Get.back();
                                   Get.snackbar(
-                                    "Low",
-                                    "Your Balance is less then 2 dollars",
+                                    isArabic ? "منخفض" : "Low",
+                                    isArabic
+                                        ? "رصيدك أقل من 2 دولار"
+                                        : "Your balance is less than 2 dollars",
                                     backgroundColor: Colors.red,
+                                    colorText: Colors.white,
                                   );
                                 }
                               },
-                              child: Text("Proceed"),
+                              child: Text(isArabic ? "متابعة" : "Proceed"),
                             ),
                           );
                         },
