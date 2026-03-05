@@ -157,13 +157,18 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    "WITHDRAWAL STATUS",
+                  Text(
+                    isArabic ? "حالة السحب" : "WITHDRAWAL STATUS",
                     style: TextStyle(
-                      letterSpacing: 1.2,
+                      letterSpacing: isArabic
+                          ? 0.0
+                          : 1.2, // Arabic mein letter spacing ki zaroorat nahi hoti
                       fontSize: 12,
                       fontWeight: FontWeight.bold,
                       color: Colors.blueGrey,
+                      fontFamily: isArabic
+                          ? GoogleFonts.amiri().fontFamily
+                          : null,
                     ),
                   ),
                   const SizedBox(height: 10),
@@ -184,11 +189,15 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              const Text(
-                                "Current Status",
+                              Text(
+                                isArabic ? "الحالة الحالية" : "Current Status",
                                 style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.w500,
+                                  // Agar aap chahte hain ke Arabic font thoda different dikhe
+                                  fontFamily: isArabic
+                                      ? GoogleFonts.amiri().fontFamily
+                                      : null,
                                 ),
                               ),
                               Container(
@@ -229,7 +238,19 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
                               child: ElevatedButton.icon(
                                 onPressed: () => cancelRequest(status),
                                 icon: const Icon(Icons.close, size: 20),
-                                label: const Text("Cancel & Refund Dollars"),
+                                label: Text(
+                                  isArabic
+                                      ? "إلغاء واسترداد الأموال"
+                                      : "Cancel & Refund Dollars",
+                                  style: TextStyle(
+                                    fontSize: isArabic
+                                        ? 14
+                                        : 12, // Arabic font thoda clear rakhne ke liye
+                                    fontFamily: isArabic
+                                        ? GoogleFonts.amiri().fontFamily
+                                        : null,
+                                  ),
+                                ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.red.shade50,
                                   foregroundColor: Colors.red,
@@ -264,20 +285,34 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
                                   size: 40,
                                 ),
                                 const SizedBox(height: 10),
-                                const Text(
-                                  "Congratulations!",
+
+                                Text(
+                                  isArabic ? "تهانينا!" : "Congratulations!",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.green,
                                     fontSize: 18,
+                                    // Arabic ke liye font behtar karne ke liye
+                                    fontFamily: isArabic
+                                        ? GoogleFonts.amiri().fontFamily
+                                        : null,
                                   ),
                                 ),
                                 const SizedBox(height: 5),
                                 Text(
-                                  "Your payment has been successfully processed and sent.",
+                                  isArabic
+                                      ? "تمت معالجة دفعتك وإرسالها بنجاح."
+                                      : "Your payment has been successfully processed and sent.",
                                   textAlign: TextAlign.center,
                                   style: TextStyle(
                                     color: Colors.green.shade700,
+                                    // Arabic font ko behtar dikhane ke liye family add kar sakte hain
+                                    fontFamily: isArabic
+                                        ? GoogleFonts.amiri().fontFamily
+                                        : null,
+                                    fontSize: isArabic
+                                        ? 16
+                                        : 14, // Arabic aksar thoda bada font maangta hai readability ke liye
                                   ),
                                 ),
                               ],
@@ -303,19 +338,34 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
                                   size: 40,
                                 ),
                                 const SizedBox(height: 10),
-                                const Text(
-                                  "Request Rejected",
+                                Text(
+                                  isArabic
+                                      ? "تم رفض الطلب"
+                                      : "Request Rejected",
                                   style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.red,
                                     fontSize: 18,
+                                    fontFamily: isArabic
+                                        ? GoogleFonts.amiri().fontFamily
+                                        : null,
                                   ),
                                 ),
                                 const SizedBox(height: 5),
                                 Text(
-                                  "Your request was rejected by the admin. Please contact support if you have questions.",
+                                  isArabic
+                                      ? "تم رفض طلبك من قبل المسؤول. يرجى التواصل مع الدعم إذا كان لديك أي أسئلة."
+                                      : "Your request was rejected by the admin. Please contact support if you have questions.",
                                   textAlign: TextAlign.center,
-                                  style: TextStyle(color: Colors.red.shade700),
+                                  style: TextStyle(
+                                    color: Colors.red.shade700,
+                                    fontFamily: isArabic
+                                        ? GoogleFonts.amiri().fontFamily
+                                        : null,
+                                    fontSize: isArabic
+                                        ? 14
+                                        : 12, // Arabic readability ke liye thoda adjustment
+                                  ),
                                 ),
                               ],
                             ),
