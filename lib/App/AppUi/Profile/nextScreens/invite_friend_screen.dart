@@ -125,6 +125,8 @@ class _InviteFriendScreenState extends State<InviteFriendScreen> {
                                 isArabic
                                     ? "تم نسخ الكود إلى الحافظة"
                                     : "Code copied to clipboard",
+                                colorText: Colors.white,
+                                backgroundColor: Colors.black87,
                                 snackPosition: SnackPosition.BOTTOM,
                               );
                             },
