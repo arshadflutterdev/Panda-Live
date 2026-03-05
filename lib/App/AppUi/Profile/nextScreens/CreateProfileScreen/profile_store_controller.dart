@@ -10,6 +10,7 @@ class ProfileStoreController extends GetxController {
   TextEditingController nameController = TextEditingController();
   TextEditingController dobController = TextEditingController();
   TextEditingController countryController = TextEditingController();
+  TextEditingController refrelController = TextEditingController();
   RxInt isSelected = 0.obs;
   final arg = Get.arguments;
 
@@ -29,8 +30,26 @@ class ProfileStoreController extends GetxController {
     final shortId = arg["shortId"];
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
     String myReferralCode = generateReferralCode();
-
+    String enteredCode = refrelController.text.trim();
     try {
+      // 2. Pehle check karein agar referral code enter kiya gaya hai
+      if (enteredCode.isNotEmpty) {
+        var query = await firestore
+            .collection("userProfile")
+            .where("myReferralCode", isEqualTo: enteredCode)
+            .get();
+
+        if (query.docs.isNotEmpty) {
+          // Jis ka code hai uski ID nikaalein
+          String inviterId = query.docs.first.id;
+
+          // Us bande ko 9000 coins dein
+          await firestore.collection("userProfile").doc(inviterId).update({
+            "coins": FieldValue.increment(9000),
+          });
+        }
+      }
+
       final adduser = {
         "name": nameController.text.toString(),
         "dob": dobController.text.toString(),
@@ -45,6 +64,7 @@ class ProfileStoreController extends GetxController {
         "createdAt": FieldValue.serverTimestamp(),
         "userId": user,
         "myReferralCode": myReferralCode,
+        "referredBy": enteredCode,
         "shortId": shortId,
       };
       await firestore.collection("userProfile").doc(user).set(adduser);
