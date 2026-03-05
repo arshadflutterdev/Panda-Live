@@ -38,8 +38,9 @@ class LogoutScreen extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               CircleAvatar(
+                backgroundColor: Colors.white,
                 radius: 40,
-                backgroundImage: AssetImage(AppImages.eman0),
+                backgroundImage: AssetImage(AppImages.profile),
               ),
               const SizedBox(height: 15),
               Text(
