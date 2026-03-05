@@ -44,7 +44,7 @@ class _GoliveScreenState extends State<GoliveScreen>
 
   //here is function to earn coins
   Timer? coinstimer;
-  final int coinsperminute = 500;
+  final int coinsperminute = 4500;
   void startCoinsTimer() {
     coinstimer?.cancel();
     coinstimer = Timer.periodic(Duration(minutes: 1), (_) => awardCoins());
@@ -568,7 +568,10 @@ class _GoliveScreenState extends State<GoliveScreen>
                           child: Text(
                             isArabic ? "نهاء البث" : "EndStream",
                             style: isArabic
-                                ? AppStyle.arabictext
+                                ? AppStyle.arabictext.copyWith(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.bold,
+                                  )
                                 : TextStyle(
                                     fontSize: 20,
                                     fontWeight: FontWeight.bold,
