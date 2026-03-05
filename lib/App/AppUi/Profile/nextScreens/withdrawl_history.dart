@@ -41,20 +41,36 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(15),
                 ),
-                title: const Text("Confirm Cancel"),
+                title: Text(
+                  isArabic ? "تأكيد الإلغاء" : "Confirm Cancel",
+                  style: TextStyle(
+                    fontSize: 16,
+                    // Arabic ke liye font size thoda bada rakhna behtar hota hai
+                  ),
+                ),
                 content: Text(
-                  "Kya aap \$$refundAmount refund lena chahte hain?",
+                  isArabic
+                      ? "هل تريد استرداد مبلغ \$$refundAmount؟" // Arabic: "Kya aap $refundAmount refund lena chahte hain?"
+                      : "Do you want to refund \$$refundAmount?", // English
+                  textAlign: isArabic ? TextAlign.right : TextAlign.left,
+                  style: TextStyle(fontSize: 16),
                 ),
                 actions: [
                   TextButton(
                     onPressed: () => Navigator.pop(context, false),
-                    child: const Text("Nahi"),
+                    child: Text(
+                      isArabic ? "لا" : "No",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
                   ),
                   TextButton(
                     onPressed: () => Navigator.pop(context, true),
-                    child: const Text(
-                      "Haan, Cancel karain",
-                      style: TextStyle(color: Colors.red),
+                    child: Text(
+                      isArabic ? "إلغاء" : "Cancel",
+                      style: TextStyle(color: Colors.red, fontSize: 16),
                     ),
                   ),
                 ],
