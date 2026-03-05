@@ -262,7 +262,37 @@ class _CreateProfileState extends State<CreateProfile> {
                               return null; // ✅ valid
                             },
                           ),
-
+                          Gap(5),
+                          // Referral Label
+                          Align(
+                            alignment: isArabic
+                                ? Alignment.topRight
+                                : Alignment.topLeft, // Is line ko sahi kiya
+                            child: Text(
+                              isArabic
+                                  ? "كود الإحالة (اختياری)"
+                                  : "Referral Code (Optional)",
+                              style: isArabic
+                                  ? AppStyle.arabictext.copyWith(
+                                      color: Colors.black54,
+                                    )
+                                  : AppStyle.halfblacktext,
+                            ),
+                          ),
+                          Gap(5),
+                          MyTextFormField(
+                            controller: pController.refrelController,
+                            keyboard: TextInputType.text,
+                            // 1. Hint text change karein (Arabic/English localization ke mutabiq)
+                            hintext: isArabic
+                                ? "كود الإحالة (اختياري)"
+                                : "Referral Code (Optional)",
+                            validator: (value) {
+                              // 2. Referral code optional hota hai, isliye validation ki zaroorat nahi
+                              // Agar user khali chore to error nahi dena chahiye
+                              return null;
+                            },
+                          ),
                           Gap(7),
                           Row(
                             children: [
