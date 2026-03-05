@@ -32,6 +32,13 @@ class _InviteFriendScreenState extends State<InviteFriendScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () {
+            Get.back();
+          },
+          icon: Icon(Icons.arrow_back_ios_new_outlined),
+        ),
         title: Text(isArabic ? "دعوة صديق" : "Invite Friends"),
         centerTitle: true,
         elevation: 0,
