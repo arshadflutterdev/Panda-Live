@@ -56,22 +56,27 @@ class _WithdrawlHistoryState extends State<WithdrawlHistory> {
                   style: TextStyle(fontSize: 16),
                 ),
                 actions: [
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, false),
-                    child: Text(
-                      isArabic ? "لا" : "No",
-                      style: TextStyle(
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                  Row(
+                    children: [
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, false),
+                        child: Text(
+                          isArabic ? "لا" : "No",
+                          style: TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () => Navigator.pop(context, true),
-                    child: Text(
-                      isArabic ? "إلغاء" : "Cancel",
-                      style: TextStyle(color: Colors.red, fontSize: 16),
-                    ),
+                      Spacer(),
+                      TextButton(
+                        onPressed: () => Navigator.pop(context, true),
+                        child: Text(
+                          isArabic ? "بالتأكيد" : "Sure",
+                          style: TextStyle(color: Colors.red, fontSize: 16),
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

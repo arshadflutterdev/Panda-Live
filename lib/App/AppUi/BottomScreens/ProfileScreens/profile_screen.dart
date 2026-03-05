@@ -464,6 +464,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 ? "استبدال العملات الخاصة بك"
                                 : "Redeem Your Coins",
                             titleStyle: TextStyle(fontSize: 18),
+
                             middleText: isArabic
                                 ? "تحويل 45000 ألف عملة إلى 45 دولارًا"
                                 : "Convert 45000 Coins To 45\$",
@@ -477,21 +478,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                         .collection("userProfile")
                                         .doc(uid)
                                         .update({
-                                          "coins": FieldValue.increment(-100),
-                                          "dollars": FieldValue.increment(1),
+                                          "coins": FieldValue.increment(-45000),
+                                          "dollars": FieldValue.increment(45),
                                         });
-                                    awardCoins.value -= 100;
+                                    awardCoins.value -= 45000;
                                     Get.back();
                                     await getUserDetails();
                                     Get.snackbar(
                                       isArabic ? "نجاح" : "Success",
                                       isArabic
-                                          ? "تم استبدال 100 عملة! تمت إضافة 1 دولار إلى حسابك."
-                                          : "100 Coins redeemed! 1\$ added to your account.",
+                                          ? "تم استبدال 45000 عملة! تمت إضافة 45 دولار إلى حسابك."
+                                          : "45,000 Coins redeemed! 45\$ added to your account.",
                                       backgroundColor: Colors.green,
                                       colorText: Colors.white,
-                                      snackPosition: SnackPosition
-                                          .BOTTOM, // Optional: neechay dikhanay ke liye
+                                      snackPosition: SnackPosition.BOTTOM,
                                     );
                                   } catch (e) {
                                     Get.snackbar(

@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -15,10 +16,20 @@ class ProfileStoreController extends GetxController {
   final user = FirebaseAuth.instance.currentUser!.uid;
   RxString userphoto = "".obs;
   Rxn<File> image = Rxn<File>();
+  // refrel system
+  String generateReferralCode() {
+    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    Random rnd = Random();
+    return String.fromCharCodes(
+      Iterable.generate(6, (_) => chars.codeUnitAt(rnd.nextInt(chars.length))),
+    );
+  }
 
   Future<void> storeuserprofile() async {
     final shortId = arg["shortId"];
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    String myReferralCode = generateReferralCode();
+
     try {
       final adduser = {
         "name": nameController.text.toString(),
@@ -33,6 +44,7 @@ class ProfileStoreController extends GetxController {
 
         "createdAt": FieldValue.serverTimestamp(),
         "userId": user,
+        "myReferralCode": myReferralCode,
         "shortId": shortId,
       };
       await firestore.collection("userProfile").doc(user).set(adduser);
