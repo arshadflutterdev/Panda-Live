@@ -10,6 +10,7 @@ import 'package:get/get_utils/get_utils.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/withdrawal_screen.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
@@ -561,98 +562,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                       GestureDetector(
+                        // Dollar wale GestureDetector ke andar:
                         onTap: () {
-                          Get.defaultDialog(
-                            backgroundColor: Colors.white,
-                            title: isArabic ? "طلب سحب" : "Withdrawal Request",
-                            titleStyle: TextStyle(fontSize: 18),
-                            middleText: isArabic
-                                ? "يمكنك المتابعة لسحب رصيدك المتاح. يرجى التأكيد للاستمرار."
-                                : "You can proceed to withdraw your available balance. Please confirm to continue.",
-
-                            cancel: TextButton(
-                              onPressed: () {
-                                Get.back();
-                              },
-                              child: Text(isArabic ? "إلغاء" : "Cancel"),
-                            ),
-                            confirm: TextButton(
-                              onPressed: () async {
-                                if (dollars.value >= 2) {
-                                  final uid =
-                                      FirebaseAuth.instance.currentUser!.uid;
-                                  final doc = await FirebaseFirestore.instance
-                                      .collection('userProfile')
-                                      .doc(uid)
-                                      .get();
-                                  if (doc.exists &&
-                                      doc
-                                          .data()!['withdrawlstatus']
-                                          .toString()
-                                          .contains("Pending")) {
-                                    // Agar status mein "Pending" mil gaya to yahin ruk jayein
-                                    Get.snackbar(
-                                      isArabic
-                                          ? "يرجى الانتظار"
-                                          : "Please Wait",
-                                      isArabic
-                                          ? "طلبك قيد الانتظار بالفعل."
-                                          : "Your request is already pending.",
-                                      snackPosition: SnackPosition.BOTTOM,
-                                      backgroundColor: Color(
-                                        0xFFE3F2FD,
-                                      ), // Light Blue
-                                      colorText: Color(0xFF0D47A1), // Dark Blue
-                                      icon: Icon(
-                                        Icons.hourglass_top,
-                                        color: Color(0xFF0D47A1),
-                                      ),
-                                      margin: EdgeInsets.all(16),
-                                      borderRadius: 12,
-                                      duration: Duration(seconds: 3),
-                                      isDismissible: true,
-                                      forwardAnimationCurve: Curves.easeOut,
-                                    );
-
-                                    return;
-                                  }
-                                  final requiestammount = dollars.value;
-
-                                  await FirebaseFirestore.instance
-                                      .collection("userProfile")
-                                      .doc(uid)
-                                      .update({
-                                        "withdrawlstatus":
-                                            "Pending ($requiestammount\$)",
-                                        "dollars": 0,
-                                      });
-                                  Get.back();
-                                  dollars.value = 0;
-
-                                  await getUserDetails();
-                                  Get.snackbar(
-                                    isArabic ? "تهانينا" : "Congratulations",
-                                    isArabic
-                                        ? "تم تقديم طلبك بنجاح"
-                                        : "Your request submitted successfully",
-                                    backgroundColor: Colors.green,
-                                    colorText: Colors.white,
-                                  );
-                                } else {
-                                  Get.back();
-                                  Get.snackbar(
-                                    isArabic ? "منخفض" : "Low",
-                                    isArabic
-                                        ? "رصيدك أقل من 2 دولار"
-                                        : "Your balance is less than 2 dollars",
-                                    backgroundColor: Colors.red,
-                                    colorText: Colors.white,
-                                  );
-                                }
-                              },
-                              child: Text(isArabic ? "متابعة" : "Proceed"),
-                            ),
-                          );
+                          if (dollars.value >= 2) {
+                            // Direct dialog dikhane ki bajaye naye page par bhejen
+                            Get.to(
+                              () => WithdrawalScreen(),
+                              arguments: {
+                                "amount": dollars.value,
+                              }, // Dollar ka value sath bhej rahe hain
+                            );
+                          } else {
+                            Get.snackbar(
+                              "Low Balance",
+                              "Minimum 2 dollars required",
+                            );
+                          }
                         },
                         child: Container(
                           width: width * 0.45,
