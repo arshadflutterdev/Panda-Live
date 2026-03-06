@@ -567,7 +567,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           if (dollars.value >= 2) {
                             // Direct dialog dikhane ki bajaye naye page par bhejen
                             Get.to(
-                              () => WithdrawalScreen(),
+                              () => WithdrawalFormScreen(),
                               arguments: {
                                 "amount": dollars.value,
                               }, // Dollar ka value sath bhej rahe hain
