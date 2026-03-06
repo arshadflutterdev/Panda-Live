@@ -470,7 +470,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                 : "Convert 45000 Coins To 45\$",
                             confirm: TextButton(
                               onPressed: () async {
-                                if (awardCoins.value >= 45000) {
+                                if (awardCoins.value >= 50) {
                                   try {
                                     final uid =
                                         FirebaseAuth.instance.currentUser!.uid;
