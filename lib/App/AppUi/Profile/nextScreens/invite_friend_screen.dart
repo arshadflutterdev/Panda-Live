@@ -51,8 +51,9 @@ class _InviteFriendScreenState extends State<InviteFriendScreen> {
             .doc(uid)
             .snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData)
+          if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
+          }
 
           var data = snapshot.data!.data() as Map<String, dynamic>;
           String myCode = data['myReferralCode'] ?? "------";
