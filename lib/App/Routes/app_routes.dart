@@ -63,8 +63,10 @@ class AppRoutes {
   static const followers = "/FollowerListScreen";
   static const following = "/FollowingListScreen";
   static const friends = "/FriendsListScreen";
+  static const withdrawalscreen = "/WithdrawalScreen";
 
   static final routes = [
+    GetPage(name: withdrawalscreen, page: () => WithdrawlHistory()),
     GetPage(name: splash, page: () => SplashScreen()),
     GetPage(
       binding: AuthBindings(),
