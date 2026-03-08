@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/Utils/Constant/app_images.dart';
 
 class UpdatesScreen extends StatefulWidget {
   const UpdatesScreen({super.key});
@@ -41,7 +42,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
       default:
         return {
           "isEmoji": false,
-          "icon": Icons.notifications,
+          "icon": AppImages.coins,
           "color": Colors.blue,
         };
     }
