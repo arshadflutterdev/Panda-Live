@@ -11,42 +11,43 @@ class UpdatesScreen extends StatefulWidget {
 }
 
 // ... imports wahi rahengy
+// ... existing imports ...
 
 class _UpdatesScreenState extends State<UpdatesScreen> {
-  // Static list ko hata kar Firestore se data lein gey
-
   bool get isArabic => Get.locale?.languageCode == "ar";
+
+  // --- Icon aur Color decide karne wala function ---
+  Map<String, dynamic> _getNotificationStyle(String? type) {
+    switch (type) {
+      case 'payment':
+        return {"icon": Icons.account_balance_wallet, "color": Colors.green};
+      case 'announcement':
+        return {"icon": Icons.campaign, "color": Colors.orange};
+      case 'security':
+        return {"icon": Icons.security, "color": Colors.red};
+      default:
+        return {"icon": Icons.notifications, "color": Colors.blue};
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.grey.shade100,
       appBar: AppBar(
-        // ... (Aapka purana AppBar code)
+        title: Text(isArabic ? "التحديثات الرسمية" : "Official Updates"),
+        // ... (Appbar actions same rahengy)
       ),
-
-      // Static ListView ki jagah StreamBuilder
       body: StreamBuilder<QuerySnapshot>(
-        // Admin ne jo 'announcements' bheji hongi wo yahan se aayengi
         stream: FirebaseFirestore.instance
             .collection('userProfile')
-            .doc(
-              FirebaseAuth.instance.currentUser?.uid,
-            ) // Specific user ki notifications
+            .doc(FirebaseAuth.instance.currentUser?.uid)
             .collection('notifications')
-            .orderBy('time', descending: true) // Nayi update sab se upar
+            .orderBy('time', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
-          }
-
-          if (!snapshot.hasData || snapshot.data!.docs.isEmpty) {
-            return Center(
-              child: Text(
-                isArabic ? "لا توجد تحديثات" : "No updates available",
-              ),
-            );
           }
 
           var docs = snapshot.data!.docs;
@@ -56,86 +57,62 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
             itemCount: docs.length,
             itemBuilder: (context, index) {
               var data = docs[index].data() as Map<String, dynamic>;
+              var style = _getNotificationStyle(
+                data['type'],
+              ); // Type ke mutabiq style
 
-              // Date format karne ke liye
-              DateTime date = (data['time'] as Timestamp).toDate();
-              String formattedDate = "${date.day}/${date.month}";
-
-              return Container(
-                margin: const EdgeInsets.only(bottom: 12),
-                padding: const EdgeInsets.all(12),
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(14),
-                  boxShadow: [
-                    BoxShadow(
-                      color: Colors.black12,
-                      blurRadius: 6,
-                      offset: Offset(0, 3),
-                    ),
-                  ],
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    /// Icon (Announcement type ke mutabiq icon set kr skty hain)
-                    Container(
-                      height: 48,
-                      width: 48,
-                      decoration: BoxDecoration(
-                        color: Colors.orange, // Default color
-                        borderRadius: BorderRadius.circular(12),
+              return GestureDetector(
+                onTap: () {
+                  // Details screen par bhejna
+                  Get.to(() => NotificationDetailScreen(data: data));
+                },
+                child: Container(
+                  margin: const EdgeInsets.only(bottom: 12),
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(14),
+                    boxShadow: [
+                      BoxShadow(color: Colors.black12, blurRadius: 4),
+                    ],
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                        height: 50,
+                        width: 50,
+                        decoration: BoxDecoration(
+                          color: style['color'],
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                        child: Icon(style['icon'], color: Colors.white),
                       ),
-                      child: const Icon(
-                        Icons.campaign,
-                        color: Colors.white,
-                        size: 26,
-                      ),
-                    ),
-                    const SizedBox(width: 12),
-
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Row(
-                            children: [
-                              Expanded(
-                                child: Text(
-                                  data['title'] ?? "", // Admin panel wala title
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold,
-                                  ),
-                                ),
+                      const SizedBox(width: 12),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              data['title'] ?? "",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
                               ),
-                              // Official Badge
-                              _buildOfficialBadge(),
-                            ],
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            data['body'] ??
-                                "", // Admin panel wala subtitle/body
-                            maxLines: 2,
-                            overflow: TextOverflow.ellipsis,
-                            style: const TextStyle(
-                              color: Colors.black54,
-                              fontSize: 14,
                             ),
-                          ),
-                          const SizedBox(height: 4),
-                          Text(
-                            formattedDate,
-                            style: const TextStyle(
-                              fontSize: 12,
-                              color: Colors.black38,
+                            Text(
+                              data['body'] ?? "",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
                             ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
-                    ),
-                  ],
+                      const Icon(
+                        Icons.arrow_forward_ios,
+                        size: 14,
+                        color: Colors.grey,
+                      ),
+                    ],
+                  ),
                 ),
               );
             },
@@ -144,20 +121,76 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
       ),
     );
   }
+}
 
-  Widget _buildOfficialBadge() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-      decoration: BoxDecoration(
-        color: Colors.blue.shade100,
-        borderRadius: BorderRadius.circular(6),
+class NotificationDetailScreen extends StatelessWidget {
+  final Map<String, dynamic> data;
+  const NotificationDetailScreen({super.key, required this.data});
+
+  @override
+  Widget build(BuildContext context) {
+    bool isArabic = Get.locale?.languageCode == "ar";
+
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(isArabic ? "التفاصيل" : "Details"),
+        backgroundColor: Colors.white,
+        foregroundColor: Colors.black,
       ),
-      child: Text(
-        isArabic ? "رسمي" : "Official",
-        style: TextStyle(
-          fontSize: 11,
-          color: Colors.blue.shade800,
-          fontWeight: FontWeight.w600,
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              data['title'] ?? "",
+              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 10),
+            Text(
+              data['time'] != null
+                  ? (data['time'] as Timestamp).toDate().toString().split(
+                      '.',
+                    )[0]
+                  : "",
+              style: const TextStyle(color: Colors.grey),
+            ),
+            const Divider(height: 30),
+
+            Text(
+              data['body'] ?? "",
+              style: const TextStyle(fontSize: 16, height: 1.5),
+            ),
+
+            const SizedBox(height: 20),
+
+            // Agar Payment ka Screenshot hai to dikhao
+            if (data['image'] != null && data['image'] != "")
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Attachment:",
+                    style: TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 10),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: Image.network(data['image'], fit: BoxFit.cover),
+                  ),
+                ],
+              ),
+
+            // Agar extra notes hain
+            if (data['details'] != null)
+              Padding(
+                padding: const EdgeInsets.only(top: 20),
+                child: Text(
+                  "Notes: ${data['details']}",
+                  style: const TextStyle(fontStyle: FontStyle.italic),
+                ),
+              ),
+          ],
         ),
       ),
     );
