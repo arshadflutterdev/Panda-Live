@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pandlive/Utils/Constant/app_images.dart';
+import 'package:pandlive/Utils/Constant/app_images.dart'; // Apna sahi path check kar lena
 
 class UpdatesScreen extends StatefulWidget {
   const UpdatesScreen({super.key});
@@ -18,32 +18,46 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
   Map<String, dynamic> _getNotificationStyle(String? type, String? title) {
     String titleLower = (title ?? "").toLowerCase();
 
-    // Withdrawal Rejected Check
+    // 1. Withdrawal Rejected Check (Sad Emoji)
     if (titleLower.contains("rejected") || titleLower.contains("refuse")) {
-      return {"isEmoji": true, "emoji": "😞", "color": Colors.red.shade50};
+      return {
+        "isEmoji": true,
+        "isImage": false,
+        "emoji": "😞",
+        "color": Colors.red.shade50,
+      };
     }
 
-    // Type based logic
+    // 2. Type based logic
     switch (type) {
       case 'payment':
         return {
           "isEmoji": false,
+          "isImage": false,
           "icon": Icons.account_balance_wallet,
           "color": Colors.green,
         };
       case 'announcement':
         return {
           "isEmoji": false,
+          "isImage": false,
           "icon": Icons.campaign,
           "color": Colors.orange,
         };
       case 'security':
-        return {"isEmoji": false, "icon": Icons.security, "color": Colors.red};
-      default:
         return {
           "isEmoji": false,
-          "icon": AppImages.coins,
-          "color": Colors.blue,
+          "isImage": false,
+          "icon": Icons.security,
+          "color": Colors.red,
+        };
+      default:
+        // Default Case: Yahan aapki Coins wali Image aayegi
+        return {
+          "isEmoji": false,
+          "isImage": true,
+          "imagePath": AppImages.coins,
+          "color": Colors.blue.shade50,
         };
     }
   }
@@ -133,14 +147,14 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                   ),
                   child: Row(
                     crossAxisAlignment:
-                        CrossAxisAlignment.center, // Vertically Center elements
+                        CrossAxisAlignment.center, // Vertically Center Content
                     children: [
-                      // Icon or Emoji Box
+                      // --- Image / Icon / Emoji Box ---
                       Container(
                         height: 52,
                         width: 52,
                         decoration: BoxDecoration(
-                          color: style['isEmoji']
+                          color: style['isEmoji'] || style['isImage']
                               ? style['color']
                               : (style['color'] as Color).withOpacity(0.15),
                           borderRadius: BorderRadius.circular(12),
@@ -152,6 +166,13 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                   style: const TextStyle(fontSize: 28),
                                 ),
                               )
+                            : style['isImage']
+                            ? Padding(
+                                padding: const EdgeInsets.all(
+                                  10.0,
+                                ), // Image size control
+                                child: Image.asset(style['imagePath']),
+                              )
                             : Icon(
                                 style['icon'],
                                 color: style['color'],
@@ -160,7 +181,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                       ),
                       const SizedBox(width: 12),
 
-                      // Text Content
+                      // --- Text Content ---
                       Expanded(
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
@@ -186,7 +207,7 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                             const SizedBox(height: 3),
                             Text(
                               displaySubtitle,
-                              maxLines: 1, // Truncate long title/body
+                              maxLines: 1, // Long Title Truncate
                               overflow: TextOverflow.ellipsis,
                               style: TextStyle(
                                 fontSize: 13,
@@ -198,25 +219,18 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                                     : FontWeight.normal,
                               ),
                             ),
-                            const SizedBox(height: 2),
-                            Text(
-                              data['body'] ?? "",
-                              maxLines: 1, // Show only one line in preview
-                              overflow: TextOverflow.ellipsis,
-                              style: const TextStyle(
-                                color: Colors.grey,
-                                fontSize: 12,
-                              ),
-                            ),
                           ],
                         ),
                       ),
 
-                      // Right Arrow (Center Aligned via Row's CrossAxisAlignment.center)
-                      const Icon(
-                        Icons.arrow_forward_ios,
-                        size: 14,
-                        color: Colors.black26,
+                      // --- Right Arrow (Height ke hisab se Center) ---
+                      const Padding(
+                        padding: EdgeInsets.only(left: 8.0),
+                        child: Icon(
+                          Icons.arrow_forward_ios,
+                          size: 14,
+                          color: Colors.black26,
+                        ),
                       ),
                     ],
                   ),
@@ -282,25 +296,6 @@ class NotificationDetailScreen extends StatelessWidget {
               ClipRRect(
                 borderRadius: BorderRadius.circular(12),
                 child: Image.network(data['image']),
-              ),
-            ],
-            if (data['details'] != null && data['details'] != "") ...[
-              const SizedBox(height: 20),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(15),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade50,
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: Colors.grey.shade200),
-                ),
-                child: Text(
-                  "Notes: ${data['details']}",
-                  style: const TextStyle(
-                    fontStyle: FontStyle.italic,
-                    color: Colors.blueGrey,
-                  ),
-                ),
               ),
             ],
           ],
