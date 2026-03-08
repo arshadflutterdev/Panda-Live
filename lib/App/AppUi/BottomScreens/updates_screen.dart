@@ -104,12 +104,14 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
             .orderBy('time', descending: true)
             .snapshots(),
         builder: (context, snapshot) {
-          if (!snapshot.hasData)
+          if (!snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
-          if (snapshot.data!.docs.isEmpty)
+          }
+          if (snapshot.data!.docs.isEmpty) {
             return Center(
               child: Text(isArabic ? "لا توجد رسائل" : "No messages yet"),
             );
+          }
 
           return ListView.builder(
             padding: const EdgeInsets.all(12),
