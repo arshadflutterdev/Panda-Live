@@ -24,7 +24,7 @@ class _WatchstreamingClassState extends State<WatchstreamingClass> {
   final String appId = "5eda14d417924d9baf39e83613e8f8f5";
   final String channelName = "testingChannel";
   final String appToken =
-      "007eJxTYBB51ueQ+DTVuma1kOXa8LRT2U2xcU9/PA6dxeC4oqY/iVWBwTLFOMnc3DTN2NgyxSQlMc0iydA0zTDZPMUgOdk8zTit+ejazIZARoYSzjYGRigE8fkYSlKLSzLz0p0zEvPyUnMYGACRpCNz";
+      "007eJxTYJhhVH4xNVg62PzuMtFFc4/F2Ry1te8qMJ0h6fVabM1JpckKDJYpxknm5qZpxsaWKSYpiWkWSYamaYbJ5ikGycnmacZpnS0bMhsCGRlWHfjIxMgAgSA+H0NJanFJZl66c0ZiXl5qDgMDAGjSI8s=";
 
   var remoteviewController = Rxn<VideoViewController>();
   Future<void> joinasaudi() async {
