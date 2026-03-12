@@ -15,6 +15,7 @@ import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/google_ads.dart';
 import 'package:pandlive/l10n/app_localizations.dart';
 
 class ProfileScreen extends StatefulWidget {
@@ -213,6 +214,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         actions: [
           IconButton(
             onPressed: () {
+              AdController().tryShowAd();
               Get.toNamed(AppRoutes.language);
             },
             icon: Image(image: AssetImage(AppImages.settings), height: 30),
@@ -337,7 +339,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ),
 
                           IconButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              AdController().tryShowAd();
+                            },
                             icon: Icon(
                               Icons.arrow_forward_ios_rounded,
                               color: Colors.black54,
@@ -354,6 +358,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       children: [
                         GestureDetector(
                           onTap: () {
+                            AdController().tryShowAd();
                             Get.toNamed(
                               AppRoutes.friends,
                               arguments: {
@@ -385,6 +390,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
+                            AdController().tryShowAd();
                             Get.toNamed(
                               AppRoutes.following,
                               arguments: {
@@ -416,6 +422,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                         GestureDetector(
                           onTap: () {
+                            AdController().tryShowAd();
                             Get.toNamed(
                               AppRoutes.followers,
                               arguments: {
