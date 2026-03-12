@@ -6,17 +6,10 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:get/get_instance/src/extension_instance.dart';
-import 'package:get/get_navigation/src/extension_navigation.dart';
-import 'package:get/get_utils/src/extensions/internacionalization.dart';
+
 import 'package:image_picker/image_picker.dart';
-import 'package:pandlive/App/AppUi/Profile/nextScreens/CreateProfileScreen/helpscreen_controller.dart';
-import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
-import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
-import 'package:pandlive/Utils/Constant/app_style.dart';
 import 'package:pandlive/google_ads.dart';
-import 'package:pandlive/l10n/app_localizations.dart';
+
 // ... (Imports wahi rahenge jo pehle thay)
 
 class HelpScreen extends StatefulWidget {
