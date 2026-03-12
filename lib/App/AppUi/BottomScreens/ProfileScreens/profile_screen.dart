@@ -31,11 +31,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       "icon": Icons.help_outline,
       "trailing": "24h",
     },
-    {
-      "title": AppLocalizations.of(context)!.help,
-      "icon": Icons.help_outline,
-      "trailing": "24h",
-    },
     // {"title": AppLocalizations.of(context)!.level, "icon": Icons.star_border},
     {
       "title": AppLocalizations.of(context)!.followus,
@@ -275,7 +270,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           ),
                                   ),
                                 ),
-
                                 Directionality(
                                   textDirection: TextDirection.ltr,
                                   child: Row(
