@@ -26,11 +26,7 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   late final List<Map<String, dynamic>> menuItems = [
-    {
-      "title": AppLocalizations.of(context)!.help,
-      "icon": Icons.help_outline,
-      "trailing": "24h",
-    },
+    {"title": "Support", "icon": Icons.help_outline, "trailing": "24h"},
     // {"title": AppLocalizations.of(context)!.level, "icon": Icons.star_border},
     {
       "title": AppLocalizations.of(context)!.followus,

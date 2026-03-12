@@ -308,9 +308,19 @@ class HelpController extends GetxController {
           });
 
       Get.back();
-      Get.snackbar("Success", "Your verification request has been submitted!");
+      Get.snackbar(
+        "Success",
+        "Your verification request has been submitted!",
+        backgroundColor: Colors.green,
+        colorText: Colors.white,
+      );
     } catch (e) {
-      Get.snackbar("Error", "Failed to upload: $e");
+      Get.snackbar(
+        "Error",
+        "Failed to upload: $e",
+        backgroundColor: Colors.red,
+        colorText: Colors.white,
+      );
     } finally {
       isLoading.value = false;
     }
