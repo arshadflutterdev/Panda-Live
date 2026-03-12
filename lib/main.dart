@@ -1,4 +1,3 @@
-import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,12 +6,13 @@ import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/firebase_options.dart';
+import 'package:pandlive/google_ads.dart';
 import 'package:pandlive/l10n/app_localizations.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  AdController().initialize();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   // 1. Load the saved language from SharedPreferences
