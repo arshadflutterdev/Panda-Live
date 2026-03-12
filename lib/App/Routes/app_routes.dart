@@ -9,6 +9,7 @@ import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/profile_screen.dart';
 import 'package:pandlive/App/AppUi/HomeScreenContant/explorer_tab.dart';
 import 'package:pandlive/App/AppUi/LiveStreaming/GoLiveStream/golive_screen.dart';
+import 'package:pandlive/App/AppUi/LiveStreaming/GoLiveStream/pre_setup_screen.dart';
 import 'package:pandlive/App/AppUi/LiveStreaming/WatchStreaming/watchstreaming_class.dart';
 import 'package:pandlive/App/AppUi/Profile/nextScreens/CreateProfileScreen/create_profile.dart';
 import 'package:pandlive/App/AppUi/Profile/nextScreens/follow_us.dart';
@@ -64,10 +65,13 @@ class AppRoutes {
   static const following = "/FollowingListScreen";
   static const friends = "/FriendsListScreen";
   static const withdrawalscreen = "/WithdrawalScreen";
+  static const liveSetup = "/LiveSetupScreen";
 
   static final routes = [
     GetPage(name: withdrawalscreen, page: () => WithdrawlHistory()),
     GetPage(name: splash, page: () => SplashScreen()),
+    GetPage(name: liveSetup, page: () => LiveSetupScreen()),
+
     GetPage(
       binding: AuthBindings(),
       name: authoptions,

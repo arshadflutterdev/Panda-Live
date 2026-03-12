@@ -72,40 +72,53 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                 style: isArabic ? AppStyle.arabictext : TextStyle(),
               ),
             ),
+            // ExplorerScreen.dart mein Confirm button ka logic
             confirm: TextButton(
-              onPressed: () async {
-                final User? currentUser = FirebaseAuth.instance.currentUser;
-                if (currentUser != null) {
-                  Get.back();
-                  await FirebaseFirestore.instance
-                      .collection("LiveStream")
-                      .doc(currentUser.uid)
-                      .set({
-                        "hostname": currentUser.displayName ?? 'Guest',
-                        "uid": currentUser.uid,
-                        "channelId": "testingChannel",
-                        "image": currentUser.photoURL ?? "",
-                        "views": 0,
-                        "startedAt": FieldValue.serverTimestamp(),
-                        "lastHeartbeat": FieldValue.serverTimestamp(),
-                      });
-
-                  Get.toNamed(
-                    AppRoutes.golive,
-                    arguments: {
-                      "channelId": "testingChannel",
-                      "hostname": currentUser.displayName ?? "no name",
-                      "hostphoto": currentUser.photoURL ?? "",
-                    },
-                  );
-                }
+              onPressed: () {
+                Get.back(); // Dialog band karein
+                // Seedha Setup Screen par bhejein, Firestore mein abhi kuch nahi likhna
+                Get.toNamed(AppRoutes.liveSetup);
               },
-
               child: Text(
                 isArabic ? "يتأكد" : "Confirm",
-                style: isArabic ? AppStyle.arabictext : TextStyle(),
+                style: isArabic ? AppStyle.arabictext : const TextStyle(),
               ),
             ),
+
+            // confirm: TextButton(
+            //   onPressed: () async {
+            //     final User? currentUser = FirebaseAuth.instance.currentUser;
+            //     if (currentUser != null) {
+            //       Get.back();
+            //       await FirebaseFirestore.instance
+            //           .collection("LiveStream")
+            //           .doc(currentUser.uid)
+            //           .set({
+            //             "hostname": currentUser.displayName ?? 'Guest',
+            //             "uid": currentUser.uid,
+            //             "channelId": "testingChannel",
+            //             "image": currentUser.photoURL ?? "",
+            //             "views": 0,
+            //             "startedAt": FieldValue.serverTimestamp(),
+            //             "lastHeartbeat": FieldValue.serverTimestamp(),
+            //           });
+
+            //       Get.toNamed(
+            //         AppRoutes.golive,
+            //         arguments: {
+            //           "channelId": "testingChannel",
+            //           "hostname": currentUser.displayName ?? "no name",
+            //           "hostphoto": currentUser.photoURL ?? "",
+            //         },
+            //       );
+            //     }
+            //   },
+
+            //   child: Text(
+            //     isArabic ? "يتأكد" : "Confirm",
+            //     style: isArabic ? AppStyle.arabictext : TextStyle(),
+            //   ),
+            // ),
           );
         },
         child: Image(image: AssetImage(AppImages.golive), color: Colors.white),
