@@ -44,7 +44,7 @@ class AdController {
 
     // 🕐 Start cooldown
     _cooldownActive = true;
-    _cooldownTimer = Timer(const Duration(minutes: 2), () {
+    _cooldownTimer = Timer(const Duration(minutes: 1), () {
       _cooldownActive = false;
       RewardedAdServices.adLoading();
       debugPrint("🔓 Ad ready again after 5 minutes");
