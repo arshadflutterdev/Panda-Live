@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart'; // Copy karne ke liye
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pandlive/google_ads.dart';
 import 'package:share_plus/share_plus.dart';
 
 class InviteFriendScreen extends StatefulWidget {
@@ -35,9 +36,10 @@ class _InviteFriendScreenState extends State<InviteFriendScreen> {
         automaticallyImplyLeading: false,
         leading: IconButton(
           onPressed: () {
+            AdController().tryShowAd();
             Get.back();
           },
-          icon: Icon(Icons.arrow_back_ios_new_outlined),
+          icon: Icon(Icons.arrow_back),
         ),
         title: Text(isArabic ? "دعوة صديق" : "Invite Friends"),
         centerTitle: true,

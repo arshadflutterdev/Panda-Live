@@ -462,6 +462,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: [
                       GestureDetector(
                         onTap: () {
+                          AdController().tryShowAd();
                           Get.defaultDialog(
                             backgroundColor: Colors.white,
                             title: isArabic
@@ -567,6 +568,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       GestureDetector(
                         // Dollar wale GestureDetector ke andar:
                         onTap: () {
+                          AdController().tryShowAd();
                           if (dollars.value >= 2) {
                             // Direct dialog dikhane ki bajaye naye page par bhejen
                             Get.to(
@@ -692,6 +694,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         padding: const EdgeInsets.symmetric(horizontal: 10),
                         child: GestureDetector(
                           onTap: () {
+                            AdController().tryShowAd();
                             Get.toNamed(AppRoutes.invitefriend);
                           },
                           child: Row(
@@ -799,10 +802,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                     ),
                               onTap: () {
                                 if (index == 0) {
+                                  AdController().tryShowAd();
                                   Get.toNamed(AppRoutes.help);
                                 } else if (index == 1) {
+                                  AdController().tryShowAd();
                                   Get.toNamed(AppRoutes.followus);
                                 } else if (index == 2) {
+                                  AdController().tryShowAd();
                                   Get.toNamed(AppRoutes.logout);
                                 }
                               },
