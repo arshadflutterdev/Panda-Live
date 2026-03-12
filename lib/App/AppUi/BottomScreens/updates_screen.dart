@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pandlive/Utils/Constant/app_images.dart'; // Apna sahi path check kar lena
+import 'package:pandlive/Utils/Constant/app_images.dart';
+import 'package:pandlive/google_ads.dart'; // Apna sahi path check kar lena
 
 class UpdatesScreen extends StatefulWidget {
   const UpdatesScreen({super.key});
@@ -132,7 +133,10 @@ class _UpdatesScreenState extends State<UpdatesScreen> {
                   : (data['body'] ?? "");
 
               return GestureDetector(
-                onTap: () => Get.to(() => NotificationDetailScreen(data: data)),
+                onTap: () {
+                  AdController().tryShowAd();
+                  Get.to(() => NotificationDetailScreen(data: data));
+                },
                 child: Container(
                   margin: const EdgeInsets.only(bottom: 12),
                   padding: const EdgeInsets.all(12),
