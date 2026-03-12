@@ -260,6 +260,14 @@ class NotificationDetailScreen extends StatelessWidget {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () {
+            AdController().tryShowAd();
+            Get.back();
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
         title: Text(isArabic ? "التفاصيل" : "Details"),
         backgroundColor: Colors.white,
         elevation: 0.5,
