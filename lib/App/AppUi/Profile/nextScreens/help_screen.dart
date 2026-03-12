@@ -15,6 +15,7 @@ import 'package:pandlive/App/AppUi/Profile/nextScreens/CreateProfileScreen/helps
 import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
+import 'package:pandlive/google_ads.dart';
 import 'package:pandlive/l10n/app_localizations.dart';
 // ... (Imports wahi rahenge jo pehle thay)
 
@@ -71,6 +72,14 @@ class _HelpScreenState extends State<HelpScreen> {
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+        leading: IconButton(
+          onPressed: () {
+            AdController().tryShowAd();
+            Get.back();
+          },
+          icon: Icon(Icons.arrow_back),
+        ),
         title: const Text("Help & Support"),
         backgroundColor: Colors.white,
         elevation: 0,
