@@ -1,8 +1,10 @@
+import 'package:agora_rtc_engine/agora_rtc_engine.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:gap/gap.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 
 class LiveSetupScreen extends StatefulWidget {
@@ -13,6 +15,8 @@ class LiveSetupScreen extends StatefulWidget {
 }
 
 class _LiveSetupScreenState extends State<LiveSetupScreen> {
+  late RtcEngine _engine;
+  bool _isReadyToPreview = false;
   String selectedFilter = "Natural";
   bool isMuted = false;
 
@@ -24,10 +28,78 @@ class _LiveSetupScreenState extends State<LiveSetupScreen> {
   ];
 
   @override
+  void initState() {
+    super.initState();
+    initAgora();
+  }
+
+  Future<void> initAgora() async {
+    await [Permission.camera, Permission.microphone].request();
+
+    _engine = createAgoraRtcEngine();
+    await _engine.initialize(
+      const RtcEngineContext(appId: "5eda14d417924d9baf39e83613e8f8f5"),
+    );
+
+    await _engine.enableVideo();
+    await _engine.startPreview();
+
+    setState(() {
+      _isReadyToPreview = true;
+    });
+  }
+
+  Future<void> _applyFilter(String filterName) async {
+    setState(() => selectedFilter = filterName);
+
+    BeautyOptions options;
+    switch (filterName) {
+      case "Beauty":
+        options = const BeautyOptions(
+          lighteningContrastLevel:
+              LighteningContrastLevel.lighteningContrastHigh,
+          lighteningLevel: 0.8,
+          smoothnessLevel: 0.9,
+          rednessLevel: 0.5,
+        );
+        break;
+      case "Warm":
+        options = const BeautyOptions(
+          lighteningContrastLevel:
+              LighteningContrastLevel.lighteningContrastNormal,
+          lighteningLevel: 0.5,
+          smoothnessLevel: 0.5,
+          rednessLevel: 0.9,
+        );
+        break;
+      case "Cool":
+        options = const BeautyOptions(
+          lighteningContrastLevel:
+              LighteningContrastLevel.lighteningContrastNormal,
+          lighteningLevel: 0.7,
+          smoothnessLevel: 0.4,
+          rednessLevel: 0.1,
+        );
+        break;
+      default:
+        options = const BeautyOptions(
+          lighteningContrastLevel:
+              LighteningContrastLevel.lighteningContrastLow,
+          lighteningLevel: 0.0,
+          smoothnessLevel: 0.0,
+          rednessLevel: 0.0,
+        );
+    }
+
+    await _engine.setBeautyEffectOptions(enabled: true, options: options);
+  }
+
+  // --- BUILD METHOD (Iska hona zaroori hai) ---
+  @override
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-      onPopInvokedWithResult: (didPop, result) async {
+      onPopInvokedWithResult: (didPop, result) {
         if (didPop) return;
         _showExitDialog();
       },
@@ -35,12 +107,17 @@ class _LiveSetupScreenState extends State<LiveSetupScreen> {
         backgroundColor: Colors.black,
         body: Stack(
           children: [
-            // 1. Camera Preview (Yahan Agora ka Preview widget aayega)
-            const Center(
-              child: Icon(Icons.camera_alt, color: Colors.white24, size: 100),
-            ),
+            _isReadyToPreview
+                ? AgoraVideoView(
+                    controller: VideoViewController(
+                      rtcEngine: _engine,
+                      canvas: const VideoCanvas(uid: 0),
+                    ),
+                  )
+                : const Center(
+                    child: CircularProgressIndicator(color: Colors.redAccent),
+                  ),
 
-            // 2. Top Controls
             Positioned(
               top: 50,
               left: 20,
@@ -48,35 +125,35 @@ class _LiveSetupScreenState extends State<LiveSetupScreen> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  IconButton(
-                    icon: const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: 30,
+                  CircleAvatar(
+                    backgroundColor: Colors.black54,
+                    child: IconButton(
+                      icon: const Icon(Icons.close, color: Colors.white),
+                      onPressed: _showExitDialog,
                     ),
-                    onPressed: () => _showExitDialog(),
                   ),
-                  IconButton(
-                    icon: Icon(
-                      isMuted ? Icons.mic_off : Icons.mic,
-                      color: Colors.white,
+                  CircleAvatar(
+                    backgroundColor: Colors.black54,
+                    child: IconButton(
+                      icon: Icon(
+                        isMuted ? Icons.mic_off : Icons.mic,
+                        color: Colors.white,
+                      ),
+                      onPressed: () => setState(() => isMuted = !isMuted),
                     ),
-                    onPressed: () => setState(() => isMuted = !isMuted),
                   ),
                 ],
               ),
             ),
 
-            // 3. Bottom Panel (Filters + Go Live)
             Positioned(
               bottom: 40,
               left: 0,
               right: 0,
               child: Column(
                 children: [
-                  // Filter Selection
                   SizedBox(
-                    height: 90,
+                    height: 100,
                     child: ListView.builder(
                       scrollDirection: Axis.horizontal,
                       padding: const EdgeInsets.symmetric(horizontal: 20),
@@ -85,28 +162,38 @@ class _LiveSetupScreenState extends State<LiveSetupScreen> {
                         bool isSelected =
                             selectedFilter == filters[index]['name'];
                         return GestureDetector(
-                          onTap: () => setState(
-                            () => selectedFilter = filters[index]['name'],
-                          ),
+                          onTap: () => _applyFilter(filters[index]['name']),
                           child: Padding(
-                            padding: const EdgeInsets.only(right: 20),
+                            padding: const EdgeInsets.only(right: 15),
                             child: Column(
                               children: [
-                                CircleAvatar(
-                                  radius: 28,
-                                  backgroundColor: isSelected
-                                      ? Colors.redAccent
-                                      : Colors.white24,
-                                  child: Icon(
-                                    filters[index]['icon'],
-                                    color: Colors.white,
+                                Container(
+                                  padding: const EdgeInsets.all(3),
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    border: Border.all(
+                                      color: isSelected
+                                          ? Colors.redAccent
+                                          : Colors.transparent,
+                                      width: 2,
+                                    ),
+                                  ),
+                                  child: CircleAvatar(
+                                    radius: 25,
+                                    backgroundColor: Colors.white24,
+                                    child: Icon(
+                                      filters[index]['icon'],
+                                      color: Colors.white,
+                                    ),
                                   ),
                                 ),
                                 const Gap(5),
                                 Text(
                                   filters[index]['name'],
-                                  style: const TextStyle(
-                                    color: Colors.white,
+                                  style: TextStyle(
+                                    color: isSelected
+                                        ? Colors.redAccent
+                                        : Colors.white,
                                     fontSize: 12,
                                   ),
                                 ),
@@ -117,25 +204,22 @@ class _LiveSetupScreenState extends State<LiveSetupScreen> {
                       },
                     ),
                   ),
-                  const Gap(30),
-
-                  // START LIVE BUTTON (Main Action)
+                  const Gap(20),
                   Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: ElevatedButton(
-                      onPressed: () => _handleGoLive(),
+                      onPressed: _handleGoLive,
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.redAccent,
-                        minimumSize: const Size(double.infinity, 55),
+                        minimumSize: const Size(double.infinity, 50),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(15),
+                          borderRadius: BorderRadius.circular(25),
                         ),
                       ),
                       child: const Text(
                         "GO LIVE NOW",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
@@ -150,39 +234,33 @@ class _LiveSetupScreenState extends State<LiveSetupScreen> {
     );
   }
 
-  // Step 3: Setup se Actual Live jana
   Future<void> _handleGoLive() async {
     final User? currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
-      // Loader dikhayen
       Get.dialog(
-        const Center(child: CircularProgressIndicator(color: Colors.redAccent)),
+        const Center(child: CircularProgressIndicator()),
         barrierDismissible: false,
       );
-
       try {
-        // Firestore mein entry ab yahan hogi
+        String channelId = "live_${currentUser.uid}";
         await FirebaseFirestore.instance
             .collection("LiveStream")
             .doc(currentUser.uid)
             .set({
               "hostname": currentUser.displayName ?? 'Guest',
               "uid": currentUser.uid,
-              "channelId": "testingChannel",
+              "channelId": channelId,
               "image": currentUser.photoURL ?? "",
               "views": 0,
-              "filter": selectedFilter, // Selected filter save karein
+              "filter": selectedFilter,
               "startedAt": FieldValue.serverTimestamp(),
               "lastHeartbeat": FieldValue.serverTimestamp(),
             });
-
-        Get.back(); // Loader band karein
-
-        // Asli Live Screen par bhej dein
+        Get.back();
         Get.offNamed(
           AppRoutes.golive,
           arguments: {
-            "channelId": "testingChannel",
+            "channelId": channelId,
             "hostname": currentUser.displayName ?? "no name",
             "hostphoto": currentUser.photoURL ?? "",
             "selectedFilter": selectedFilter,
@@ -191,22 +269,28 @@ class _LiveSetupScreenState extends State<LiveSetupScreen> {
         );
       } catch (e) {
         Get.back();
-        Get.snackbar("Error", "Could not start stream: $e");
+        Get.snackbar("Error", "$e");
       }
     }
   }
 
   void _showExitDialog() {
     Get.defaultDialog(
-      title: "Exit Setup?",
-      middleText: "Are you sure you want to go back?",
+      title: "Exit?",
+      middleText: "Band karein?",
+      onConfirm: () {
+        Get.back();
+        Get.back();
+      },
       textConfirm: "Yes",
       textCancel: "No",
-      confirmTextColor: Colors.white,
-      onConfirm: () {
-        Get.back(); // Dialog band
-        Get.back(); // Setup screen band
-      },
     );
+  }
+
+  @override
+  void dispose() {
+    _engine.stopPreview();
+    _engine.release();
+    super.dispose();
   }
 }
