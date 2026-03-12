@@ -20,11 +20,16 @@ class _LiveSetupScreenState extends State<LiveSetupScreen> {
   String selectedFilter = "Natural";
   bool isMuted = false;
 
+  // Language Check Logic
+  bool get isArabic => Get.locale?.languageCode == 'ar';
+
   final List<Map<String, dynamic>> filters = [
     {"name": "Natural", "icon": Icons.face},
     {"name": "Beauty", "icon": Icons.auto_fix_high},
     {"name": "Warm", "icon": Icons.wb_sunny},
     {"name": "Cool", "icon": Icons.ac_unit},
+    {"name": "Bright", "icon": Icons.light_mode},
+    {"name": "Glass", "icon": Icons.blur_on},
   ];
 
   @override
@@ -35,15 +40,16 @@ class _LiveSetupScreenState extends State<LiveSetupScreen> {
 
   Future<void> initAgora() async {
     await [Permission.camera, Permission.microphone].request();
-
     _engine = createAgoraRtcEngine();
     await _engine.initialize(
       const RtcEngineContext(appId: "5eda14d417924d9baf39e83613e8f8f5"),
     );
-
     await _engine.enableVideo();
     await _engine.startPreview();
-
+    await _engine.setBeautyEffectOptions(
+      enabled: true,
+      options: const BeautyOptions(),
+    );
     setState(() {
       _isReadyToPreview = true;
     });
@@ -51,16 +57,15 @@ class _LiveSetupScreenState extends State<LiveSetupScreen> {
 
   Future<void> _applyFilter(String filterName) async {
     setState(() => selectedFilter = filterName);
-
     BeautyOptions options;
     switch (filterName) {
       case "Beauty":
         options = const BeautyOptions(
           lighteningContrastLevel:
               LighteningContrastLevel.lighteningContrastHigh,
-          lighteningLevel: 0.8,
-          smoothnessLevel: 0.9,
-          rednessLevel: 0.5,
+          lighteningLevel: 0.7,
+          smoothnessLevel: 0.8,
+          rednessLevel: 0.3,
         );
         break;
       case "Warm":
@@ -69,16 +74,32 @@ class _LiveSetupScreenState extends State<LiveSetupScreen> {
               LighteningContrastLevel.lighteningContrastNormal,
           lighteningLevel: 0.5,
           smoothnessLevel: 0.5,
-          rednessLevel: 0.9,
+          rednessLevel: 0.8,
         );
         break;
       case "Cool":
         options = const BeautyOptions(
           lighteningContrastLevel:
               LighteningContrastLevel.lighteningContrastNormal,
-          lighteningLevel: 0.7,
+          lighteningLevel: 0.8,
           smoothnessLevel: 0.4,
           rednessLevel: 0.1,
+        );
+        break;
+      case "Bright":
+        options = const BeautyOptions(
+          lighteningContrastLevel:
+              LighteningContrastLevel.lighteningContrastHigh,
+          lighteningLevel: 0.9,
+          smoothnessLevel: 0.3,
+        );
+        break;
+      case "Glass":
+        options = const BeautyOptions(
+          lighteningContrastLevel:
+              LighteningContrastLevel.lighteningContrastHigh,
+          lighteningLevel: 0.6,
+          smoothnessLevel: 0.9,
         );
         break;
       default:
@@ -87,14 +108,11 @@ class _LiveSetupScreenState extends State<LiveSetupScreen> {
               LighteningContrastLevel.lighteningContrastLow,
           lighteningLevel: 0.0,
           smoothnessLevel: 0.0,
-          rednessLevel: 0.0,
         );
     }
-
     await _engine.setBeautyEffectOptions(enabled: true, options: options);
   }
 
-  // --- BUILD METHOD (Iska hona zaroori hai) ---
   @override
   Widget build(BuildContext context) {
     return PopScope(
@@ -108,128 +126,138 @@ class _LiveSetupScreenState extends State<LiveSetupScreen> {
         body: Stack(
           children: [
             _isReadyToPreview
-                ? AgoraVideoView(
-                    controller: VideoViewController(
-                      rtcEngine: _engine,
-                      canvas: const VideoCanvas(uid: 0),
+                ? SizedBox.expand(
+                    child: AgoraVideoView(
+                      controller: VideoViewController(
+                        rtcEngine: _engine,
+                        canvas: const VideoCanvas(uid: 0),
+                      ),
                     ),
                   )
                 : const Center(
                     child: CircularProgressIndicator(color: Colors.redAccent),
                   ),
-
-            Positioned(
-              top: 50,
-              left: 20,
-              right: 20,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  CircleAvatar(
-                    backgroundColor: Colors.black54,
-                    child: IconButton(
-                      icon: const Icon(Icons.close, color: Colors.white),
-                      onPressed: _showExitDialog,
-                    ),
-                  ),
-                  CircleAvatar(
-                    backgroundColor: Colors.black54,
-                    child: IconButton(
-                      icon: Icon(
-                        isMuted ? Icons.mic_off : Icons.mic,
-                        color: Colors.white,
-                      ),
-                      onPressed: () => setState(() => isMuted = !isMuted),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-
-            Positioned(
-              bottom: 40,
-              left: 0,
-              right: 0,
-              child: Column(
-                children: [
-                  SizedBox(
-                    height: 100,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      itemCount: filters.length,
-                      itemBuilder: (context, index) {
-                        bool isSelected =
-                            selectedFilter == filters[index]['name'];
-                        return GestureDetector(
-                          onTap: () => _applyFilter(filters[index]['name']),
-                          child: Padding(
-                            padding: const EdgeInsets.only(right: 15),
-                            child: Column(
-                              children: [
-                                Container(
-                                  padding: const EdgeInsets.all(3),
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    border: Border.all(
-                                      color: isSelected
-                                          ? Colors.redAccent
-                                          : Colors.transparent,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  child: CircleAvatar(
-                                    radius: 25,
-                                    backgroundColor: Colors.white24,
-                                    child: Icon(
-                                      filters[index]['icon'],
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ),
-                                const Gap(5),
-                                Text(
-                                  filters[index]['name'],
-                                  style: TextStyle(
-                                    color: isSelected
-                                        ? Colors.redAccent
-                                        : Colors.white,
-                                    fontSize: 12,
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        );
-                      },
-                    ),
-                  ),
-                  const Gap(20),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 30),
-                    child: ElevatedButton(
-                      onPressed: _handleGoLive,
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.redAccent,
-                        minimumSize: const Size(double.infinity, 50),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(25),
-                        ),
-                      ),
-                      child: const Text(
-                        "GO LIVE NOW",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
+            _buildTopBar(),
+            _buildBottomControls(),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildTopBar() {
+    return Positioned(
+      top: 50,
+      left: 20,
+      right: 20,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          _circleIcon(Icons.close, _showExitDialog),
+          Row(
+            children: [
+              _circleIcon(isMuted ? Icons.mic_off : Icons.mic, () {
+                setState(() => isMuted = !isMuted);
+              }),
+              const Gap(15),
+              _circleIcon(Icons.flip_camera_ios, () async {
+                await _engine.switchCamera();
+              }),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildBottomControls() {
+    return Positioned(
+      bottom: 40,
+      left: 0,
+      right: 0,
+      child: Column(
+        children: [
+          Text(
+            selectedFilter,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const Gap(15),
+          SizedBox(
+            height: 90,
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              itemCount: filters.length,
+              itemBuilder: (context, index) {
+                bool isSelected = selectedFilter == filters[index]['name'];
+                return GestureDetector(
+                  onTap: () => _applyFilter(filters[index]['name']),
+                  child: Padding(
+                    padding: const EdgeInsets.only(right: 15),
+                    child: Column(
+                      children: [
+                        CircleAvatar(
+                          radius: 28,
+                          backgroundColor: isSelected
+                              ? Colors.redAccent
+                              : Colors.white24,
+                          child: Icon(
+                            filters[index]['icon'],
+                            color: Colors.white,
+                          ),
+                        ),
+                        const Gap(5),
+                        Text(
+                          filters[index]['name'],
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+          const Gap(25),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 40),
+            child: ElevatedButton(
+              onPressed: _handleGoLive,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.redAccent,
+                minimumSize: const Size(double.infinity, 55),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(30),
+                ),
+              ),
+              child: Text(
+                isArabic ? "ابدأ البث المباشر الآن" : "GO LIVE NOW",
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _circleIcon(IconData icon, VoidCallback onTap) {
+    return GestureDetector(
+      onTap: onTap,
+      child: CircleAvatar(
+        radius: 22,
+        backgroundColor: Colors.black45,
+        child: Icon(icon, color: Colors.white, size: 22),
       ),
     );
   }
@@ -238,7 +266,7 @@ class _LiveSetupScreenState extends State<LiveSetupScreen> {
     final User? currentUser = FirebaseAuth.instance.currentUser;
     if (currentUser != null) {
       Get.dialog(
-        const Center(child: CircularProgressIndicator()),
+        const Center(child: CircularProgressIndicator(color: Colors.redAccent)),
         barrierDismissible: false,
       );
       try {
@@ -253,6 +281,7 @@ class _LiveSetupScreenState extends State<LiveSetupScreen> {
               "image": currentUser.photoURL ?? "",
               "views": 0,
               "filter": selectedFilter,
+              "isMuted": isMuted,
               "startedAt": FieldValue.serverTimestamp(),
               "lastHeartbeat": FieldValue.serverTimestamp(),
             });
@@ -269,21 +298,26 @@ class _LiveSetupScreenState extends State<LiveSetupScreen> {
         );
       } catch (e) {
         Get.back();
-        Get.snackbar("Error", "$e");
+        Get.snackbar(
+          isArabic ? "خطأ" : "Error",
+          isArabic ? "تعذر بدء البث" : "Could not start stream",
+        );
       }
     }
   }
 
   void _showExitDialog() {
     Get.defaultDialog(
-      title: "Exit?",
-      middleText: "Band karein?",
+      title: isArabic ? "خروج؟" : "Exit?",
+      middleText: isArabic ? "هل تريد إغلاق الإعداد؟" : "Close the setup?",
       onConfirm: () {
         Get.back();
         Get.back();
       },
-      textConfirm: "Yes",
-      textCancel: "No",
+      textConfirm: isArabic ? "نعم" : "Yes",
+      textCancel: isArabic ? "لا" : "No",
+      buttonColor: Colors.redAccent,
+      confirmTextColor: Colors.white,
     );
   }
 
