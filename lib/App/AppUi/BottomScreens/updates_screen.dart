@@ -257,64 +257,73 @@ class NotificationDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isArabic = Get.locale?.languageCode == "ar";
-    return Scaffold(
-      backgroundColor: Colors.white,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        leading: IconButton(
-          onPressed: () {
-            AdController().tryShowAd();
-            Get.back();
-          },
-          icon: Icon(Icons.arrow_back),
-        ),
-        title: Text(isArabic ? "التفاصيل" : "Details"),
+    return WillPopScope(
+      child: Scaffold(
         backgroundColor: Colors.white,
-        elevation: 0.5,
-        foregroundColor: Colors.black,
-      ),
-      body: SingleChildScrollView(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              data['title'] ?? "",
-              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              data['time'] != null
-                  ? (data['time'] as Timestamp).toDate().toString().split(
-                      '.',
-                    )[0]
-                  : "",
-              style: const TextStyle(color: Colors.grey, fontSize: 13),
-            ),
-            const Divider(height: 30),
-            Text(
-              data['body'] ?? "",
-              style: const TextStyle(
-                fontSize: 16,
-                height: 1.6,
-                color: Colors.black87,
+        appBar: AppBar(
+          automaticallyImplyLeading: false,
+          leading: IconButton(
+            onPressed: () {
+              AdController().tryShowAd();
+              Get.back();
+            },
+            icon: Icon(Icons.arrow_back),
+          ),
+          title: Text(isArabic ? "التفاصيل" : "Details"),
+          backgroundColor: Colors.white,
+          elevation: 0.5,
+          foregroundColor: Colors.black,
+        ),
+        body: SingleChildScrollView(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                data['title'] ?? "",
+                style: const TextStyle(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            if (data['image'] != null && data['image'] != "") ...[
-              const SizedBox(height: 25),
-              const Text(
-                "Attachment:",
-                style: TextStyle(fontWeight: FontWeight.bold),
+              const SizedBox(height: 8),
+              Text(
+                data['time'] != null
+                    ? (data['time'] as Timestamp).toDate().toString().split(
+                        '.',
+                      )[0]
+                    : "",
+                style: const TextStyle(color: Colors.grey, fontSize: 13),
               ),
-              const SizedBox(height: 10),
-              ClipRRect(
-                borderRadius: BorderRadius.circular(12),
-                child: Image.network(data['image']),
+              const Divider(height: 30),
+              Text(
+                data['body'] ?? "",
+                style: const TextStyle(
+                  fontSize: 16,
+                  height: 1.6,
+                  color: Colors.black87,
+                ),
               ),
+              if (data['image'] != null && data['image'] != "") ...[
+                const SizedBox(height: 25),
+                const Text(
+                  "Attachment:",
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                const SizedBox(height: 10),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: Image.network(data['image']),
+                ),
+              ],
             ],
-          ],
+          ),
         ),
       ),
+      onWillPop: () async {
+        AdController().tryShowAd();
+        return true;
+      },
     );
   }
 }
