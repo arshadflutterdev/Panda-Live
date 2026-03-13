@@ -300,65 +300,130 @@ class _GoliveScreenState extends State<GoliveScreen>
   //Real Cont update for viewrs
   var getComment = FirebaseFirestore.instance.collection("LiveStream");
   late Stream<QuerySnapshot> _commentStream;
-
   final List<Map<String, dynamic>> filters = [
     {
       'name': 'Original',
-      'img': 'assets/f0.png',
+      'img':
+          'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=200',
       'smooth': 0.0,
       'light': 0.0,
       'enabled': false,
     },
     {
       'name': 'Natural',
-      'img': 'assets/f1.png',
+      'img':
+          'https://images.pexels.com/photos/1222271/pexels-photo-1222271.jpeg?auto=compress&cs=tinysrgb&w=200',
       'smooth': 0.5,
       'light': 0.6,
       'enabled': true,
-    }, // Default
+    },
     {
       'name': 'Bright',
-      'img': 'assets/f2.png',
+      'img':
+          'https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=200',
       'smooth': 0.6,
       'light': 0.8,
       'enabled': true,
     },
     {
       'name': 'Glossy',
-      'img': 'assets/f3.png',
+      'img':
+          'https://images.pexels.com/photos/91227/pexels-photo-91227.jpeg?auto=compress&cs=tinysrgb&w=200',
       'smooth': 0.8,
       'light': 0.5,
       'enabled': true,
     },
     {
       'name': 'Whiten',
-      'img': 'assets/f4.png',
+      'img':
+          'https://images.pexels.com/photos/1681010/pexels-photo-1681010.jpeg?auto=compress&cs=tinysrgb&w=200',
       'smooth': 0.4,
       'light': 0.9,
       'enabled': true,
     },
     {
       'name': 'Soft',
-      'img': 'assets/f5.png',
+      'img':
+          'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=200',
       'smooth': 0.9,
       'light': 0.3,
       'enabled': true,
     },
     {
       'name': 'Fair',
-      'img': 'assets/f6.png',
+      'img':
+          'https://images.pexels.com/photos/614810/pexels-photo-614810.jpeg?auto=compress&cs=tinysrgb&w=200',
       'smooth': 0.7,
       'light': 0.7,
       'enabled': true,
     },
     {
       'name': 'Radiant',
-      'img': 'assets/f7.png',
+      'img':
+          'https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=200',
       'smooth': 0.5,
       'light': 0.5,
       'enabled': true,
     },
   ];
+  // final List<Map<String, dynamic>> filters = [
+  //   {
+  //     'name': 'Original',
+  //     'img': 'assets/f0.png',
+  //     'smooth': 0.0,
+  //     'light': 0.0,
+  //     'enabled': false,
+  //   },
+  //   {
+  //     'name': 'Natural',
+  //     'img': 'assets/f1.png',
+  //     'smooth': 0.5,
+  //     'light': 0.6,
+  //     'enabled': true,
+  //   }, // Default
+  //   {
+  //     'name': 'Bright',
+  //     'img': 'assets/f2.png',
+  //     'smooth': 0.6,
+  //     'light': 0.8,
+  //     'enabled': true,
+  //   },
+  //   {
+  //     'name': 'Glossy',
+  //     'img': 'assets/f3.png',
+  //     'smooth': 0.8,
+  //     'light': 0.5,
+  //     'enabled': true,
+  //   },
+  //   {
+  //     'name': 'Whiten',
+  //     'img': 'assets/f4.png',
+  //     'smooth': 0.4,
+  //     'light': 0.9,
+  //     'enabled': true,
+  //   },
+  //   {
+  //     'name': 'Soft',
+  //     'img': 'assets/f5.png',
+  //     'smooth': 0.9,
+  //     'light': 0.3,
+  //     'enabled': true,
+  //   },
+  //   {
+  //     'name': 'Fair',
+  //     'img': 'assets/f6.png',
+  //     'smooth': 0.7,
+  //     'light': 0.7,
+  //     'enabled': true,
+  //   },
+  //   {
+  //     'name': 'Radiant',
+  //     'img': 'assets/f7.png',
+  //     'smooth': 0.5,
+  //     'light': 0.5,
+  //     'enabled': true,
+  //   },
+  // ];
 
   // Default selection index 1 rakhein (Natural filter ke liye)
   RxInt selectedFilterIndex = 1.obs;
@@ -585,32 +650,73 @@ class _GoliveScreenState extends State<GoliveScreen>
                                     child: Obx(
                                       () => Column(
                                         children: [
+                                          // ListView.builder ke andar decoration ko replace karein
                                           Container(
-                                            margin: EdgeInsets.symmetric(
+                                            margin: const EdgeInsets.symmetric(
                                               horizontal: 8,
                                             ),
                                             width: 70,
                                             height: 70,
                                             decoration: BoxDecoration(
                                               shape: BoxShape.circle,
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.black
+                                                      .withOpacity(0.3),
+                                                  blurRadius: 5,
+                                                  spreadRadius: 1,
+                                                ),
+                                              ],
                                               border: Border.all(
                                                 color:
                                                     selectedFilterIndex.value ==
                                                         index
                                                     ? Colors.pinkAccent
-                                                    : Colors.white.withOpacity(
-                                                        0.5,
-                                                      ),
-                                                width: 3,
+                                                    : Colors.white,
+                                                width:
+                                                    selectedFilterIndex.value ==
+                                                        index
+                                                    ? 3
+                                                    : 1.5,
                                               ),
-                                              image: DecorationImage(
-                                                image: AssetImage(
-                                                  filters[index]['img'],
-                                                ),
+                                            ),
+                                            child: ClipOval(
+                                              child: Image.network(
+                                                filters[index]['img'],
                                                 fit: BoxFit.cover,
+                                                // Loading state handle karein taake user ko khali dabba na dikhe
+                                                loadingBuilder:
+                                                    (
+                                                      context,
+                                                      child,
+                                                      loadingProgress,
+                                                    ) {
+                                                      if (loadingProgress ==
+                                                          null)
+                                                        return child;
+                                                      return const Center(
+                                                        child:
+                                                            CircularProgressIndicator(
+                                                              strokeWidth: 2,
+                                                              color:
+                                                                  Colors.white,
+                                                            ),
+                                                      );
+                                                    },
+                                                // Agar internet ka masla ho toh error icon show karein
+                                                errorBuilder:
+                                                    (
+                                                      context,
+                                                      error,
+                                                      stackTrace,
+                                                    ) => const Icon(
+                                                      Icons.broken_image,
+                                                      color: Colors.white,
+                                                    ),
                                               ),
                                             ),
                                           ),
+
                                           SizedBox(height: 6),
                                           Text(
                                             filters[index]['name'],
