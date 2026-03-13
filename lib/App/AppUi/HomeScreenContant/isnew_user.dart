@@ -60,11 +60,12 @@ class _VerificationScreenState extends State<VerificationScreen> {
     try {
       final uid = FirebaseAuth.instance.currentUser!.uid;
 
-      // 1. Fetch Existing Data from userProfile
+      // 1. Fetch Existing Data from userProfile (for reference)
       DocumentSnapshot userDoc = await FirebaseFirestore.instance
           .collection("userProfile")
           .doc(uid)
           .get();
+
       var userData = userDoc.data() as Map<String, dynamic>;
 
       // 2. Upload to Storage
@@ -72,16 +73,18 @@ class _VerificationScreenState extends State<VerificationScreen> {
       String backUrl = await uploadFile(idBack!, "id_back.jpg");
       String faceUrl = await uploadFile(facePic!, "face_pic.jpg");
 
-      // 3. Save to VerificationApplications
+      // 3. Save to Subcollection inside userProfile
+      // Path: userProfile -> {uid} -> isUserValid -> info
       await FirebaseFirestore.instance
-          .collection("VerificationApplications")
+          .collection("userProfile")
           .doc(uid)
+          .collection("isUserValid")
+          .doc(
+            "verification_data",
+          ) // Fixed ID taake history overwrite na ho ya naya doc ban jaye
           .set({
-            "userId": userData["userId"],
-            "name": userData["name"],
-            "country": userData["country"],
-            "gender": userData["gender"],
-            "shortId": userData["shortId"],
+            "userId": userData["userId"] ?? uid,
+            "name": userData["name"] ?? "N/A",
             "idCardFront": frontUrl,
             "idCardBack": backUrl,
             "facePic": faceUrl,
@@ -89,21 +92,23 @@ class _VerificationScreenState extends State<VerificationScreen> {
             "submittedAt": FieldValue.serverTimestamp(),
           });
 
-      // 4. Update userProfile status
+      // 4. Main userProfile status update karna (ExplorerScreen isi ko check karegi)
       await FirebaseFirestore.instance
           .collection("userProfile")
           .doc(uid)
           .update({"isVerified": "pending"});
 
-      Get.offAllNamed('/home'); // Ya jahan bhi aap le jana chahen
+      Get.back(); // Verification Screen se wapis
       Get.snackbar(
         "Success",
         "Application submitted for review!",
         backgroundColor: Colors.green,
         colorText: Colors.white,
+        snackPosition: SnackPosition.BOTTOM,
       );
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      print("Error: $e");
+      Get.snackbar("Error", "Failed to submit: ${e.toString()}");
     } finally {
       setState(() => isUploading = false);
     }

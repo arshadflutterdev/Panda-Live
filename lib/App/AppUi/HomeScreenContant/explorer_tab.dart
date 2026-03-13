@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/AppUi/HomeScreenContant/isnew_user.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_colours.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
@@ -87,54 +88,87 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
             // ),
             confirm: TextButton(
               onPressed: () async {
-  final uid = FirebaseAuth.instance.currentUser!.uid;
-  DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection("userProfile").doc(uid).get();
-  
-  // Status check karein
-  var isVerified = userDoc['isVerified']; // Ye dynamic hoga: false, "pending", ya true
+                final uid = FirebaseAuth.instance.currentUser!.uid;
 
-  if (isVerified == true) {
-     // Go Live Dialog dikhayein jo pehle tha
-  } else if (isVerified == "pending") {
-     Get.snackbar("Under Review", "Your application is still being processed.");
-  } else {
-     // Nayi class par bhej dein
-     Get.to(() => const VerificationScreen());
-  }
-}
-              // onPressed: () async {
-              //   final User? currentUser = FirebaseAuth.instance.currentUser;
-              //   if (currentUser != null) {
-              //     Get.back();
-              //     await FirebaseFirestore.instance
-              //         .collection("LiveStream")
-              //         .doc(currentUser.uid)
-              //         .set({
-              //           "hostname": currentUser.displayName ?? 'Guest',
-              //           "uid": currentUser.uid,
-              //           "channelId": "testingChannel",
-              //           "image": currentUser.photoURL ?? "",
-              //           "views": 0,
-              //           "startedAt": FieldValue.serverTimestamp(),
-              //           "lastHeartbeat": FieldValue.serverTimestamp(),
-              //         });
+                try {
+                  // Data fetch karte waqt user ko wait karwane ke liye
+                  DocumentSnapshot userDoc = await FirebaseFirestore.instance
+                      .collection("userProfile")
+                      .doc(uid)
+                      .get();
 
-              //     Get.toNamed(
-              //       AppRoutes.golive,
-              //       arguments: {
-              //         "channelId": "testingChannel",
-              //         "hostname": currentUser.displayName ?? "no name",
-              //         "hostphoto": currentUser.photoURL ?? "",
-              //       },
-              //     );
-              //   }
-              // },
+                  if (userDoc.exists) {
+                    // Status fetch karein
+                    var isVerified = userDoc['isVerified'];
 
+                    if (isVerified == true) {
+                      Get.back(); // Dialog band karein
+                      Get.toNamed(
+                        AppRoutes.liveSetup,
+                      ); // Live setup screen par bhej dein
+                    } else if (isVerified == "pending") {
+                      Get.back();
+                      Get.snackbar(
+                        isArabic ? "قيد المراجعة" : "Under Review",
+                        isArabic
+                            ? "طلبك لا يزال قيد المعالجة."
+                            : "Your application is still being processed.",
+                        backgroundColor: Colors.orange,
+                        colorText: Colors.white,
+                      );
+                    } else {
+                      Get.back();
+                      // Nayi verification class par bhej dein
+                      Get.to(() => const VerificationScreen());
+                    }
+                  }
+                } catch (e) {
+                  Get.snackbar(
+                    "Error",
+                    "Something went wrong. Please try again.",
+                  );
+                }
+              },
               child: Text(
                 isArabic ? "يتأكد" : "Confirm",
-                style: isArabic ? AppStyle.arabictext : TextStyle(),
+                style: isArabic ? AppStyle.arabictext : const TextStyle(),
               ),
             ),
+
+            // confirm: TextButton(
+            //   onPressed: () async {
+            //     final User? currentUser = FirebaseAuth.instance.currentUser;
+            //     if (currentUser != null) {
+            //       Get.back();
+            //       await FirebaseFirestore.instance
+            //           .collection("LiveStream")
+            //           .doc(currentUser.uid)
+            //           .set({
+            //             "hostname": currentUser.displayName ?? 'Guest',
+            //             "uid": currentUser.uid,
+            //             "channelId": "testingChannel",
+            //             "image": currentUser.photoURL ?? "",
+            //             "views": 0,
+            //             "startedAt": FieldValue.serverTimestamp(),
+            //             "lastHeartbeat": FieldValue.serverTimestamp(),
+            //           });
+
+            //       Get.toNamed(
+            //         AppRoutes.golive,
+            //         arguments: {
+            //           "channelId": "testingChannel",
+            //           "hostname": currentUser.displayName ?? "no name",
+            //           "hostphoto": currentUser.photoURL ?? "",
+            //         },
+            //       );
+            //     }
+            //   },
+
+            //   child: Text(
+            //     isArabic ? "يتأكد" : "Confirm",
+            //     style: isArabic ? AppStyle.arabictext : TextStyle(),
+            //   ),
+            // ),
           );
         },
         child: Image(image: AssetImage(AppImages.golive), color: Colors.white),
