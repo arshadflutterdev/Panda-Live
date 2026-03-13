@@ -300,6 +300,69 @@ class _GoliveScreenState extends State<GoliveScreen>
   //Real Cont update for viewrs
   var getComment = FirebaseFirestore.instance.collection("LiveStream");
   late Stream<QuerySnapshot> _commentStream;
+
+  final List<Map<String, dynamic>> filters = [
+    {
+      'name': 'Original',
+      'img': 'assets/f0.png',
+      'smooth': 0.0,
+      'light': 0.0,
+      'enabled': false,
+    },
+    {
+      'name': 'Natural',
+      'img': 'assets/f1.png',
+      'smooth': 0.5,
+      'light': 0.6,
+      'enabled': true,
+    }, // Default
+    {
+      'name': 'Bright',
+      'img': 'assets/f2.png',
+      'smooth': 0.6,
+      'light': 0.8,
+      'enabled': true,
+    },
+    {
+      'name': 'Glossy',
+      'img': 'assets/f3.png',
+      'smooth': 0.8,
+      'light': 0.5,
+      'enabled': true,
+    },
+    {
+      'name': 'Whiten',
+      'img': 'assets/f4.png',
+      'smooth': 0.4,
+      'light': 0.9,
+      'enabled': true,
+    },
+    {
+      'name': 'Soft',
+      'img': 'assets/f5.png',
+      'smooth': 0.9,
+      'light': 0.3,
+      'enabled': true,
+    },
+    {
+      'name': 'Fair',
+      'img': 'assets/f6.png',
+      'smooth': 0.7,
+      'light': 0.7,
+      'enabled': true,
+    },
+    {
+      'name': 'Radiant',
+      'img': 'assets/f7.png',
+      'smooth': 0.5,
+      'light': 0.5,
+      'enabled': true,
+    },
+  ];
+
+  // Default selection index 1 rakhein (Natural filter ke liye)
+  RxInt selectedFilterIndex = 1.obs;
+
   @override
   void initState() {
     super.initState();
@@ -339,31 +402,29 @@ class _GoliveScreenState extends State<GoliveScreen>
   RxDouble smoothness = 0.5.obs;
   RxDouble lightening = 0.7.obs;
 
-  void applyFilter(double smooth, double light) async {
-    smoothness.value = smooth;
-    lightening.value = light;
+  void applyFilter(
+    int index,
+    double smooth,
+    double light,
+    bool isEnabled,
+  ) async {
+    selectedFilterIndex.value = index;
 
-    await _engine.setBeautyEffectOptions(
-      enabled: true,
-      options: BeautyOptions(
-        lighteningContrastLevel:
-            LighteningContrastLevel.lighteningContrastNormal,
-        lighteningLevel: light,
-        smoothnessLevel: smooth,
-        rednessLevel: 0.2,
-      ),
-    );
+    if (_engine != null) {
+      await _engine.setBeautyEffectOptions(
+        enabled: isEnabled,
+        options: BeautyOptions(
+          lighteningContrastLevel:
+              LighteningContrastLevel.lighteningContrastNormal,
+          lighteningLevel: light,
+          smoothnessLevel: smooth,
+          rednessLevel: 0.1, // Slight pinkish touch for natural look
+        ),
+      );
+    }
   }
 
   RxBool showFilterList = false.obs;
-
-  // Filter Data Model
-  final List<Map<String, dynamic>> filters = [
-    {"name": "Natural", "smooth": 0.5, "light": 0.5},
-    {"name": "Bright", "smooth": 0.7, "light": 0.9},
-    {"name": "Glow", "smooth": 0.9, "light": 0.6},
-    {"name": "Soft", "smooth": 0.4, "light": 0.8},
-  ];
 
   Timer? _backgroundExitTimer;
   @override
@@ -504,41 +565,72 @@ class _GoliveScreenState extends State<GoliveScreen>
                   Obx(
                     () => showFilterList.value
                         ? Positioned(
-                            bottom: height * 0.2, // Buttons ke upar
+                            bottom: height * 0.18,
                             left: 0,
                             right: 0,
                             child: Container(
-                              height: 80,
+                              height: 110,
                               child: ListView.builder(
                                 scrollDirection: Axis.horizontal,
+                                padding: EdgeInsets.symmetric(horizontal: 15),
                                 itemCount: filters.length,
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
                                     onTap: () => applyFilter(
+                                      index,
                                       filters[index]['smooth'],
                                       filters[index]['light'],
+                                      filters[index]['enabled'],
                                     ),
-                                    child: Container(
-                                      margin: EdgeInsets.symmetric(
-                                        horizontal: 10,
-                                      ),
-                                      width: 70,
-                                      decoration: BoxDecoration(
-                                        color: Colors.black54,
-                                        shape: BoxShape.circle,
-                                        border: Border.all(
-                                          color: Colors.white,
-                                          width: 2,
-                                        ),
-                                      ),
-                                      child: Center(
-                                        child: Text(
-                                          filters[index]['name'],
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 12,
+                                    child: Obx(
+                                      () => Column(
+                                        children: [
+                                          Container(
+                                            margin: EdgeInsets.symmetric(
+                                              horizontal: 8,
+                                            ),
+                                            width: 70,
+                                            height: 70,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                color:
+                                                    selectedFilterIndex.value ==
+                                                        index
+                                                    ? Colors.pinkAccent
+                                                    : Colors.white.withOpacity(
+                                                        0.5,
+                                                      ),
+                                                width: 3,
+                                              ),
+                                              image: DecorationImage(
+                                                image: AssetImage(
+                                                  filters[index]['img'],
+                                                ),
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
                                           ),
-                                        ),
+                                          SizedBox(height: 6),
+                                          Text(
+                                            filters[index]['name'],
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontSize: 12,
+                                              fontWeight:
+                                                  selectedFilterIndex.value ==
+                                                      index
+                                                  ? FontWeight.bold
+                                                  : FontWeight.normal,
+                                              shadows: [
+                                                Shadow(
+                                                  blurRadius: 2,
+                                                  color: Colors.black,
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                   );
@@ -548,6 +640,7 @@ class _GoliveScreenState extends State<GoliveScreen>
                           )
                         : SizedBox.shrink(),
                   ),
+
                   //here I will handle the design
                   Positioned(
                     bottom: height * 0.050,
