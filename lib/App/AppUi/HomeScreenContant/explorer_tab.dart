@@ -87,32 +87,48 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
             // ),
             confirm: TextButton(
               onPressed: () async {
-                final User? currentUser = FirebaseAuth.instance.currentUser;
-                if (currentUser != null) {
-                  Get.back();
-                  await FirebaseFirestore.instance
-                      .collection("LiveStream")
-                      .doc(currentUser.uid)
-                      .set({
-                        "hostname": currentUser.displayName ?? 'Guest',
-                        "uid": currentUser.uid,
-                        "channelId": "testingChannel",
-                        "image": currentUser.photoURL ?? "",
-                        "views": 0,
-                        "startedAt": FieldValue.serverTimestamp(),
-                        "lastHeartbeat": FieldValue.serverTimestamp(),
-                      });
+  final uid = FirebaseAuth.instance.currentUser!.uid;
+  DocumentSnapshot userDoc = await FirebaseFirestore.instance.collection("userProfile").doc(uid).get();
+  
+  // Status check karein
+  var isVerified = userDoc['isVerified']; // Ye dynamic hoga: false, "pending", ya true
 
-                  Get.toNamed(
-                    AppRoutes.golive,
-                    arguments: {
-                      "channelId": "testingChannel",
-                      "hostname": currentUser.displayName ?? "no name",
-                      "hostphoto": currentUser.photoURL ?? "",
-                    },
-                  );
-                }
-              },
+  if (isVerified == true) {
+     // Go Live Dialog dikhayein jo pehle tha
+  } else if (isVerified == "pending") {
+     Get.snackbar("Under Review", "Your application is still being processed.");
+  } else {
+     // Nayi class par bhej dein
+     Get.to(() => const VerificationScreen());
+  }
+}
+              // onPressed: () async {
+              //   final User? currentUser = FirebaseAuth.instance.currentUser;
+              //   if (currentUser != null) {
+              //     Get.back();
+              //     await FirebaseFirestore.instance
+              //         .collection("LiveStream")
+              //         .doc(currentUser.uid)
+              //         .set({
+              //           "hostname": currentUser.displayName ?? 'Guest',
+              //           "uid": currentUser.uid,
+              //           "channelId": "testingChannel",
+              //           "image": currentUser.photoURL ?? "",
+              //           "views": 0,
+              //           "startedAt": FieldValue.serverTimestamp(),
+              //           "lastHeartbeat": FieldValue.serverTimestamp(),
+              //         });
+
+              //     Get.toNamed(
+              //       AppRoutes.golive,
+              //       arguments: {
+              //         "channelId": "testingChannel",
+              //         "hostname": currentUser.displayName ?? "no name",
+              //         "hostphoto": currentUser.photoURL ?? "",
+              //       },
+              //     );
+              //   }
+              // },
 
               child: Text(
                 isArabic ? "يتأكد" : "Confirm",
