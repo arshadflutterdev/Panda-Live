@@ -88,26 +88,62 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
             // ),
             confirm: TextButton(
               onPressed: () async {
-                final uid = FirebaseAuth.instance.currentUser!.uid;
+                final User? currentUser = FirebaseAuth.instance.currentUser;
+                if (currentUser == null) return;
+
+                // 1. Loading Indicator start karein
+                Get.dialog(
+                  const Center(
+                    child: CircularProgressIndicator(color: Colors.green),
+                  ),
+                  barrierDismissible: false,
+                );
 
                 try {
-                  // Data fetch karte waqt user ko wait karwane ke liye
-                  DocumentSnapshot userDoc = await FirebaseFirestore.instance
+                  // 2. Verification status check karein
+                  DocumentSnapshot vDoc = await FirebaseFirestore.instance
                       .collection("userProfile")
-                      .doc(uid)
+                      .doc(currentUser.uid)
+                      .collection("isUserValid")
+                      .doc("verification_details")
                       .get();
 
-                  if (userDoc.exists) {
-                    // Status fetch karein
-                    var isVerified = userDoc['isVerified'];
+                  Get.back(); // Loading dialog band karein
 
-                    if (isVerified == true) {
-                      Get.back(); // Dialog band karein
+                  if (vDoc.exists && vDoc.data() != null) {
+                    final data = vDoc.data() as Map<String, dynamic>;
+                    String status = data['status']?.toString() ?? "pending";
+
+                    if (status == "approved") {
+                      // --- USER APPROVED: AB LIVE DATA SAVE KAREIN ---
+                      Get.back(); // Main Confirmation Dialog band karein
+
+                      // Firestore mein LiveStream ki entry karein
+                      await FirebaseFirestore.instance
+                          .collection("LiveStream")
+                          .doc(currentUser.uid)
+                          .set({
+                            "hostname": currentUser.displayName ?? 'Guest',
+                            "uid": currentUser.uid,
+                            "channelId":
+                                "testingChannel", // Aapka dynamic channel ID
+                            "image": currentUser.photoURL ?? "",
+                            "views": 0,
+                            "startedAt": FieldValue.serverTimestamp(),
+                            "lastHeartbeat": FieldValue.serverTimestamp(),
+                          });
+
+                      // Screen transition with arguments
                       Get.toNamed(
-                        AppRoutes.liveSetup,
-                      ); // Live setup screen par bhej dein
-                    } else if (isVerified == "pending") {
-                      Get.back();
+                        AppRoutes.golive,
+                        arguments: {
+                          "channelId": "testingChannel",
+                          "hostname": currentUser.displayName ?? "Guest",
+                          "hostphoto": currentUser.photoURL ?? "",
+                        },
+                      );
+                    } else if (status == "pending") {
+                      Get.back(); // Main Dialog band
                       Get.snackbar(
                         isArabic ? "قيد المراجعة" : "Under Review",
                         isArabic
@@ -115,14 +151,20 @@ class _ExplorerScreenState extends State<ExplorerScreen> {
                             : "Your application is still being processed.",
                         backgroundColor: Colors.orange,
                         colorText: Colors.white,
+                        snackPosition: SnackPosition.BOTTOM,
                       );
                     } else {
                       Get.back();
-                      // Nayi verification class par bhej dein
                       Get.to(() => const VerificationScreen());
                     }
+                  } else {
+                    // Document nahi hai matlab user ne apply nahi kiya
+                    Get.back();
+                    Get.to(() => const VerificationScreen());
                   }
                 } catch (e) {
+                  if (Get.isDialogOpen!) Get.back();
+                  print("Live Stream Error: $e");
                   Get.snackbar(
                     "Error",
                     "Something went wrong. Please try again.",
