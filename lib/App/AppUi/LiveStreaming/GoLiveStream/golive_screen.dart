@@ -245,6 +245,17 @@ class _GoliveScreenState extends State<GoliveScreen>
     await _engine.setParameters('{"che.audio.enableAEC":true}');
     await _engine.setParameters('{"che.audio.enableAGC":true}');
     await _engine.enableVideo();
+    // Default beauty settings
+    await _engine.setBeautyEffectOptions(
+      enabled: true,
+      options: const BeautyOptions(
+        lighteningContrastLevel:
+            LighteningContrastLevel.lighteningContrastNormal,
+        lighteningLevel: 0.7, // Skin tone brightness
+        smoothnessLevel: 0.5, // Skin smoothness
+        rednessLevel: 0.1, // Blush
+      ),
+    );
     await _engine.startPreview();
     _localviewController = VideoViewController(
       rtcEngine: _engine,
@@ -322,6 +333,37 @@ class _GoliveScreenState extends State<GoliveScreen>
       }
     });
   }
+
+  //filters
+  // Beauty levels ke liye variables (Optional: aap GetX use kar sakte hain)
+  RxDouble smoothness = 0.5.obs;
+  RxDouble lightening = 0.7.obs;
+
+  void applyFilter(double smooth, double light) async {
+    smoothness.value = smooth;
+    lightening.value = light;
+
+    await _engine.setBeautyEffectOptions(
+      enabled: true,
+      options: BeautyOptions(
+        lighteningContrastLevel:
+            LighteningContrastLevel.lighteningContrastNormal,
+        lighteningLevel: light,
+        smoothnessLevel: smooth,
+        rednessLevel: 0.2,
+      ),
+    );
+  }
+
+  RxBool showFilterList = false.obs;
+
+  // Filter Data Model
+  final List<Map<String, dynamic>> filters = [
+    {"name": "Natural", "smooth": 0.5, "light": 0.5},
+    {"name": "Bright", "smooth": 0.7, "light": 0.9},
+    {"name": "Glow", "smooth": 0.9, "light": 0.6},
+    {"name": "Soft", "smooth": 0.4, "light": 0.8},
+  ];
 
   Timer? _backgroundExitTimer;
   @override
@@ -459,6 +501,53 @@ class _GoliveScreenState extends State<GoliveScreen>
                             return SizedBox.shrink();
                           }
                         }),
+                  Obx(
+                    () => showFilterList.value
+                        ? Positioned(
+                            bottom: height * 0.2, // Buttons ke upar
+                            left: 0,
+                            right: 0,
+                            child: Container(
+                              height: 80,
+                              child: ListView.builder(
+                                scrollDirection: Axis.horizontal,
+                                itemCount: filters.length,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () => applyFilter(
+                                      filters[index]['smooth'],
+                                      filters[index]['light'],
+                                    ),
+                                    child: Container(
+                                      margin: EdgeInsets.symmetric(
+                                        horizontal: 10,
+                                      ),
+                                      width: 70,
+                                      decoration: BoxDecoration(
+                                        color: Colors.black54,
+                                        shape: BoxShape.circle,
+                                        border: Border.all(
+                                          color: Colors.white,
+                                          width: 2,
+                                        ),
+                                      ),
+                                      child: Center(
+                                        child: Text(
+                                          filters[index]['name'],
+                                          style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 12,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          )
+                        : SizedBox.shrink(),
+                  ),
                   //here I will handle the design
                   Positioned(
                     bottom: height * 0.050,
@@ -469,6 +558,20 @@ class _GoliveScreenState extends State<GoliveScreen>
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
+                        GestureDetector(
+                          onTap: () {
+                            showFilterList.value = !showFilterList.value;
+                          },
+                          child: CircleAvatar(
+                            backgroundColor: Colors.black,
+                            radius: 25,
+                            child: Icon(
+                              Icons.face,
+                              color: Colors.white,
+                              size: 30,
+                            ),
+                          ),
+                        ),
                         GestureDetector(
                           onTap: () {
                             _engine.switchCamera();
