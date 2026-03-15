@@ -62,6 +62,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   RxInt frientsCount = 0.obs;
   RxInt awardCoins = 0.obs;
   RxInt dollars = 0.obs;
+  RxBool isVerified = false.obs;
 
   RxInt userId = 0.obs;
   RxBool isloading = false.obs;
@@ -170,6 +171,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         print("here is following list=$followingCount");
         followersCount.value = followerList.length;
         print("here is followers list count $followersCount");
+        isVerified.value = snapshot.data()?["isVerified"] ?? false;
 
         //below related frients
         Set<String> followingIds = followingSnapshot.docs
@@ -234,15 +236,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            radius: 30,
-                            backgroundColor: Colors.black38,
-                            backgroundImage:
-                                userimage.value.isNotEmpty &&
-                                    userimage.value.startsWith("http")
-                                ? NetworkImage(userimage.value)
-                                : AssetImage(AppImages.girl) as ImageProvider,
+                          Stack(
+                            children: [
+                              CircleAvatar(
+                                radius: 30,
+                                backgroundColor: Colors.black38,
+                                backgroundImage:
+                                    userimage.value.isNotEmpty &&
+                                        userimage.value.startsWith("http")
+                                    ? NetworkImage(userimage.value)
+                                    : AssetImage(AppImages.girl)
+                                          as ImageProvider,
+                              ),
+
+                              if (isVerified.value)
+                                Positioned(
+                                  bottom: 0,
+                                  right: 0,
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.white,
+                                    ),
+                                    padding: EdgeInsets.all(2),
+                                    child: Icon(
+                                      Icons.verified,
+                                      color: Colors.blue,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ),
+                            ],
                           ),
+
                           // Gap(10),
                           Padding(
                             padding: const EdgeInsets.only(top: 20),
