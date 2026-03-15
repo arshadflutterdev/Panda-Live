@@ -10,6 +10,7 @@ import 'package:get/get_utils/get_utils.dart';
 import 'package:get/route_manager.dart';
 import 'package:get/state_manager.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/user_details_edit.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/withdrawal_screen.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
@@ -366,7 +367,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                           IconButton(
                             onPressed: () {
-                              AdController().tryShowAd();
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => UserDetailsEdit(),
+                                ),
+                              );
                             },
                             icon: Icon(
                               Icons.arrow_forward_ios_rounded,
