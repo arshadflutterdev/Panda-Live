@@ -4,6 +4,7 @@ import 'package:pandlive/App/AppUi/BottomNavBar/bottomnavbar.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/follower_list.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/following_list.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/friends_list.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/WalletScreen/coins_plan_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/updates_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/profile_screen.dart';
@@ -66,10 +67,12 @@ class AppRoutes {
   static const friends = "/FriendsListScreen";
   static const withdrawalscreen = "/WithdrawalScreen";
   static const liveSetup = "/LiveSetupScreen";
+  static const buycoins = "/CoinPlansScreen";
 
   static final routes = [
     GetPage(name: withdrawalscreen, page: () => WithdrawlHistory()),
     GetPage(name: splash, page: () => SplashScreen()),
+    GetPage(name: buycoins, page: () => CoinPlansScreen()),
     GetPage(name: liveSetup, page: () => LiveSetupScreen()),
 
     GetPage(
