@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/WalletScreen/payment_buycoins.dart';
+import 'package:pandlive/App/Routes/app_routes.dart';
 
 class CoinPlansScreen extends StatelessWidget {
   const CoinPlansScreen({super.key});
@@ -299,7 +301,8 @@ class CoinPlansScreen extends StatelessWidget {
                     Expanded(
                       child: ElevatedButton(
                         onPressed: () {
-                          Get.back();
+                          Get.toNamed(AppRoutes.paymentscreen);
+
                           Get.snackbar(
                             "Success",
                             "Redirecting to Payment Gate",
