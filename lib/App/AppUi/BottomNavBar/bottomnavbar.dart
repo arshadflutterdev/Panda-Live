@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/WalletScreen/wallet_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/updates_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/profile_screen.dart';
@@ -15,7 +16,12 @@ class Bottomnavbar extends StatefulWidget {
 class _BottomnavbarState extends State<Bottomnavbar> {
   RxInt selectedScreen = 0.obs;
 
-  List<Widget> screens = [Homescreen(), UpdatesScreen(), ProfileScreen()];
+  List<Widget> screens = [
+    Homescreen(),
+    UpdatesScreen(),
+    WalletScreen(),
+    ProfileScreen(),
+  ];
   @override
   Widget build(BuildContext context) {
     bool isArabic = Get.locale?.languageCode == "ar";
@@ -63,6 +69,18 @@ class _BottomnavbarState extends State<Bottomnavbar> {
               icon: Image(
                 image: AssetImage(AppImages.myprofile),
                 color: selectedScreen.value == 2
+                    ? Colors.black
+                    : Colors.black38,
+
+                height: 30,
+                width: 30,
+              ),
+              label: isArabic ? "حساب تعريفي" : "Wallet",
+            ),
+            BottomNavigationBarItem(
+              icon: Image(
+                image: AssetImage(AppImages.myprofile),
+                color: selectedScreen.value == 3
                     ? Colors.black
                     : Colors.black38,
 
