@@ -44,6 +44,7 @@ class AppImages {
   static String yt = "assets/icons/youtube.png";
   static String history = "assets/icons/history.png";
   static String refresh = "assets/icons/refresh.png";
+  static String wallet = "assets/icons/wallet (1).png";
   //below images are related for live streamers
   static const eman = "assets/images/man.jpg";
   static const egirll = "assets/images/girl.jpg";
