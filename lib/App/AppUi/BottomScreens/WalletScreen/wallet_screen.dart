@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/withdrawal_screen.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
+import 'package:pandlive/google_ads.dart';
 
 class WalletScreen extends StatefulWidget {
   const WalletScreen({super.key});
@@ -63,14 +64,7 @@ class _WalletScreenState extends State<WalletScreen> {
         backgroundColor: Colors.white,
         elevation: 0.5,
         centerTitle: true,
-        leading: IconButton(
-          icon: const Icon(
-            Icons.arrow_back_ios_new_rounded,
-            color: Colors.black,
-            size: 20,
-          ),
-          onPressed: () => Get.back(),
-        ),
+
         title: Text(
           isArabic ? "المحفظة" : "My Wallet",
           style: GoogleFonts.inter(
@@ -143,6 +137,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     // --- BUY COINS BUTTON (Premium Gradient) ---
                     GestureDetector(
                       onTap: () {
+                        AdController().tryShowAd();
                         Get.toNamed(AppRoutes.buycoins);
                         // Navigate to Buy Coins Screen
 
