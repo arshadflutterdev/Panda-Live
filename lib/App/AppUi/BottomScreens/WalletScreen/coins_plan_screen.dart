@@ -1,11 +1,10 @@
 import 'dart:ui';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Added missing import
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-
-import 'package:pandlive/App/AppUi/BottomScreens/WalletScreen/payment_buycoins.dart'; // Apna sahi path check karlein
 
 class CoinPlansScreen extends StatelessWidget {
   const CoinPlansScreen({super.key});
@@ -27,9 +26,7 @@ class CoinPlansScreen extends StatelessWidget {
             color: Colors.white,
             size: 20,
           ),
-          onPressed: () {
-            Get.back();
-          },
+          onPressed: () => Get.back(),
         ),
         title: Text(
           isArabic ? "متجر العملات" : "Coin Store",
@@ -51,8 +48,7 @@ class CoinPlansScreen extends StatelessWidget {
         child: Column(
           children: [
             const Gap(100),
-            _buildPremiumHeader(isArabic),
-
+            _buildHeader(isArabic),
             Expanded(
               child: StreamBuilder<QuerySnapshot>(
                 stream: FirebaseFirestore.instance
@@ -75,19 +71,19 @@ class CoinPlansScreen extends StatelessWidget {
                     ),
                     itemCount: snapshot.data!.docs.length,
                     itemBuilder: (context, index) {
-                      // FIX: Safely get the document and data
                       var doc = snapshot.data!.docs[index];
                       var planData = doc.data() as Map<String, dynamic>?;
 
                       if (planData == null) return const SizedBox();
 
-                      // Check active status safely
-                      if (planData['isActive'] == false ||
-                          planData['isActive'] == "false") {
-                        return const SizedBox();
-                      }
+                      // Safely check status
+                      bool isActive =
+                          planData['isActive'] == true ||
+                          planData['isActive'].toString() == "true";
 
-                      return _buildPremiumPlanCard(
+                      if (!isActive) return const SizedBox();
+
+                      return _buildPlanCard(
                         planData,
                         doc.id,
                         isArabic,
@@ -104,7 +100,7 @@ class CoinPlansScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPremiumHeader(bool isArabic) {
+  Widget _buildHeader(bool isArabic) {
     return Container(
       width: double.infinity,
       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
@@ -142,7 +138,7 @@ class CoinPlansScreen extends StatelessWidget {
                 ),
                 Text(
                   isArabic
-                      ? "كن مميزاً في البث المباشr"
+                      ? "كن مميزاً في البث المباشر"
                       : "Be a star in live streams",
                   style: GoogleFonts.poppins(
                     fontSize: 13,
@@ -158,13 +154,12 @@ class CoinPlansScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildPremiumPlanCard(
+  Widget _buildPlanCard(
     Map<String, dynamic> plan,
     String docId,
     bool isArabic,
     BuildContext context,
   ) {
-    // FIX: Null-aware string conversion
     final String coins = plan['coins']?.toString() ?? "0";
     final String price = plan['amount']?.toString() ?? "0";
 
@@ -212,7 +207,7 @@ class CoinPlansScreen extends StatelessWidget {
                   ),
                 ),
                 GestureDetector(
-                  onTap: () => _showProfessionalDialog(
+                  onTap: () => _checkBalanceAndBuy(
                     context,
                     plan,
                     docId,
@@ -252,110 +247,81 @@ class CoinPlansScreen extends StatelessWidget {
     );
   }
 
-  void _showProfessionalDialog(
+  void _checkBalanceAndBuy(
     BuildContext context,
     Map<String, dynamic> plan,
     String docId,
     String coins,
     String price,
     bool isArabic,
+  ) async {
+    Get.dialog(
+      const Center(child: CircularProgressIndicator(color: Colors.amber)),
+      barrierDismissible: false,
+    );
+
+    try {
+      final String uid = FirebaseAuth.instance.currentUser!.uid;
+      var userDoc = await FirebaseFirestore.instance
+          .collection("userProfile")
+          .doc(uid)
+          .get();
+
+      if (Get.isDialogOpen!) Get.back();
+
+      if (userDoc.exists) {
+        // Handle dollars as double or int safely
+        num userBalance = userDoc.data()?["dollars"] ?? 0;
+        double planPrice = double.tryParse(price) ?? 0.0;
+
+        if (userBalance < planPrice) {
+          Get.snackbar(
+            isArabic ? "رصيد غير كافٍ" : "Insufficient Balance",
+            isArabic
+                ? "ليس لديك $price دولار في حسابك"
+                : "You don't have \$$price in your account",
+            backgroundColor: Colors.redAccent,
+            colorText: Colors.white,
+            snackPosition: SnackPosition.BOTTOM,
+            margin: const EdgeInsets.all(15),
+          );
+          return;
+        }
+
+        _showConfirmDialog(context, coins, price, isArabic, () {
+          // Add your logic to deduct dollars and add coins here
+          debugPrint("Proceeding with purchase of $coins coins");
+        });
+      }
+    } catch (e) {
+      if (Get.isDialogOpen!) Get.back();
+      debugPrint("Error: $e");
+    }
+  }
+
+  void _showConfirmDialog(
+    BuildContext context,
+    String coins,
+    String price,
+    bool isArabic,
+    VoidCallback onConfirm,
   ) {
-    showDialog(
-      context: context,
-      builder: (context) => BackdropFilter(
-        filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-        child: Dialog(
-          backgroundColor: Colors.transparent,
-          insetPadding: const EdgeInsets.all(20),
-          child: Container(
-            padding: const EdgeInsets.all(25),
-            decoration: BoxDecoration(
-              color: const Color(0xFF1E293B).withOpacity(0.9),
-              borderRadius: BorderRadius.circular(30),
-              border: Border.all(color: Colors.white.withOpacity(0.1)),
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Container(
-                  padding: const EdgeInsets.all(15),
-                  decoration: BoxDecoration(
-                    color: Colors.amber.withOpacity(0.1),
-                    shape: BoxShape.circle,
-                  ),
-                  child: const Icon(
-                    Icons.shopping_cart_checkout_rounded,
-                    color: Colors.amber,
-                    size: 40,
-                  ),
-                ),
-                const Gap(20),
-                Text(
-                  isArabic ? "تأكيد العملية" : "Confirm Purchase",
-                  style: GoogleFonts.poppins(
-                    color: Colors.white,
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                const Gap(10),
-                Text(
-                  "You are about to buy $coins coins for a total of \$$price.",
-                  textAlign: TextAlign.center,
-                  style: GoogleFonts.poppins(
-                    color: Colors.white70,
-                    fontSize: 14,
-                  ),
-                ),
-                const Gap(30),
-                Row(
-                  children: [
-                    Expanded(
-                      child: TextButton(
-                        onPressed: () => Get.back(),
-                        child: Text(
-                          isArabic ? "إلغاء" : "Cancel",
-                          style: const TextStyle(color: Colors.white60),
-                        ),
-                      ),
-                    ),
-                    const Gap(10),
-                    Expanded(
-                      child: ElevatedButton(
-                        onPressed: () {
-                          // FIX: Proper Redirection with Data
-                          Get.back(); // Dialog band karein
-                          Get.to(
-                            () => const PaymentFormScreen(),
-                            arguments: {
-                              'planId': docId,
-                              'coins': coins,
-                              'amount': price,
-                              'productKey': plan['productKey'] ?? "12344",
-                            },
-                          );
-                        },
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.amber,
-                          foregroundColor: Colors.black,
-                          padding: const EdgeInsets.symmetric(vertical: 15),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                        child: Text(
-                          isArabic ? "تأكيد" : "Confirm",
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
+    Get.defaultDialog(
+      title: isArabic ? "تأكيد الشراء" : "Confirm Purchase",
+      middleText: isArabic
+          ? "هل تريد شراء $coins عملة مقابل \$$price؟"
+          : "Buy $coins coins for \$$price?",
+      backgroundColor: const Color(0xFF1E293B),
+      titleStyle: const TextStyle(color: Colors.white),
+      middleTextStyle: const TextStyle(color: Colors.white70),
+      textConfirm: isArabic ? "شراء" : "Buy Now",
+      textCancel: isArabic ? "إلغاء" : "Cancel",
+      confirmTextColor: Colors.black,
+      buttonColor: Colors.amber,
+      onConfirm: () {
+        Get.back();
+        onConfirm();
+      },
     );
   }
 
