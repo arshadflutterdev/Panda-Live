@@ -10,6 +10,7 @@ import 'package:pandlive/Utils/Constant/app_heightwidth.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 import 'package:pandlive/Utils/Constant/app_style.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:wakelock_plus/wakelock_plus.dart';
 
 class GoliveScreen extends StatefulWidget {
   const GoliveScreen({super.key});
@@ -264,6 +265,7 @@ class _GoliveScreenState extends State<GoliveScreen>
 
     // 5. Join Channel (Await it!)
     await joinChannel();
+    WakelockPlus.enable();
 
     // NOTE: Remove setupVideoView() from the bottom of this function.
   }
@@ -547,6 +549,7 @@ class _GoliveScreenState extends State<GoliveScreen>
 
     if (isShutdown) return;
     isShutdown = true;
+    WakelockPlus.disable();
 
     // Stop all timers regardless of whether they are active or not
     heartbeatTimer?.cancel();
