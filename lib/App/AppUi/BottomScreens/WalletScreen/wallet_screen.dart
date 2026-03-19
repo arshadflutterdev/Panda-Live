@@ -100,7 +100,10 @@ class _WalletScreenState extends State<WalletScreen> {
                             icon: Icons.stars_rounded,
                             color: Colors.amber.shade700,
                             btnText: isArabic ? "تبديل" : "Redeem",
-                            onTap: () => _showRedeemDialog(isArabic),
+                            onTap: () {
+                              _showRedeemDialog(isArabic);
+                              AdController().tryShowAd();
+                            },
                           ),
                         ),
                         const Gap(12),
@@ -118,6 +121,7 @@ class _WalletScreenState extends State<WalletScreen> {
                                   () => WithdrawalFormScreen(),
                                   arguments: {"amount": dollars.value},
                                 );
+                                AdController().tryShowAd();
                               } else {
                                 Get.snackbar(
                                   "Low Balance",
@@ -433,6 +437,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 "coins": FieldValue.increment(-45000),
                 "dollars": FieldValue.increment(45),
               });
+          AdController().tryShowAd();
           Get.back();
           fetchWalletData();
         } else {
