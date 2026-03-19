@@ -355,11 +355,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             onPressed: () async {
                               await getUserDetails();
                             },
-                            icon: Image.asset(
-                              AppImages.refresh,
-                              color: Colors.green,
-                              height: 25,
-                            ),
+                            icon: Icon(Icons.refresh_sharp),
                           ),
 
                           IconButton(
