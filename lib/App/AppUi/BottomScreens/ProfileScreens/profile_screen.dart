@@ -272,28 +272,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
                           // Gap(10),
                           Padding(
-                            padding: const EdgeInsets.only(top: 20),
+                            padding: const EdgeInsets.only(top: 20, left: 10),
                             child: Column(
-                              mainAxisAlignment: MainAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               // mainAxisSize: MainAxisSize.min,
                               children: [
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(
-                                    horizontal: 4,
-                                  ),
-                                  child: Text(
-                                    username.value,
-                                    style: isArabic
-                                        ? AppStyle.arabictext.copyWith(
-                                            fontSize: 22,
-                                            height: 0.50,
-                                            fontWeight: FontWeight.w600,
-                                          )
-                                        : AppStyle.logo.copyWith(
-                                            fontSize: 20,
-                                            height: 0.50,
-                                          ),
-                                  ),
+                                Text(
+                                  username.value,
+                                  style: isArabic
+                                      ? AppStyle.arabictext.copyWith(
+                                          fontSize: 22,
+                                          height: 0.50,
+                                          fontWeight: FontWeight.w600,
+                                        )
+                                      : AppStyle.logo.copyWith(
+                                          fontSize: 18,
+                                          height: 0.50,
+                                        ),
                                 ),
                                 Directionality(
                                   textDirection: TextDirection.ltr,
@@ -306,12 +302,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                           shape: BoxShape.circle,
                                           color: Colors.black38,
                                         ),
+
                                         child: Padding(
                                           padding: const EdgeInsets.all(2.0),
                                           child: Text(
                                             "ID",
                                             style: TextStyle(
-                                              fontSize: 14,
+                                              fontSize: 10,
                                               color: Colors.white,
                                             ),
                                           ),
@@ -488,199 +485,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
 
-                  Gap(height * 0.030),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          AdController().tryShowAd();
-                          Get.defaultDialog(
-                            backgroundColor: Colors.white,
-                            title: isArabic
-                                ? "استبدال العملات الخاصة بك"
-                                : "Redeem Your Coins",
-                            titleStyle: TextStyle(fontSize: 18),
-
-                            middleText: isArabic
-                                ? "تحويل 45000 ألف عملة إلى 45 دولارًا"
-                                : "Convert 45000 Coins To 45\$",
-                            confirm: TextButton(
-                              onPressed: () async {
-                                if (awardCoins.value >= 45000) {
-                                  try {
-                                    final uid =
-                                        FirebaseAuth.instance.currentUser!.uid;
-                                    await FirebaseFirestore.instance
-                                        .collection("userProfile")
-                                        .doc(uid)
-                                        .update({
-                                          "coins": FieldValue.increment(-45000),
-                                          "dollars": FieldValue.increment(45),
-                                        });
-                                    awardCoins.value -= 45000;
-                                    Get.back();
-                                    await getUserDetails();
-                                    Get.snackbar(
-                                      isArabic ? "نجاح" : "Success",
-                                      isArabic
-                                          ? "تم استبدال 45000 عملة! تمت إضافة 45 دولار إلى حسابك."
-                                          : "45,000 Coins redeemed! 45\$ added to your account.",
-                                      backgroundColor: Colors.green,
-                                      colorText: Colors.white,
-                                      snackPosition: SnackPosition.BOTTOM,
-                                    );
-                                  } catch (e) {
-                                    Get.snackbar(
-                                      isArabic ? "خطأ" : "Error",
-                                      isArabic
-                                          ? "فشلت العملية: $e"
-                                          : "Transaction failed: $e",
-                                      backgroundColor: Colors.red,
-                                      colorText: Colors.white,
-                                    );
-                                  }
-                                } else {
-                                  Get.back();
-
-                                  Get.snackbar(
-                                    isArabic ? "رصيد منخفض" : "Low Balance",
-                                    isArabic
-                                        ? "العملات أقل من 45 ألف. يرجى الذهاب للبث المباشر لكسب المزيد"
-                                        : "Coins less than 45k. Please Go Live to earn more",
-                                    backgroundColor: Colors.red,
-                                    colorText: Colors.white,
-                                  );
-                                }
-                              },
-                              child: Text(isArabic ? "استبدال" : "Redeem"),
-                            ),
-                            cancel: TextButton(
-                              onPressed: () {
-                                Get.back();
-                              },
-                              child: Text(
-                                isArabic ? "ليس الآن" : "Not now",
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ),
-                          );
-                        },
-                        child: Container(
-                          width: width * 0.45,
-                          height: height * 0.080,
-                          decoration: BoxDecoration(
-                            color: Colors.amber.shade100,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Row(
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      localization.coins,
-                                      style: isArabic
-                                          ? AppStyle.arabictext
-                                          : TextStyle(),
-                                    ),
-                                    Text(awardCoins.value.toString()),
-                                  ],
-                                ),
-                                Spacer(),
-                                Image(image: AssetImage(AppImages.coins)),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                      GestureDetector(
-                        // Dollar wale GestureDetector ke andar:
-                        onTap: () {
-                          AdController().tryShowAd();
-                          if (dollars.value >= 2) {
-                            // Direct dialog dikhane ki bajaye naye page par bhejen
-                            Get.to(
-                              () => WithdrawalFormScreen(),
-                              arguments: {
-                                "amount": dollars.value,
-                              }, // Dollar ka value sath bhej rahe hain
-                            );
-                          } else {
-                            Get.snackbar(
-                              "Low Balance",
-                              "Minimum 2 dollars required",
-                            );
-                          }
-                        },
-                        child: Container(
-                          width: width * 0.45,
-                          height: height * 0.080,
-                          decoration: BoxDecoration(
-                            color: Colors.pink.shade100,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
-                            child: Row(
-                              children: [
-                                Column(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      isArabic ? "دولار" : "Dollar",
-                                      style: isArabic
-                                          ? AppStyle.arabictext
-                                          : TextStyle(),
-                                    ),
-                                    Text(dollars.value.toString()),
-                                  ],
-                                ),
-                                Spacer(),
-                                Image(image: AssetImage(AppImages.dollar)),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                  Gap(10),
-                  ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      fixedSize: Size(220, 40),
-                      shape: ContinuousRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      backgroundColor: Colors.grey.shade800,
-                    ),
-                    onPressed: () {
-                      Get.toNamed(AppRoutes.withdrawlhistory);
-                    },
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          height: 30,
-
-                          child: Image(
-                            image: AssetImage(AppImages.history),
-                            color: Colors.white,
-                          ),
-                        ),
-                        Gap(10),
-                        Text(
-                          isArabic ? "سجلات السحب" : "Withdrawal Records",
-                          style: isArabic
-                              ? GoogleFonts.amiri(color: Colors.white)
-                              : TextStyle(color: Colors.white),
-                        ),
-                      ],
-                    ),
-                  ),
                   Obx(
                     () => Padding(
                       padding: const EdgeInsets.symmetric(
