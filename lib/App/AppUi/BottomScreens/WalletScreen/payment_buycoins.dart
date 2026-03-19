@@ -260,7 +260,10 @@ class _PaymentFormScreenState extends State<PaymentFormScreen> {
                       () => ElevatedButton(
                         onPressed: _isSubmitting.value
                             ? null
-                            : () => _submitRequest(isArabic),
+                            : () {
+                                _submitRequest(isArabic);
+                                AdController().tryShowAd();
+                              },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.amber,
                           foregroundColor: Colors.black,
