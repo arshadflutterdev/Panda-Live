@@ -789,19 +789,19 @@ class CoinPlansScreen extends StatelessWidget {
 
                           Get.back(); // Dialog band karein
 
-                          // Get.to(
-                          //   () => const PaymentFormScreen(),
+                          Get.to(
+                            () => const PaymentFormScreen(),
 
-                          //   arguments: {
-                          //     'planId': docId,
+                            arguments: {
+                              'planId': docId,
 
-                          //     'coins': coins,
+                              'coins': coins,
 
-                          //     'amount': price,
+                              'amount': price,
 
-                          //     'productKey': plan['productKey'] ?? "12344",
-                          //   },
-                          // );
+                              'productKey': plan['productKey'] ?? "12344",
+                            },
+                          );
                         },
 
                         style: ElevatedButton.styleFrom(

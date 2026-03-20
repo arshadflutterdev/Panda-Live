@@ -28,7 +28,7 @@ class _PaymentFormScreenState extends State<PaymentFormScreen> {
 
   // Form Controllers
   final _trxIdController = TextEditingController();
-  final ImagePicker _picker = ImagePicker();
+  // final ImagePicker _picker = ImagePicker();
   File? _screenshot;
   RxBool _isSubmitting = false.obs;
 
@@ -48,14 +48,14 @@ class _PaymentFormScreenState extends State<PaymentFormScreen> {
     super.dispose();
   }
 
-  Future<void> _pickScreenshot() async {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image != null) {
-      setState(() {
-        _screenshot = File(image.path);
-      });
-    }
-  }
+  // Future<void> _pickScreenshot() async {
+  //   final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+  //   if (image != null) {
+  //     setState(() {
+  //       _screenshot = File(image.path);
+  //     });
+  //   }
+  // }
 
   Future<void> _submitRequest(bool isArabic) async {
     if (_trxIdController.text.isEmpty || _screenshot == null) {
@@ -207,7 +207,7 @@ class _PaymentFormScreenState extends State<PaymentFormScreen> {
                   ),
                   const Gap(10),
                   GestureDetector(
-                    onTap: _pickScreenshot,
+                    // onTap: _pickScreenshot,
                     child: Container(
                       width: double.infinity,
                       height: 180,
