@@ -45,7 +45,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
           items: [
             BottomNavigationBarItem(
               icon: Image(
-                image: AssetImage(AppImages.live),
+                image: AssetImage(AppImages.reels),
                 color: selectedScreen.value == 0
                     ? Colors.black
                     : Colors.black38,
@@ -57,7 +57,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
             ),
             BottomNavigationBarItem(
               icon: Image(
-                image: AssetImage(AppImages.reels),
+                image: AssetImage(AppImages.chat),
                 color: selectedScreen.value == 1
                     ? Colors.black
                     : Colors.black38,
