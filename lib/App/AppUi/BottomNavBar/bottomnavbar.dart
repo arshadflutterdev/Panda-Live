@@ -42,6 +42,9 @@ class _BottomnavbarState extends State<Bottomnavbar> {
 
           unselectedItemColor: Colors.black54,
           type: BottomNavigationBarType.fixed,
+          showSelectedLabels: false,
+          showUnselectedLabels: false,
+
           items: [
             BottomNavigationBarItem(
               icon: Image(
@@ -52,8 +55,8 @@ class _BottomnavbarState extends State<Bottomnavbar> {
                 height: 35,
                 width: 35,
               ),
-              label: "",
-              // label: isArabic ? "يستكشف" : "Explore",
+
+              label: isArabic ? "يستكشف" : "Explore",
             ),
             BottomNavigationBarItem(
               icon: Image(
@@ -65,8 +68,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
                 height: 30,
                 width: 30,
               ),
-              label: "",
-              // label: isArabic ? "التحديثات" : "Updates",
+              label: isArabic ? "التحديثات" : "Updates",
             ),
 
             // BottomNavigationBarItem(
@@ -91,8 +93,8 @@ class _BottomnavbarState extends State<Bottomnavbar> {
                 height: 30,
                 width: 30,
               ),
-              label: "",
-              // label: isArabic ? "حساب تعريفي" : "Profile",
+
+              label: isArabic ? "حساب تعريفي" : "Profile",
             ),
           ],
         ),
