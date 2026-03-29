@@ -4,6 +4,7 @@ import 'package:pandlive/App/AppUi/BottomScreens/WalletScreen/wallet_screen.dart
 import 'package:pandlive/App/AppUi/BottomScreens/updates_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/profile_screen.dart';
+import 'package:pandlive/App/AppUi/ReelsVideo/reels_screen.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 
 class Bottomnavbar extends StatefulWidget {
@@ -17,7 +18,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
   RxInt selectedScreen = 0.obs;
 
   List<Widget> screens = [
-    Homescreen(),
+    ReelsScreen(),
     UpdatesScreen(),
     // WalletScreen(),
     ProfileScreen(),
@@ -65,6 +66,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
               ),
               label: isArabic ? "التحديثات" : "Updates",
             ),
+
             // BottomNavigationBarItem(
             //   icon: Image(
             //     image: AssetImage(AppImages.wallet),
