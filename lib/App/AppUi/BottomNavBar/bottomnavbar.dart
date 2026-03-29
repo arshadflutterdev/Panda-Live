@@ -52,11 +52,12 @@ class _BottomnavbarState extends State<Bottomnavbar> {
                 height: 35,
                 width: 35,
               ),
-              label: isArabic ? "يستكشف" : "Explore",
+              label: "",
+              // label: isArabic ? "يستكشف" : "Explore",
             ),
             BottomNavigationBarItem(
               icon: Image(
-                image: AssetImage(AppImages.chat),
+                image: AssetImage(AppImages.reels),
                 color: selectedScreen.value == 1
                     ? Colors.black
                     : Colors.black38,
@@ -64,7 +65,8 @@ class _BottomnavbarState extends State<Bottomnavbar> {
                 height: 30,
                 width: 30,
               ),
-              label: isArabic ? "التحديثات" : "Updates",
+              label: "",
+              // label: isArabic ? "التحديثات" : "Updates",
             ),
 
             // BottomNavigationBarItem(
@@ -89,7 +91,8 @@ class _BottomnavbarState extends State<Bottomnavbar> {
                 height: 30,
                 width: 30,
               ),
-              label: isArabic ? "حساب تعريفي" : "Profile",
+              label: "",
+              // label: isArabic ? "حساب تعريفي" : "Profile",
             ),
           ],
         ),
