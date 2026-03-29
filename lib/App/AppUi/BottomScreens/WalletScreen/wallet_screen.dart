@@ -46,11 +46,15 @@ class _WalletScreenState extends State<WalletScreen> {
     }
   }
 
-  Color getStatusColor(String status) {
+Color getStatusColor(String status) {
     String s = status.toLowerCase();
     if (s.contains("pending")) return Colors.orange.shade700;
-    if (s.contains("complete")) return Colors.green.shade700;
-    if (s.contains("reject")) return Colors.red.shade700;
+    // Admin panel "Approved" likhta hai, isliye yahan approved check karein
+    if (s.contains("approved") || s.contains("complete"))
+      return Colors.green.shade700;
+    // Admin panel "Rejected" likhta hai
+    if (s.contains("rejected") || s.contains("reject"))
+      return Colors.red.shade700;
     return Colors.grey;
   }
 
