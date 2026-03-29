@@ -19,7 +19,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
   List<Widget> screens = [
     Homescreen(),
     UpdatesScreen(),
-    WalletScreen(),
+    // WalletScreen(),
     ProfileScreen(),
   ];
   @override
@@ -65,18 +65,18 @@ class _BottomnavbarState extends State<Bottomnavbar> {
               ),
               label: isArabic ? "التحديثات" : "Updates",
             ),
-            BottomNavigationBarItem(
-              icon: Image(
-                image: AssetImage(AppImages.wallet),
-                color: selectedScreen.value == 2
-                    ? Colors.black
-                    : Colors.black38,
+            // BottomNavigationBarItem(
+            //   icon: Image(
+            //     image: AssetImage(AppImages.wallet),
+            //     color: selectedScreen.value == 2
+            //         ? Colors.black
+            //         : Colors.black38,
 
-                height: 30,
-                width: 30,
-              ),
-              label: isArabic ? "حساب تعريفي" : "Wallet",
-            ),
+            //     height: 30,
+            //     width: 30,
+            //   ),
+            //   label: isArabic ? "حساب تعريفي" : "Wallet",
+            // ),
             BottomNavigationBarItem(
               icon: Image(
                 image: AssetImage(AppImages.myprofile),
