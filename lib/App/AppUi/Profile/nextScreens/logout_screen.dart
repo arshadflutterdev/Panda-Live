@@ -12,6 +12,9 @@ class LogoutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final data = Get.arguments;
+    String? profilePic = data != null ? data['userImage'] : null;
+    String? username = data != null ? data['userName'] : null;
     bool isArabic = Get.locale?.languageCode == "ar";
     final localization = AppLocalizations.of(context)!;
     double height = MediaQuery.of(context).size.height;
@@ -38,12 +41,26 @@ class LogoutScreen extends StatelessWidget {
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                CircleAvatar(
-                  backgroundColor: Colors.white,
-                  radius: 40,
-                  backgroundImage: AssetImage(AppImages.profile),
+                Center(
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.grey.shade200,
+                    backgroundImage:
+                        (profilePic != null && profilePic.startsWith("http"))
+                        ? NetworkImage(profilePic)
+                        : AssetImage(AppImages.girl) as ImageProvider,
+                  ),
                 ),
                 const SizedBox(height: 15),
+                Text(
+                  username.toString(),
+                  style: TextStyle(
+                    fontSize: 25,
+                    color: Colors.black54,
+                    fontWeight: FontWeight.bold,
+                    letterSpacing: 3,
+                  ),
+                ),
                 Text(
                   isArabic
                       ? "هل أنت متأكد من رغبتك في تسجيل الخروج؟"
