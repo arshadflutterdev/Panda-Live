@@ -641,7 +641,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
                                   Get.toNamed(AppRoutes.followus);
                                 } else if (index == 2) {
                                   AdController().tryShowAd();
-                                  Get.toNamed(AppRoutes.logout);
+                                  Get.toNamed(
+                                    AppRoutes.logout,
+                                    arguments: {
+                                      "userImage": userimage
+                                          .value, // Yahan image pass ho rahi hai
+                                      "userName": username
+                                          .value, // Optional: Agar naam bhi dikhana ho
+                                    },
+                                  );
                                 }
                               },
                             );
