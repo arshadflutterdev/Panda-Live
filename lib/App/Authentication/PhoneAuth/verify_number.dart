@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
+import 'package:pandlive/App/AppUi/Profile/nextScreens/CreateProfileScreen/create_profile.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
@@ -116,7 +117,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
       await FirebaseAuth.instance.signInWithCredential(credential);
       isLoading.value = false;
 
-      Get.offAll(() => Homescreen());
+      Get.offAll(() => CreateProfile());
     } catch (e) {
       isLoading.value = false;
       Get.snackbar(
@@ -313,6 +314,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
                             onPressed: verifyOTP,
                           ),
                         ),
+
                         const Gap(10),
 
                         // Terms
