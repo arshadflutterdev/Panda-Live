@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -29,10 +30,30 @@ class ProfileStoreController extends GetxController {
   Future<void> storeuserprofile() async {
     final shortId = arg["shortId"];
     final FirebaseFirestore firestore = FirebaseFirestore.instance;
+    final FirebaseStorage storage =
+        FirebaseStorage.instance; // Storage ka instance
+
     String myReferralCode = generateReferralCode();
     String enteredCode = refrelController.text.trim();
+    String finalImageUrl = "no photo"; // Default value
+
     try {
-      // 2. Pehle check karein agar referral code enter kiya gaya hai
+      // --- STEP 1: Image Storage par upload karein ---
+      if (image.value != null) {
+        // File ka naam userId ya timestamp ke sath rakhein
+        Reference ref = storage.ref().child("user_profiles").child("$user.jpg");
+
+        // File upload karein
+        UploadTask uploadTask = ref.putFile(image.value!);
+        TaskSnapshot snapshot = await uploadTask;
+
+        // Upload hone ke baad URL nikaalein
+        finalImageUrl = await snapshot.ref.getDownloadURL();
+      } else if (userphoto.isNotEmpty) {
+        finalImageUrl = userphoto.value;
+      }
+
+      // --- STEP 2: Referral System (Same logic) ---
       if (enteredCode.isNotEmpty) {
         var query = await firestore
             .collection("userProfile")
@@ -40,34 +61,30 @@ class ProfileStoreController extends GetxController {
             .get();
 
         if (query.docs.isNotEmpty) {
-          // Jis ka code hai uski ID nikaalein
           String inviterId = query.docs.first.id;
-
-          // Us bande ko 9000 coins dein
           await firestore.collection("userProfile").doc(inviterId).update({
             "coins": FieldValue.increment(9000),
           });
         }
       }
 
+      // --- STEP 3: Firestore mein Data save karein ---
       final adduser = {
-        "name": nameController.text.toString(),
-        "dob": dobController.text.toString(),
-        "country": countryController.text.toString(),
+        "name": nameController.text.trim(),
+        "dob": dobController.text.trim(),
+        "country": countryController.text.trim(),
         "gender": isSelected.value == 1 ? "Male" : "Female",
-        "userimage": image.value != null
-            ? image.value!.path
-            : userphoto.isNotEmpty
-            ? userphoto.value
-            : "no phote",
-
+        "userimage": finalImageUrl, // Ab yahan path nahi, URL jayega
         "createdAt": FieldValue.serverTimestamp(),
         "userId": user,
         "myReferralCode": myReferralCode,
         "referredBy": enteredCode,
         "shortId": shortId,
+        "coins": 0, // New user ke coins 0 se start karein
       };
+
       await firestore.collection("userProfile").doc(user).set(adduser);
+
       Get.snackbar(
         "Congratulation",
         "All set! Your profile is now complete.",
@@ -75,13 +92,66 @@ class ProfileStoreController extends GetxController {
         colorText: Colors.white,
       );
     } catch (e) {
-      print(e.toString());
-      Get.snackbar(
-        "Error",
-        "Failed to save user information",
-        backgroundColor: Colors.red,
-        colorText: Colors.white,
-      );
+      print("Error: ${e.toString()}");
+      Get.snackbar("Error", "Something went wrong!");
     }
   }
+  // Future<void> storeuserprofile() async {
+  //   final shortId = arg["shortId"];
+  //   final FirebaseFirestore firestore = FirebaseFirestore.instance;
+  //   String myReferralCode = generateReferralCode();
+  //   String enteredCode = refrelController.text.trim();
+  //   try {
+  //     // 2. Pehle check karein agar referral code enter kiya gaya hai
+  //     if (enteredCode.isNotEmpty) {
+  //       var query = await firestore
+  //           .collection("userProfile")
+  //           .where("myReferralCode", isEqualTo: enteredCode)
+  //           .get();
+
+  //       if (query.docs.isNotEmpty) {
+  //         // Jis ka code hai uski ID nikaalein
+  //         String inviterId = query.docs.first.id;
+
+  //         // Us bande ko 9000 coins dein
+  //         await firestore.collection("userProfile").doc(inviterId).update({
+  //           "coins": FieldValue.increment(9000),
+  //         });
+  //       }
+  //     }
+
+  //     final adduser = {
+  //       "name": nameController.text.toString(),
+  //       "dob": dobController.text.toString(),
+  //       "country": countryController.text.toString(),
+  //       "gender": isSelected.value == 1 ? "Male" : "Female",
+  //       "userimage": image.value != null
+  //           ? image.value!.path
+  //           : userphoto.isNotEmpty
+  //           ? userphoto.value
+  //           : "no phote",
+
+  //       "createdAt": FieldValue.serverTimestamp(),
+  //       "userId": user,
+  //       "myReferralCode": myReferralCode,
+  //       "referredBy": enteredCode,
+  //       "shortId": shortId,
+  //     };
+  //     await firestore.collection("userProfile").doc(user).set(adduser);
+  //     Get.snackbar(
+  //       "Congratulation",
+  //       "All set! Your profile is now complete.",
+  //       backgroundColor: Colors.black,
+  //       colorText: Colors.white,
+  //     );
+  //   } catch (e) {
+  //     print(e.toString());
+  //     Get.snackbar(
+  //       "Error",
+  //       "Failed to save user information",
+  //       backgroundColor: Colors.red,
+  //       colorText: Colors.white,
+  //     );
+  //   }
+  // }
 }
