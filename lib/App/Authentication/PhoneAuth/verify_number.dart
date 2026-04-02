@@ -1,10 +1,10 @@
 import 'dart:async';
+import 'dart:math';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
-import 'package:pandlive/App/AppUi/Profile/nextScreens/CreateProfileScreen/create_profile.dart';
 import 'package:pandlive/App/Routes/app_routes.dart';
 import 'package:pandlive/App/Widgets/Buttons/elevatedbutton0.dart';
 import 'package:pandlive/App/Widgets/TextFields/textfield.dart';
@@ -107,27 +107,83 @@ class _VerifyNumberState extends State<VerifyNumber> {
   Future<void> verifyOTP() async {
     if (!_formKey.currentState!.validate()) return;
 
+    // 1. Arguments ko safely pakrein
+    final Map<String, dynamic> arg = Get.arguments ?? {};
+
+    // Phone number aur verification ID agar constructor se na milein to arguments se lein
+    final String vId = widget.verificationId.isNotEmpty
+        ? widget.verificationId
+        : (arg["verificationId"] ?? "");
+    final String pNum = widget.phoneNumber.isNotEmpty
+        ? widget.phoneNumber
+        : (arg["phoneNumber"] ?? "");
+
+    final String userid = arg["userId"]?.toString() ?? "";
+    final String username = arg["userName"]?.toString() ?? "";
+
     try {
       isLoading.value = true;
+
+      // 2. Variable use karein jo upar define kiye hain
       final credential = PhoneAuthProvider.credential(
-        verificationId: widget.verificationId,
+        verificationId: vId,
         smsCode: otpController.text.trim(),
       );
 
       await FirebaseAuth.instance.signInWithCredential(credential);
+
+      // Success logic
+      final shortUserId = Random().nextInt(900000) + 100000;
+
       isLoading.value = false;
 
-      Get.offAll(() => CreateProfile());
+      // 3. Agli screen pe sara data bhej dein
+      Get.offAllNamed(
+        AppRoutes.createprofile,
+        arguments: {
+          "userId": userid,
+          "username": username,
+          "userpass": passwordController
+              .text, // OTP ki jagah password bhejein jo user ne create kiya h
+          "shortId": shortUserId,
+          "phoneNumber": pNum,
+        },
+      );
     } catch (e) {
       isLoading.value = false;
       Get.snackbar(
         "Error",
-        "Invalid OTP. Try again.",
-        backgroundColor: AppColours.blues,
+        "Invalid OTP or Connection Issue.",
+        backgroundColor: Colors.red,
         colorText: Colors.white,
       );
     }
   }
+
+  // Future<void> verifyOTP() async {
+  //   if (!_formKey.currentState!.validate()) return;
+
+  //   try {
+  //     isLoading.value = true;
+  //     final credential = PhoneAuthProvider.credential(
+  //       verificationId: widget.verificationId,
+  //       smsCode: otpController.text.trim(),
+  //     );
+
+  //     await FirebaseAuth.instance.signInWithCredential(credential);
+  //     isLoading.value = false;
+
+  //     Get.offAll(() => Homescreen());
+  //   } catch (e) {
+  //     isLoading.value = false;
+  //     Get.snackbar(
+  //       "Error",
+  //       "Invalid OTP. Try again.",
+  //       backgroundColor: AppColours.blues,
+  //       colorText: Colors.white,
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -314,7 +370,6 @@ class _VerifyNumberState extends State<VerifyNumber> {
                             onPressed: verifyOTP,
                           ),
                         ),
-
                         const Gap(10),
 
                         // Terms
