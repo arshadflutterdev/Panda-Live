@@ -207,7 +207,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get loginwithphone => 'Login With Phone number';
 
   @override
-  String get phonecodesend => 'verification code send to +966 ******34';
+  String get phonecodesend => 'verification code send to';
 
   @override
   String get enterphone => 'Enter Your Phone Number';
@@ -234,7 +234,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get coins => 'Coins';
 
   @override
-  String get points => 'Points';
+  String get points => 'Dollor';
 
   @override
   String get invitefriend => 'Invite a friend';

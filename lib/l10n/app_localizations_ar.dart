@@ -207,7 +207,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get loginwithphone => 'تسجيل الدخول برقم الهاتف';
 
   @override
-  String get phonecodesend => 'يتم إرسال رمز التحقق إلى الرقم +966 ******34';
+  String get phonecodesend => 'يتم إرسال رمز التحقق إلى الرقم';
 
   @override
   String get enterphone => 'أدخل رقم هاتفك';
@@ -234,7 +234,7 @@ class AppLocalizationsAr extends AppLocalizations {
   String get coins => 'عملات معدنية';
 
   @override
-  String get points => 'نقاط';
+  String get points => 'دولار';
 
   @override
   String get invitefriend => 'ادعُ صديقًا';

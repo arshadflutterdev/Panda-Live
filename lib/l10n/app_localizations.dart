@@ -494,7 +494,7 @@ abstract class AppLocalizations {
   /// No description provided for @phonecodesend.
   ///
   /// In en, this message translates to:
-  /// **'verification code send to +966 ******34'**
+  /// **'verification code send to'**
   String get phonecodesend;
 
   /// No description provided for @enterphone.
@@ -548,7 +548,7 @@ abstract class AppLocalizations {
   /// No description provided for @points.
   ///
   /// In en, this message translates to:
-  /// **'Points'**
+  /// **'Dollor'**
   String get points;
 
   /// No description provided for @invitefriend.
