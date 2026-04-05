@@ -220,7 +220,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
                       await signinwithphone();
                       // isloading.value = false;
 
-                      phoneController.clear();
+                      phoneController;
                     }
                   },
                   child: Obx(
