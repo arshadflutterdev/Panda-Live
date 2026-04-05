@@ -61,10 +61,14 @@ class _AuthOptionsState extends State<AuthOptions> {
       await FacebookAuth.instance.logOut();
 
       // 2️⃣ Trigger Facebook login
+      // final LoginResult result = await FacebookAuth.instance.login(
+      //   permissions: ['email', 'public_profile'], // required permissions
+      // );
       final LoginResult result = await FacebookAuth.instance.login(
-        permissions: ['email', 'public_profile'], // required permissions
+        permissions: ['email', 'public_profile'],
+        // Yeh line add karein taake native app priority base par open ho
+        loginBehavior: LoginBehavior.nativeWithFallback,
       );
-
       // 3️⃣ Check login status
       if (result.status == LoginStatus.success && result.accessToken != null) {
         // 4️⃣ Create Firebase credential
