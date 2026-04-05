@@ -107,10 +107,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
   Future<void> verifyOTP() async {
     if (!_formKey.currentState!.validate()) return;
 
-    // 1. Arguments ko safely pakrein
     final Map<String, dynamic> arg = Get.arguments ?? {};
-
-    // Phone number aur verification ID agar constructor se na milein to arguments se lein
     final String vId = widget.verificationId.isNotEmpty
         ? widget.verificationId
         : (arg["verificationId"] ?? "");
@@ -118,37 +115,38 @@ class _VerifyNumberState extends State<VerifyNumber> {
         ? widget.phoneNumber
         : (arg["phoneNumber"] ?? "");
 
-    final String userid = arg["userId"]?.toString() ?? "";
-    final String username = arg["userName"]?.toString() ?? "";
-
     try {
       isLoading.value = true;
 
-      // 2. Variable use karein jo upar define kiye hain
       final credential = PhoneAuthProvider.credential(
         verificationId: vId,
         smsCode: otpController.text.trim(),
       );
 
-      await FirebaseAuth.instance.signInWithCredential(credential);
+      // Sign in the user
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
 
-      // Success logic
-      final shortUserId = Random().nextInt(900000) + 100000;
+      // Check if it's a new user or existing
+      bool isNewUser = userCredential.additionalUserInfo?.isNewUser ?? false;
 
       isLoading.value = false;
 
-      // 3. Agli screen pe sara data bhej dein
-      Get.offAllNamed(
-        AppRoutes.createprofile,
-        arguments: {
-          "userId": userid,
-          "username": username,
-          "userpass": passwordController
-              .text, // OTP ki jagah password bhejein jo user ne create kiya h
-          "shortId": shortUserId,
-          "phoneNumber": pNum,
-        },
-      );
+      if (isNewUser) {
+        // CASE 1: Naya User hai -> Create Profile screen par bhejein
+        final shortUserId = Random().nextInt(900000) + 100000;
+        Get.offAllNamed(
+          AppRoutes.createprofile,
+          arguments: {
+            "userId": userCredential.user?.uid,
+            "shortId": shortUserId,
+            "phoneNumber": pNum,
+          },
+        );
+      } else {
+        // CASE 2: Purana User hai -> Direct Home/BottomNav par bhejein
+        Get.offAllNamed(AppRoutes.bottomnav);
+      }
     } catch (e) {
       isLoading.value = false;
       Get.snackbar(
@@ -159,27 +157,57 @@ class _VerifyNumberState extends State<VerifyNumber> {
       );
     }
   }
-
   // Future<void> verifyOTP() async {
   //   if (!_formKey.currentState!.validate()) return;
 
+  //   // 1. Arguments ko safely pakrein
+  //   final Map<String, dynamic> arg = Get.arguments ?? {};
+
+  //   // Phone number aur verification ID agar constructor se na milein to arguments se lein
+  //   final String vId = widget.verificationId.isNotEmpty
+  //       ? widget.verificationId
+  //       : (arg["verificationId"] ?? "");
+  //   final String pNum = widget.phoneNumber.isNotEmpty
+  //       ? widget.phoneNumber
+  //       : (arg["phoneNumber"] ?? "");
+
+  //   final String userid = arg["userId"]?.toString() ?? "";
+  //   final String username = arg["userName"]?.toString() ?? "";
+
   //   try {
   //     isLoading.value = true;
+
+  //     // 2. Variable use karein jo upar define kiye hain
   //     final credential = PhoneAuthProvider.credential(
-  //       verificationId: widget.verificationId,
+  //       verificationId: vId,
   //       smsCode: otpController.text.trim(),
   //     );
 
   //     await FirebaseAuth.instance.signInWithCredential(credential);
+
+  //     // Success logic
+  //     final shortUserId = Random().nextInt(900000) + 100000;
+
   //     isLoading.value = false;
 
-  //     Get.offAll(() => Homescreen());
+  //     // 3. Agli screen pe sara data bhej dein
+  //     Get.offAllNamed(
+  //       AppRoutes.createprofile,
+  //       arguments: {
+  //         "userId": userid,
+  //         "username": username,
+  //         "userpass": passwordController
+  //             .text, // OTP ki jagah password bhejein jo user ne create kiya h
+  //         "shortId": shortUserId,
+  //         "phoneNumber": pNum,
+  //       },
+  //     );
   //   } catch (e) {
   //     isLoading.value = false;
   //     Get.snackbar(
   //       "Error",
-  //       "Invalid OTP. Try again.",
-  //       backgroundColor: AppColours.blues,
+  //       "Invalid OTP or Connection Issue.",
+  //       backgroundColor: Colors.red,
   //       colorText: Colors.white,
   //     );
   //   }
