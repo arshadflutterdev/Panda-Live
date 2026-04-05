@@ -318,56 +318,57 @@ class _VerifyNumberState extends State<VerifyNumber> {
                             ),
                           ],
                         ),
-                        const Gap(20),
+
+                        // const Gap(20),
 
                         // Password Field
-                        Obx(
-                          () => MyTextFormField(
-                            controller: passwordController,
-                            hintext: localization.createpassword,
-                            obscure: isSecure.value,
-                            validator: (value) {
-                              if (value == null || value.isEmpty) {
-                                return localization.createpassword;
-                              }
-                              if (value.length < 8) {
-                                return localization.code8digits;
-                              }
-                              return null;
-                            },
-                            suffix: SizedBox(
-                              height: 20,
-                              width: width * 0.27,
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                    padding: EdgeInsets.zero,
-                                    icon: const Icon(
-                                      Icons.close,
-                                      color: Colors.black54,
-                                    ),
-                                    onPressed: () => passwordController.clear(),
-                                  ),
-                                  IconButton(
-                                    padding: EdgeInsets.zero,
-                                    icon: isSecure.value
-                                        ? Image.asset(
-                                            AppImages.eyesoff,
-                                            height: 30,
-                                          )
-                                        : Image.asset(
-                                            AppImages.eyeson,
-                                            height: 30,
-                                          ),
-                                    onPressed: () =>
-                                        isSecure.value = !isSecure.value,
-                                  ),
-                                ],
-                              ),
-                            ),
-                            keyboard: TextInputType.number,
-                          ),
-                        ),
+                        // Obx(
+                        //   () => MyTextFormField(
+                        //     controller: passwordController,
+                        //     hintext: localization.createpassword,
+                        //     obscure: isSecure.value,
+                        //     validator: (value) {
+                        //       if (value == null || value.isEmpty) {
+                        //         return localization.createpassword;
+                        //       }
+                        //       if (value.length < 8) {
+                        //         return localization.code8digits;
+                        //       }
+                        //       return null;
+                        //     },
+                        //     suffix: SizedBox(
+                        //       height: 20,
+                        //       width: width * 0.27,
+                        //       child: Row(
+                        //         children: [
+                        //           IconButton(
+                        //             padding: EdgeInsets.zero,
+                        //             icon: const Icon(
+                        //               Icons.close,
+                        //               color: Colors.black54,
+                        //             ),
+                        //             onPressed: () => passwordController.clear(),
+                        //           ),
+                        //           IconButton(
+                        //             padding: EdgeInsets.zero,
+                        //             icon: isSecure.value
+                        //                 ? Image.asset(
+                        //                     AppImages.eyesoff,
+                        //                     height: 30,
+                        //                   )
+                        //                 : Image.asset(
+                        //                     AppImages.eyeson,
+                        //                     height: 30,
+                        //                   ),
+                        //             onPressed: () =>
+                        //                 isSecure.value = !isSecure.value,
+                        //           ),
+                        //         ],
+                        //       ),
+                        //     ),
+                        //     keyboard: TextInputType.number,
+                        //   ),
+                        // ),
                         Align(
                           alignment: isArabic
                               ? Alignment.topRight
