@@ -28,43 +28,38 @@ class _PhoneAuthState extends State<PhoneAuth> {
   //below function signinwithphone
   Future<void> signinwithphone() async {
     final auth = FirebaseAuth.instance;
-    auth.setLanguageCode(Get.locale?.languageCode ?? 'en'); // Locale fix
+    auth.setLanguageCode(Get.locale?.languageCode ?? 'en');
 
     try {
       await auth.verifyPhoneNumber(
         phoneNumber: phoneController.text,
         verificationCompleted: (PhoneAuthCredential credential) async {
           try {
+            // 1. Sign in the user
             final userCredential = await auth.signInWithCredential(credential);
+
             if (userCredential.user != null) {
-              Get.toNamed(AppRoutes.verifynumber);
+              isloading.value = false; // Loading stop karein
+
+              // 2. Direct Bottom Nav/Home par bhejein na ke verify number screen par
+              Get.offAllNamed(
+                AppRoutes.bottomnav,
+              ); // Apna sahi route name yahan likhein
             }
           } catch (e) {
+            isloading.value = false;
             debugPrint("Auto sign-in failed: $e");
           }
         },
         verificationFailed: (FirebaseAuthException e) {
-          String message = "Something went wrong. Try again.";
-          switch (e.code) {
-            case 'invalid-phone-number':
-              message = "Invalid phone number format.";
-              break;
-            case 'too-many-requests':
-              message = "Too many requests. Try later.";
-              break;
-            case 'network-request-failed':
-              message = "Network error. Check internet.";
-              break;
-            case 'quota-exceeded':
-              message = "SMS quota exceeded. Try later.";
-              break;
-          }
-          ScaffoldMessenger.of(
-            context,
-          ).showSnackBar(SnackBar(content: Text(message)));
-          debugPrint("Phone auth failed: ${e.code} - ${e.message}");
+          isloading.value = false;
+          // ... (Aapka purana error message logic)
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.message ?? "Verification Failed")),
+          );
         },
         codeSent: (verificationId, resendToken) {
+          isloading.value = false; // OTP send ho gaya, loading band
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -80,12 +75,70 @@ class _PhoneAuthState extends State<PhoneAuth> {
         codeAutoRetrievalTimeout: (verificationId) {},
       );
     } catch (e) {
-      debugPrint("verifyPhoneNumber exception: $e");
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Unexpected error occurred.")),
-      );
+      isloading.value = false;
+      debugPrint("Exception: $e");
     }
   }
+  // Future<void> signinwithphone() async {
+  //   final auth = FirebaseAuth.instance;
+  //   auth.setLanguageCode(Get.locale?.languageCode ?? 'en'); // Locale fix
+
+  //   try {
+  //     await auth.verifyPhoneNumber(
+  //       phoneNumber: phoneController.text,
+  //       verificationCompleted: (PhoneAuthCredential credential) async {
+  //         try {
+  //           final userCredential = await auth.signInWithCredential(credential);
+  //           if (userCredential.user != null) {
+  //             Get.toNamed(AppRoutes.verifynumber);
+  //           }
+  //         } catch (e) {
+  //           debugPrint("Auto sign-in failed: $e");
+  //         }
+  //       },
+  //       verificationFailed: (FirebaseAuthException e) {
+  //         String message = "Something went wrong. Try again.";
+  //         switch (e.code) {
+  //           case 'invalid-phone-number':
+  //             message = "Invalid phone number format.";
+  //             break;
+  //           case 'too-many-requests':
+  //             message = "Too many requests. Try later.";
+  //             break;
+  //           case 'network-request-failed':
+  //             message = "Network error. Check internet.";
+  //             break;
+  //           case 'quota-exceeded':
+  //             message = "SMS quota exceeded. Try later.";
+  //             break;
+  //         }
+  //         ScaffoldMessenger.of(
+  //           context,
+  //         ).showSnackBar(SnackBar(content: Text(message)));
+  //         debugPrint("Phone auth failed: ${e.code} - ${e.message}");
+  //       },
+  //       codeSent: (verificationId, resendToken) {
+  //         Navigator.push(
+  //           context,
+  //           MaterialPageRoute(
+  //             builder: (_) => VerifyNumber(
+  //               verificationId: verificationId,
+  //               phoneNumber: phoneController.text,
+  //               resendToken: resendToken,
+  //             ),
+  //           ),
+  //         );
+  //       },
+  //       timeout: const Duration(seconds: 60),
+  //       codeAutoRetrievalTimeout: (verificationId) {},
+  //     );
+  //   } catch (e) {
+  //     debugPrint("verifyPhoneNumber exception: $e");
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       const SnackBar(content: Text("Unexpected error occurred.")),
+  //     );
+  //   }
+  // }
 
   // Future<UserCredential?> signinwithphone() async {
   //   final auth = FirebaseAuth.instance;
