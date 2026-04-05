@@ -292,7 +292,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
                             return null;
                           },
                         ),
-                        const Gap(10),
+
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -311,11 +311,6 @@ class _VerifyNumberState extends State<VerifyNumber> {
                                 );
                               }
                             }),
-                            TextButton(
-                              onPressed: () =>
-                                  Get.toNamed(AppRoutes.phonelogin),
-                              child: Text(localization.tryanother),
-                            ),
                           ],
                         ),
 
@@ -369,16 +364,16 @@ class _VerifyNumberState extends State<VerifyNumber> {
                         //     keyboard: TextInputType.number,
                         //   ),
                         // ),
-                        Align(
-                          alignment: isArabic
-                              ? Alignment.topRight
-                              : Alignment.topLeft,
-                          child: Text(
-                            localization.setpassword,
-                            style: TextStyle(color: Colors.black54),
-                          ),
-                        ),
-                        const Gap(30),
+                        // Align(
+                        //   alignment: isArabic
+                        //       ? Alignment.topRight
+                        //       : Alignment.topLeft,
+                        //   child: Text(
+                        //     localization.setpassword,
+                        //     style: TextStyle(color: Colors.black54),
+                        //   ),
+                        // ),
+                        // const Gap(30),
 
                         // Verify Button
                         Center(
