@@ -293,6 +293,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
                           },
                         ),
 
+                        Gap(10),
                         Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -314,7 +315,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
                           ],
                         ),
 
-                        // const Gap(20),
+                        const Gap(10),
 
                         // Password Field
                         // Obx(

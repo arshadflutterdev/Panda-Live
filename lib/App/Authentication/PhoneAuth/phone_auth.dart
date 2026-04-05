@@ -37,13 +37,16 @@ class _PhoneAuthState extends State<PhoneAuth> {
           try {
             final userCredential = await auth.signInWithCredential(credential);
             if (userCredential.user != null) {
+              isloading.value = false;
               Get.toNamed(AppRoutes.verifynumber);
             }
           } catch (e) {
+            isloading.value = false;
             debugPrint("Auto sign-in failed: $e");
           }
         },
         verificationFailed: (FirebaseAuthException e) {
+          isloading.value = false;
           String message = "Something went wrong. Try again.";
           switch (e.code) {
             case 'invalid-phone-number':
@@ -65,6 +68,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
           debugPrint("Phone auth failed: ${e.code} - ${e.message}");
         },
         codeSent: (verificationId, resendToken) {
+          isloading.value = false;
           Navigator.push(
             context,
             MaterialPageRoute(
@@ -77,6 +81,7 @@ class _PhoneAuthState extends State<PhoneAuth> {
           );
         },
         timeout: const Duration(seconds: 60),
+
         codeAutoRetrievalTimeout: (verificationId) {},
       );
     } catch (e) {
