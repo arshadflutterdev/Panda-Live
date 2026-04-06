@@ -84,28 +84,9 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
-// class VideoPlayerItem extends StatefulWidget {
-//   final String videoUrl;
-//   const VideoPlayerItem({super.key, required this.videoUrl});
-
-//   @override
-//   State<VideoPlayerItem> createState() => _VideoPlayerItemState();
-// }
 class VideoPlayerItem extends StatefulWidget {
   final String videoUrl;
-  final String videoId;
-  final String username;
-  final String caption;
-  final String profilePic; // <-- Ye add karein
-
-  const VideoPlayerItem({
-    super.key,
-    required this.videoUrl,
-    required this.videoId,
-    required this.username,
-    required this.caption,
-    required this.profilePic, // <-- Ye add karein
-  });
+  const VideoPlayerItem({super.key, required this.videoUrl});
 
   @override
   State<VideoPlayerItem> createState() => _VideoPlayerItemState();

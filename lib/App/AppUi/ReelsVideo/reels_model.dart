@@ -29,12 +29,12 @@
 //   }
 // }
 class VideoModel {
-  final String username;
-  final String uid;
-  final String id;
-  final String videoUrl;
-  final String caption;
-  final String profilePic; // Image link ke liye
+  String username;
+  String uid;
+  String id;
+  String videoUrl;
+  String caption;
+  String profilePic; // Link store karne ke liye
 
   VideoModel({
     required this.username,
