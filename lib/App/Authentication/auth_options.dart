@@ -178,7 +178,7 @@ class _AuthOptionsState extends State<AuthOptions> {
                         ),
                       ),
                     ),
-                    Gap(height * 0.17),
+                    Gap(height * 0.27),
 
                     Directionality(
                       textDirection: TextDirection.ltr,
@@ -219,7 +219,7 @@ class _AuthOptionsState extends State<AuthOptions> {
                         ],
                       ),
                     ),
-                    Gap(height * 0.10),
+                    Gap(height * 0.070),
                     GestureDetector(
                       onTap: () {
                         if (checkValue.value == true) {
@@ -297,7 +297,7 @@ class _AuthOptionsState extends State<AuthOptions> {
                     ),
 
                     // here is image
-                    Gap(15),
+                    // Gap(15),
 
                     // GestureDetector(
                     //   onTap: () {
@@ -399,7 +399,7 @@ class _AuthOptionsState extends State<AuthOptions> {
                     //     ),
                     //   ),
                     // ),
-                    Gap(height * 0.080),
+                    Gap(height * 0.060),
                     Image(image: AssetImage(AppImages.or)),
                     Gap(height * 0.030),
 
