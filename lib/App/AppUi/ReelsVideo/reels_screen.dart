@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/AppUi/ReelsVideo/reel_player_screen.dart';
 import 'package:pandlive/App/AppUi/ReelsVideo/video_controllers.dart';
 
 class ReelsScreen extends StatelessWidget {
@@ -18,12 +19,36 @@ class ReelsScreen extends StatelessWidget {
             () => PageView.builder(
               scrollDirection: Axis.vertical,
               itemCount: controller.videoList.length,
+              // ReelsScreen ke PageView.builder mein ye update karein:
               itemBuilder: (context, index) {
-                return Center(
-                  child: Text(
-                    "Video Index: $index",
-                    style: TextStyle(color: Colors.white),
-                  ),
+                final data = controller.videoList[index];
+                return Stack(
+                  children: [
+                    // Actual Video Player
+                    VideoPlayerItem(videoUrl: data.videoUrl),
+
+                    // Caption aur Username overlay (Optional)
+                    Positioned(
+                      bottom: 20,
+                      left: 20,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            "@${data.username}",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                          Text(
+                            data.caption,
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
                 );
               },
             ),

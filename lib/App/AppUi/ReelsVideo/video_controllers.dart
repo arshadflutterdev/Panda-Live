@@ -11,6 +11,27 @@ class ReelsController extends GetxController {
   var isForYou = true.obs;
   var isLoading = false.obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    // App chaltay hi videos fetch karna shuru kar dega
+    getAllVideos();
+  }
+
+  // --- GET ALL VIDEOS FROM FIREBASE ---
+  getAllVideos() async {
+    // bindStream se data khud-ba-khud update hota rahega jab bhi koi nayi video aayegi
+    videoList.bindStream(
+      FirebaseFirestore.instance.collection('videos').snapshots().map((query) {
+        List<VideoModel> retVal = [];
+        for (var element in query.docs) {
+          retVal.add(VideoModel.fromSnap(element));
+        }
+        return retVal;
+      }),
+    );
+  }
+
   // --- VIDEO PICKING LOGIC ---
   Future<void> pickVideo() async {
     final video = await ImagePicker().pickVideo(source: ImageSource.gallery);
@@ -24,6 +45,8 @@ class ReelsController extends GetxController {
   Future<void> uploadVideo(String caption, String videoPath) async {
     try {
       isLoading.value = true;
+
+      // Sahi waqt nikalne ke liye brackets () lagaye hain
       String videoId = DateTime.now().millisecondsSinceEpoch.toString();
 
       // 1. Storage mein video bhejhein
@@ -31,6 +54,7 @@ class ReelsController extends GetxController {
           .ref()
           .child('videos')
           .child(videoId);
+
       await ref.putFile(File(videoPath));
       String downloadUrl = await ref.getDownloadURL();
 
@@ -44,10 +68,11 @@ class ReelsController extends GetxController {
         'songName': 'Original Audio',
       });
 
-      Get.back(); // Confirm screen se wapis
+      Get.back(); // Confirm screen se wapis Reels par
       Get.snackbar("Success", "Video Post Ho Gayi!");
     } catch (e) {
       Get.snackbar("Error", e.toString());
+      print("Upload Error: $e");
     } finally {
       isLoading.value = false;
     }
