@@ -21,13 +21,80 @@ class ReelsScreen extends StatelessWidget {
               itemCount: controller.videoList.length,
               // ReelsScreen ke PageView.builder mein ye update karein:
               itemBuilder: (context, index) {
-                final data = controller.videoList[index];
+                final data =
+                    controller.videoList[index]; // Firebase se aane wala data
+
                 return Stack(
                   children: [
-                    // Actual Video Player
+                    // 1. Actual Video Player
                     VideoPlayerItem(videoUrl: data.videoUrl),
 
-                    // Caption aur Username overlay (Optional)
+                    // 2. Right Side Profile/User Section (TikTok Style)
+                    Positioned(
+                      right: 15,
+                      bottom: 120, // Isay likes ke upar set karein
+                      child: Column(
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              // Yahan user ki profile par janay ka logic aaye ga
+                              print("Navigate to profile of: ${data.username}");
+                            },
+                            child: Container(
+                              padding: const EdgeInsets.all(
+                                2,
+                              ), // White border effect
+                              decoration: const BoxDecoration(
+                                color: Colors.white,
+                                shape: BoxShape.circle,
+                              ),
+                              child: CircleAvatar(
+                                radius: 25,
+                                backgroundColor: Colors.black,
+                                // --- REAL IMAGE LOADING ---
+                                // Agar profilePic link hai to wo dikhao
+                                backgroundImage: data.profilePic.isNotEmpty
+                                    ? NetworkImage(data.profilePic)
+                                    : null,
+                                // Agar profilePic khali hai to User ka pehla letter dikhao
+                                child: data.profilePic.isEmpty
+                                    ? Text(
+                                        data.username.isNotEmpty
+                                            ? data.username[0].toUpperCase()
+                                            : "?",
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      )
+                                    : null,
+                              ),
+                            ),
+                          ),
+
+                          // Wo chota sa red plus icon (TikTok Follow Button)
+                          Transform.translate(
+                            offset: const Offset(
+                              0,
+                              -10,
+                            ), // Image ke upar set karne ke liye
+                            child: Container(
+                              decoration: const BoxDecoration(
+                                color: Colors.red,
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(
+                                Icons.add,
+                                color: Colors.white,
+                                size: 18,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // 3. Bottom Left Overlay (Username aur Caption)
                     Positioned(
                       bottom: 20,
                       left: 20,
@@ -35,15 +102,16 @@ class ReelsScreen extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            "@${data.username}",
-                            style: TextStyle(
+                            "@${data.username}", // Dynamic Username
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
+                              fontSize: 16,
                             ),
                           ),
                           Text(
-                            data.caption,
-                            style: TextStyle(color: Colors.white),
+                            data.caption, // Dynamic Caption
+                            style: const TextStyle(color: Colors.white),
                           ),
                         ],
                       ),
@@ -51,6 +119,38 @@ class ReelsScreen extends StatelessWidget {
                   ],
                 );
               },
+
+              // itemBuilder: (context, index) {
+              //   final data = controller.videoList[index];
+              //   return Stack(
+              //     children: [
+              //       // Actual Video Player
+              //       VideoPlayerItem(videoUrl: data.videoUrl),
+
+              //       // Caption aur Username overlay (Optional)
+              //       Positioned(
+              //         bottom: 20,
+              //         left: 20,
+              //         child: Column(
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           children: [
+              //             Text(
+              //               "@${data.username}",
+              //               style: TextStyle(
+              //                 color: Colors.white,
+              //                 fontWeight: FontWeight.bold,
+              //               ),
+              //             ),
+              //             Text(
+              //               data.caption,
+              //               style: TextStyle(color: Colors.white),
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     ],
+              //   );
+              // },
             ),
           ),
 
