@@ -17,38 +17,14 @@ class ReelsScreen extends StatelessWidget {
           // 1. Main Video PageView
           Obx(
             () => PageView.builder(
+              controller: PageController(initialPage: 0, viewportFraction: 1),
               scrollDirection: Axis.vertical,
+              allowImplicitScrolling:
+                  true, // Isko true rakhna hai taake agla video background mein load ho
               itemCount: controller.videoList.length,
-              // ReelsScreen ke PageView.builder mein ye update karein:
               itemBuilder: (context, index) {
-                final data = controller.videoList[index];
-                return Stack(
-                  children: [
-                    // Actual Video Player
-                    VideoPlayerItem(videoUrl: data.videoUrl),
-
-                    // Caption aur Username overlay (Optional)
-                    Positioned(
-                      bottom: 20,
-                      left: 20,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "@${data.username}",
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          Text(
-                            data.caption,
-                            style: TextStyle(color: Colors.white),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                return VideoPlayerItem(
+                  videoUrl: controller.videoList[index].videoUrl,
                 );
               },
             ),
