@@ -104,17 +104,21 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
 
   // --- CACHE & INITIALIZE LOGIC ---
   Future<void> _initializeVideo() async {
+    // Cache se file check karna
     final fileInfo = await DefaultCacheManager().getFileFromCache(
       widget.videoUrl,
     );
     File? videoFile;
 
     if (fileInfo == null) {
+      // Agar cache mein nahi hai toh download karein
       videoFile = await DefaultCacheManager().getSingleFile(widget.videoUrl);
     } else {
+      // Agar hai toh wahi file uthayein
       videoFile = fileInfo.file;
     }
 
+    // Controller ko file provide karna
     videoPlayerController = VideoPlayerController.file(videoFile)
       ..initialize().then((_) {
         if (mounted) {
@@ -158,21 +162,19 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // 1. Video Player Layer
+          // 1. Video Player Layer (Original Ratio Fix)
           Container(
             width: size.width,
             height: size.height,
-            color: Colors.black,
+            color: Colors.black, // Background black rahega agar ratio chota ho
             child: (isInitialized && videoPlayerController != null)
-                ? FittedBox(
-                    fit: BoxFit.cover,
-                    child: SizedBox(
-                      width: videoPlayerController!.value.size.width,
-                      height: videoPlayerController!.value.size.height,
+                ? Center(
+                    child: AspectRatio(
+                      aspectRatio: videoPlayerController!.value.aspectRatio,
                       child: VideoPlayer(videoPlayerController!),
                     ),
                   )
-                : const SizedBox.shrink(), // No Circle/Avatar
+                : const SizedBox.shrink(), // No Loading Circle
           ),
 
           // 2. Play Icon Overlay (Sirf Pause hone par dikhega)
