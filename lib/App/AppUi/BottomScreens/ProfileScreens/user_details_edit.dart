@@ -1,6 +1,10 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 
 class UserDetailsEdit extends StatefulWidget {
   const UserDetailsEdit({super.key});
@@ -10,6 +14,54 @@ class UserDetailsEdit extends StatefulWidget {
 }
 
 class _UserDetailsEditState extends State<UserDetailsEdit> {
+  File? _pickedImage;
+  bool isImageUploading = false;
+  Future<void> changeProfileImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(
+      source: ImageSource.gallery,
+      imageQuality: 50,
+    );
+
+    if (image != null) {
+      setState(() {
+        isImageUploading = true;
+      });
+
+      try {
+        final uid = FirebaseAuth.instance.currentUser!.uid;
+        final storageRef = FirebaseStorage.instance
+            .ref()
+            .child("user_images")
+            .child("$uid.jpg");
+
+        // Upload to Firebase Storage
+        await storageRef.putFile(File(image.path));
+
+        // Get Download URL
+        String downloadUrl = await storageRef.getDownloadURL();
+
+        // Update Firestore
+        await FirebaseFirestore.instance
+            .collection("userProfile")
+            .doc(uid)
+            .update({"userimage": downloadUrl});
+
+        setState(() {
+          userImage = downloadUrl;
+          isImageUploading = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text("Profile Picture Updated!")),
+        );
+      } catch (e) {
+        setState(() => isImageUploading = false);
+        print("Error: $e");
+      }
+    }
+  }
+
   final nameController = TextEditingController();
   final countryController = TextEditingController();
   final dobController = TextEditingController();
@@ -173,36 +225,38 @@ class _UserDetailsEditState extends State<UserDetailsEdit> {
                     children: [
                       CircleAvatar(
                         radius: 50,
+                        backgroundColor: Colors.grey.shade200,
                         backgroundImage: userImage.isNotEmpty
                             ? NetworkImage(userImage)
                             : null,
-                        child: userImage.isEmpty
-                            ? const Icon(Icons.person, size: 50)
-                            : null,
+                        child: isImageUploading
+                            ? const CircularProgressIndicator() // Loader jab image upload ho rahi ho
+                            : (userImage.isEmpty
+                                  ? const Icon(Icons.person, size: 50)
+                                  : null),
                       ),
-
-                      if (isVerified)
-                        Positioned(
-                          bottom: 0,
-                          right: 0,
+                      // Edit Icon Button
+                      Positioned(
+                        bottom: 0,
+                        right: 0,
+                        child: GestureDetector(
+                          onTap: isImageUploading ? null : changeProfileImage,
                           child: Container(
-                            height: 22,
-                            width: 22,
-                            decoration: BoxDecoration(
+                            padding: const EdgeInsets.all(4),
+                            decoration: const BoxDecoration(
                               color: Colors.blue,
                               shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white, width: 2),
                             ),
                             child: const Icon(
-                              Icons.check,
-                              size: 12,
+                              Icons.camera_alt,
+                              size: 18,
                               color: Colors.white,
                             ),
                           ),
                         ),
+                      ),
                     ],
                   ),
-
                   const SizedBox(height: 20),
 
                   Row(
