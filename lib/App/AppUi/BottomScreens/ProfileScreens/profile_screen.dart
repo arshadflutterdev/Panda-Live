@@ -481,36 +481,35 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     ),
                   ),
 
-                  Obx(
-                    () => Padding(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 15,
-                        vertical: 10,
-                      ),
-                      child: AnimatedSwitcher(
-                        duration: Duration(milliseconds: 600),
+                  // Obx(
+                  //   () => Padding(
+                  //     padding: const EdgeInsets.symmetric(
+                  //       horizontal: 15,
+                  //       vertical: 10,
+                  //     ),
+                  //     child: AnimatedSwitcher(
+                  //       duration: Duration(milliseconds: 600),
 
-                        child: Container(
-                          key: ValueKey(currentbgindex.value),
-                          height: height * 0.12,
-                          width: width,
-                          decoration: BoxDecoration(
-                            image: DecorationImage(
-                              fit: BoxFit.contain,
-                              image: isArabic
-                                  ? AssetImage(
-                                      infoarimages[currentbgindex.value],
-                                    )
-                                  : AssetImage(infimages[currentbgindex.value]),
-                            ),
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(15),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-
+                  //       child: Container(
+                  //         key: ValueKey(currentbgindex.value),
+                  //         height: height * 0.12,
+                  //         width: width,
+                  //         decoration: BoxDecoration(
+                  //           image: DecorationImage(
+                  //             fit: BoxFit.contain,
+                  //             image: isArabic
+                  //                 ? AssetImage(
+                  //                     infoarimages[currentbgindex.value],
+                  //                   )
+                  //                 : AssetImage(infimages[currentbgindex.value]),
+                  //           ),
+                  //           color: Colors.white,
+                  //           borderRadius: BorderRadius.circular(15),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: 10,
