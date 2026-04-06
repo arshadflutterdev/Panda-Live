@@ -38,21 +38,57 @@ class _UserDetailsEditState extends State<UserDetailsEdit> {
         .get();
 
     if (snapshot.exists) {
-      setState(() {
-        nameController.text = snapshot["name"] ?? "";
-        countryController.text = snapshot["country"] ?? "";
-        dobController.text = snapshot["dob"] ?? "";
+      // 1. Map nikaalein taake field check asaan ho
+      final data = snapshot.data() as Map<String, dynamic>;
 
-        gender = snapshot["gender"] ?? "";
-        referral = snapshot["myReferralCode"] ?? "";
-        userImage = snapshot["userimage"] ?? "";
-        shortId = snapshot["shortId"] ?? 0;
-        isVerified = snapshot["isVerified"] ?? false;
+      setState(() {
+        // 2. Bracket notation ki bajaye data[key] use karein aur null handle karein
+        nameController.text = data["name"] ?? "";
+        countryController.text = data["country"] ?? "";
+        dobController.text = data["dob"] ?? "";
+
+        gender = data["gender"] ?? "Not Specified";
+        referral = data["myReferralCode"] ?? "N/A";
+        userImage = data["userimage"] ?? "";
+
+        // Data type check karein (int ke liye default 0)
+        shortId = data["shortId"] ?? 0;
+
+        // Verification status agar field nahi hai to false rakhein
+        isVerified = data["isVerified"] ?? false;
 
         isLoading = false;
       });
+    } else {
+      // Agar user ka document hi nahi hai
+      setState(() => isLoading = false);
     }
   }
+
+  // Future<void> getUserData() async {
+  //   final uid = FirebaseAuth.instance.currentUser!.uid;
+
+  //   final snapshot = await FirebaseFirestore.instance
+  //       .collection("userProfile")
+  //       .doc(uid)
+  //       .get();
+
+  //   if (snapshot.exists) {
+  //     setState(() {
+  //       nameController.text = snapshot["name"] ?? "";
+  //       countryController.text = snapshot["country"] ?? "";
+  //       dobController.text = snapshot["dob"] ?? "";
+
+  //       gender = snapshot["gender"] ?? "";
+  //       referral = snapshot["myReferralCode"] ?? "";
+  //       userImage = snapshot["userimage"] ?? "";
+  //       shortId = snapshot["shortId"] ?? 0;
+  //       isVerified = snapshot["isVerified"] ?? false;
+
+  //       isLoading = false;
+  //     });
+  //   }
+  // }
 
   Future<void> updateUser() async {
     final uid = FirebaseAuth.instance.currentUser!.uid;
