@@ -191,10 +191,10 @@
 // }
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:pandlive/App/AppUi/ReelsVideo/reels_left_details.dart';
+import 'package:pandlive/App/AppUi/ReelsVideo/reels_sidebar_buttons.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'reels_side_buttons.dart';
-import 'reels_left_detail.dart';
 
 class VideoPlayerItem extends StatefulWidget {
   final String videoUrl;
