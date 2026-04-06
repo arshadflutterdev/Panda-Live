@@ -1,4 +1,3 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/AppUi/ReelsVideo/video_controllers.dart';
@@ -14,26 +13,23 @@ class ReelsScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       body: Stack(
         children: [
-          // Video List
-          Obx(() {
-            var currentList = controller.isForYou.value
-                ? controller.forYouList
-                : controller.followingList;
-            return PageView.builder(
+          // 1. Main Video PageView
+          Obx(
+            () => PageView.builder(
               scrollDirection: Axis.vertical,
-              itemCount: currentList.length,
+              itemCount: controller.videoList.length,
               itemBuilder: (context, index) {
                 return Center(
                   child: Text(
-                    "Video ${index + 1}",
+                    "Video Index: $index",
                     style: TextStyle(color: Colors.white),
                   ),
                 );
               },
-            );
-          }),
+            ),
+          ),
 
-          // Top Overlay (Tabs + Upload Button)
+          // 2. Top Bar (Tabs & Upload)
           Positioned(
             top: 50,
             left: 0,
@@ -41,98 +37,38 @@ class ReelsScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // Upload Button (Left Side)
+                // UPLOAD BUTTON
                 IconButton(
                   icon: Icon(
                     Icons.add_box_outlined,
                     color: Colors.white,
                     size: 30,
                   ),
-                  onPressed: () => print("Upload Screen"),
+                  onPressed: () => controller.pickVideo(),
                 ),
                 const SizedBox(width: 20),
-
-                // Tabs Logic
-                Obx(
-                  () => GestureDetector(
-                    onTap: () => controller.toggleTab(false),
-                    child: Text(
-                      "Following",
-                      style: TextStyle(
-                        color: !controller.isForYou.value
-                            ? Colors.white
-                            : Colors.white60,
-                        fontWeight: !controller.isForYou.value
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                        fontSize: 17,
-                      ),
-                    ),
-                  ),
+                // TABS
+                Text(
+                  "Following",
+                  style: TextStyle(color: Colors.white60, fontSize: 17),
                 ),
                 const SizedBox(width: 15),
-                const Text("|", style: TextStyle(color: Colors.white30)),
+                Text("|", style: TextStyle(color: Colors.white30)),
                 const SizedBox(width: 15),
-                Obx(
-                  () => GestureDetector(
-                    onTap: () => controller.toggleTab(true),
-                    child: Text(
-                      "For You",
-                      style: TextStyle(
-                        color: controller.isForYou.value
-                            ? Colors.white
-                            : Colors.white60,
-                        fontWeight: controller.isForYou.value
-                            ? FontWeight.bold
-                            : FontWeight.normal,
-                        fontSize: 17,
-                      ),
-                    ),
+                Text(
+                  "For You",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 17,
                   ),
                 ),
-
-                // Spacer for balance
-                const SizedBox(width: 50),
+                const SizedBox(width: 50), // Balance ke liye
               ],
             ),
           ),
         ],
       ),
     );
-  }
-}
-
-class ReelsController extends GetxController {
-  var forYouList = <VideoModel>[].obs;
-  var followingList = <VideoModel>[].obs;
-  var isForYou = true.obs; // Toggle state
-
-  @override
-  void onInit() {
-    super.onInit();
-    fetchForYou();
-    fetchFollowing();
-  }
-
-  void fetchForYou() async {
-    var snap = await FirebaseFirestore.instance.collection('videos').get();
-    forYouList.assignAll(
-      snap.docs.map((doc) => VideoModel.fromSnap(doc)).toList(),
-    );
-  }
-
-  void fetchFollowing() async {
-    // Yahan following logic ayega (e.g. jinko user follow karta hai)
-    var snap = await FirebaseFirestore.instance
-        .collection('videos')
-        .where('isFollowing', isEqualTo: true)
-        .get();
-    followingList.assignAll(
-      snap.docs.map((doc) => VideoModel.fromSnap(doc)).toList(),
-    );
-  }
-
-  void toggleTab(bool val) {
-    isForYou.value = val;
   }
 }
