@@ -34,7 +34,8 @@ class VideoModel {
   String id;
   String videoUrl;
   String caption;
-  String profilePic; // Link store karne ke liye
+  String songName;
+  String profilePic; // Image link ke liye ye zaroori hai
 
   VideoModel({
     required this.username,
@@ -42,9 +43,11 @@ class VideoModel {
     required this.id,
     required this.videoUrl,
     required this.caption,
+    required this.songName,
     required this.profilePic,
   });
 
+  // Firebase se data map karne ke liye
   static VideoModel fromSnap(var snap) {
     var data = snap.data();
     return VideoModel(
@@ -53,8 +56,9 @@ class VideoModel {
       id: data['id'] ?? '',
       videoUrl: data['videoUrl'] ?? '',
       caption: data['caption'] ?? '',
-      // FIX: Firebase field 'userimage' se link connect karein
-      profilePic: data['userimage'] ?? '',
+      songName: data['songName'] ?? 'Original Audio',
+      profilePic:
+          data['profilePic'] ?? '', // Upload logic ke mutabiq profilePic field
     );
   }
 }
