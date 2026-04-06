@@ -22,28 +22,71 @@ class ReelsScreen extends StatelessWidget {
               // ReelsScreen ke PageView.builder mein ye update karein:
               itemBuilder: (context, index) {
                 final data = controller.videoList[index];
+
                 return Stack(
                   children: [
-                    // Actual Video Player
-                    VideoPlayerItem(videoUrl: data.videoUrl),
+                    // 1. Video Player (Asli data bhejien)
+                    VideoPlayerItem(
+                      videoUrl: data.videoUrl,
+                      videoId: data.id,
+                      username: data.username,
+                      caption: data.caption,
+                      profilePic: data.profilePic,
+                    ),
 
-                    // Caption aur Username overlay (Optional)
+                    // 2. TikTok Style Profile Image (Right Side)
                     Positioned(
-                      bottom: 20,
-                      left: 20,
+                      right: 15,
+                      bottom: 110,
+                      child: Column(
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(1.5),
+                            decoration: const BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                            ),
+                            child: CircleAvatar(
+                              radius: 25,
+                              backgroundColor: Colors.grey[900],
+                              // Check karein agar URL valid hai
+                              backgroundImage: data.profilePic.isNotEmpty
+                                  ? NetworkImage(data.profilePic)
+                                  : null,
+                              child: data.profilePic.isEmpty
+                                  ? const Icon(
+                                      Icons.person,
+                                      color: Colors.white,
+                                    )
+                                  : null,
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    // 3. Name aur Caption (Left Side)
+                    Positioned(
+                      left: 15,
+                      bottom: 30,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
                             "@${data.username}",
-                            style: TextStyle(
+                            style: const TextStyle(
                               color: Colors.white,
                               fontWeight: FontWeight.bold,
+                              fontSize: 16,
                             ),
                           ),
+                          const SizedBox(height: 5),
                           Text(
                             data.caption,
-                            style: TextStyle(color: Colors.white),
+                            style: const TextStyle(
+                              color: Colors.white,
+                              fontSize: 14,
+                            ),
                           ),
                         ],
                       ),
@@ -51,6 +94,38 @@ class ReelsScreen extends StatelessWidget {
                   ],
                 );
               },
+
+              // itemBuilder: (context, index) {
+              //   final data = controller.videoList[index];
+              //   return Stack(
+              //     children: [
+              //       // Actual Video Player
+              //       VideoPlayerItem(videoUrl: data.videoUrl),
+
+              //       // Caption aur Username overlay (Optional)
+              //       Positioned(
+              //         bottom: 20,
+              //         left: 20,
+              //         child: Column(
+              //           crossAxisAlignment: CrossAxisAlignment.start,
+              //           children: [
+              //             Text(
+              //               "@${data.username}",
+              //               style: TextStyle(
+              //                 color: Colors.white,
+              //                 fontWeight: FontWeight.bold,
+              //               ),
+              //             ),
+              //             Text(
+              //               data.caption,
+              //               style: TextStyle(color: Colors.white),
+              //             ),
+              //           ],
+              //         ),
+              //       ),
+              //     ],
+              //   );
+              // },
             ),
           ),
 
