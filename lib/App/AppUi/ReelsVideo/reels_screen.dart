@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/AppUi/ReelsVideo/reel_player_screen.dart';
@@ -73,22 +74,44 @@ class ReelsScreen extends StatelessWidget {
                           ),
 
                           // Wo chota sa red plus icon (TikTok Follow Button)
-                          Transform.translate(
-                            offset: const Offset(
-                              0,
-                              -10,
-                            ), // Image ke upar set karne ke liye
-                            child: Container(
-                              decoration: const BoxDecoration(
-                                color: Colors.red,
-                                shape: BoxShape.circle,
-                              ),
-                              child: const Icon(
-                                Icons.add,
-                                color: Colors.white,
-                                size: 18,
-                              ),
-                            ),
+                          // ReelsScreen.dart mein Profile Picture ke neeche wala Plus Icon code:
+                          StreamBuilder<bool>(
+                            stream: controller.isFollowing(
+                              data.uid,
+                            ), // Check kar raha hai follow status
+                            builder: (context, snapshot) {
+                              // Agar data load ho raha ho ya user already followed ho, toh khali box dikhao (Hide icon)
+                              if (data.uid ==
+                                  FirebaseAuth.instance.currentUser!.uid) {
+                                return const SizedBox.shrink();
+                              }
+                              if (snapshot.data == true) {
+                                return const SizedBox.shrink(); // Icon gayab ho jayega
+                              }
+
+                              // Agar user followed NAHI hai, toh Plus Icon dikhao
+                              return Transform.translate(
+                                offset: const Offset(0, -10),
+                                child: GestureDetector(
+                                  onTap: () {
+                                    controller.followUser(
+                                      data.uid,
+                                    ); // Follow logic call hoga
+                                  },
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.red,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: const Icon(
+                                      Icons.add,
+                                      color: Colors.white,
+                                      size: 18,
+                                    ),
+                                  ),
+                                ),
+                              );
+                            },
                           ),
                         ],
                       ),
