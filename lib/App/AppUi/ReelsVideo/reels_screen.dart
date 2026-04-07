@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,6 +13,116 @@ class ReelsScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.put(ReelsController());
     final TextEditingController _commentController = TextEditingController();
+    void showCommentBottomSheet(BuildContext context, String videoId) {
+      final TextEditingController _commentController = TextEditingController();
+
+      showModalBottomSheet(
+        context: context,
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => Container(
+          height: MediaQuery.of(context).size.height * 0.7,
+          decoration: const BoxDecoration(
+            color: Color(0xFF121212),
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              const SizedBox(height: 12),
+              const Text(
+                "Comments",
+                style: TextStyle(
+                  color: Colors.white,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              const Divider(color: Colors.white12),
+
+              Expanded(
+                child: Obx(() {
+                  if (controller.comments.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "No comments yet",
+                        style: TextStyle(color: Colors.white54),
+                      ),
+                    );
+                  }
+                  return ListView.builder(
+                    itemCount: controller.comments.length,
+                    itemBuilder: (context, index) {
+                      final comment = controller.comments[index];
+                      return ListTile(
+                        leading: CircleAvatar(
+                          backgroundImage: NetworkImage(comment.profilePic),
+                        ),
+                        title: Text(
+                          comment.username,
+                          style: const TextStyle(
+                            color: Colors.white54,
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        subtitle: Text(
+                          comment.comment,
+                          style: const TextStyle(
+                            color: Colors.white,
+                            fontSize: 14,
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }),
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(
+                  bottom: MediaQuery.of(context).viewInsets.bottom + 10,
+                  left: 15,
+                  right: 15,
+                  top: 10,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: TextField(
+                        controller: _commentController,
+                        style: const TextStyle(color: Colors.white),
+                        decoration: InputDecoration(
+                          hintText: "Add a comment...",
+                          hintStyle: const TextStyle(color: Colors.white38),
+                          filled: true,
+                          fillColor: Colors.white.withOpacity(0.1),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        controller.postComment(
+                          videoId,
+                          _commentController.text,
+                        );
+                        _commentController.clear();
+                        FocusScope.of(
+                          context,
+                        ).unfocus(); // Keyboard hide karne ke liye
+                      },
+                      icon: const Icon(Icons.send, color: Colors.blueAccent),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+      );
+    }
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -125,6 +236,7 @@ class ReelsScreen extends StatelessWidget {
                       ),
                     ),
                     // 2. Right Side Action Buttons (TikTok Style)
+                    // 2. Right Side Action Buttons (TikTok Style)
                     Positioned(
                       right: 15,
                       bottom: 80,
@@ -193,10 +305,9 @@ class ReelsScreen extends StatelessWidget {
 
                           const SizedBox(height: 25),
 
-                          // --- LIKE BUTTON (Fixed with GetX Observable) ---
+                          // --- LIKE BUTTON (Fixed with GetX Obx) ---
                           Obx(() {
-                            // Hum pure Column ko Obx mein le rahe hain aur controller ki list se data check kar rahe hain
-                            // Taake error "Improper use of GetX" khatam ho jaye
+                            // controller.videoList se current video ka fresh data nikalna zaroori hai
                             final currentVideo = controller.videoList
                                 .firstWhere((v) => v.id == data.id);
                             bool isLiked = currentVideo.likes.contains(
@@ -228,181 +339,53 @@ class ReelsScreen extends StatelessWidget {
 
                           const SizedBox(height: 20),
 
-                          // --- COMMENT BUTTON ---
+                          // --- COMMENT BUTTON (With Real-time Count) ---
                           Column(
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  // Comments fetch karna shuru karein
+                                  // Comments fetch karna aur bottom sheet kholna
                                   controller.getComments(data.id);
-
-                                  showModalBottomSheet(
-                                    context: context,
-                                    isScrollControlled: true,
-                                    backgroundColor: Colors.transparent,
-                                    builder: (context) => Container(
-                                      height:
-                                          MediaQuery.of(context).size.height *
-                                          0.7,
-                                      decoration: const BoxDecoration(
-                                        color: Color(
-                                          0xFF121212,
-                                        ), // Dark TikTok Theme
-                                        borderRadius: BorderRadius.vertical(
-                                          top: Radius.circular(20),
-                                        ),
-                                      ),
-                                      child: Column(
-                                        children: [
-                                          const SizedBox(height: 12),
-                                          const Text(
-                                            "Comments",
-                                            style: TextStyle(
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 15,
-                                            ),
-                                          ),
-                                          const Divider(
-                                            color: Colors.white12,
-                                            thickness: 1,
-                                          ),
-
-                                          // --- COMMENTS LIST ---
-                                          Expanded(
-                                            child: Obx(() {
-                                              return ListView.builder(
-                                                itemCount:
-                                                    controller.comments.length,
-                                                itemBuilder: (context, index) {
-                                                  final comment = controller
-                                                      .comments[index];
-                                                  return ListTile(
-                                                    leading: CircleAvatar(
-                                                      backgroundColor:
-                                                          Colors.grey,
-                                                      backgroundImage:
-                                                          NetworkImage(
-                                                            comment.profilePic,
-                                                          ),
-                                                    ),
-                                                    title: Text(
-                                                      comment.username,
-                                                      style: const TextStyle(
-                                                        color: Colors.white54,
-                                                        fontSize: 13,
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                      ),
-                                                    ),
-                                                    subtitle: Text(
-                                                      comment.comment,
-                                                      style: const TextStyle(
-                                                        color: Colors.white,
-                                                        fontSize: 14,
-                                                      ),
-                                                    ),
-                                                  );
-                                                },
-                                              );
-                                            }),
-                                          ),
-
-                                          const Divider(color: Colors.white12),
-
-                                          // --- INPUT FIELD ---
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                              bottom:
-                                                  MediaQuery.of(
-                                                    context,
-                                                  ).viewInsets.bottom +
-                                                  10,
-                                              left: 15,
-                                              right: 15,
-                                              top: 5,
-                                            ),
-                                            child: Row(
-                                              children: [
-                                                Expanded(
-                                                  child: TextField(
-                                                    controller:
-                                                        _commentController,
-                                                    style: const TextStyle(
-                                                      color: Colors.white,
-                                                    ),
-                                                    decoration: InputDecoration(
-                                                      hintText:
-                                                          "Add a comment...",
-                                                      hintStyle: TextStyle(
-                                                        color: Colors.white38,
-                                                      ),
-                                                      filled: true,
-                                                      fillColor: Colors.white
-                                                          .withOpacity(0.1),
-                                                      contentPadding:
-                                                          const EdgeInsets.symmetric(
-                                                            horizontal: 20,
-                                                            vertical: 10,
-                                                          ),
-                                                      border: OutlineInputBorder(
-                                                        borderRadius:
-                                                            BorderRadius.circular(
-                                                              30,
-                                                            ),
-                                                        borderSide:
-                                                            BorderSide.none,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ),
-                                                IconButton(
-                                                  onPressed: () {
-                                                    controller.postComment(
-                                                      data.id,
-                                                      _commentController.text,
-                                                    );
-                                                    _commentController.clear();
-                                                  },
-                                                  icon: const Icon(
-                                                    Icons.send,
-                                                    color: Colors.blueAccent,
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
+                                  showCommentBottomSheet(
+                                    context,
+                                    data.id,
+                                  ); // Niche function call ho raha hai
                                 },
-                                child: Column(
-                                  children: [
-                                    const Icon(
-                                      Icons.comment,
-                                      size: 38,
-                                      color: Colors.white,
-                                    ),
-                                    const SizedBox(height: 5),
-                                    // Real-time comment count (Optional: Iske liye ek aur stream chahiye hogi)
-                                    const Text(
-                                      "View",
+                                child: const Icon(
+                                  Icons.comment,
+                                  size: 38,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              const SizedBox(height: 5),
+                              StreamBuilder<QuerySnapshot>(
+                                stream: FirebaseFirestore.instance
+                                    .collection('videos')
+                                    .doc(data.id)
+                                    .collection('comments')
+                                    .snapshots(),
+                                builder: (context, snapshot) {
+                                  // Agar comments nahi hain to 'Comment' text show karein
+                                  if (!snapshot.hasData ||
+                                      snapshot.data!.docs.isEmpty) {
+                                    return const Text(
+                                      "Comment",
                                       style: TextStyle(
                                         color: Colors.white,
                                         fontSize: 12,
                                       ),
+                                    );
+                                  }
+                                  // Agar comments hain to number show karein
+                                  return Text(
+                                    "${snapshot.data!.docs.length}",
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 13,
+                                      fontWeight: FontWeight.bold,
                                     ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(height: 5),
-                              Text(
-                                "0",
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13,
-                                ),
+                                  );
+                                },
                               ),
                             ],
                           ),
@@ -413,7 +396,7 @@ class ReelsScreen extends StatelessWidget {
                           const Column(
                             children: [
                               Icon(Icons.share, size: 35, color: Colors.white),
-                              SizedBox(height: 5),
+                              const SizedBox(height: 5),
                               Text(
                                 "Share",
                                 style: TextStyle(
@@ -426,6 +409,308 @@ class ReelsScreen extends StatelessWidget {
                         ],
                       ),
                     ),
+                    // Positioned(
+                    //   right: 15,
+                    //   bottom: 80,
+                    //   child: Column(
+                    //     mainAxisAlignment: MainAxisAlignment.end,
+                    //     children: [
+                    //       // --- PROFILE SECTION ---
+                    //       GestureDetector(
+                    //         onTap: () =>
+                    //             Get.to(() => ProfileScreen(uid: data.uid)),
+                    //         child: Stack(
+                    //           clipBehavior: Clip.none,
+                    //           children: [
+                    //             Container(
+                    //               padding: const EdgeInsets.all(1.5),
+                    //               decoration: const BoxDecoration(
+                    //                 color: Colors.white,
+                    //                 shape: BoxShape.circle,
+                    //               ),
+                    //               child: CircleAvatar(
+                    //                 radius: 25,
+                    //                 backgroundImage: data.profilePic.isNotEmpty
+                    //                     ? NetworkImage(data.profilePic)
+                    //                     : null,
+                    //                 child: data.profilePic.isEmpty
+                    //                     ? Text(data.username[0].toUpperCase())
+                    //                     : null,
+                    //               ),
+                    //             ),
+                    //             StreamBuilder<bool>(
+                    //               stream: controller.isFollowing(data.uid),
+                    //               builder: (context, snapshot) {
+                    //                 if (data.uid ==
+                    //                         FirebaseAuth
+                    //                             .instance
+                    //                             .currentUser!
+                    //                             .uid ||
+                    //                     snapshot.data == true) {
+                    //                   return const SizedBox.shrink();
+                    //                 }
+                    //                 return Positioned(
+                    //                   bottom: -8,
+                    //                   left: 18,
+                    //                   child: GestureDetector(
+                    //                     onTap: () =>
+                    //                         controller.followUser(data.uid),
+                    //                     child: Container(
+                    //                       padding: const EdgeInsets.all(2),
+                    //                       decoration: const BoxDecoration(
+                    //                         color: Colors.red,
+                    //                         shape: BoxShape.circle,
+                    //                       ),
+                    //                       child: const Icon(
+                    //                         Icons.add,
+                    //                         color: Colors.white,
+                    //                         size: 16,
+                    //                       ),
+                    //                     ),
+                    //                   ),
+                    //                 );
+                    //               },
+                    //             ),
+                    //           ],
+                    //         ),
+                    //       ),
+
+                    //       const SizedBox(height: 25),
+
+                    //       // --- LIKE BUTTON (Fixed with GetX Observable) ---
+                    //       Obx(() {
+                    //         // Hum pure Column ko Obx mein le rahe hain aur controller ki list se data check kar rahe hain
+                    //         // Taake error "Improper use of GetX" khatam ho jaye
+                    //         final currentVideo = controller.videoList
+                    //             .firstWhere((v) => v.id == data.id);
+                    //         bool isLiked = currentVideo.likes.contains(
+                    //           FirebaseAuth.instance.currentUser!.uid,
+                    //         );
+
+                    //         return Column(
+                    //           children: [
+                    //             GestureDetector(
+                    //               onTap: () => controller.likeVideo(data.id),
+                    //               child: Icon(
+                    //                 Icons.favorite,
+                    //                 size: 38,
+                    //                 color: isLiked ? Colors.red : Colors.white,
+                    //               ),
+                    //             ),
+                    //             const SizedBox(height: 5),
+                    //             Text(
+                    //               "${currentVideo.likes.length}",
+                    //               style: const TextStyle(
+                    //                 color: Colors.white,
+                    //                 fontSize: 13,
+                    //                 fontWeight: FontWeight.bold,
+                    //               ),
+                    //             ),
+                    //           ],
+                    //         );
+                    //       }),
+
+                    //       const SizedBox(height: 20),
+
+                    //       // --- COMMENT BUTTON ---
+                    //       Column(
+                    //         children: [
+                    //           GestureDetector(
+                    //             onTap: () {
+                    //               // Comments fetch karna shuru karein
+                    //               controller.getComments(data.id);
+
+                    //               showModalBottomSheet(
+                    //                 context: context,
+                    //                 isScrollControlled: true,
+                    //                 backgroundColor: Colors.transparent,
+                    //                 builder: (context) => Container(
+                    //                   height:
+                    //                       MediaQuery.of(context).size.height *
+                    //                       0.7,
+                    //                   decoration: const BoxDecoration(
+                    //                     color: Color(
+                    //                       0xFF121212,
+                    //                     ), // Dark TikTok Theme
+                    //                     borderRadius: BorderRadius.vertical(
+                    //                       top: Radius.circular(20),
+                    //                     ),
+                    //                   ),
+                    //                   child: Column(
+                    //                     children: [
+                    //                       const SizedBox(height: 12),
+                    //                       const Text(
+                    //                         "Comments",
+                    //                         style: TextStyle(
+                    //                           color: Colors.white,
+                    //                           fontWeight: FontWeight.bold,
+                    //                           fontSize: 15,
+                    //                         ),
+                    //                       ),
+                    //                       const Divider(
+                    //                         color: Colors.white12,
+                    //                         thickness: 1,
+                    //                       ),
+
+                    //                       // --- COMMENTS LIST ---
+                    //                       Expanded(
+                    //                         child: Obx(() {
+                    //                           return ListView.builder(
+                    //                             itemCount:
+                    //                                 controller.comments.length,
+                    //                             itemBuilder: (context, index) {
+                    //                               final comment = controller
+                    //                                   .comments[index];
+                    //                               return ListTile(
+                    //                                 leading: CircleAvatar(
+                    //                                   backgroundColor:
+                    //                                       Colors.grey,
+                    //                                   backgroundImage:
+                    //                                       NetworkImage(
+                    //                                         comment.profilePic,
+                    //                                       ),
+                    //                                 ),
+                    //                                 title: Text(
+                    //                                   comment.username,
+                    //                                   style: const TextStyle(
+                    //                                     color: Colors.white54,
+                    //                                     fontSize: 13,
+                    //                                     fontWeight:
+                    //                                         FontWeight.bold,
+                    //                                   ),
+                    //                                 ),
+                    //                                 subtitle: Text(
+                    //                                   comment.comment,
+                    //                                   style: const TextStyle(
+                    //                                     color: Colors.white,
+                    //                                     fontSize: 14,
+                    //                                   ),
+                    //                                 ),
+                    //                               );
+                    //                             },
+                    //                           );
+                    //                         }),
+                    //                       ),
+
+                    //                       const Divider(color: Colors.white12),
+
+                    //                       // --- INPUT FIELD ---
+                    //                       Padding(
+                    //                         padding: EdgeInsets.only(
+                    //                           bottom:
+                    //                               MediaQuery.of(
+                    //                                 context,
+                    //                               ).viewInsets.bottom +
+                    //                               10,
+                    //                           left: 15,
+                    //                           right: 15,
+                    //                           top: 5,
+                    //                         ),
+                    //                         child: Row(
+                    //                           children: [
+                    //                             Expanded(
+                    //                               child: TextField(
+                    //                                 controller:
+                    //                                     _commentController,
+                    //                                 style: const TextStyle(
+                    //                                   color: Colors.white,
+                    //                                 ),
+                    //                                 decoration: InputDecoration(
+                    //                                   hintText:
+                    //                                       "Add a comment...",
+                    //                                   hintStyle: TextStyle(
+                    //                                     color: Colors.white38,
+                    //                                   ),
+                    //                                   filled: true,
+                    //                                   fillColor: Colors.white
+                    //                                       .withOpacity(0.1),
+                    //                                   contentPadding:
+                    //                                       const EdgeInsets.symmetric(
+                    //                                         horizontal: 20,
+                    //                                         vertical: 10,
+                    //                                       ),
+                    //                                   border: OutlineInputBorder(
+                    //                                     borderRadius:
+                    //                                         BorderRadius.circular(
+                    //                                           30,
+                    //                                         ),
+                    //                                     borderSide:
+                    //                                         BorderSide.none,
+                    //                                   ),
+                    //                                 ),
+                    //                               ),
+                    //                             ),
+                    //                             IconButton(
+                    //                               onPressed: () {
+                    //                                 controller.postComment(
+                    //                                   data.id,
+                    //                                   _commentController.text,
+                    //                                 );
+                    //                                 _commentController.clear();
+                    //                               },
+                    //                               icon: const Icon(
+                    //                                 Icons.send,
+                    //                                 color: Colors.blueAccent,
+                    //                               ),
+                    //                             ),
+                    //                           ],
+                    //                         ),
+                    //                       ),
+                    //                     ],
+                    //                   ),
+                    //                 ),
+                    //               );
+                    //             },
+                    //             child: Column(
+                    //               children: [
+                    //                 const Icon(
+                    //                   Icons.comment,
+                    //                   size: 38,
+                    //                   color: Colors.white,
+                    //                 ),
+                    //                 const SizedBox(height: 5),
+                    //                 // Real-time comment count (Optional: Iske liye ek aur stream chahiye hogi)
+                    //                 const Text(
+                    //                   "View",
+                    //                   style: TextStyle(
+                    //                     color: Colors.white,
+                    //                     fontSize: 12,
+                    //                   ),
+                    //                 ),
+                    //               ],
+                    //             ),
+                    //           ),
+                    //           SizedBox(height: 5),
+                    //           Text(
+                    //             "0",
+                    //             style: TextStyle(
+                    //               color: Colors.white,
+                    //               fontSize: 13,
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+
+                    //       const SizedBox(height: 20),
+
+                    //       // --- SHARE BUTTON ---
+                    //       const Column(
+                    //         children: [
+                    //           Icon(Icons.share, size: 35, color: Colors.white),
+                    //           SizedBox(height: 5),
+                    //           Text(
+                    //             "Share",
+                    //             style: TextStyle(
+                    //               color: Colors.white,
+                    //               fontSize: 13,
+                    //             ),
+                    //           ),
+                    //         ],
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
+
                     // 3. Bottom Left Overlay (Username aur Caption)
                     Positioned(
                       bottom: 20,
