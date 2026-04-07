@@ -385,6 +385,7 @@ class ReelsController extends GetxController {
   }
 
   // --- FIREBASE UPLOAD LOGIC ---
+  // --- FIREBASE UPLOAD LOGIC ---
   Future<void> uploadVideo(String caption, String videoPath) async {
     try {
       isLoading.value = true;
@@ -406,16 +407,14 @@ class ReelsController extends GetxController {
           .doc(uid)
           .get();
 
-      String realName =
-          userDoc.data() != null && userDoc.data()!.containsKey('name')
+      String realName = userDoc.data()?.containsKey('name') == true
           ? userDoc['name']
           : "User";
-      String realImage =
-          userDoc.data() != null && userDoc.data()!.containsKey('userimage')
+      String realImage = userDoc.data()?.containsKey('userimage') == true
           ? userDoc['userimage']
           : "";
 
-      // 3. Save to Firestore
+      // 3. Save to Firestore (IMPORTANT: Added 'likes' field)
       await FirebaseFirestore.instance.collection('videos').doc(videoId).set({
         'uid': uid,
         'id': videoId,
@@ -425,6 +424,7 @@ class ReelsController extends GetxController {
         'caption': caption,
         'songName': 'Original Audio',
         'createdAt': FieldValue.serverTimestamp(),
+        'likes': [], // <--- YE LINE ADD KARNA ZAROORI HAI
       });
 
       Get.back();
@@ -435,4 +435,54 @@ class ReelsController extends GetxController {
       isLoading.value = false;
     }
   }
+  // Future<void> uploadVideo(String caption, String videoPath) async {
+  //   try {
+  //     isLoading.value = true;
+  //     String uid = FirebaseAuth.instance.currentUser!.uid;
+  //     String videoId = DateTime.now().millisecondsSinceEpoch.toString();
+
+  //     // 1. Storage mein upload
+  //     Reference ref = FirebaseStorage.instance
+  //         .ref()
+  //         .child('videos')
+  //         .child(videoId);
+
+  //     await ref.putFile(File(videoPath));
+  //     String downloadUrl = await ref.getDownloadURL();
+
+  //     // 2. User Profile Fetch
+  //     var userDoc = await FirebaseFirestore.instance
+  //         .collection('userProfile')
+  //         .doc(uid)
+  //         .get();
+
+  //     String realName =
+  //         userDoc.data() != null && userDoc.data()!.containsKey('name')
+  //         ? userDoc['name']
+  //         : "User";
+  //     String realImage =
+  //         userDoc.data() != null && userDoc.data()!.containsKey('userimage')
+  //         ? userDoc['userimage']
+  //         : "";
+
+  //     // 3. Save to Firestore
+  //     await FirebaseFirestore.instance.collection('videos').doc(videoId).set({
+  //       'uid': uid,
+  //       'id': videoId,
+  //       'username': realName,
+  //       'profilePic': realImage,
+  //       'videoUrl': downloadUrl,
+  //       'caption': caption,
+  //       'songName': 'Original Audio',
+  //       'createdAt': FieldValue.serverTimestamp(),
+  //     });
+
+  //     Get.back();
+  //     Get.snackbar("Mubarak!", "Video kamyabi se post ho gayi.");
+  //   } catch (e) {
+  //     Get.snackbar("Error", "Upload fail: $e");
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
 }
