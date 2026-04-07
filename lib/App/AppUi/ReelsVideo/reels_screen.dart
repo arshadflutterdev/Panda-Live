@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/profile_screen.dart';
 import 'package:pandlive/App/AppUi/ReelsVideo/reel_player_screen.dart';
 import 'package:pandlive/App/AppUi/ReelsVideo/video_controllers.dart';
 
@@ -38,8 +39,14 @@ class ReelsScreen extends StatelessWidget {
                         children: [
                           GestureDetector(
                             onTap: () {
-                              // Yahan user ki profile par janay ka logic aaye ga
-                              print("Navigate to profile of: ${data.username}");
+                              // Navigating to Profile Screen using GetX
+                              // 'data.uid' pass kar rahe hain taake us specific user ki profile khule
+                              Get.to(
+                                () => ProfileScreen(uid: data.uid),
+                                transition: Transition
+                                    .cupertino, // iOS style smooth slide transition
+                                duration: const Duration(milliseconds: 400),
+                              );
                             },
                             child: Container(
                               padding: const EdgeInsets.all(

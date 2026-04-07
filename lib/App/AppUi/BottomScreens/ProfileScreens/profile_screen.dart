@@ -20,7 +20,10 @@ import 'package:pandlive/google_ads.dart';
 import 'package:pandlive/l10n/app_localizations.dart';
 
 class ProfileScreen extends StatefulWidget {
-  const ProfileScreen({super.key});
+  final String uid; // <--- Ye line honi chahiye
+
+  // Constructor mein 'required this.uid' hona chahiye
+  const ProfileScreen({super.key, required this.uid});
 
   @override
   State<ProfileScreen> createState() => _ProfileScreenState();
