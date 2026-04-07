@@ -358,6 +358,31 @@ class ReelsController extends GetxController {
   //     Get.snackbar("Error", e.toString());
   //   }
   // }
+  // function related like/unlike video
+  // --- LIKE/UNLIKE LOGIC ---
+  Future<void> likeVideo(String id) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('videos')
+          .doc(id)
+          .get();
+
+      if ((doc.data() as dynamic)['likes'].contains(uid)) {
+        // Agar pehle se like hai to remove kar do (Unlike)
+        await FirebaseFirestore.instance.collection('videos').doc(id).update({
+          'likes': FieldValue.arrayRemove([uid]),
+        });
+      } else {
+        // Agar like nahi hai to add kar do (Like)
+        await FirebaseFirestore.instance.collection('videos').doc(id).update({
+          'likes': FieldValue.arrayUnion([uid]),
+        });
+      }
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    }
+  }
 
   // --- FIREBASE UPLOAD LOGIC ---
   Future<void> uploadVideo(String caption, String videoPath) async {

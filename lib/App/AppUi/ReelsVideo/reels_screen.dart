@@ -131,12 +131,22 @@ class ReelsScreen extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            "@${data.username}", // Dynamic Username
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
+                          GestureDetector(
+                            onTap: () {
+                              Get.to(
+                                () => ProfileScreen(
+                                  uid: data.uid,
+                                ), // Ab 'uid' define ho chuka hai
+                                transition: Transition.rightToLeft,
+                              );
+                            },
+                            child: Text(
+                              "@${data.username}", // Dynamic Username
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.bold,
+                                fontSize: 16,
+                              ),
                             ),
                           ),
                           Text(
