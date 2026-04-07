@@ -44,96 +44,214 @@ class ReelsScreen extends StatelessWidget {
                     return const Center(
                       child: Text(
                         "No comments yet",
-                        style: TextStyle(color: Colors.white54),
+                        style: TextStyle(color: Colors.white54, fontSize: 14),
                       ),
                     );
                   }
                   return ListView.builder(
                     itemCount: controller.comments.length,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 10,
+                    ),
                     itemBuilder: (context, index) {
                       final comment = controller.comments[index];
-                      return ListTile(
-                        leading: CircleAvatar(
-                          radius: 18,
-                          backgroundImage: NetworkImage(comment.profilePic),
-                        ),
-                        title: Text(
-                          comment.username,
-                          style: const TextStyle(
-                            color: Colors.white54,
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        subtitle: Column(
+                      return Padding(
+                        padding: const EdgeInsets.only(bottom: 15.0),
+                        child: Row(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              comment.comment,
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
+                            // 1. Profile Picture
+                            CircleAvatar(
+                              radius: 16,
+                              backgroundImage: NetworkImage(comment.profilePic),
+                            ),
+                            const SizedBox(width: 12),
+
+                            // 2. Comment Content & Replies
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Username
+                                  Text(
+                                    comment.username,
+                                    style: const TextStyle(
+                                      color: Colors.white54,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 4),
+                                  // Comment Text
+                                  Text(
+                                    comment.comment,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      height: 1.3,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 6),
+                                  // Time & Reply Action
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        "Just now",
+                                        style: TextStyle(
+                                          color: Colors.white38,
+                                          fontSize: 11,
+                                        ),
+                                      ),
+                                      const SizedBox(width: 20),
+                                      GestureDetector(
+                                        onTap: () {
+                                          _commentController.text =
+                                              "@${comment.username} ";
+                                        },
+                                        child: const Text(
+                                          "Reply",
+                                          style: TextStyle(
+                                            color: Colors.white54,
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+
+                                  // --- REPLIES SECTION ---
+                                  StreamBuilder<QuerySnapshot>(
+                                    stream: controller.getReplies(
+                                      videoId,
+                                      comment.id,
+                                    ),
+                                    builder: (context, replySnap) {
+                                      if (!replySnap.hasData ||
+                                          replySnap.data!.docs.isEmpty) {
+                                        return const SizedBox.shrink();
+                                      }
+
+                                      return Theme(
+                                        data: Theme.of(context).copyWith(
+                                          dividerColor: Colors.transparent,
+                                        ),
+                                        child: ExpansionTile(
+                                          tilePadding: EdgeInsets.zero,
+                                          iconColor: Colors.white38,
+                                          collapsedIconColor: Colors.white38,
+                                          title: Text(
+                                            "View ${replySnap.data!.docs.length} replies",
+                                            style: const TextStyle(
+                                              color: Colors.white38,
+                                              fontSize: 12,
+                                            ),
+                                          ),
+                                          children: replySnap.data!.docs.map((
+                                            doc,
+                                          ) {
+                                            var replyData =
+                                                doc.data()
+                                                    as Map<String, dynamic>;
+                                            return Padding(
+                                              padding: const EdgeInsets.only(
+                                                left: 0,
+                                                bottom: 10,
+                                              ),
+                                              child: Row(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  CircleAvatar(
+                                                    radius: 10,
+                                                    backgroundImage: NetworkImage(
+                                                      replyData['profilePic'] ??
+                                                          '',
+                                                    ),
+                                                  ),
+                                                  const SizedBox(width: 10),
+                                                  Expanded(
+                                                    child: Column(
+                                                      crossAxisAlignment:
+                                                          CrossAxisAlignment
+                                                              .start,
+                                                      children: [
+                                                        Text(
+                                                          replyData['username'],
+                                                          style:
+                                                              const TextStyle(
+                                                                color: Colors
+                                                                    .white54,
+                                                                fontSize: 11,
+                                                                fontWeight:
+                                                                    FontWeight
+                                                                        .w600,
+                                                              ),
+                                                        ),
+                                                        Text(
+                                                          replyData['reply'],
+                                                          style:
+                                                              const TextStyle(
+                                                                color: Colors
+                                                                    .white,
+                                                                fontSize: 13,
+                                                              ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                            );
+                                          }).toList(),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ],
                               ),
                             ),
-                            const SizedBox(height: 5),
-                            Row(
+
+                            // 3. Like Section (Right Side)
+                            const SizedBox(width: 8),
+                            Column(
                               children: [
-                                const Text(
-                                  "2h",
-                                  style: TextStyle(
+                                GestureDetector(
+                                  onTap: () => controller.likeComment(
+                                    videoId,
+                                    comment.id,
+                                  ),
+                                  child: Icon(
+                                    comment.likes.contains(
+                                          FirebaseAuth
+                                              .instance
+                                              .currentUser!
+                                              .uid,
+                                        )
+                                        ? Icons.favorite
+                                        : Icons.favorite_border,
+                                    size: 20,
+                                    color:
+                                        comment.likes.contains(
+                                          FirebaseAuth
+                                              .instance
+                                              .currentUser!
+                                              .uid,
+                                        )
+                                        ? Colors.red
+                                        : Colors.white38,
+                                  ),
+                                ),
+                                const SizedBox(height: 2),
+                                Text(
+                                  "${comment.likes.length}",
+                                  style: const TextStyle(
                                     color: Colors.white38,
                                     fontSize: 11,
                                   ),
-                                ), // Time placeholder
-                                const SizedBox(width: 20),
-                                GestureDetector(
-                                  onTap: () {
-                                    // Yahan Reply wala logic trigger karein
-                                    _commentController.text =
-                                        "@${comment.username} ";
-                                  },
-                                  child: const Text(
-                                    "Reply",
-                                    style: TextStyle(
-                                      color: Colors.white54,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
                                 ),
                               ],
-                            ),
-                          ],
-                        ),
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            GestureDetector(
-                              // Idhar 'videoId' aur 'comment.id' dono pass karne hain
-                              onTap: () =>
-                                  controller.likeComment(videoId, comment.id),
-                              child: Icon(
-                                comment.likes.contains(
-                                      FirebaseAuth.instance.currentUser!.uid,
-                                    )
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                size: 20,
-                                color:
-                                    comment.likes.contains(
-                                      FirebaseAuth.instance.currentUser!.uid,
-                                    )
-                                    ? Colors.red
-                                    : Colors.white54,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              "${comment.likes.length}",
-                              style: const TextStyle(
-                                color: Colors.white54,
-                                fontSize: 12,
-                              ),
                             ),
                           ],
                         ),
@@ -142,7 +260,6 @@ class ReelsScreen extends StatelessWidget {
                   );
                 }),
               ),
-
               Padding(
                 padding: EdgeInsets.only(
                   bottom: MediaQuery.of(context).viewInsets.bottom + 10,

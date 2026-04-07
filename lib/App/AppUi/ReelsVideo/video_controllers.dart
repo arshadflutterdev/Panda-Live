@@ -384,6 +384,54 @@ class ReelsController extends GetxController {
   // }
   // function related like/unlike video
   // --- LIKE/UNLIKE LOGIC ---
+  //replay a comment
+  // 1. Reply Save karne ke liye
+  // Future<void> postReply(
+  //   String videoId,
+  //   String commentId,
+  //   String replyText,
+  // ) async {
+  //   try {
+  //     if (replyText.trim().isNotEmpty) {
+  //       DocumentSnapshot userDoc = await FirebaseFirestore.instance
+  //           .collection('userProfile')
+  //           .doc(FirebaseAuth.instance.currentUser!.uid)
+  //           .get();
+
+  //       var userData = userDoc.data() as Map<String, dynamic>;
+
+  //       await FirebaseFirestore.instance
+  //           .collection('videos')
+  //           .doc(videoId)
+  //           .collection('comments')
+  //           .doc(commentId)
+  //           .collection('replies')
+  //           .add({
+  //             'username': userData['name'],
+  //             'profilePic': userData['userimage'],
+  //             'reply': replyText.trim(),
+  //             'createdAt': FieldValue.serverTimestamp(),
+  //             'uid': FirebaseAuth.instance.currentUser!.uid,
+  //           });
+  //       print("Reply Posted!");
+  //     }
+  //   } catch (e) {
+  //     Get.snackbar("Error", e.toString());
+  //   }
+  // }
+
+  // 2. Replies Fetch karne ke liye (Stream)
+  Stream<QuerySnapshot> getReplies(String videoId, String commentId) {
+    return FirebaseFirestore.instance
+        .collection('videos')
+        .doc(videoId)
+        .collection('comments')
+        .doc(commentId)
+        .collection('replies')
+        .orderBy('createdAt', descending: false)
+        .snapshots();
+  }
+
   // Comment ko like/unlike karne ke liye
   Future<void> likeComment(String videoId, String commentId) async {
     try {
