@@ -21,7 +21,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
     ReelsScreen(),
     UpdatesScreen(),
     // WalletScreen(),
-    ProfileScreen(),
+    ProfileScreen(uid: ''),
   ];
   @override
   Widget build(BuildContext context) {

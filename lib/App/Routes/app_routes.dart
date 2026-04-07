@@ -107,7 +107,10 @@ class AppRoutes {
     //screen from bottom to next
     GetPage(name: home, page: () => Homescreen()),
     GetPage(name: updates, page: () => UpdatesScreen()),
-    GetPage(name: profile, page: () => ProfileScreen()),
+    GetPage(
+      name: profile,
+      page: () => ProfileScreen(uid: ''),
+    ),
     GetPage(name: invitefriend, page: () => InviteFriendScreen()),
     GetPage(name: withdrawlhistory, page: () => WithdrawlHistory()),
     GetPage(

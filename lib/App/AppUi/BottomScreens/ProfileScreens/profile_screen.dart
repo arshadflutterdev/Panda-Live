@@ -94,9 +94,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     isloading.value = true;
     try {
       final uid = FirebaseAuth.instance.currentUser!.uid;
+      final uidToFetch = widget.uid;
       final snapshot = await FirebaseFirestore.instance
           .collection("userProfile")
-          .doc(uid)
+          .doc(uidToFetch)
           .get();
 
       final followingSnapshot = await FirebaseFirestore.instance
