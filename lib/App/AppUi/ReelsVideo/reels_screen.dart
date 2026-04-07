@@ -233,88 +233,143 @@ class ReelsScreen extends StatelessWidget {
                             children: [
                               GestureDetector(
                                 onTap: () {
+                                  // Comments fetch karna shuru karein
+                                  controller.getComments(data.id);
+
                                   showModalBottomSheet(
                                     context: context,
-                                    isScrollControlled:
-                                        true, // Full screen height ke liye
+                                    isScrollControlled: true,
                                     backgroundColor: Colors.transparent,
                                     builder: (context) => Container(
                                       height:
                                           MediaQuery.of(context).size.height *
-                                          0.75,
+                                          0.7,
                                       decoration: const BoxDecoration(
                                         color: Color(
-                                          0xFF1E1E1E,
-                                        ), // TikTok dark style
+                                          0xFF121212,
+                                        ), // Dark TikTok Theme
                                         borderRadius: BorderRadius.vertical(
                                           top: Radius.circular(20),
                                         ),
                                       ),
                                       child: Column(
                                         children: [
-                                          const SizedBox(height: 10),
+                                          const SizedBox(height: 12),
                                           const Text(
                                             "Comments",
                                             style: TextStyle(
                                               color: Colors.white,
                                               fontWeight: FontWeight.bold,
+                                              fontSize: 15,
                                             ),
                                           ),
-                                          const Divider(color: Colors.white24),
+                                          const Divider(
+                                            color: Colors.white12,
+                                            thickness: 1,
+                                          ),
 
-                                          // Yahan hum StreamBuilder laga kar comments dikhayenge (Next step mein)
+                                          // --- COMMENTS LIST ---
                                           Expanded(
-                                            child: Center(
-                                              child: Text(
-                                                "No comments yet",
-                                                style: TextStyle(
-                                                  color: Colors.white54,
-                                                ),
-                                              ),
-                                            ),
+                                            child: Obx(() {
+                                              return ListView.builder(
+                                                itemCount:
+                                                    controller.comments.length,
+                                                itemBuilder: (context, index) {
+                                                  final comment = controller
+                                                      .comments[index];
+                                                  return ListTile(
+                                                    leading: CircleAvatar(
+                                                      backgroundColor:
+                                                          Colors.grey,
+                                                      backgroundImage:
+                                                          NetworkImage(
+                                                            comment.profilePic,
+                                                          ),
+                                                    ),
+                                                    title: Text(
+                                                      comment.username,
+                                                      style: const TextStyle(
+                                                        color: Colors.white54,
+                                                        fontSize: 13,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                      ),
+                                                    ),
+                                                    subtitle: Text(
+                                                      comment.comment,
+                                                      style: const TextStyle(
+                                                        color: Colors.white,
+                                                        fontSize: 14,
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            }),
                                           ),
 
-                                          // Input Field
+                                          const Divider(color: Colors.white12),
+
+                                          // --- INPUT FIELD ---
                                           Padding(
                                             padding: EdgeInsets.only(
-                                              bottom: MediaQuery.of(
-                                                context,
-                                              ).viewInsets.bottom,
-                                              left: 10,
-                                              right: 10,
+                                              bottom:
+                                                  MediaQuery.of(
+                                                    context,
+                                                  ).viewInsets.bottom +
+                                                  10,
+                                              left: 15,
+                                              right: 15,
+                                              top: 5,
                                             ),
-                                            child: ListTile(
-                                              title: TextField(
-                                                controller: _commentController,
-                                                style: const TextStyle(
-                                                  color: Colors.white,
-                                                ),
-                                                decoration:
-                                                    const InputDecoration(
+                                            child: Row(
+                                              children: [
+                                                Expanded(
+                                                  child: TextField(
+                                                    controller:
+                                                        _commentController,
+                                                    style: const TextStyle(
+                                                      color: Colors.white,
+                                                    ),
+                                                    decoration: InputDecoration(
                                                       hintText:
                                                           "Add a comment...",
                                                       hintStyle: TextStyle(
-                                                        color: Colors.white54,
+                                                        color: Colors.white38,
                                                       ),
-                                                      border: InputBorder.none,
+                                                      filled: true,
+                                                      fillColor: Colors.white
+                                                          .withOpacity(0.1),
+                                                      contentPadding:
+                                                          const EdgeInsets.symmetric(
+                                                            horizontal: 20,
+                                                            vertical: 10,
+                                                          ),
+                                                      border: OutlineInputBorder(
+                                                        borderRadius:
+                                                            BorderRadius.circular(
+                                                              30,
+                                                            ),
+                                                        borderSide:
+                                                            BorderSide.none,
+                                                      ),
                                                     ),
-                                              ),
-                                              trailing: TextButton(
-                                                onPressed: () {
-                                                  controller.postComment(
-                                                    data.id,
-                                                    _commentController.text,
-                                                  );
-                                                  _commentController.clear();
-                                                },
-                                                child: const Text(
-                                                  "Post",
-                                                  style: TextStyle(
-                                                    color: Colors.blueAccent,
-                                                    fontWeight: FontWeight.bold,
                                                   ),
                                                 ),
-                                              ),
+                                                IconButton(
+                                                  onPressed: () {
+                                                    controller.postComment(
+                                                      data.id,
+                                                      _commentController.text,
+                                                    );
+                                                    _commentController.clear();
+                                                  },
+                                                  icon: const Icon(
+                                                    Icons.send,
+                                                    color: Colors.blueAccent,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
                                           ),
                                         ],
@@ -322,19 +377,20 @@ class ReelsScreen extends StatelessWidget {
                                     ),
                                   );
                                 },
-                                child: const Column(
+                                child: Column(
                                   children: [
-                                    Icon(
+                                    const Icon(
                                       Icons.comment,
                                       size: 38,
                                       color: Colors.white,
                                     ),
-                                    SizedBox(height: 5),
-                                    Text(
-                                      "0",
+                                    const SizedBox(height: 5),
+                                    // Real-time comment count (Optional: Iske liye ek aur stream chahiye hogi)
+                                    const Text(
+                                      "View",
                                       style: TextStyle(
                                         color: Colors.white,
-                                        fontSize: 13,
+                                        fontSize: 12,
                                       ),
                                     ),
                                   ],

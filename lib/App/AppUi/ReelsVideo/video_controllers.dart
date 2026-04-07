@@ -242,6 +242,27 @@ class ReelsController extends GetxController {
     );
   }
 
+  // Comments ki list store karne ke liye
+  RxList<CommentModel> comments = <CommentModel>[].obs;
+
+  getComments(String videoId) {
+    comments.bindStream(
+      FirebaseFirestore.instance
+          .collection('videos')
+          .doc(videoId)
+          .collection('comments')
+          .orderBy('createdAt', descending: true) // Latest comments top par
+          .snapshots()
+          .map((QuerySnapshot query) {
+            List<CommentModel> retVal = [];
+            for (var element in query.docs) {
+              retVal.add(CommentModel.fromSnap(element));
+            }
+            return retVal;
+          }),
+    );
+  }
+
   // --- VIDEO PICKING LOGIC ---
   Future<void> pickVideo() async {
     final video = await ImagePicker().pickVideo(source: ImageSource.gallery);
