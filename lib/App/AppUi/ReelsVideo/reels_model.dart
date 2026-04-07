@@ -36,6 +36,7 @@ class VideoModel {
   String caption;
   String songName;
   String profilePic; // Image link ke liye ye zaroori hai
+  List likes;
 
   VideoModel({
     required this.username,
@@ -45,6 +46,7 @@ class VideoModel {
     required this.caption,
     required this.songName,
     required this.profilePic,
+    required this.likes, // <--- Constructor mein add karein
   });
 
   // Firebase se data map karne ke liye
@@ -59,6 +61,7 @@ class VideoModel {
       songName: data['songName'] ?? 'Original Audio',
       profilePic:
           data['profilePic'] ?? '', // Upload logic ke mutabiq profilePic field
+      likes: data['likes'] ?? [], // <--- Database se array uthane ke liye
     );
   }
 }
