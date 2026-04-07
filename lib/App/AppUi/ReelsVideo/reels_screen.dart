@@ -11,6 +11,7 @@ class ReelsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final controller = Get.put(ReelsController());
+    final TextEditingController _commentController = TextEditingController();
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -123,7 +124,252 @@ class ReelsScreen extends StatelessWidget {
                         ],
                       ),
                     ),
+                    // 2. Right Side Action Buttons (TikTok Style)
+                    Positioned(
+                      right: 15,
+                      bottom: 80,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        children: [
+                          // --- PROFILE SECTION ---
+                          GestureDetector(
+                            onTap: () =>
+                                Get.to(() => ProfileScreen(uid: data.uid)),
+                            child: Stack(
+                              clipBehavior: Clip.none,
+                              children: [
+                                Container(
+                                  padding: const EdgeInsets.all(1.5),
+                                  decoration: const BoxDecoration(
+                                    color: Colors.white,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: CircleAvatar(
+                                    radius: 25,
+                                    backgroundImage: data.profilePic.isNotEmpty
+                                        ? NetworkImage(data.profilePic)
+                                        : null,
+                                    child: data.profilePic.isEmpty
+                                        ? Text(data.username[0].toUpperCase())
+                                        : null,
+                                  ),
+                                ),
+                                StreamBuilder<bool>(
+                                  stream: controller.isFollowing(data.uid),
+                                  builder: (context, snapshot) {
+                                    if (data.uid ==
+                                            FirebaseAuth
+                                                .instance
+                                                .currentUser!
+                                                .uid ||
+                                        snapshot.data == true) {
+                                      return const SizedBox.shrink();
+                                    }
+                                    return Positioned(
+                                      bottom: -8,
+                                      left: 18,
+                                      child: GestureDetector(
+                                        onTap: () =>
+                                            controller.followUser(data.uid),
+                                        child: Container(
+                                          padding: const EdgeInsets.all(2),
+                                          decoration: const BoxDecoration(
+                                            color: Colors.red,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: const Icon(
+                                            Icons.add,
+                                            color: Colors.white,
+                                            size: 16,
+                                          ),
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
 
+                          const SizedBox(height: 25),
+
+                          // --- LIKE BUTTON (Fixed with GetX Observable) ---
+                          Obx(() {
+                            // Hum pure Column ko Obx mein le rahe hain aur controller ki list se data check kar rahe hain
+                            // Taake error "Improper use of GetX" khatam ho jaye
+                            final currentVideo = controller.videoList
+                                .firstWhere((v) => v.id == data.id);
+                            bool isLiked = currentVideo.likes.contains(
+                              FirebaseAuth.instance.currentUser!.uid,
+                            );
+
+                            return Column(
+                              children: [
+                                GestureDetector(
+                                  onTap: () => controller.likeVideo(data.id),
+                                  child: Icon(
+                                    Icons.favorite,
+                                    size: 38,
+                                    color: isLiked ? Colors.red : Colors.white,
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  "${currentVideo.likes.length}",
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
+
+                          const SizedBox(height: 20),
+
+                          // --- COMMENT BUTTON ---
+                          Column(
+                            children: [
+                              GestureDetector(
+                                onTap: () {
+                                  showModalBottomSheet(
+                                    context: context,
+                                    isScrollControlled:
+                                        true, // Full screen height ke liye
+                                    backgroundColor: Colors.transparent,
+                                    builder: (context) => Container(
+                                      height:
+                                          MediaQuery.of(context).size.height *
+                                          0.75,
+                                      decoration: const BoxDecoration(
+                                        color: Color(
+                                          0xFF1E1E1E,
+                                        ), // TikTok dark style
+                                        borderRadius: BorderRadius.vertical(
+                                          top: Radius.circular(20),
+                                        ),
+                                      ),
+                                      child: Column(
+                                        children: [
+                                          const SizedBox(height: 10),
+                                          const Text(
+                                            "Comments",
+                                            style: TextStyle(
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          const Divider(color: Colors.white24),
+
+                                          // Yahan hum StreamBuilder laga kar comments dikhayenge (Next step mein)
+                                          Expanded(
+                                            child: Center(
+                                              child: Text(
+                                                "No comments yet",
+                                                style: TextStyle(
+                                                  color: Colors.white54,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+
+                                          // Input Field
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                              bottom: MediaQuery.of(
+                                                context,
+                                              ).viewInsets.bottom,
+                                              left: 10,
+                                              right: 10,
+                                            ),
+                                            child: ListTile(
+                                              title: TextField(
+                                                controller: _commentController,
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                ),
+                                                decoration:
+                                                    const InputDecoration(
+                                                      hintText:
+                                                          "Add a comment...",
+                                                      hintStyle: TextStyle(
+                                                        color: Colors.white54,
+                                                      ),
+                                                      border: InputBorder.none,
+                                                    ),
+                                              ),
+                                              trailing: TextButton(
+                                                onPressed: () {
+                                                  controller.postComment(
+                                                    data.id,
+                                                    _commentController.text,
+                                                  );
+                                                  _commentController.clear();
+                                                },
+                                                child: const Text(
+                                                  "Post",
+                                                  style: TextStyle(
+                                                    color: Colors.blueAccent,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  );
+                                },
+                                child: const Column(
+                                  children: [
+                                    Icon(
+                                      Icons.comment,
+                                      size: 38,
+                                      color: Colors.white,
+                                    ),
+                                    SizedBox(height: 5),
+                                    Text(
+                                      "0",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 13,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              SizedBox(height: 5),
+                              Text(
+                                "0",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+
+                          const SizedBox(height: 20),
+
+                          // --- SHARE BUTTON ---
+                          const Column(
+                            children: [
+                              Icon(Icons.share, size: 35, color: Colors.white),
+                              SizedBox(height: 5),
+                              Text(
+                                "Share",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 13,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
                     // 3. Bottom Left Overlay (Username aur Caption)
                     Positioned(
                       bottom: 20,

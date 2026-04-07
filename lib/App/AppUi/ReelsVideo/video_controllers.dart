@@ -214,8 +214,9 @@ import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:pandlive/App/AppUi/ReelsVideo/Reels_Models.dart/comments_model.dart';
 import 'package:pandlive/App/AppUi/ReelsVideo/confirm_upload_screen.dart';
-import 'package:pandlive/App/AppUi/ReelsVideo/reels_model.dart';
+import 'package:pandlive/App/AppUi/ReelsVideo/Reels_Models.dart/reels_model.dart';
 
 class ReelsController extends GetxController {
   var videoList = <VideoModel>[].obs;
@@ -386,6 +387,51 @@ class ReelsController extends GetxController {
       // Ye line GetX ko batati hai ke list change hui hai,
       // taake UI mein Obx wala error khatam ho jaye aur heart color change ho.
       videoList.refresh();
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    }
+  }
+
+  // Comment post karne ka function
+  postComment(String videoId, String commentText) async {
+    try {
+      if (commentText.isNotEmpty) {
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('users')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .get();
+
+        var allDocs = await FirebaseFirestore.instance
+            .collection('videos')
+            .doc(videoId)
+            .collection('comments')
+            .get();
+
+        int len = allDocs.docs.length;
+
+        CommentModel comment = CommentModel(
+          username: (userDoc.data() as dynamic)['name'],
+          comment: commentText.trim(),
+          createdAt: DateTime.now(),
+          profilePic: (userDoc.data() as dynamic)['profilePic'] ?? '',
+          uid: FirebaseAuth.instance.currentUser!.uid,
+          id: "Comment $len",
+        );
+
+        await FirebaseFirestore.instance
+            .collection('videos')
+            .doc(videoId)
+            .collection('comments')
+            .doc("Comment $len")
+            .set({
+              'username': comment.username,
+              'comment': comment.comment,
+              'createdAt': comment.createdAt,
+              'profilePic': comment.profilePic,
+              'uid': comment.uid,
+              'id': comment.id,
+            });
+      }
     } catch (e) {
       Get.snackbar("Error", e.toString());
     }
