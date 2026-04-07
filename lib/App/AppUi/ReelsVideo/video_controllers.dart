@@ -368,17 +368,24 @@ class ReelsController extends GetxController {
           .doc(id)
           .get();
 
-      if ((doc.data() as dynamic)['likes'].contains(uid)) {
-        // Agar pehle se like hai to remove kar do (Unlike)
+      var likesList = (doc.data() as dynamic)['likes'] as List;
+
+      if (likesList.contains(uid)) {
+        // 1. Database Update (Unlike)
         await FirebaseFirestore.instance.collection('videos').doc(id).update({
           'likes': FieldValue.arrayRemove([uid]),
         });
       } else {
-        // Agar like nahi hai to add kar do (Like)
+        // 2. Database Update (Like)
         await FirebaseFirestore.instance.collection('videos').doc(id).update({
           'likes': FieldValue.arrayUnion([uid]),
         });
       }
+
+      // --- GETX REFRESH LOGIC ---
+      // Ye line GetX ko batati hai ke list change hui hai,
+      // taake UI mein Obx wala error khatam ho jaye aur heart color change ho.
+      videoList.refresh();
     } catch (e) {
       Get.snackbar("Error", e.toString());
     }
