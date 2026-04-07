@@ -106,8 +106,16 @@ class ReelsScreen extends StatelessWidget {
                                       const SizedBox(width: 20),
                                       GestureDetector(
                                         onTap: () {
+                                          controller.selectedCommentId.value =
+                                              comment
+                                                  .id; // Comment ID set karein
+                                          controller.replyingToUser.value =
+                                              comment.username;
                                           _commentController.text =
-                                              "@${comment.username} ";
+                                              "@${comment.username} "; // Tag sirf dikhane ke liye
+                                          FocusScope.of(context).requestFocus(
+                                            FocusNode(),
+                                          ); // Keyboard open karne ke liye
                                         },
                                         child: const Text(
                                           "Reply",

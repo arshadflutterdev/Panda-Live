@@ -542,61 +542,119 @@ class ReelsController extends GetxController {
   }
 
   // Comment post karne ka function
+  // Controller ke top par ye variables add karein
+  var selectedCommentId = "".obs;
+  var replyingToUser = "".obs;
+
+  // Post Comment aur Reply dono ke liye ek hi logic
   Future<void> postComment(String videoId, String commentText) async {
     try {
       if (commentText.trim().isNotEmpty) {
-        // 1. Current User ka data 'userProfile' collection se fetch karein
         DocumentSnapshot userDoc = await FirebaseFirestore.instance
-            .collection('userProfile') // Aapke Firebase ke mutabiq
+            .collection('userProfile')
             .doc(FirebaseAuth.instance.currentUser!.uid)
             .get();
 
-        if (!userDoc.exists) {
-          Get.snackbar(
-            "Error",
-            "User profile not found. Please complete your profile setup.",
-          );
-          return;
-        }
-
-        // 2. Data extract karein
         var userData = userDoc.data() as Map<String, dynamic>;
 
-        // Counting comments
-        var allDocs = await FirebaseFirestore.instance
-            .collection('videos')
-            .doc(videoId)
-            .collection('comments')
-            .get();
+        // AGAR REPLIES HAI (selectedCommentId khali nahi hai)
+        if (selectedCommentId.value.isNotEmpty) {
+          await FirebaseFirestore.instance
+              .collection('videos')
+              .doc(videoId)
+              .collection('comments')
+              .doc(selectedCommentId.value)
+              .collection('replies')
+              .add({
+                'username': userData['name'], //
+                'profilePic': userData['userimage'], //
+                'reply': commentText.trim(),
+                'createdAt': FieldValue.serverTimestamp(),
+                'uid': FirebaseAuth.instance.currentUser!.uid,
+              });
 
-        int len = allDocs.docs.length;
-        String commentId =
-            "Comment_${DateTime.now().millisecondsSinceEpoch}"; // Unique ID logic
-
-        // 3. Comment save karein
-        // postComment function ke andar 'set' wala hissa:
-        await FirebaseFirestore.instance
-            .collection('videos')
-            .doc(videoId)
-            .collection('comments')
-            .doc(commentId)
-            .set({
-              'username': userData['name'],
-              'comment': commentText.trim(),
-              'createdAt': FieldValue.serverTimestamp(),
-              'profilePic': userData['userimage'],
-              'uid': FirebaseAuth.instance.currentUser!.uid,
-              'id': commentId,
-              'likes': [], // <--- Naye comment ke liye khali list lazmi hai
-            });
-
-        print("Comment Posted: ${commentText.trim()}");
+          // Reset after reply
+          selectedCommentId.value = "";
+          replyingToUser.value = "";
+        }
+        // AGAR NORMAL COMMENT HAI
+        else {
+          String commentId = "Comment_${DateTime.now().millisecondsSinceEpoch}";
+          await FirebaseFirestore.instance
+              .collection('videos')
+              .doc(videoId)
+              .collection('comments')
+              .doc(commentId)
+              .set({
+                'username': userData['name'],
+                'comment': commentText.trim(),
+                'createdAt': FieldValue.serverTimestamp(),
+                'profilePic': userData['userimage'],
+                'uid': FirebaseAuth.instance.currentUser!.uid,
+                'id': commentId,
+                'likes': [],
+              });
+        }
       }
     } catch (e) {
-      Get.snackbar("Error", "Post failed: ${e.toString()}");
-      print("Post Comment Error: $e");
+      Get.snackbar("Error", e.toString());
     }
   }
+  // Future<void> postComment(String videoId, String commentText) async {
+  //   try {
+  //     if (commentText.trim().isNotEmpty) {
+  //       // 1. Current User ka data 'userProfile' collection se fetch karein
+  //       DocumentSnapshot userDoc = await FirebaseFirestore.instance
+  //           .collection('userProfile') // Aapke Firebase ke mutabiq
+  //           .doc(FirebaseAuth.instance.currentUser!.uid)
+  //           .get();
+
+  //       if (!userDoc.exists) {
+  //         Get.snackbar(
+  //           "Error",
+  //           "User profile not found. Please complete your profile setup.",
+  //         );
+  //         return;
+  //       }
+
+  //       // 2. Data extract karein
+  //       var userData = userDoc.data() as Map<String, dynamic>;
+
+  //       // Counting comments
+  //       var allDocs = await FirebaseFirestore.instance
+  //           .collection('videos')
+  //           .doc(videoId)
+  //           .collection('comments')
+  //           .get();
+
+  //       int len = allDocs.docs.length;
+  //       String commentId =
+  //           "Comment_${DateTime.now().millisecondsSinceEpoch}"; // Unique ID logic
+
+  //       // 3. Comment save karein
+  //       // postComment function ke andar 'set' wala hissa:
+  //       await FirebaseFirestore.instance
+  //           .collection('videos')
+  //           .doc(videoId)
+  //           .collection('comments')
+  //           .doc(commentId)
+  //           .set({
+  //             'username': userData['name'],
+  //             'comment': commentText.trim(),
+  //             'createdAt': FieldValue.serverTimestamp(),
+  //             'profilePic': userData['userimage'],
+  //             'uid': FirebaseAuth.instance.currentUser!.uid,
+  //             'id': commentId,
+  //             'likes': [], // <--- Naye comment ke liye khali list lazmi hai
+  //           });
+
+  //       print("Comment Posted: ${commentText.trim()}");
+  //     }
+  //   } catch (e) {
+  //     Get.snackbar("Error", "Post failed: ${e.toString()}");
+  //     print("Post Comment Error: $e");
+  //   }
+  // }
 
   // --- FIREBASE UPLOAD LOGIC ---
   // --- FIREBASE UPLOAD LOGIC ---
