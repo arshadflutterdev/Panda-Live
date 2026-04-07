@@ -414,14 +414,27 @@ class ReelsController extends GetxController {
   }
 
   // Comment post karne ka function
-  postComment(String videoId, String commentText) async {
+  Future<void> postComment(String videoId, String commentText) async {
     try {
-      if (commentText.isNotEmpty) {
+      if (commentText.trim().isNotEmpty) {
+        // 1. Current User ka data 'userProfile' collection se fetch karein
         DocumentSnapshot userDoc = await FirebaseFirestore.instance
-            .collection('users')
+            .collection('userProfile') // Aapke Firebase ke mutabiq
             .doc(FirebaseAuth.instance.currentUser!.uid)
             .get();
 
+        if (!userDoc.exists) {
+          Get.snackbar(
+            "Error",
+            "User profile not found. Please complete your profile setup.",
+          );
+          return;
+        }
+
+        // 2. Data extract karein
+        var userData = userDoc.data() as Map<String, dynamic>;
+
+        // Counting comments
         var allDocs = await FirebaseFirestore.instance
             .collection('videos')
             .doc(videoId)
@@ -429,32 +442,33 @@ class ReelsController extends GetxController {
             .get();
 
         int len = allDocs.docs.length;
+        String commentId =
+            "Comment_${DateTime.now().millisecondsSinceEpoch}"; // Unique ID logic
 
-        CommentModel comment = CommentModel(
-          username: (userDoc.data() as dynamic)['name'],
-          comment: commentText.trim(),
-          createdAt: DateTime.now(),
-          profilePic: (userDoc.data() as dynamic)['profilePic'] ?? '',
-          uid: FirebaseAuth.instance.currentUser!.uid,
-          id: "Comment $len",
-        );
-
+        // 3. Comment save karein
         await FirebaseFirestore.instance
             .collection('videos')
             .doc(videoId)
             .collection('comments')
-            .doc("Comment $len")
+            .doc(commentId)
             .set({
-              'username': comment.username,
-              'comment': comment.comment,
-              'createdAt': comment.createdAt,
-              'profilePic': comment.profilePic,
-              'uid': comment.uid,
-              'id': comment.id,
+              'username':
+                  userData['name'] ??
+                  'Panda User', // Firebase mein 'name' field hai
+              'comment': commentText.trim(),
+              'createdAt': FieldValue.serverTimestamp(), // Exact timing ke liye
+              'profilePic':
+                  userData['userimage'] ??
+                  '', // Firebase mein 'userimage' field hai
+              'uid': FirebaseAuth.instance.currentUser!.uid,
+              'id': commentId,
             });
+
+        print("Comment Posted: ${commentText.trim()}");
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      Get.snackbar("Error", "Post failed: ${e.toString()}");
+      print("Post Comment Error: $e");
     }
   }
 
