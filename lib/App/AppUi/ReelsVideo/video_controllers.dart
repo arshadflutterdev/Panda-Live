@@ -264,23 +264,6 @@ class ReelsController extends GetxController {
           }),
     );
   }
-  // getComments(String videoId) {
-  //   comments.bindStream(
-  //     FirebaseFirestore.instance
-  //         .collection('videos')
-  //         .doc(videoId)
-  //         .collection('comments')
-  //         .orderBy('createdAt', descending: true) // Latest comments top par
-  //         .snapshots()
-  //         .map((QuerySnapshot query) {
-  //           List<CommentModel> retVal = [];
-  //           for (var element in query.docs) {
-  //             retVal.add(CommentModel.fromSnap(element));
-  //           }
-  //           return retVal;
-  //         }),
-  //   );
-  // }
 
   // --- VIDEO PICKING LOGIC ---
   Future<void> pickVideo() async {
@@ -401,6 +384,84 @@ class ReelsController extends GetxController {
   // }
   // function related like/unlike video
   // --- LIKE/UNLIKE LOGIC ---
+  // Comment ko like/unlike karne ke liye
+  Future<void> likeComment(String videoId, String commentId) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+
+      // Comment ka document uthao
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('videos')
+          .doc(videoId)
+          .collection('comments')
+          .doc(commentId)
+          .get();
+
+      if (doc.exists) {
+        List likes = (doc.data() as dynamic)['likes'] ?? [];
+
+        if (likes.contains(uid)) {
+          // Unlike logic
+          await FirebaseFirestore.instance
+              .collection('videos')
+              .doc(videoId)
+              .collection('comments')
+              .doc(commentId)
+              .update({
+                'likes': FieldValue.arrayRemove([uid]),
+              });
+        } else {
+          // Like logic
+          await FirebaseFirestore.instance
+              .collection('videos')
+              .doc(videoId)
+              .collection('comments')
+              .doc(commentId)
+              .update({
+                'likes': FieldValue.arrayUnion([uid]),
+              });
+        }
+      }
+    } catch (e) {
+      print("Error liking comment: $e");
+    }
+  }
+
+  // Reply post karne ke liye
+  Future<void> postReply(
+    String videoId,
+    String commentId,
+    String replyText,
+  ) async {
+    try {
+      if (replyText.isNotEmpty) {
+        DocumentSnapshot userDoc = await FirebaseFirestore.instance
+            .collection('userProfile')
+            .doc(FirebaseAuth.instance.currentUser!.uid)
+            .get();
+
+        var userData = userDoc.data() as Map<String, dynamic>;
+
+        await FirebaseFirestore.instance
+            .collection('videos')
+            .doc(videoId)
+            .collection('comments')
+            .doc(commentId)
+            .collection('replies')
+            .add({
+              'username': userData['name'] ?? 'User',
+              'profilePic': userData['userimage'] ?? '',
+              'reply': replyText.trim(),
+              'createdAt': FieldValue.serverTimestamp(),
+              'uid': FirebaseAuth.instance.currentUser!.uid,
+            });
+      }
+    } catch (e) {
+      Get.snackbar("Error", e.toString());
+    }
+  }
+
+  //comment like upper
   Future<void> likeVideo(String id) async {
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
@@ -465,22 +526,20 @@ class ReelsController extends GetxController {
             "Comment_${DateTime.now().millisecondsSinceEpoch}"; // Unique ID logic
 
         // 3. Comment save karein
+        // postComment function ke andar 'set' wala hissa:
         await FirebaseFirestore.instance
             .collection('videos')
             .doc(videoId)
             .collection('comments')
             .doc(commentId)
             .set({
-              'username':
-                  userData['name'] ??
-                  'Panda User', // Firebase mein 'name' field hai
+              'username': userData['name'],
               'comment': commentText.trim(),
-              'createdAt': FieldValue.serverTimestamp(), // Exact timing ke liye
-              'profilePic':
-                  userData['userimage'] ??
-                  '', // Firebase mein 'userimage' field hai
+              'createdAt': FieldValue.serverTimestamp(),
+              'profilePic': userData['userimage'],
               'uid': FirebaseAuth.instance.currentUser!.uid,
               'id': commentId,
+              'likes': [], // <--- Naye comment ke liye khali list lazmi hai
             });
 
         print("Comment Posted: ${commentText.trim()}");

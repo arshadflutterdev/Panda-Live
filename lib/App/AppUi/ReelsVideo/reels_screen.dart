@@ -54,6 +54,7 @@ class ReelsScreen extends StatelessWidget {
                       final comment = controller.comments[index];
                       return ListTile(
                         leading: CircleAvatar(
+                          radius: 18,
                           backgroundImage: NetworkImage(comment.profilePic),
                         ),
                         title: Text(
@@ -64,12 +65,77 @@ class ReelsScreen extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                           ),
                         ),
-                        subtitle: Text(
-                          comment.comment,
-                          style: const TextStyle(
-                            color: Colors.white,
-                            fontSize: 14,
-                          ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              comment.comment,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 14,
+                              ),
+                            ),
+                            const SizedBox(height: 5),
+                            Row(
+                              children: [
+                                const Text(
+                                  "2h",
+                                  style: TextStyle(
+                                    color: Colors.white38,
+                                    fontSize: 11,
+                                  ),
+                                ), // Time placeholder
+                                const SizedBox(width: 20),
+                                GestureDetector(
+                                  onTap: () {
+                                    // Yahan Reply wala logic trigger karein
+                                    _commentController.text =
+                                        "@${comment.username} ";
+                                  },
+                                  child: const Text(
+                                    "Reply",
+                                    style: TextStyle(
+                                      color: Colors.white54,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                        trailing: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            GestureDetector(
+                              // Idhar 'videoId' aur 'comment.id' dono pass karne hain
+                              onTap: () =>
+                                  controller.likeComment(videoId, comment.id),
+                              child: Icon(
+                                comment.likes.contains(
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                    )
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                size: 20,
+                                color:
+                                    comment.likes.contains(
+                                      FirebaseAuth.instance.currentUser!.uid,
+                                    )
+                                    ? Colors.red
+                                    : Colors.white54,
+                              ),
+                            ),
+                            const SizedBox(height: 4),
+                            Text(
+                              "${comment.likes.length}",
+                              style: const TextStyle(
+                                color: Colors.white54,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ],
                         ),
                       );
                     },
