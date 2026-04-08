@@ -210,6 +210,7 @@
 // }
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -502,10 +503,55 @@ class ReelsController extends GetxController {
               'reply': replyText.trim(),
               'createdAt': FieldValue.serverTimestamp(),
               'uid': FirebaseAuth.instance.currentUser!.uid,
+              'likes': [], // Ye add karna zaroori hai!
             });
       }
     } catch (e) {
       Get.snackbar("Error", e.toString());
+    }
+  }
+
+  // Video ke total comments count karne ke liye logic
+  int getTotalComments(
+    AsyncSnapshot<QuerySnapshot> commentSnap,
+    List<int> allRepliesCounts,
+  ) {
+    int mainComments = commentSnap.data?.docs.length ?? 0;
+    int totalReplies = allRepliesCounts.fold(0, (sum, next) => sum + next);
+    return mainComments + totalReplies;
+  }
+
+  //comment reply like
+  Future<void> likeReply(
+    String videoId,
+    String commentId,
+    String replyId,
+  ) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      DocumentReference replyRef = FirebaseFirestore.instance
+          .collection('videos')
+          .doc(videoId)
+          .collection('comments')
+          .doc(commentId)
+          .collection('replies')
+          .doc(replyId);
+
+      DocumentSnapshot doc = await replyRef.get();
+      if (doc.exists) {
+        List likes = (doc.data() as dynamic)['likes'] ?? [];
+        if (likes.contains(uid)) {
+          await replyRef.update({
+            'likes': FieldValue.arrayRemove([uid]),
+          });
+        } else {
+          await replyRef.update({
+            'likes': FieldValue.arrayUnion([uid]),
+          });
+        }
+      }
+    } catch (e) {
+      print("Error liking reply: $e");
     }
   }
 
@@ -545,8 +591,6 @@ class ReelsController extends GetxController {
   // Controller ke top par ye variables add karein
   var selectedCommentId = "".obs;
   var replyingToUser = "".obs;
-
-  // Post Comment aur Reply dono ke liye ek hi logic
   Future<void> postComment(String videoId, String commentText) async {
     try {
       if (commentText.trim().isNotEmpty) {
@@ -557,49 +601,108 @@ class ReelsController extends GetxController {
 
         var userData = userDoc.data() as Map<String, dynamic>;
 
-        // AGAR REPLIES HAI (selectedCommentId khali nahi hai)
+        // --- YE LINE COUNTER UPDATE KAREGI ---
+        DocumentReference videoRef = FirebaseFirestore.instance
+            .collection('videos')
+            .doc(videoId);
+
+        // AGAR REPLIES HAI
         if (selectedCommentId.value.isNotEmpty) {
-          await FirebaseFirestore.instance
-              .collection('videos')
-              .doc(videoId)
+          await videoRef
               .collection('comments')
               .doc(selectedCommentId.value)
               .collection('replies')
               .add({
-                'username': userData['name'], //
-                'profilePic': userData['userimage'], //
+                'username': userData['name'],
+                'profilePic': userData['userimage'],
                 'reply': commentText.trim(),
                 'createdAt': FieldValue.serverTimestamp(),
                 'uid': FirebaseAuth.instance.currentUser!.uid,
+                'likes': [],
               });
 
-          // Reset after reply
+          // Reply save hone ke baad total count increase karein
+          await videoRef.update({'commentCount': FieldValue.increment(1)});
+
           selectedCommentId.value = "";
           replyingToUser.value = "";
         }
         // AGAR NORMAL COMMENT HAI
         else {
           String commentId = "Comment_${DateTime.now().millisecondsSinceEpoch}";
-          await FirebaseFirestore.instance
-              .collection('videos')
-              .doc(videoId)
-              .collection('comments')
-              .doc(commentId)
-              .set({
-                'username': userData['name'],
-                'comment': commentText.trim(),
-                'createdAt': FieldValue.serverTimestamp(),
-                'profilePic': userData['userimage'],
-                'uid': FirebaseAuth.instance.currentUser!.uid,
-                'id': commentId,
-                'likes': [],
-              });
+          await videoRef.collection('comments').doc(commentId).set({
+            'username': userData['name'],
+            'comment': commentText.trim(),
+            'createdAt': FieldValue.serverTimestamp(),
+            'profilePic': userData['userimage'],
+            'uid': FirebaseAuth.instance.currentUser!.uid,
+            'id': commentId,
+            'likes': [],
+          });
+
+          // Main comment ke baad bhi total count increase karein
+          await videoRef.update({'commentCount': FieldValue.increment(1)});
         }
       }
     } catch (e) {
       Get.snackbar("Error", e.toString());
     }
   }
+  // Post Comment aur Reply dono ke liye ek hi logic
+  // Future<void> postComment(String videoId, String commentText) async {
+  //   try {
+  //     if (commentText.trim().isNotEmpty) {
+  //       DocumentSnapshot userDoc = await FirebaseFirestore.instance
+  //           .collection('userProfile')
+  //           .doc(FirebaseAuth.instance.currentUser!.uid)
+  //           .get();
+
+  //       var userData = userDoc.data() as Map<String, dynamic>;
+
+  //       // AGAR REPLIES HAI (selectedCommentId khali nahi hai)
+  //       if (selectedCommentId.value.isNotEmpty) {
+  //         await FirebaseFirestore.instance
+  //             .collection('videos')
+  //             .doc(videoId)
+  //             .collection('comments')
+  //             .doc(selectedCommentId.value)
+  //             .collection('replies')
+  //             .add({
+  //               'username': userData['name'], //
+  //               'profilePic': userData['userimage'], //
+  //               'reply': commentText.trim(),
+  //               'createdAt': FieldValue.serverTimestamp(),
+  //               'uid': FirebaseAuth.instance.currentUser!.uid,
+  //             });
+
+  //         // Reset after reply
+  //         selectedCommentId.value = "";
+  //         replyingToUser.value = "";
+  //       }
+  //       // AGAR NORMAL COMMENT HAI
+  //       else {
+  //         String commentId = "Comment_${DateTime.now().millisecondsSinceEpoch}";
+  //         await FirebaseFirestore.instance
+  //             .collection('videos')
+  //             .doc(videoId)
+  //             .collection('comments')
+  //             .doc(commentId)
+  //             .set({
+  //               'username': userData['name'],
+  //               'comment': commentText.trim(),
+  //               'createdAt': FieldValue.serverTimestamp(),
+  //               'profilePic': userData['userimage'],
+  //               'uid': FirebaseAuth.instance.currentUser!.uid,
+  //               'id': commentId,
+  //               'likes': [],
+  //             });
+  //       }
+  //     }
+  //   } catch (e) {
+  //     Get.snackbar("Error", e.toString());
+  //   }
+  // }
+
   // Future<void> postComment(String videoId, String commentText) async {
   //   try {
   //     if (commentText.trim().isNotEmpty) {

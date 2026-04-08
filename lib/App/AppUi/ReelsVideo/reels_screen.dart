@@ -162,10 +162,16 @@ class ReelsScreen extends StatelessWidget {
                                             var replyData =
                                                 doc.data()
                                                     as Map<String, dynamic>;
+                                            String replyId =
+                                                doc.id; // Har reply ki apni ID
+                                            List replyLikes =
+                                                replyData['likes'] ?? [];
+
                                             return Padding(
                                               padding: const EdgeInsets.only(
-                                                left: 0,
-                                                bottom: 10,
+                                                left: 40,
+                                                bottom: 12,
+                                                right: 10,
                                               ),
                                               child: Row(
                                                 crossAxisAlignment:
@@ -197,6 +203,9 @@ class ReelsScreen extends StatelessWidget {
                                                                         .w600,
                                                               ),
                                                         ),
+                                                        const SizedBox(
+                                                          height: 2,
+                                                        ),
                                                         Text(
                                                           replyData['reply'],
                                                           style:
@@ -206,13 +215,143 @@ class ReelsScreen extends StatelessWidget {
                                                                 fontSize: 13,
                                                               ),
                                                         ),
+                                                        const SizedBox(
+                                                          height: 4,
+                                                        ),
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            // Reply ke andar reply ke liye tag set karein
+                                                            controller
+                                                                .selectedCommentId
+                                                                .value = comment
+                                                                .id;
+                                                            controller
+                                                                    .replyingToUser
+                                                                    .value =
+                                                                replyData['username'];
+                                                            _commentController
+                                                                    .text =
+                                                                "@${replyData['username']} ";
+                                                          },
+                                                          child: const Text(
+                                                            "Reply",
+                                                            style: TextStyle(
+                                                              color: Colors
+                                                                  .white38,
+                                                              fontSize: 11,
+                                                              fontWeight:
+                                                                  FontWeight
+                                                                      .bold,
+                                                            ),
+                                                          ),
+                                                        ),
                                                       ],
                                                     ),
+                                                  ),
+                                                  // --- Reply Like Button ---
+                                                  Column(
+                                                    children: [
+                                                      GestureDetector(
+                                                        onTap: () => controller
+                                                            .likeReply(
+                                                              videoId,
+                                                              comment.id,
+                                                              replyId,
+                                                            ),
+                                                        child: Icon(
+                                                          replyLikes.contains(
+                                                                FirebaseAuth
+                                                                    .instance
+                                                                    .currentUser!
+                                                                    .uid,
+                                                              )
+                                                              ? Icons.favorite
+                                                              : Icons
+                                                                    .favorite_border,
+                                                          size:
+                                                              14, // Replies ke liye icons thode chote
+                                                          color:
+                                                              replyLikes.contains(
+                                                                FirebaseAuth
+                                                                    .instance
+                                                                    .currentUser!
+                                                                    .uid,
+                                                              )
+                                                              ? Colors.red
+                                                              : Colors.white38,
+                                                        ),
+                                                      ),
+                                                      Text(
+                                                        "${replyLikes.length}",
+                                                        style: const TextStyle(
+                                                          color: Colors.white38,
+                                                          fontSize: 10,
+                                                        ),
+                                                      ),
+                                                    ],
                                                   ),
                                                 ],
                                               ),
                                             );
                                           }).toList(),
+
+                                          // children: replySnap.data!.docs.map((
+                                          //   doc,
+                                          // ) {
+                                          //   var replyData =
+                                          //       doc.data()
+                                          //           as Map<String, dynamic>;
+                                          //   return Padding(
+                                          //     padding: const EdgeInsets.only(
+                                          //       left: 0,
+                                          //       bottom: 10,
+                                          //     ),
+                                          //     child: Row(
+                                          //       crossAxisAlignment:
+                                          //           CrossAxisAlignment.start,
+                                          //       children: [
+                                          //         CircleAvatar(
+                                          //           radius: 10,
+                                          //           backgroundImage: NetworkImage(
+                                          //             replyData['profilePic'] ??
+                                          //                 '',
+                                          //           ),
+                                          //         ),
+                                          //         const SizedBox(width: 10),
+                                          //         Expanded(
+                                          //           child: Column(
+                                          //             crossAxisAlignment:
+                                          //                 CrossAxisAlignment
+                                          //                     .start,
+                                          //             children: [
+                                          //               Text(
+                                          //                 replyData['username'],
+                                          //                 style:
+                                          //                     const TextStyle(
+                                          //                       color: Colors
+                                          //                           .white54,
+                                          //                       fontSize: 11,
+                                          //                       fontWeight:
+                                          //                           FontWeight
+                                          //                               .w600,
+                                          //                     ),
+                                          //               ),
+                                          //               Text(
+                                          //                 replyData['reply'],
+                                          //                 style:
+                                          //                     const TextStyle(
+                                          //                       color: Colors
+                                          //                           .white,
+                                          //                       fontSize: 13,
+                                          //                     ),
+                                          //               ),
+                                          //             ],
+                                          //           ),
+                                          //         ),
+                                          //       ],
+                                          //     ),
+                                          //   );
+                                          // }).toList(),
                                         ),
                                       );
                                     },
@@ -340,49 +479,6 @@ class ReelsScreen extends StatelessWidget {
                       bottom: 120, // Isay likes ke upar set karein
                       child: Column(
                         children: [
-                          GestureDetector(
-                            onTap: () {
-                              // Navigating to Profile Screen using GetX
-                              // 'data.uid' pass kar rahe hain taake us specific user ki profile khule
-                              Get.to(
-                                () => ProfileScreen(uid: data.uid),
-                                transition: Transition
-                                    .cupertino, // iOS style smooth slide transition
-                                duration: const Duration(milliseconds: 400),
-                              );
-                            },
-                            child: Container(
-                              padding: const EdgeInsets.all(
-                                2,
-                              ), // White border effect
-                              decoration: const BoxDecoration(
-                                color: Colors.white,
-                                shape: BoxShape.circle,
-                              ),
-                              child: CircleAvatar(
-                                radius: 25,
-                                backgroundColor: Colors.black,
-                                // --- REAL IMAGE LOADING ---
-                                // Agar profilePic link hai to wo dikhao
-                                backgroundImage: data.profilePic.isNotEmpty
-                                    ? NetworkImage(data.profilePic)
-                                    : null,
-                                // Agar profilePic khali hai to User ka pehla letter dikhao
-                                child: data.profilePic.isEmpty
-                                    ? Text(
-                                        data.username.isNotEmpty
-                                            ? data.username[0].toUpperCase()
-                                            : "?",
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      )
-                                    : null,
-                              ),
-                            ),
-                          ),
-
                           // Wo chota sa red plus icon (TikTok Follow Button)
                           // ReelsScreen.dart mein Profile Picture ke neeche wala Plus Icon code:
                           StreamBuilder<bool>(
