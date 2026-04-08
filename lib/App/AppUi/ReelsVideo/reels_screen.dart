@@ -471,8 +471,11 @@ class ReelsScreen extends StatelessWidget {
                 return Stack(
                   children: [
                     // 1. Actual Video Player
-                    VideoPlayerItem(videoUrl: data.videoUrl),
-
+                    // ReelsScreen mein jahan call ho raha hai:
+                    VideoPlayerItem(
+                      videoUrl: data.videoUrl,
+                      videoId: data.id, // <--- Ye lazmi pass karein
+                    ),
                     // 2. Right Side Profile/User Section (TikTok Style)
                     Positioned(
                       right: 15,

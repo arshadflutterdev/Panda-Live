@@ -39,6 +39,7 @@ class VideoModel {
   String profilePic; // Image link ke liye ye zaroori hai
   List likes;
   int commentCount; // <--- Ye field lazmi add karein
+  List views; // <--- views store karne ke liye list
 
   VideoModel({
     required this.username,
@@ -50,6 +51,7 @@ class VideoModel {
     required this.profilePic,
     required this.likes, // <--- Constructor mein add karein
     required this.commentCount, // <--- Constructor mein shamil karein
+    required this.views,
   });
 
   // Firebase se data map karne ke liye
@@ -67,6 +69,7 @@ class VideoModel {
       likes: data['likes'] ?? [], // <--- Database se array uthane ke liye
       commentCount:
           data['commentCount'] ?? 0, // <--- Firebase se count uthane ke liye
+      views: data['views'] ?? [], // Database se list uthayega
     );
   }
 
@@ -80,5 +83,6 @@ class VideoModel {
     "profilePic": profilePic,
     "likes": likes,
     "commentCount": commentCount, // <--- Upload ke waqt 0 jayega starting mein
+    "views": views,
   };
 }

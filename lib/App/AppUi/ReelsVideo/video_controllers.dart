@@ -587,6 +587,32 @@ class ReelsController extends GetxController {
     }
   }
 
+  //views system
+  updateVideoViews(String videoId) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      DocumentSnapshot doc = await FirebaseFirestore.instance
+          .collection('videos')
+          .doc(videoId)
+          .get();
+
+      if ((doc.data() as dynamic)['views'].contains(uid)) {
+        // Agar user ne pehle se dekha hua hai, toh kuch nahi karna
+        return;
+      } else {
+        // Agar naya user hai, toh uski ID add kardo
+        await FirebaseFirestore.instance
+            .collection('videos')
+            .doc(videoId)
+            .update({
+              'views': FieldValue.arrayUnion([uid]),
+            });
+      }
+    } catch (e) {
+      print("Views error: $e");
+    }
+  }
+
   // Comment post karne ka function
   // Controller ke top par ye variables add karein
   var selectedCommentId = "".obs;

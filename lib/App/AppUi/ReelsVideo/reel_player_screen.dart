@@ -81,12 +81,20 @@
 
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:get/get_core/src/get_main.dart';
+import 'package:get/get_instance/src/extension_instance.dart';
+import 'package:pandlive/App/AppUi/ReelsVideo/video_controllers.dart';
 import 'package:video_player/video_player.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class VideoPlayerItem extends StatefulWidget {
   final String videoUrl;
-  const VideoPlayerItem({super.key, required this.videoUrl});
+  final String videoId; // <--- Ye line add karein
+  const VideoPlayerItem({
+    super.key,
+    required this.videoUrl,
+    required this.videoId,
+  });
 
   @override
   State<VideoPlayerItem> createState() => _VideoPlayerItemState();
@@ -118,6 +126,16 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
       // Agar hai toh wahi file uthayein
       videoFile = fileInfo.file;
     }
+    videoPlayerController!.initialize().then((_) {
+      if (mounted) {
+        setState(() {
+          isInitialized = true;
+          videoPlayerController!.play();
+          // Views update logic
+          Get.find<ReelsController>().updateVideoViews(widget.videoId);
+        });
+      }
+    });
 
     // Controller ko file provide karna
     videoPlayerController = VideoPlayerController.file(videoFile)
