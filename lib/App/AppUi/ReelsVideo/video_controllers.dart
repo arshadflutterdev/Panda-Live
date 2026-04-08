@@ -600,52 +600,55 @@ class ReelsController extends GetxController {
             .get();
 
         var userData = userDoc.data() as Map<String, dynamic>;
-
-        // --- YE LINE COUNTER UPDATE KAREGI ---
         DocumentReference videoRef = FirebaseFirestore.instance
             .collection('videos')
             .doc(videoId);
 
-        // AGAR REPLIES HAI
+        // --- CASE 1: AGAR AAP REPLY KAR RAHE HAIN ---
         if (selectedCommentId.value.isNotEmpty) {
           await videoRef
               .collection('comments')
               .doc(selectedCommentId.value)
               .collection('replies')
               .add({
-                'username': userData['name'],
-                'profilePic': userData['userimage'],
+                'username': userData['name'] ?? 'User',
+                'profilePic': userData['userimage'] ?? '',
                 'reply': commentText.trim(),
                 'createdAt': FieldValue.serverTimestamp(),
                 'uid': FirebaseAuth.instance.currentUser!.uid,
                 'likes': [],
               });
 
-          // Reply save hone ke baad total count increase karein
+          // Reply ke baad bhi total count barhayein
           await videoRef.update({'commentCount': FieldValue.increment(1)});
 
+          // State reset karein
           selectedCommentId.value = "";
           replyingToUser.value = "";
         }
-        // AGAR NORMAL COMMENT HAI
+        // --- CASE 2: AGAR AAP NORMAL COMMENT KAR RAHE HAIN ---
         else {
           String commentId = "Comment_${DateTime.now().millisecondsSinceEpoch}";
           await videoRef.collection('comments').doc(commentId).set({
-            'username': userData['name'],
+            'username': userData['name'] ?? 'User',
             'comment': commentText.trim(),
             'createdAt': FieldValue.serverTimestamp(),
-            'profilePic': userData['userimage'],
+            'profilePic': userData['userimage'] ?? '',
             'uid': FirebaseAuth.instance.currentUser!.uid,
             'id': commentId,
             'likes': [],
           });
 
-          // Main comment ke baad bhi total count increase karein
+          // Main comment ke baad count barhayein
           await videoRef.update({'commentCount': FieldValue.increment(1)});
         }
+
+        // GetX ko force refresh karein taake UI update ho jaye
+        videoList.refresh();
       }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      print("Comment Error: $e");
+      Get.snackbar("Error", "Count update nahi ho saka");
     }
   }
   // Post Comment aur Reply dono ke liye ek hi logic

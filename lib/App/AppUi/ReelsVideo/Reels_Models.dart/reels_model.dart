@@ -28,6 +28,7 @@
 //     );
 //   }
 // }
+
 class VideoModel {
   String username;
   String uid;
@@ -37,6 +38,7 @@ class VideoModel {
   String songName;
   String profilePic; // Image link ke liye ye zaroori hai
   List likes;
+  int commentCount; // <--- Ye field lazmi add karein
 
   VideoModel({
     required this.username,
@@ -47,6 +49,7 @@ class VideoModel {
     required this.songName,
     required this.profilePic,
     required this.likes, // <--- Constructor mein add karein
+    required this.commentCount, // <--- Constructor mein shamil karein
   });
 
   // Firebase se data map karne ke liye
@@ -62,6 +65,20 @@ class VideoModel {
       profilePic:
           data['profilePic'] ?? '', // Upload logic ke mutabiq profilePic field
       likes: data['likes'] ?? [], // <--- Database se array uthane ke liye
+      commentCount:
+          data['commentCount'] ?? 0, // <--- Firebase se count uthane ke liye
     );
   }
+
+  Map<String, dynamic> toJson() => {
+    "username": username,
+    "uid": uid,
+    "id": id,
+    "videoUrl": videoUrl,
+    "caption": caption,
+    "songName": songName,
+    "profilePic": profilePic,
+    "likes": likes,
+    "commentCount": commentCount, // <--- Upload ke waqt 0 jayega starting mein
+  };
 }

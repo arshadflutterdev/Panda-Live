@@ -645,35 +645,48 @@ class ReelsScreen extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 5),
-                              StreamBuilder<QuerySnapshot>(
-                                stream: FirebaseFirestore.instance
-                                    .collection('videos')
-                                    .doc(data.id)
-                                    .collection('comments')
-                                    .snapshots(),
-                                builder: (context, snapshot) {
-                                  // Agar comments nahi hain to 'Comment' text show karein
-                                  if (!snapshot.hasData ||
-                                      snapshot.data!.docs.isEmpty) {
-                                    return const Text(
-                                      "Comment",
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 12,
-                                      ),
-                                    );
-                                  }
-                                  // Agar comments hain to number show karein
-                                  return Text(
-                                    "${snapshot.data!.docs.length}",
-                                    style: const TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 13,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  );
-                                },
-                              ),
+                              // Is logic ko "Text" widget ki jagah replace karein agar aapne Firestore update kiya hai
+                              Obx(() {
+                                final currentVideo = controller.videoList
+                                    .firstWhere((v) => v.id == data.id);
+                                return Text(
+                                  "${currentVideo.commentCount ?? 0}", // Ye main video doc se count uthaye ga
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                  ),
+                                );
+                              }),
+
+                              // StreamBuilder<QuerySnapshot>(
+                              //   stream: FirebaseFirestore.instance
+                              //       .collection('videos')
+                              //       .doc(data.id)
+                              //       .collection('comments')
+                              //       .snapshots(),
+                              //   builder: (context, snapshot) {
+                              //     // Agar comments nahi hain to 'Comment' text show karein
+                              //     if (!snapshot.hasData ||
+                              //         snapshot.data!.docs.isEmpty) {
+                              //       return const Text(
+                              //         "Comment",
+                              //         style: TextStyle(
+                              //           color: Colors.white,
+                              //           fontSize: 12,
+                              //         ),
+                              //       );
+                              //     }
+                              //     // Agar comments hain to number show karein
+                              //     return Text(
+                              //       "${snapshot.data!.docs.length}",
+                              //       style: const TextStyle(
+                              //         color: Colors.white,
+                              //         fontSize: 13,
+                              //         fontWeight: FontWeight.bold,
+                              //       ),
+                              //     );
+                              //   },
+                              // ),
                             ],
                           ),
 
