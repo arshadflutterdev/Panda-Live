@@ -112,43 +112,77 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
   }
 
   // --- CACHE & INITIALIZE LOGIC ---
+  // --- CACHE & INITIALIZE LOGIC (CLEAN VERSION) ---
   Future<void> _initializeVideo() async {
-    // Cache se file check karna
     final fileInfo = await DefaultCacheManager().getFileFromCache(
       widget.videoUrl,
     );
     File? videoFile;
 
     if (fileInfo == null) {
-      // Agar cache mein nahi hai toh download karein
       videoFile = await DefaultCacheManager().getSingleFile(widget.videoUrl);
     } else {
-      // Agar hai toh wahi file uthayein
       videoFile = fileInfo.file;
     }
-    videoPlayerController!.initialize().then((_) {
+
+    // 1. Controller create karein
+    videoPlayerController = VideoPlayerController.file(videoFile);
+
+    try {
+      // 2. Initialization ka wait karein
+      await videoPlayerController!.initialize();
+
       if (mounted) {
         setState(() {
           isInitialized = true;
+          videoPlayerController!.setLooping(true);
           videoPlayerController!.play();
-          // Views update logic
+
+          // 3. Views update logic (ReelsController use karein)
           Get.find<ReelsController>().updateVideoViews(widget.videoId);
         });
       }
-    });
-
-    // Controller ko file provide karna
-    videoPlayerController = VideoPlayerController.file(videoFile)
-      ..initialize().then((_) {
-        if (mounted) {
-          setState(() {
-            isInitialized = true;
-            videoPlayerController!.play();
-            videoPlayerController!.setLooping(true);
-          });
-        }
-      });
+    } catch (e) {
+      print("Video initialization error: $e");
+    }
   }
+  // Future<void> _initializeVideo() async {
+  //   // Cache se file check karna
+  //   final fileInfo = await DefaultCacheManager().getFileFromCache(
+  //     widget.videoUrl,
+  //   );
+  //   File? videoFile;
+
+  //   if (fileInfo == null) {
+  //     // Agar cache mein nahi hai toh download karein
+  //     videoFile = await DefaultCacheManager().getSingleFile(widget.videoUrl);
+  //   } else {
+  //     // Agar hai toh wahi file uthayein
+  //     videoFile = fileInfo.file;
+  //   }
+  //   videoPlayerController!.initialize().then((_) {
+  //     if (mounted) {
+  //       setState(() {
+  //         isInitialized = true;
+  //         videoPlayerController!.play();
+  //         // Views update logic
+  //         Get.find<ReelsController>().updateVideoViews(widget.videoId);
+  //       });
+  //     }
+  //   });
+
+  //   // Controller ko file provide karna
+  //   videoPlayerController = VideoPlayerController.file(videoFile)
+  //     ..initialize().then((_) {
+  //       if (mounted) {
+  //         setState(() {
+  //           isInitialized = true;
+  //           videoPlayerController!.play();
+  //           videoPlayerController!.setLooping(true);
+  //         });
+  //       }
+  //     });
+  // }
 
   // --- PLAY/PAUSE TOGGLE FUNCTION ---
   void togglePlayPause() {

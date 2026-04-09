@@ -1,213 +1,3 @@
-// // import 'dart:io';
-// // import 'package:get/get.dart';
-// // import 'package:image_picker/image_picker.dart';
-// // import 'package:firebase_storage/firebase_storage.dart';
-// // import 'package:cloud_firestore/cloud_firestore.dart';
-// // import 'package:pandlive/App/AppUi/ReelsVideo/confirm_upload_screen.dart';
-// // import 'package:pandlive/App/AppUi/ReelsVideo/reels_model.dart';
-
-// // class ReelsController extends GetxController {
-// //   var videoList = <VideoModel>[].obs;
-// //   var isForYou = true.obs;
-// //   var isLoading = false.obs;
-
-// //   @override
-// //   void onInit() {
-// //     super.onInit();
-// //     // App chaltay hi videos fetch karna shuru kar dega
-// //     getAllVideos();
-// //   }
-
-// //   // --- GET ALL VIDEOS FROM FIREBASE ---
-// //   getAllVideos() async {
-// //     // bindStream se data khud-ba-khud update hota rahega jab bhi koi nayi video aayegi
-// //     videoList.bindStream(
-// //       FirebaseFirestore.instance.collection('videos').snapshots().map((query) {
-// //         List<VideoModel> retVal = [];
-// //         for (var element in query.docs) {
-// //           retVal.add(VideoModel.fromSnap(element));
-// //         }
-// //         return retVal;
-// //       }),
-// //     );
-// //   }
-
-// //   // --- VIDEO PICKING LOGIC ---
-// //   Future<void> pickVideo() async {
-// //     final video = await ImagePicker().pickVideo(source: ImageSource.gallery);
-// //     if (video != null) {
-// //       // Jab video select ho jaye toh Confirm Screen par bhejein
-// //       Get.to(() => ConfirmUploadScreen(videoFile: File(video.path)));
-// //     }
-// //   }
-
-// //   // --- FIREBASE UPLOAD LOGIC ---
-// //   Future<void> uploadVideo(String caption, String videoPath) async {
-// //     try {
-// //       isLoading.value = true;
-
-// //       // Sahi waqt nikalne ke liye brackets () lagaye hain
-// //       String videoId = DateTime.now().millisecondsSinceEpoch.toString();
-
-// //       // 1. Storage mein video bhejhein
-// //       Reference ref = FirebaseStorage.instance
-// //           .ref()
-// //           .child('videos')
-// //           .child(videoId);
-
-// //       await ref.putFile(File(videoPath));
-// //       String downloadUrl = await ref.getDownloadURL();
-
-// //       // 2. Firestore mein entry karein
-// //       await FirebaseFirestore.instance.collection('videos').doc(videoId).set({
-// //         'username': 'Arshad Developer',
-// //         'uid': 'user_123',
-// //         'id': videoId,
-// //         'videoUrl': downloadUrl,
-// //         'caption': caption,
-// //         'songName': 'Original Audio',
-// //       });
-
-// //       Get.back(); // Confirm screen se wapis Reels par
-// //       Get.snackbar("Success", "Video Post Ho Gayi!");
-// //     } catch (e) {
-// //       Get.snackbar("Error", e.toString());
-// //       print("Upload Error: $e");
-// //     } finally {
-// //       isLoading.value = false;
-// //     }
-// //   }
-
-// // }
-// import 'dart:io';
-// import 'package:firebase_auth/firebase_auth.dart';
-// import 'package:get/get.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:firebase_storage/firebase_storage.dart';
-// import 'package:cloud_firestore/cloud_firestore.dart';
-// import 'package:pandlive/App/AppUi/ReelsVideo/confirm_upload_screen.dart';
-// import 'package:pandlive/App/AppUi/ReelsVideo/reels_model.dart';
-
-// class ReelsController extends GetxController {
-//   var videoList = <VideoModel>[].obs;
-//   var isForYou = true.obs;
-//   var isLoading = false.obs;
-
-//   @override
-//   void onInit() {
-//     super.onInit();
-//     getAllVideos();
-//   }
-
-//   // --- GET ALL VIDEOS FROM FIREBASE ---
-//   getAllVideos() async {
-//     videoList.bindStream(
-//       FirebaseFirestore.instance.collection('videos').snapshots().map((query) {
-//         List<VideoModel> retVal = [];
-//         for (var element in query.docs) {
-//           retVal.add(VideoModel.fromSnap(element));
-//         }
-//         return retVal;
-//       }),
-//     );
-//   }
-
-//   // --- VIDEO PICKING LOGIC ---
-//   Future<void> pickVideo() async {
-//     final video = await ImagePicker().pickVideo(source: ImageSource.gallery);
-//     if (video != null) {
-//       Get.to(() => ConfirmUploadScreen(videoFile: File(video.path)));
-//     }
-//   }
-// //here is controlelr for following
-// // ReelsController.dart mein add karein
-
-//   Future<void> followUser(String targetUid) async {
-//     try {
-
-//       String currentUid = FirebaseAuth.instance.currentUser!.uid;
-
-//       // Khud ko follow nahi kar sakte
-//       if (currentUid == targetUid) {
-//         Get.snackbar("Opps", "Aap khud ko follow nahi kar sakte!");
-//         return;
-//       }
-
-//       // 1. Apne 'following' collection mein target user ko add karein
-//       await FirebaseFirestore.instance
-//           .collection('userProfile')
-//           .doc(currentUid)
-//           .collection('following')
-//           .doc(targetUid)
-//           .set({});
-
-//       // 2. Target user ke 'followers' collection mein apni entry karein
-//       await FirebaseFirestore.instance
-//           .collection('userProfile')
-//           .doc(targetUid)
-//           .collection('followers')
-//           .doc(currentUid)
-//           .set({});
-
-//       Get.snackbar("Success", "Aapne follow kar liya!");
-//     } catch (e) {
-//       Get.snackbar("Error", e.toString());
-//     }
-//   }
-//   // --- FIREBASE UPLOAD LOGIC (DYNAMIC FIX) ---
-//   Future<void> uploadVideo(String caption, String videoPath) async {
-//     try {
-//       isLoading.value = true;
-//       String uid = FirebaseAuth.instance.currentUser!.uid;
-//       String videoId = DateTime.now().millisecondsSinceEpoch.toString();
-
-//       // 1. Pehle Storage mein video upload karein
-//       Reference ref = FirebaseStorage.instance
-//           .ref()
-//           .child('videos')
-//           .child(videoId);
-
-//       await ref.putFile(File(videoPath));
-//       String downloadUrl = await ref.getDownloadURL();
-
-//       // 2. User ki Profile fetch karein (Real Name aur Image ke liye)
-//       var userDoc = await FirebaseFirestore.instance
-//           .collection('userProfile')
-//           .doc(uid)
-//           .get();
-
-//       // Database fields check (Screenshot ke mutabiq)
-//       String realName =
-//           userDoc.data() != null && userDoc.data()!.containsKey('name')
-//           ? userDoc['name']
-//           : "User";
-//       String realImage =
-//           userDoc.data() != null && userDoc.data()!.containsKey('userimage')
-//           ? userDoc['userimage']
-//           : "";
-
-//       // 3. Videos collection mein dynamic data save karein
-//       await FirebaseFirestore.instance.collection('videos').doc(videoId).set({
-//         'uid': uid,
-//         'id': videoId,
-//         'username': realName, // Ab "Arshad" save hoga
-//         'profilePic': realImage, // Profile image ka link save hoga
-//         'videoUrl': downloadUrl, // Storage wala actual URL
-//         'caption': caption,
-//         'songName': 'Original Audio',
-//         'createdAt': FieldValue.serverTimestamp(),
-//       });
-
-//       Get.back(); // Confirm screen se wapis
-//       Get.snackbar("Mubarak!", "Video kamyabi se post ho gayi.");
-//     } catch (e) {
-//       Get.snackbar("Error", "Upload nahi ho saki: $e");
-//       print("Upload Error: $e");
-//     } finally {
-//       isLoading.value = false;
-//     }
-//   }
-// }
 import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -352,74 +142,6 @@ class ReelsController extends GetxController {
       Get.snackbar("Error", "Follow process fail: $e");
     }
   }
-  // Future<void> followUser(String targetUid) async {
-  //   try {
-  //     String currentUid = FirebaseAuth.instance.currentUser!.uid;
-
-  //     // Khud ko follow nahi kar sakte
-  //     if (currentUid == targetUid) {
-  //       Get.snackbar("Opps", "Aap khud ko follow nahi kar sakte!");
-  //       return;
-  //     }
-
-  //     // 1. Apne 'following' collection mein entry
-  //     await FirebaseFirestore.instance
-  //         .collection('userProfile')
-  //         .doc(currentUid)
-  //         .collection('following')
-  //         .doc(targetUid)
-  //         .set({});
-
-  //     // 2. Target user ke 'followers' collection mein entry
-  //     await FirebaseFirestore.instance
-  //         .collection('userProfile')
-  //         .doc(targetUid)
-  //         .collection('followers')
-  //         .doc(currentUid)
-  //         .set({});
-
-  //     Get.snackbar("Success", "Aapne follow kar liya!");
-  //   } catch (e) {
-  //     Get.snackbar("Error", e.toString());
-  //   }
-  // }
-  // function related like/unlike video
-  // --- LIKE/UNLIKE LOGIC ---
-  //replay a comment
-  // 1. Reply Save karne ke liye
-  // Future<void> postReply(
-  //   String videoId,
-  //   String commentId,
-  //   String replyText,
-  // ) async {
-  //   try {
-  //     if (replyText.trim().isNotEmpty) {
-  //       DocumentSnapshot userDoc = await FirebaseFirestore.instance
-  //           .collection('userProfile')
-  //           .doc(FirebaseAuth.instance.currentUser!.uid)
-  //           .get();
-
-  //       var userData = userDoc.data() as Map<String, dynamic>;
-
-  //       await FirebaseFirestore.instance
-  //           .collection('videos')
-  //           .doc(videoId)
-  //           .collection('comments')
-  //           .doc(commentId)
-  //           .collection('replies')
-  //           .add({
-  //             'username': userData['name'],
-  //             'profilePic': userData['userimage'],
-  //             'reply': replyText.trim(),
-  //             'createdAt': FieldValue.serverTimestamp(),
-  //             'uid': FirebaseAuth.instance.currentUser!.uid,
-  //           });
-  //       print("Reply Posted!");
-  //     }
-  //   } catch (e) {
-  //     Get.snackbar("Error", e.toString());
-  //   }
-  // }
 
   // 2. Replies Fetch karne ke liye (Stream)
   Stream<QuerySnapshot> getReplies(String videoId, String commentId) {
@@ -587,28 +309,30 @@ class ReelsController extends GetxController {
     }
   }
 
-  //views system
   updateVideoViews(String videoId) async {
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
-      DocumentSnapshot doc = await FirebaseFirestore.instance
+      DocumentReference videoRef = FirebaseFirestore.instance
           .collection('videos')
-          .doc(videoId)
-          .get();
+          .doc(videoId);
 
-      if ((doc.data() as dynamic)['views'].contains(uid)) {
-        // Agar user ne pehle se dekha hua hai, toh kuch nahi karna
-        return;
-      } else {
-        // Agar naya user hai, toh uski ID add kardo
-        await FirebaseFirestore.instance
-            .collection('videos')
-            .doc(videoId)
-            .update({
-              'views': FieldValue.arrayUnion([uid]),
-            });
+      DocumentSnapshot doc = await videoRef.get();
+
+      if (doc.exists) {
+        // Safe way to get views list
+        var data = doc.data() as Map<String, dynamic>;
+        List views = data.containsKey('views') ? data['views'] : [];
+
+        if (!views.contains(uid)) {
+          // Agar user ID nahi hai, toh add karein
+          await videoRef.update({
+            'views': FieldValue.arrayUnion([uid]),
+          });
+          print("View added for video: $videoId");
+        }
       }
     } catch (e) {
+      // Agar koi error aaye toh yahan print hoga crash nahi hoga
       print("Views error: $e");
     }
   }
@@ -677,116 +401,6 @@ class ReelsController extends GetxController {
       Get.snackbar("Error", "Count update nahi ho saka");
     }
   }
-  // Post Comment aur Reply dono ke liye ek hi logic
-  // Future<void> postComment(String videoId, String commentText) async {
-  //   try {
-  //     if (commentText.trim().isNotEmpty) {
-  //       DocumentSnapshot userDoc = await FirebaseFirestore.instance
-  //           .collection('userProfile')
-  //           .doc(FirebaseAuth.instance.currentUser!.uid)
-  //           .get();
-
-  //       var userData = userDoc.data() as Map<String, dynamic>;
-
-  //       // AGAR REPLIES HAI (selectedCommentId khali nahi hai)
-  //       if (selectedCommentId.value.isNotEmpty) {
-  //         await FirebaseFirestore.instance
-  //             .collection('videos')
-  //             .doc(videoId)
-  //             .collection('comments')
-  //             .doc(selectedCommentId.value)
-  //             .collection('replies')
-  //             .add({
-  //               'username': userData['name'], //
-  //               'profilePic': userData['userimage'], //
-  //               'reply': commentText.trim(),
-  //               'createdAt': FieldValue.serverTimestamp(),
-  //               'uid': FirebaseAuth.instance.currentUser!.uid,
-  //             });
-
-  //         // Reset after reply
-  //         selectedCommentId.value = "";
-  //         replyingToUser.value = "";
-  //       }
-  //       // AGAR NORMAL COMMENT HAI
-  //       else {
-  //         String commentId = "Comment_${DateTime.now().millisecondsSinceEpoch}";
-  //         await FirebaseFirestore.instance
-  //             .collection('videos')
-  //             .doc(videoId)
-  //             .collection('comments')
-  //             .doc(commentId)
-  //             .set({
-  //               'username': userData['name'],
-  //               'comment': commentText.trim(),
-  //               'createdAt': FieldValue.serverTimestamp(),
-  //               'profilePic': userData['userimage'],
-  //               'uid': FirebaseAuth.instance.currentUser!.uid,
-  //               'id': commentId,
-  //               'likes': [],
-  //             });
-  //       }
-  //     }
-  //   } catch (e) {
-  //     Get.snackbar("Error", e.toString());
-  //   }
-  // }
-
-  // Future<void> postComment(String videoId, String commentText) async {
-  //   try {
-  //     if (commentText.trim().isNotEmpty) {
-  //       // 1. Current User ka data 'userProfile' collection se fetch karein
-  //       DocumentSnapshot userDoc = await FirebaseFirestore.instance
-  //           .collection('userProfile') // Aapke Firebase ke mutabiq
-  //           .doc(FirebaseAuth.instance.currentUser!.uid)
-  //           .get();
-
-  //       if (!userDoc.exists) {
-  //         Get.snackbar(
-  //           "Error",
-  //           "User profile not found. Please complete your profile setup.",
-  //         );
-  //         return;
-  //       }
-
-  //       // 2. Data extract karein
-  //       var userData = userDoc.data() as Map<String, dynamic>;
-
-  //       // Counting comments
-  //       var allDocs = await FirebaseFirestore.instance
-  //           .collection('videos')
-  //           .doc(videoId)
-  //           .collection('comments')
-  //           .get();
-
-  //       int len = allDocs.docs.length;
-  //       String commentId =
-  //           "Comment_${DateTime.now().millisecondsSinceEpoch}"; // Unique ID logic
-
-  //       // 3. Comment save karein
-  //       // postComment function ke andar 'set' wala hissa:
-  //       await FirebaseFirestore.instance
-  //           .collection('videos')
-  //           .doc(videoId)
-  //           .collection('comments')
-  //           .doc(commentId)
-  //           .set({
-  //             'username': userData['name'],
-  //             'comment': commentText.trim(),
-  //             'createdAt': FieldValue.serverTimestamp(),
-  //             'profilePic': userData['userimage'],
-  //             'uid': FirebaseAuth.instance.currentUser!.uid,
-  //             'id': commentId,
-  //             'likes': [], // <--- Naye comment ke liye khali list lazmi hai
-  //           });
-
-  //       print("Comment Posted: ${commentText.trim()}");
-  //     }
-  //   } catch (e) {
-  //     Get.snackbar("Error", "Post failed: ${e.toString()}");
-  //     print("Post Comment Error: $e");
-  //   }
-  // }
 
   // --- FIREBASE UPLOAD LOGIC ---
   // --- FIREBASE UPLOAD LOGIC ---
@@ -829,6 +443,7 @@ class ReelsController extends GetxController {
         'songName': 'Original Audio',
         'createdAt': FieldValue.serverTimestamp(),
         'likes': [], // <--- YE LINE ADD KARNA ZAROORI HAI
+        'views': [], // <--- YE LINE ADD KAREIN
       });
 
       Get.back();
@@ -839,54 +454,4 @@ class ReelsController extends GetxController {
       isLoading.value = false;
     }
   }
-  // Future<void> uploadVideo(String caption, String videoPath) async {
-  //   try {
-  //     isLoading.value = true;
-  //     String uid = FirebaseAuth.instance.currentUser!.uid;
-  //     String videoId = DateTime.now().millisecondsSinceEpoch.toString();
-
-  //     // 1. Storage mein upload
-  //     Reference ref = FirebaseStorage.instance
-  //         .ref()
-  //         .child('videos')
-  //         .child(videoId);
-
-  //     await ref.putFile(File(videoPath));
-  //     String downloadUrl = await ref.getDownloadURL();
-
-  //     // 2. User Profile Fetch
-  //     var userDoc = await FirebaseFirestore.instance
-  //         .collection('userProfile')
-  //         .doc(uid)
-  //         .get();
-
-  //     String realName =
-  //         userDoc.data() != null && userDoc.data()!.containsKey('name')
-  //         ? userDoc['name']
-  //         : "User";
-  //     String realImage =
-  //         userDoc.data() != null && userDoc.data()!.containsKey('userimage')
-  //         ? userDoc['userimage']
-  //         : "";
-
-  //     // 3. Save to Firestore
-  //     await FirebaseFirestore.instance.collection('videos').doc(videoId).set({
-  //       'uid': uid,
-  //       'id': videoId,
-  //       'username': realName,
-  //       'profilePic': realImage,
-  //       'videoUrl': downloadUrl,
-  //       'caption': caption,
-  //       'songName': 'Original Audio',
-  //       'createdAt': FieldValue.serverTimestamp(),
-  //     });
-
-  //     Get.back();
-  //     Get.snackbar("Mubarak!", "Video kamyabi se post ho gayi.");
-  //   } catch (e) {
-  //     Get.snackbar("Error", "Upload fail: $e");
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
 }
