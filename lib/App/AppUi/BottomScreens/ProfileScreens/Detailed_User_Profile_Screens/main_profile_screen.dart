@@ -156,12 +156,10 @@ class ProfileScreen extends StatelessWidget {
                 SliverToBoxAdapter(
                   child: Column(
                     children: [
+                      // ProfileScreen ke andar jahan ProfileHeaderWidget call ho raha hai
                       ProfileHeaderWidget(
-                        name: controller.user.value?.name ?? 'User',
-                        image: controller.user.value?.image ?? '',
-                        shortId: controller.user.value?.shortId ?? 0,
-                        isVerified: controller.user.value?.isVerified ?? false,
-                        user: controller.user.value!, // Yeh add karna lazmi hai
+                        // Purane parameters (name, image, etc.) nikal den
+                        user: controller.user.value!,
                       ),
                       const SizedBox(height: 20),
                       // Stats Row

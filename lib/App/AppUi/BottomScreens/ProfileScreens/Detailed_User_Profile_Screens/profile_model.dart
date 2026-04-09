@@ -24,7 +24,7 @@ class UserProfileModel {
       image: data['userimage'] ?? '',
       shortId: data['shortId'] ?? 0,
       isVerified: data['isVerified'] ?? false,
-      bio: data['bio'] ?? '', // Firestore mein 'bio' field add karein
+      bio: data['bio'] ?? '', // Yeh field lazmi honi chahiye
       youtubeLink: data['youtubeLink'] ?? '',
     );
   }

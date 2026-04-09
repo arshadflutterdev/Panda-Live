@@ -12,6 +12,36 @@ class ProfileController extends GetxController {
   var followingCount = 0.obs;
   var friendsCount = 0.obs;
   var isLoading = true.obs;
+  // ProfileController ke andar ye function add karein
+  Future<void> updateBio(String newBio) async {
+    try {
+      // 1. Firebase update
+      await _db.collection('userProfile').doc(targetUid).update({
+        'bio': newBio,
+      });
+
+      // 2. Local State Update
+      if (user.value != null) {
+        // Model ko naye data ke sath re-initialize karein
+        user.value = UserProfileModel(
+          uid: user.value!.uid,
+          name: user.value!.name,
+          image: user.value!.image,
+          shortId: user.value!.shortId,
+          isVerified: user.value!.isVerified,
+          bio: newBio,
+          youtubeLink: user.value!.youtubeLink,
+        );
+
+        // 3. Force Refresh (Ye UI ko foran signal bhejta hai)
+        user.refresh();
+      }
+
+      Get.snackbar("Success", "Bio updated!");
+    } catch (e) {
+      Get.snackbar("Error", "Update failed: $e");
+    }
+  }
 
   @override
   void onInit() {
