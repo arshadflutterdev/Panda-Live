@@ -1,6 +1,7 @@
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:pandlive/App/AppUi/BottomNavBar/bottomnavbar.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/main_profile_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/follower_list.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/following_list.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/friends_list.dart';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/main_profile_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/WalletScreen/wallet_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/updates_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';

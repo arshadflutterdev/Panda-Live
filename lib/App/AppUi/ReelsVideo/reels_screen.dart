@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/main_profile_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/profile_screen.dart';
 import 'package:pandlive/App/AppUi/ReelsVideo/reel_player_screen.dart';
 import 'package:pandlive/App/AppUi/ReelsVideo/video_controllers.dart';
@@ -714,40 +715,60 @@ class ReelsScreen extends StatelessWidget {
                           ),
 
                           const SizedBox(height: 20),
-                          StreamBuilder<bool>(
-                            stream: Get.find<ReelsController>().isFavorite(
-                              data.id,
-                            ),
-                            builder: (context, snapshot) {
-                              bool isFav = snapshot.data ?? false;
-                              return Column(
-                                children: [
-                                  IconButton(
-                                    onPressed: () {
-                                      // Controller ka function call karein
-                                      Get.find<ReelsController>().toggleFavorite(
-                                        data.id,
-                                        data.toJson(), // Map format mein data bhejein
-                                      );
-                                    },
-                                    icon: Icon(
-                                      isFav
-                                          ? Icons.bookmark
-                                          : Icons.bookmark_border,
-                                      color: isFav
-                                          ? Colors.amber
-                                          : Colors.white,
-                                      size: 35,
-                                    ),
-                                  ),
-                                  const Text(
-                                    "Save",
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 12,
-                                    ),
-                                  ),
-                                ],
+                          StreamBuilder<int>(
+                            stream: Get.find<ReelsController>()
+                                .getTotalSaveCount(data.id),
+                            builder: (context, countSnapshot) {
+                              int count = countSnapshot.data ?? 0;
+
+                              return StreamBuilder<bool>(
+                                stream: Get.find<ReelsController>().isFavorite(
+                                  data.id,
+                                ),
+                                builder: (context, favSnapshot) {
+                                  bool isFav = favSnapshot.data ?? false;
+
+                                  return Column(
+                                    mainAxisSize: MainAxisSize
+                                        .min, // Extra space khatam karne ke liye
+                                    children: [
+                                      IconButton(
+                                        onPressed: () {
+                                          Get.find<ReelsController>()
+                                              .toggleFavorite(
+                                                data.id,
+                                                data.toJson(),
+                                              );
+                                        },
+                                        icon: Icon(
+                                          isFav
+                                              ? Icons.bookmark
+                                              : Icons.bookmark_border,
+                                          color: isFav
+                                              ? Colors.amber
+                                              : Colors.white,
+                                          size: 35,
+                                        ),
+                                      ),
+                                      // Text widget styling complete
+                                      Text(
+                                        count > 0 ? "$count" : "Save",
+                                        style: const TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 12,
+                                          fontWeight: FontWeight.bold,
+                                          shadows: [
+                                            Shadow(
+                                              blurRadius: 4.0,
+                                              color: Colors.black,
+                                              offset: Offset(1.0, 1.0),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                },
                               );
                             },
                           ),

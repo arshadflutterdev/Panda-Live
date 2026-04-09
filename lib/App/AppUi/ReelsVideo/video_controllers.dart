@@ -311,6 +311,7 @@ class ReelsController extends GetxController {
 
   //vidoe ko favourite kreyn
   // --- FAVORITE / SAVE VIDEO LOGIC ---
+  // 1. Toggle Favorite: Data save karne aur delete karne ke liye
   Future<void> toggleFavorite(
     String videoId,
     Map<String, dynamic> videoData,
@@ -326,28 +327,22 @@ class ReelsController extends GetxController {
       DocumentSnapshot favDoc = await favRef.get();
 
       if (favDoc.exists) {
-        // Agar pehle se save hai toh remove kar do
         await favRef.delete();
-        Get.snackbar("Removed", "Video favorites se hata di gayi");
+        Get.snackbar("Removed", "Saved list se hata di gayi.");
       } else {
-        // Agar save nahi hai toh poora video data save kar lo (taake baad mein dikhane mein asani ho)
-        await favRef.set({
-          'id': videoId,
-          'videoUrl': videoData['videoUrl'],
-          'thumbnail':
-              videoData['profilePic'], // Ya agar aapne thumbnail banaya hai
-          'username': videoData['username'],
-          'caption': videoData['caption'],
-          'createdAt': FieldValue.serverTimestamp(),
-        });
-        Get.snackbar("Saved", "Video favorites mein add ho gayi!");
+        // IMPORTANT: 'id' field add karna lazmi hai count ke liye
+        Map<String, dynamic> dataToSave = Map.from(videoData);
+        dataToSave['id'] = videoId;
+
+        await favRef.set(dataToSave);
+        Get.snackbar("Saved", "Profile mein save ho gayi!");
       }
     } catch (e) {
-      Get.snackbar("Error", "Favorite process fail: $e");
+      print("Error: $e");
     }
   }
 
-  // Favourite check karne ke liye Stream (taake icon ka color change ho sakay)
+  // 2. Icon Color Check: Kya current user ne save kiya hai?
   Stream<bool> isFavorite(String videoId) {
     String uid = FirebaseAuth.instance.currentUser!.uid;
     return FirebaseFirestore.instance
@@ -357,6 +352,15 @@ class ReelsController extends GetxController {
         .doc(videoId)
         .snapshots()
         .map((snapshot) => snapshot.exists);
+  }
+
+  // 3. Total Count: Poore app mein kitne saves hain?
+  Stream<int> getTotalSaveCount(String videoId) {
+    return FirebaseFirestore.instance
+        .collectionGroup('favorites')
+        .where('id', isEqualTo: videoId)
+        .snapshots()
+        .map((snapshot) => snapshot.docs.length);
   }
 
   updateVideoViews(String videoId) async {
