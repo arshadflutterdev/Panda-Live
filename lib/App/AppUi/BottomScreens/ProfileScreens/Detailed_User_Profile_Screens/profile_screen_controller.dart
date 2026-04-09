@@ -15,31 +15,31 @@ class ProfileController extends GetxController {
   // ProfileController ke andar ye function add karein
   Future<void> updateBio(String newBio) async {
     try {
-      // 1. Firebase update
+      // 1. Firebase mein update karein
       await _db.collection('userProfile').doc(targetUid).update({
         'bio': newBio,
       });
 
-      // 2. Local State Update
+      // 2. Local state update (Naya model object bana kar)
       if (user.value != null) {
-        // Model ko naye data ke sath re-initialize karein
+        // Hum purane data ko copy kar rahe hain aur sirf bio change kar rahe hain
         user.value = UserProfileModel(
           uid: user.value!.uid,
           name: user.value!.name,
           image: user.value!.image,
           shortId: user.value!.shortId,
           isVerified: user.value!.isVerified,
-          bio: newBio,
+          bio: newBio, // Nayi bio yahan assign hogi
           youtubeLink: user.value!.youtubeLink,
         );
 
-        // 3. Force Refresh (Ye UI ko foran signal bhejta hai)
+        // 3. UI refresh karein
         user.refresh();
       }
 
-      Get.snackbar("Success", "Bio updated!");
+      Get.snackbar("Success", "Bio updated successfully!");
     } catch (e) {
-      Get.snackbar("Error", "Update failed: $e");
+      Get.snackbar("Error", "Could not update bio");
     }
   }
 
