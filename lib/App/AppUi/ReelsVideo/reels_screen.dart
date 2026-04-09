@@ -606,26 +606,26 @@ class ReelsScreen extends StatelessWidget {
 
                             return Column(
                               children: [
-                                Obx(() {
-                                  final currentVideo = controller.videoList
-                                      .firstWhere((v) => v.id == data.id);
-                                  return Column(
-                                    children: [
-                                      const Icon(
-                                        Icons.play_arrow_outlined,
-                                        size: 35,
-                                        color: Colors.white,
-                                      ),
-                                      Text(
-                                        "${currentVideo.views.length}", // List ki length hi total views hain
-                                        style: const TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 13,
-                                        ),
-                                      ),
-                                    ],
-                                  );
-                                }),
+                                // Obx(() {
+                                //   final currentVideo = controller.videoList
+                                //       .firstWhere((v) => v.id == data.id);
+                                //   return Column(
+                                //     children: [
+                                //       const Icon(
+                                //         Icons.play_arrow_outlined,
+                                //         size: 35,
+                                //         color: Colors.white,
+                                //       ),
+                                //       Text(
+                                //         "${currentVideo.views.length}", // List ki length hi total views hain
+                                //         style: const TextStyle(
+                                //           color: Colors.white,
+                                //           fontSize: 13,
+                                //         ),
+                                //       ),
+                                //     ],
+                                //   );
+                                // }),
                                 GestureDetector(
                                   onTap: () => controller.likeVideo(data.id),
                                   child: Icon(
@@ -1063,6 +1063,26 @@ class ReelsScreen extends StatelessWidget {
                             data.caption, // Dynamic Caption
                             style: const TextStyle(color: Colors.white),
                           ),
+                          Obx(() {
+                            final currentVideo = controller.videoList
+                                .firstWhere((v) => v.id == data.id);
+                            return Column(
+                              children: [
+                                const Icon(
+                                  Icons.play_arrow_outlined,
+                                  size: 35,
+                                  color: Colors.white,
+                                ),
+                                Text(
+                                  "${currentVideo.views.length}", // List ki length hi total views hain
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 13,
+                                  ),
+                                ),
+                              ],
+                            );
+                          }),
                         ],
                       ),
                     ),
