@@ -714,6 +714,43 @@ class ReelsScreen extends StatelessWidget {
                           ),
 
                           const SizedBox(height: 20),
+                          StreamBuilder<bool>(
+                            stream: Get.find<ReelsController>().isFavorite(
+                              data.id,
+                            ),
+                            builder: (context, snapshot) {
+                              bool isFav = snapshot.data ?? false;
+                              return Column(
+                                children: [
+                                  IconButton(
+                                    onPressed: () {
+                                      // Controller ka function call karein
+                                      Get.find<ReelsController>().toggleFavorite(
+                                        data.id,
+                                        data.toJson(), // Map format mein data bhejein
+                                      );
+                                    },
+                                    icon: Icon(
+                                      isFav
+                                          ? Icons.bookmark
+                                          : Icons.bookmark_border,
+                                      color: isFav
+                                          ? Colors.amber
+                                          : Colors.white,
+                                      size: 35,
+                                    ),
+                                  ),
+                                  const Text(
+                                    "Save",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12,
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
 
                           // --- SHARE BUTTON ---
                           const Column(

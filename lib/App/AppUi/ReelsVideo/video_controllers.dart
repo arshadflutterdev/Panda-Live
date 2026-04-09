@@ -309,6 +309,56 @@ class ReelsController extends GetxController {
     }
   }
 
+  //vidoe ko favourite kreyn
+  // --- FAVORITE / SAVE VIDEO LOGIC ---
+  Future<void> toggleFavorite(
+    String videoId,
+    Map<String, dynamic> videoData,
+  ) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+      DocumentReference favRef = FirebaseFirestore.instance
+          .collection('userProfile')
+          .doc(uid)
+          .collection('favorites')
+          .doc(videoId);
+
+      DocumentSnapshot favDoc = await favRef.get();
+
+      if (favDoc.exists) {
+        // Agar pehle se save hai toh remove kar do
+        await favRef.delete();
+        Get.snackbar("Removed", "Video favorites se hata di gayi");
+      } else {
+        // Agar save nahi hai toh poora video data save kar lo (taake baad mein dikhane mein asani ho)
+        await favRef.set({
+          'id': videoId,
+          'videoUrl': videoData['videoUrl'],
+          'thumbnail':
+              videoData['profilePic'], // Ya agar aapne thumbnail banaya hai
+          'username': videoData['username'],
+          'caption': videoData['caption'],
+          'createdAt': FieldValue.serverTimestamp(),
+        });
+        Get.snackbar("Saved", "Video favorites mein add ho gayi!");
+      }
+    } catch (e) {
+      Get.snackbar("Error", "Favorite process fail: $e");
+    }
+  }
+
+  // Favourite check karne ke liye Stream (taake icon ka color change ho sakay)
+  Stream<bool> isFavorite(String videoId) {
+    String uid = FirebaseAuth.instance.currentUser!.uid;
+    return FirebaseFirestore.instance
+        .collection('userProfile')
+        .doc(uid)
+        .collection('favorites')
+        .doc(videoId)
+        .snapshots()
+        .map((snapshot) => snapshot.exists);
+  }
+
   updateVideoViews(String videoId) async {
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
