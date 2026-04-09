@@ -123,6 +123,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/profile_screen_controller.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/profile_widget.dart';
 
 class ProfileScreen extends StatelessWidget {
   final String uid;
@@ -155,6 +156,13 @@ class ProfileScreen extends StatelessWidget {
                 SliverToBoxAdapter(
                   child: Column(
                     children: [
+                      ProfileHeaderWidget(
+                        name: controller.user.value?.name ?? 'User',
+                        image: controller.user.value?.image ?? '',
+                        shortId: controller.user.value?.shortId ?? 0,
+                        isVerified: controller.user.value?.isVerified ?? false,
+                        user: controller.user.value!, // Yeh add karna lazmi hai
+                      ),
                       const SizedBox(height: 20),
                       // Stats Row
                       Row(

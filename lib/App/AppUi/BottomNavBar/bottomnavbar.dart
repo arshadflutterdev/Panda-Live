@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/main_profile_screen.dart';
@@ -22,7 +23,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
     ReelsScreen(),
     UpdatesScreen(),
     // WalletScreen(),
-    ProfileScreen(uid: ''),
+    ProfileScreen(uid: FirebaseAuth.instance.currentUser?.uid ?? ""),
   ];
   @override
   Widget build(BuildContext context) {
