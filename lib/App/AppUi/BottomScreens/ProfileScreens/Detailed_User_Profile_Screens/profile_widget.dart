@@ -166,64 +166,77 @@ class SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
 
 // User Info Header
 class ProfileHeaderWidget extends StatelessWidget {
-  final UserProfileModel user;
+  final String targetUid; // User object ki jagah UID pass karein
 
-  const ProfileHeaderWidget({super.key, required this.user});
+  const ProfileHeaderWidget({super.key, required this.targetUid});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const SizedBox(height: 20),
-        // Profile Image
-        CircleAvatar(
-          radius: 50,
-          backgroundImage: user.image.isNotEmpty
-              ? NetworkImage(user.image)
-              : const AssetImage('assets/images/default_user.png')
-                    as ImageProvider,
-        ),
-        const SizedBox(height: 10),
-        // User Name & Verified Icon
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(
-              "@${user.name}",
-              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-            ),
-            if (user.isVerified)
-              const Padding(
-                padding: EdgeInsets.only(left: 4),
-                child: Icon(Icons.verified, color: Colors.blue, size: 20),
+    // Controller ko dhoondein tag ke zariye
+    final controller = Get.find<ProfileController>(tag: targetUid);
+
+    return Obx(() {
+      // Agar user data abhi tak load nahi hua
+      if (controller.user.value == null) return const SizedBox();
+
+      final user = controller.user.value!;
+
+      return Column(
+        children: [
+          const SizedBox(height: 20),
+          CircleAvatar(
+            radius: 50,
+            backgroundImage: user.image.isNotEmpty
+                ? NetworkImage(user.image)
+                : const AssetImage('assets/images/default_user.png')
+                      as ImageProvider,
+          ),
+          const SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "@${user.name}",
+                style: const TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
               ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        // Bio Section with Edit Button
-        Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const SizedBox(width: 40), // Spacing to balance the icon button
-            Flexible(
-              child: Text(
-                user.bio.isNotEmpty ? user.bio : "Add your bio",
-                textAlign: TextAlign.center,
-                style: const TextStyle(fontSize: 14, color: Colors.black87),
+              if (user.isVerified)
+                const Padding(
+                  padding: EdgeInsets.only(left: 4),
+                  child: Icon(Icons.verified, color: Colors.blue, size: 20),
+                ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const SizedBox(width: 40),
+              Flexible(
+                child: Text(
+                  user.bio.isNotEmpty ? user.bio : "Add your bio",
+                  textAlign: TextAlign.center,
+                  style: const TextStyle(fontSize: 14, color: Colors.black87),
+                ),
               ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.edit, size: 18, color: Colors.grey),
-              onPressed: () => _showEditBioDialog(context),
-            ),
-          ],
-        ),
-      ],
-    );
+              IconButton(
+                icon: const Icon(Icons.edit, size: 18, color: Colors.grey),
+                onPressed: () => _showEditBioDialog(context, controller, user),
+              ),
+            ],
+          ),
+        ],
+      );
+    });
   }
 
-  // Edit Bio Dialog function
-  void _showEditBioDialog(BuildContext context) {
+  void _showEditBioDialog(
+    BuildContext context,
+    ProfileController controller,
+    UserProfileModel user,
+  ) {
     final TextEditingController bioController = TextEditingController(
       text: user.bio,
     );
@@ -235,10 +248,6 @@ class ProfileHeaderWidget extends StatelessWidget {
         content: TextField(
           controller: bioController,
           autofocus: true,
-          decoration: const InputDecoration(
-            hintText: "Enter your bio (e.g. Buy)",
-            counterText: "",
-          ),
           maxLength: 100,
         ),
         actions: [
@@ -248,10 +257,7 @@ class ProfileHeaderWidget extends StatelessWidget {
           ),
           ElevatedButton(
             onPressed: () {
-              // Find the controller using the tag and update
-              Get.find<ProfileController>(
-                tag: user.uid,
-              ).updateBio(bioController.text.trim());
+              controller.updateBio(bioController.text.trim());
               Navigator.pop(context);
             },
             child: const Text("Save"),
