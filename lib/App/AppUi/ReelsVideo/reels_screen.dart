@@ -1066,11 +1066,11 @@ class ReelsScreen extends StatelessWidget {
                           Obx(() {
                             final currentVideo = controller.videoList
                                 .firstWhere((v) => v.id == data.id);
-                            return Column(
+                            return Row(
                               children: [
                                 const Icon(
                                   Icons.play_arrow_outlined,
-                                  size: 35,
+                                  size: 25,
                                   color: Colors.white,
                                 ),
                                 Text(
