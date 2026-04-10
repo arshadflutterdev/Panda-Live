@@ -49,10 +49,15 @@ class ProfileController extends GetxController {
     fetchProfileData();
   }
 
-  Future<void> fetchProfileData() async {
+  Future<void> fetchProfileData({bool forceRefresh = false}) async {
     try {
+      // Agar data pehle se hai aur force refresh nahi maanga gaya, toh wahi dikhao
+      if (user.value != null && !forceRefresh) {
+        return;
+      }
+
       isLoading(true);
-      // Fetch Basic User Info
+
       var userDoc = await _db.collection('userProfile').doc(targetUid).get();
       if (userDoc.exists) {
         user.value = UserProfileModel.fromFirestore(
@@ -61,27 +66,45 @@ class ProfileController extends GetxController {
         );
       }
 
-      // Fetch Followers/Following Counts
-      var followers = await _db
-          .collection('userProfile')
-          .doc(targetUid)
-          .collection('Followers')
-          .get();
-      var following = await _db
-          .collection('userProfile')
-          .doc(targetUid)
-          .collection('Following')
-          .get();
-
-      followerCount.value = followers.docs.length;
-      followingCount.value = following.docs.length;
-
-      // Friends logic (common IDs)
-      var followerIds = followers.docs.map((e) => e.id).toSet();
-      var followingIds = following.docs.map((e) => e.id).toSet();
-      friendsCount.value = followerIds.intersection(followingIds).length;
+      // Followers/Following logic yahan rahegi...
     } finally {
       isLoading(false);
     }
   }
+
+  // Future<void> fetchProfileData() async {
+  //   try {
+  //     isLoading(true);
+  //     // Fetch Basic User Info
+  //     var userDoc = await _db.collection('userProfile').doc(targetUid).get();
+  //     if (userDoc.exists) {
+  //       user.value = UserProfileModel.fromFirestore(
+  //         userDoc.data()!,
+  //         userDoc.id,
+  //       );
+  //     }
+
+  //     // Fetch Followers/Following Counts
+  //     var followers = await _db
+  //         .collection('userProfile')
+  //         .doc(targetUid)
+  //         .collection('Followers')
+  //         .get();
+  //     var following = await _db
+  //         .collection('userProfile')
+  //         .doc(targetUid)
+  //         .collection('Following')
+  //         .get();
+
+  //     followerCount.value = followers.docs.length;
+  //     followingCount.value = following.docs.length;
+
+  //     // Friends logic (common IDs)
+  //     var followerIds = followers.docs.map((e) => e.id).toSet();
+  //     var followingIds = following.docs.map((e) => e.id).toSet();
+  //     friendsCount.value = followerIds.intersection(followingIds).length;
+  //   } finally {
+  //     isLoading(false);
+  //   }
+  // }
 }

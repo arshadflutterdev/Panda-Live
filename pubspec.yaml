@@ -57,6 +57,7 @@ dependencies:
   wakelock_plus: ^1.5.1
   video_player: ^2.11.1
   flutter_cache_manager: ^3.4.1
+  cached_network_image: ^3.4.1
   
  
 

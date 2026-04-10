@@ -135,6 +135,7 @@
 // //     );
 // //   }
 // // }
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/profile_model.dart';
@@ -187,7 +188,9 @@ class ProfileHeaderWidget extends StatelessWidget {
           CircleAvatar(
             radius: 50,
             backgroundImage: user.image.isNotEmpty
-                ? NetworkImage(user.image)
+                ? CachedNetworkImageProvider(
+                    user.image,
+                  ) // Ye local cache se uthaye ga
                 : const AssetImage('assets/images/default_user.png')
                       as ImageProvider,
           ),
