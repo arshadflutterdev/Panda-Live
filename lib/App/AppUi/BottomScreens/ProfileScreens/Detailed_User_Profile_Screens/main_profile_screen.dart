@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/Follower_Following_Friends_Screens/following_main_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/Follower_Following_Friends_Screens/friends_main_class.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/followers_main_class.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/profile_screen_controller.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/profile_widget.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/profile_related_video_screen.dart/video_details.dart';
@@ -64,9 +65,14 @@ class ProfileScreen extends StatelessWidget {
                                 controller.followingCount.value,
                               ),
                             ),
-                            _buildStatColumn(
-                              "Followers",
-                              controller.followerCount.value,
+                            GestureDetector(
+                              onTap: () => Get.to(
+                                () => FollowersListScreen(targetUid: uid),
+                              ),
+                              child: _buildStatColumn(
+                                "Followers",
+                                controller.followerCount.value,
+                              ),
                             ),
                           ],
                         ),

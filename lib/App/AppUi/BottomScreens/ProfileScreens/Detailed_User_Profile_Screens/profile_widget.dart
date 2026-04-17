@@ -136,8 +136,10 @@
 // //   }
 // // }
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/Edit_Main_Profile_Screen/edit_main_profile_screen.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/profile_model.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/profile_screen_controller.dart';
 
@@ -195,7 +197,9 @@ class ProfileHeaderWidget extends StatelessWidget {
                 : const AssetImage('assets/images/default_user.png')
                       as ImageProvider,
           ),
+
           const SizedBox(height: 10),
+          // ProfileHeaderWidget ke andar build method mein Name wali Row ko aise update karein:
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -211,8 +215,37 @@ class ProfileHeaderWidget extends StatelessWidget {
                   padding: EdgeInsets.only(left: 4),
                   child: Icon(Icons.verified, color: Colors.blue, size: 20),
                 ),
+
+              // --- Edit Button Logic ---
+              if (targetUid == FirebaseAuth.instance.currentUser!.uid)
+                IconButton(
+                  icon: const Icon(
+                    Icons.edit_note,
+                    size: 22,
+                    color: Colors.black54,
+                  ),
+                  onPressed: () => Get.to(() => const EditProfileScreen()),
+                ),
             ],
           ),
+
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     Text(
+          //       "@${user.name}",
+          //       style: const TextStyle(
+          //         fontWeight: FontWeight.bold,
+          //         fontSize: 18,
+          //       ),
+          //     ),
+          //     if (user.isVerified)
+          //       const Padding(
+          //         padding: EdgeInsets.only(left: 4),
+          //         child: Icon(Icons.verified, color: Colors.blue, size: 20),
+          //       ),
+          //   ],
+          // ),
           const SizedBox(height: 12),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
