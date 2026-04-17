@@ -3,7 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/main_profile_screen.dart';
-
+import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/profile_screen.dart';
 import 'package:pandlive/App/AppUi/ReelsVideo/reel_player_screen.dart';
 import 'package:pandlive/App/AppUi/ReelsVideo/video_controllers.dart';
 
@@ -402,11 +402,54 @@ class ReelsScreen extends StatelessWidget {
       body: Stack(
         children: [
           // 1. Main Video PageView
-          Obx(
-            () => PageView.builder(
+          Obx(() {
+            // --- Empty Following List Check ---
+            if (controller.isForYou.value == false &&
+                controller.videoList.isEmpty) {
+              return Container(
+                color: Colors.black,
+                child: Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Icon(
+                        Icons.person_add_alt_1_outlined,
+                        color: Colors.white54,
+                        size: 80,
+                      ),
+                      const SizedBox(height: 20),
+                      const Text(
+                        "Follow someone to see videos",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                      const SizedBox(height: 30),
+                      ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.red,
+                        ),
+                        onPressed: () {
+                          controller.isForYou.value = true;
+                          controller.getAllVideos();
+                        },
+                        child: const Text(
+                          "Explore For You",
+                          style: TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              );
+            }
+
+            // --- Aapka Original PageView Builder ---
+            return PageView.builder(
               scrollDirection: Axis.vertical,
               itemCount: controller.videoList.length,
-              // ReelsScreen ke PageView.builder mein ye update karein:
               itemBuilder: (context, index) {
                 final data =
                     controller.videoList[index]; // Firebase se aane wala data
@@ -414,12 +457,56 @@ class ReelsScreen extends StatelessWidget {
                 return Stack(
                   children: [
                     // 1. Actual Video Player
-                    // ReelsScreen mein jahan call ho raha hai:
                     VideoPlayerItem(
                       videoUrl: data.videoUrl,
                       videoId: data.id, // <--- Ye lazmi pass karein
                     ),
 
+                    // 2. Right Side Profile/User Section (TikTok Style)
+                    // Positioned(
+                    //   right: 15,
+                    //   bottom: 120, // Isay likes ke upar set karein
+                    //   child: Column(
+                    //     children: [
+                    //       StreamBuilder<bool>(
+                    //         stream: controller.isFollowing(
+                    //           data.uid,
+                    //         ), // Check kar raha hai follow status
+                    //         builder: (context, snapshot) {
+                    //           if (data.uid ==
+                    //               FirebaseAuth.instance.currentUser!.uid) {
+                    //             return const SizedBox.shrink();
+                    //           }
+                    //           if (snapshot.data == true) {
+                    //             return const SizedBox.shrink(); // Icon gayab ho jayega
+                    //           }
+
+                    //           return Transform.translate(
+                    //             offset: const Offset(0, -10),
+                    //             child: GestureDetector(
+                    //               onTap: () {
+                    //                 controller.followUser(
+                    //                   data.uid,
+                    //                 ); // Follow logic call hoga
+                    //               },
+                    //               child: Container(
+                    //                 decoration: const BoxDecoration(
+                    //                   color: Colors.blue,
+                    //                   shape: BoxShape.circle,
+                    //                 ),
+                    //                 child: const Icon(
+                    //                   Icons.add,
+                    //                   color: Colors.white,
+                    //                   size: 18,
+                    //                 ),
+                    //               ),
+                    //             ),
+                    //           );
+                    //         },
+                    //       ),
+                    //     ],
+                    //   ),
+                    // ),
                     Positioned(
                       right: 15,
                       bottom: 80,
@@ -490,7 +577,6 @@ class ReelsScreen extends StatelessWidget {
 
                           // --- LIKE BUTTON (Fixed with GetX Obx) ---
                           Obx(() {
-                            // controller.videoList se current video ka fresh data nikalna zaroori hai
                             final currentVideo = controller.videoList
                                 .firstWhere((v) => v.id == data.id);
                             bool isLiked = currentVideo.likes.contains(
@@ -527,12 +613,8 @@ class ReelsScreen extends StatelessWidget {
                             children: [
                               GestureDetector(
                                 onTap: () {
-                                  // Comments fetch karna aur bottom sheet kholna
                                   controller.getComments(data.id);
-                                  showCommentBottomSheet(
-                                    context,
-                                    data.id,
-                                  ); // Niche function call ho raha hai
+                                  showCommentBottomSheet(context, data.id);
                                 },
                                 child: const Icon(
                                   Icons.comment,
@@ -541,12 +623,11 @@ class ReelsScreen extends StatelessWidget {
                                 ),
                               ),
                               const SizedBox(height: 5),
-
                               Obx(() {
                                 final currentVideo = controller.videoList
                                     .firstWhere((v) => v.id == data.id);
                                 return Text(
-                                  "${currentVideo.commentCount ?? 0}", // Ye main video doc se count uthaye ga
+                                  "${currentVideo.commentCount ?? 0}",
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 13,
@@ -557,6 +638,7 @@ class ReelsScreen extends StatelessWidget {
                           ),
 
                           const SizedBox(height: 20),
+
                           StreamBuilder<int>(
                             stream: Get.find<ReelsController>()
                                 .getTotalSaveCount(data.id),
@@ -571,8 +653,7 @@ class ReelsScreen extends StatelessWidget {
                                   bool isFav = favSnapshot.data ?? false;
 
                                   return Column(
-                                    mainAxisSize: MainAxisSize
-                                        .min, // Extra space khatam karne ke liye
+                                    mainAxisSize: MainAxisSize.min,
                                     children: [
                                       IconButton(
                                         onPressed: () {
@@ -592,7 +673,6 @@ class ReelsScreen extends StatelessWidget {
                                           size: 35,
                                         ),
                                       ),
-                                      // Text widget styling complete
                                       Text(
                                         count > 0 ? "$count" : "Save",
                                         style: const TextStyle(
@@ -619,7 +699,7 @@ class ReelsScreen extends StatelessWidget {
                           const Column(
                             children: [
                               Icon(Icons.share, size: 35, color: Colors.white),
-                              const SizedBox(height: 5),
+                              SizedBox(height: 5),
                               Text(
                                 "Share",
                                 style: TextStyle(
@@ -633,7 +713,6 @@ class ReelsScreen extends StatelessWidget {
                       ),
                     ),
 
-                    // 3. Bottom Left Overlay (Username aur Caption)
                     Positioned(
                       bottom: 20,
                       left: 20,
@@ -643,14 +722,12 @@ class ReelsScreen extends StatelessWidget {
                           GestureDetector(
                             onTap: () {
                               Get.to(
-                                () => ProfileScreen(
-                                  uid: data.uid,
-                                ), // Ab 'uid' define ho chuka hai
+                                () => ProfileScreen(uid: data.uid),
                                 transition: Transition.rightToLeft,
                               );
                             },
                             child: Text(
-                              "@${data.username}", // Dynamic Username
+                              "@${data.username}",
                               style: const TextStyle(
                                 color: Colors.white,
                                 fontWeight: FontWeight.bold,
@@ -659,7 +736,7 @@ class ReelsScreen extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            data.caption, // Dynamic Caption
+                            data.caption,
                             style: const TextStyle(color: Colors.white),
                           ),
                           Obx(() {
@@ -673,7 +750,7 @@ class ReelsScreen extends StatelessWidget {
                                   color: Colors.white,
                                 ),
                                 Text(
-                                  "${currentVideo.views.length}", // List ki length hi total views hain
+                                  "${currentVideo.views.length}",
                                   style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 13,
@@ -688,8 +765,344 @@ class ReelsScreen extends StatelessWidget {
                   ],
                 );
               },
-            ),
-          ),
+            );
+          }),
+          // Obx(
+          //   () => PageView.builder(
+          //     scrollDirection: Axis.vertical,
+          //     itemCount: controller.videoList.length,
+          //     // ReelsScreen ke PageView.builder mein ye update karein:
+          //     itemBuilder: (context, index) {
+          //       final data =
+          //           controller.videoList[index]; // Firebase se aane wala data
+
+          //       return Stack(
+          //         children: [
+          //           // 1. Actual Video Player
+          //           // ReelsScreen mein jahan call ho raha hai:
+          //           VideoPlayerItem(
+          //             videoUrl: data.videoUrl,
+          //             videoId: data.id, // <--- Ye lazmi pass karein
+          //           ),
+          //           // 2. Right Side Profile/User Section (TikTok Style)
+          //           Positioned(
+          //             right: 15,
+          //             bottom: 120, // Isay likes ke upar set karein
+          //             child: Column(
+          //               children: [
+          //                 // Wo chota sa red plus icon (TikTok Follow Button)
+          //                 // ReelsScreen.dart mein Profile Picture ke neeche wala Plus Icon code:
+          //                 StreamBuilder<bool>(
+          //                   stream: controller.isFollowing(
+          //                     data.uid,
+          //                   ), // Check kar raha hai follow status
+          //                   builder: (context, snapshot) {
+          //                     // Agar data load ho raha ho ya user already followed ho, toh khali box dikhao (Hide icon)
+          //                     if (data.uid ==
+          //                         FirebaseAuth.instance.currentUser!.uid) {
+          //                       return const SizedBox.shrink();
+          //                     }
+          //                     if (snapshot.data == true) {
+          //                       return const SizedBox.shrink(); // Icon gayab ho jayega
+          //                     }
+
+          //                     // Agar user followed NAHI hai, toh Plus Icon dikhao
+          //                     return Transform.translate(
+          //                       offset: const Offset(0, -10),
+          //                       child: GestureDetector(
+          //                         onTap: () {
+          //                           controller.followUser(
+          //                             data.uid,
+          //                           ); // Follow logic call hoga
+          //                         },
+          //                         child: Container(
+          //                           decoration: const BoxDecoration(
+          //                             color: Colors.red,
+          //                             shape: BoxShape.circle,
+          //                           ),
+          //                           child: const Icon(
+          //                             Icons.add,
+          //                             color: Colors.white,
+          //                             size: 18,
+          //                           ),
+          //                         ),
+          //                       ),
+          //                     );
+          //                   },
+          //                 ),
+          //               ],
+          //             ),
+          //           ),
+
+          //           Positioned(
+          //             right: 15,
+          //             bottom: 80,
+          //             child: Column(
+          //               mainAxisAlignment: MainAxisAlignment.end,
+          //               children: [
+          //                 // --- PROFILE SECTION ---
+          //                 GestureDetector(
+          //                   onTap: () =>
+          //                       Get.to(() => ProfileScreen(uid: data.uid)),
+          //                   child: Stack(
+          //                     clipBehavior: Clip.none,
+          //                     children: [
+          //                       Container(
+          //                         padding: const EdgeInsets.all(1.5),
+          //                         decoration: const BoxDecoration(
+          //                           color: Colors.white,
+          //                           shape: BoxShape.circle,
+          //                         ),
+          //                         child: CircleAvatar(
+          //                           radius: 25,
+          //                           backgroundImage: data.profilePic.isNotEmpty
+          //                               ? NetworkImage(data.profilePic)
+          //                               : null,
+          //                           child: data.profilePic.isEmpty
+          //                               ? Text(data.username[0].toUpperCase())
+          //                               : null,
+          //                         ),
+          //                       ),
+          //                       StreamBuilder<bool>(
+          //                         stream: controller.isFollowing(data.uid),
+          //                         builder: (context, snapshot) {
+          //                           if (data.uid ==
+          //                                   FirebaseAuth
+          //                                       .instance
+          //                                       .currentUser!
+          //                                       .uid ||
+          //                               snapshot.data == true) {
+          //                             return const SizedBox.shrink();
+          //                           }
+          //                           return Positioned(
+          //                             bottom: -8,
+          //                             left: 18,
+          //                             child: GestureDetector(
+          //                               onTap: () =>
+          //                                   controller.followUser(data.uid),
+          //                               child: Container(
+          //                                 padding: const EdgeInsets.all(2),
+          //                                 decoration: const BoxDecoration(
+          //                                   color: Colors.red,
+          //                                   shape: BoxShape.circle,
+          //                                 ),
+          //                                 child: const Icon(
+          //                                   Icons.add,
+          //                                   color: Colors.white,
+          //                                   size: 16,
+          //                                 ),
+          //                               ),
+          //                             ),
+          //                           );
+          //                         },
+          //                       ),
+          //                     ],
+          //                   ),
+          //                 ),
+
+          //                 const SizedBox(height: 25),
+
+          //                 // --- LIKE BUTTON (Fixed with GetX Obx) ---
+          //                 Obx(() {
+          //                   // controller.videoList se current video ka fresh data nikalna zaroori hai
+          //                   final currentVideo = controller.videoList
+          //                       .firstWhere((v) => v.id == data.id);
+          //                   bool isLiked = currentVideo.likes.contains(
+          //                     FirebaseAuth.instance.currentUser!.uid,
+          //                   );
+
+          //                   return Column(
+          //                     children: [
+          //                       GestureDetector(
+          //                         onTap: () => controller.likeVideo(data.id),
+          //                         child: Icon(
+          //                           Icons.favorite,
+          //                           size: 38,
+          //                           color: isLiked ? Colors.red : Colors.white,
+          //                         ),
+          //                       ),
+          //                       const SizedBox(height: 5),
+          //                       Text(
+          //                         "${currentVideo.likes.length}",
+          //                         style: const TextStyle(
+          //                           color: Colors.white,
+          //                           fontSize: 13,
+          //                           fontWeight: FontWeight.bold,
+          //                         ),
+          //                       ),
+          //                     ],
+          //                   );
+          //                 }),
+
+          //                 const SizedBox(height: 20),
+
+          //                 // --- COMMENT BUTTON (With Real-time Count) ---
+          //                 Column(
+          //                   children: [
+          //                     GestureDetector(
+          //                       onTap: () {
+          //                         // Comments fetch karna aur bottom sheet kholna
+          //                         controller.getComments(data.id);
+          //                         showCommentBottomSheet(
+          //                           context,
+          //                           data.id,
+          //                         ); // Niche function call ho raha hai
+          //                       },
+          //                       child: const Icon(
+          //                         Icons.comment,
+          //                         size: 38,
+          //                         color: Colors.white,
+          //                       ),
+          //                     ),
+          //                     const SizedBox(height: 5),
+          //                     // Is logic ko "Text" widget ki jagah replace karein agar aapne Firestore update kiya hai
+          //                     Obx(() {
+          //                       final currentVideo = controller.videoList
+          //                           .firstWhere((v) => v.id == data.id);
+          //                       return Text(
+          //                         "${currentVideo.commentCount ?? 0}", // Ye main video doc se count uthaye ga
+          //                         style: const TextStyle(
+          //                           color: Colors.white,
+          //                           fontSize: 13,
+          //                         ),
+          //                       );
+          //                     }),
+          //                   ],
+          //                 ),
+
+          //                 const SizedBox(height: 20),
+          //                 StreamBuilder<int>(
+          //                   stream: Get.find<ReelsController>()
+          //                       .getTotalSaveCount(data.id),
+          //                   builder: (context, countSnapshot) {
+          //                     int count = countSnapshot.data ?? 0;
+
+          //                     return StreamBuilder<bool>(
+          //                       stream: Get.find<ReelsController>().isFavorite(
+          //                         data.id,
+          //                       ),
+          //                       builder: (context, favSnapshot) {
+          //                         bool isFav = favSnapshot.data ?? false;
+
+          //                         return Column(
+          //                           mainAxisSize: MainAxisSize
+          //                               .min, // Extra space khatam karne ke liye
+          //                           children: [
+          //                             IconButton(
+          //                               onPressed: () {
+          //                                 Get.find<ReelsController>()
+          //                                     .toggleFavorite(
+          //                                       data.id,
+          //                                       data.toJson(),
+          //                                     );
+          //                               },
+          //                               icon: Icon(
+          //                                 isFav
+          //                                     ? Icons.bookmark
+          //                                     : Icons.bookmark_border,
+          //                                 color: isFav
+          //                                     ? Colors.amber
+          //                                     : Colors.white,
+          //                                 size: 35,
+          //                               ),
+          //                             ),
+          //                             // Text widget styling complete
+          //                             Text(
+          //                               count > 0 ? "$count" : "Save",
+          //                               style: const TextStyle(
+          //                                 color: Colors.white,
+          //                                 fontSize: 12,
+          //                                 fontWeight: FontWeight.bold,
+          //                                 shadows: [
+          //                                   Shadow(
+          //                                     blurRadius: 4.0,
+          //                                     color: Colors.black,
+          //                                     offset: Offset(1.0, 1.0),
+          //                                   ),
+          //                                 ],
+          //                               ),
+          //                             ),
+          //                           ],
+          //                         );
+          //                       },
+          //                     );
+          //                   },
+          //                 ),
+
+          //                 // --- SHARE BUTTON ---
+          //                 const Column(
+          //                   children: [
+          //                     Icon(Icons.share, size: 35, color: Colors.white),
+          //                     const SizedBox(height: 5),
+          //                     Text(
+          //                       "Share",
+          //                       style: TextStyle(
+          //                         color: Colors.white,
+          //                         fontSize: 13,
+          //                       ),
+          //                     ),
+          //                   ],
+          //                 ),
+          //               ],
+          //             ),
+          //           ),
+
+          //           Positioned(
+          //             bottom: 20,
+          //             left: 20,
+          //             child: Column(
+          //               crossAxisAlignment: CrossAxisAlignment.start,
+          //               children: [
+          //                 GestureDetector(
+          //                   onTap: () {
+          //                     Get.to(
+          //                       () => ProfileScreen(
+          //                         uid: data.uid,
+          //                       ), // Ab 'uid' define ho chuka hai
+          //                       transition: Transition.rightToLeft,
+          //                     );
+          //                   },
+          //                   child: Text(
+          //                     "@${data.username}", // Dynamic Username
+          //                     style: const TextStyle(
+          //                       color: Colors.white,
+          //                       fontWeight: FontWeight.bold,
+          //                       fontSize: 16,
+          //                     ),
+          //                   ),
+          //                 ),
+          //                 Text(
+          //                   data.caption, // Dynamic Caption
+          //                   style: const TextStyle(color: Colors.white),
+          //                 ),
+          //                 Obx(() {
+          //                   final currentVideo = controller.videoList
+          //                       .firstWhere((v) => v.id == data.id);
+          //                   return Row(
+          //                     children: [
+          //                       const Icon(
+          //                         Icons.play_arrow_outlined,
+          //                         size: 25,
+          //                         color: Colors.white,
+          //                       ),
+          //                       Text(
+          //                         "${currentVideo.views.length}", // List ki length hi total views hain
+          //                         style: const TextStyle(
+          //                           color: Colors.white,
+          //                           fontSize: 13,
+          //                         ),
+          //                       ),
+          //                     ],
+          //                   );
+          //                 }),
+          //               ],
+          //             ),
+          //           ),
+          //         ],
+          //       );
+          //     },
+          //   ),
+          // ),
 
           // 2. Top Bar (Tabs & Upload)
           Positioned(
@@ -699,9 +1112,9 @@ class ReelsScreen extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                // UPLOAD BUTTON
+                // UPLOAD BUTTON (Vesa hi hai jesa aapne manga)
                 IconButton(
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.add_box_outlined,
                     color: Colors.white,
                     size: 30,
@@ -709,22 +1122,54 @@ class ReelsScreen extends StatelessWidget {
                   onPressed: () => controller.pickVideo(),
                 ),
                 const SizedBox(width: 20),
-                // TABS
-                Text(
-                  "Following",
-                  style: TextStyle(color: Colors.white60, fontSize: 17),
-                ),
-                const SizedBox(width: 15),
-                Text("|", style: TextStyle(color: Colors.white30)),
-                const SizedBox(width: 15),
-                Text(
-                  "For You",
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 17,
+
+                // TABS (Ab clickable aur reactive hain)
+                Obx(
+                  () => GestureDetector(
+                    onTap: () {
+                      controller.isForYou.value = false;
+                      controller.getFollowingVideos(); // Following logic call
+                    },
+                    child: Text(
+                      "Following",
+                      style: TextStyle(
+                        color: !controller.isForYou.value
+                            ? Colors.white
+                            : Colors.white60,
+                        fontSize: 17,
+                        fontWeight: !controller.isForYou.value
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
                   ),
                 ),
+
+                const SizedBox(width: 15),
+                const Text("|", style: TextStyle(color: Colors.white30)),
+                const SizedBox(width: 15),
+
+                Obx(
+                  () => GestureDetector(
+                    onTap: () {
+                      controller.isForYou.value = true;
+                      controller.getAllVideos(); // For You (All Videos) call
+                    },
+                    child: Text(
+                      "For You",
+                      style: TextStyle(
+                        color: controller.isForYou.value
+                            ? Colors.white
+                            : Colors.white60,
+                        fontSize: 17,
+                        fontWeight: controller.isForYou.value
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                  ),
+                ),
+
                 const SizedBox(width: 50), // Balance ke liye
               ],
             ),
