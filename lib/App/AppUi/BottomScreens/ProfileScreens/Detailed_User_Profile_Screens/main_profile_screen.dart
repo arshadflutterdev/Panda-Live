@@ -40,7 +40,7 @@ class ProfileScreen extends StatelessWidget {
                   child: Column(
                     children: [
                       ProfileHeaderWidget(targetUid: controller.targetUid),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                       // Stats Row
                       // Stats Row
                       Obx(
@@ -77,7 +77,7 @@ class ProfileScreen extends StatelessWidget {
                           ],
                         ),
                       ), // Obx yahan khatam ho raha hai
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
                     ],
                   ),
                 ),
@@ -92,10 +92,14 @@ class ProfileScreen extends StatelessWidget {
                       unselectedLabelColor: Colors.grey,
                       indicatorWeight: 2,
                       tabs: [
-                        Tab(icon: Icon(Icons.grid_on)), // User's Own Videos
-                        Tab(icon: Icon(Icons.favorite_border)), // Liked Videos
                         Tab(
-                          icon: Icon(Icons.bookmark_border),
+                          icon: Icon(Icons.grid_on, size: 35),
+                        ), // User's Own Videos
+                        Tab(
+                          icon: Icon(Icons.favorite_border, size: 35),
+                        ), // Liked Videos
+                        Tab(
+                          icon: Icon(Icons.bookmark_border, size: 35),
                         ), // Favorite Videos
                       ],
                     ),

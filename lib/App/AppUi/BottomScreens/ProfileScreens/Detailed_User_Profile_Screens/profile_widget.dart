@@ -247,21 +247,48 @@ class ProfileHeaderWidget extends StatelessWidget {
           //   ],
           // ),
           const SizedBox(height: 12),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.center,
+          //   children: [
+          //     const SizedBox(width: 40),
+          //     Flexible(
+          //       child: Text(
+          //         user.bio.isNotEmpty ? user.bio : "Add your bio",
+          //         textAlign: TextAlign.center,
+          //         style: const TextStyle(fontSize: 14, color: Colors.black87),
+          //       ),
+          //     ),
+          //     IconButton(
+          //       icon: const Icon(Icons.edit, size: 18, color: Colors.grey),
+          //       onPressed: () => _showEditBioDialog(context, controller, user),
+          //     ),
+          //   ],
+          // ),
+
+          // --- Bio Section ---
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const SizedBox(width: 40),
+              const SizedBox(width: 40), // Spacing for alignment
               Flexible(
                 child: Text(
-                  user.bio.isNotEmpty ? user.bio : "Add your bio",
+                  // Agar bio khali hai to "No bio yet" show karega
+                  user.bio.isNotEmpty ? user.bio : "No bio yet",
                   textAlign: TextAlign.center,
                   style: const TextStyle(fontSize: 14, color: Colors.black87),
                 ),
               ),
-              IconButton(
-                icon: const Icon(Icons.edit, size: 18, color: Colors.grey),
-                onPressed: () => _showEditBioDialog(context, controller, user),
-              ),
+
+              // --- Edit Icon Condition ---
+              // Sirf tab show hoga jab profile apni hogi
+              if (targetUid == FirebaseAuth.instance.currentUser!.uid)
+                IconButton(
+                  icon: const Icon(Icons.edit, size: 18, color: Colors.grey),
+                  onPressed: () =>
+                      _showEditBioDialog(context, controller, user),
+                )
+              else
+                const SizedBox(width: 40), // Balance spacing if no icon
             ],
           ),
         ],
