@@ -144,6 +144,7 @@ import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Pr
 // Fixes the 'minExtent' and 'maxExtent' error
 class SliverTabBarDelegate extends SliverPersistentHeaderDelegate {
   final TabBar tabBar;
+
   SliverTabBarDelegate(this.tabBar);
 
   @override

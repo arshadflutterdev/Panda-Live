@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/Follower_Following_Friends_Screens/following_main_screen.dart';
+import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/Follower_Following_Friends_Screens/friends_main_class.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/profile_screen_controller.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/Detailed_User_Profile_Screens/profile_widget.dart';
 import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/profile_related_video_screen.dart/video_details.dart';
@@ -44,13 +46,23 @@ class ProfileScreen extends StatelessWidget {
                         () => Row(
                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                           children: [
-                            _buildStatColumn(
-                              "Friends",
-                              controller.friendsCount.value,
+                            GestureDetector(
+                              onTap: () => Get.to(
+                                () => FriendsListScreen(targetUid: uid),
+                              ),
+                              child: _buildStatColumn(
+                                "Friends",
+                                controller.friendsCount.value,
+                              ),
                             ),
-                            _buildStatColumn(
-                              "Following",
-                              controller.followingCount.value,
+                            GestureDetector(
+                              onTap: () => Get.to(
+                                () => FollowingListScreen(targetUid: uid),
+                              ),
+                              child: _buildStatColumn(
+                                "Following",
+                                controller.followingCount.value,
+                              ),
                             ),
                             _buildStatColumn(
                               "Followers",
