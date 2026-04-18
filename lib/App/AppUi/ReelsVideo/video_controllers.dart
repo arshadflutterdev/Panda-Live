@@ -32,18 +32,40 @@ class ReelsController extends GetxController {
   //     }),
   //   );
   // }
-  getAllVideos() async {
-    String currentUid = FirebaseAuth.instance.currentUser!.uid;
+  // getAllVideos() async {
+  //   String currentUid = FirebaseAuth.instance.currentUser!.uid;
 
+  //   videoList.bindStream(
+  //     FirebaseFirestore.instance
+  //         .collection('videos')
+  //         .orderBy('createdAt', descending: true) // Newest first
+  //         .snapshots()
+  //         .map((query) {
+  //           List<VideoModel> retVal = [];
+  //           for (var element in query.docs) {
+  //             retVal.add(VideoModel.fromSnap(element));
+  //           }
+  //           return retVal;
+  //         }),
+  //   );
+  // }
+  getAllVideos() async {
     videoList.bindStream(
       FirebaseFirestore.instance
           .collection('videos')
-          .orderBy('createdAt', descending: true) // Newest first
+          .where('isPrivate', isEqualTo: false) // Sirf public videos
+          .orderBy('createdAt', descending: true)
           .snapshots()
           .map((query) {
             List<VideoModel> retVal = [];
             for (var element in query.docs) {
-              retVal.add(VideoModel.fromSnap(element));
+              try {
+                retVal.add(VideoModel.fromSnap(element));
+              } catch (e) {
+                print(
+                  "Video mapping error: $e",
+                ); // Kisi video mein data missing ho toh crash na ho
+              }
             }
             return retVal;
           }),
@@ -368,38 +390,7 @@ class ReelsController extends GetxController {
       Get.snackbar("Error", e.toString());
     }
   }
-  // Future<void> likeVideo(String id) async {
-  //   try {
-  //     String uid = FirebaseAuth.instance.currentUser!.uid;
-  //     DocumentSnapshot doc = await FirebaseFirestore.instance
-  //         .collection('videos')
-  //         .doc(id)
-  //         .get();
 
-  //     var likesList = (doc.data() as dynamic)['likes'] as List;
-
-  //     if (likesList.contains(uid)) {
-  //       // 1. Database Update (Unlike)
-  //       await FirebaseFirestore.instance.collection('videos').doc(id).update({
-  //         'likes': FieldValue.arrayRemove([uid]),
-  //       });
-  //     } else {
-  //       // 2. Database Update (Like)
-  //       await FirebaseFirestore.instance.collection('videos').doc(id).update({
-  //         'likes': FieldValue.arrayUnion([uid]),
-  //       });
-  //     }
-
-  //     // --- GETX REFRESH LOGIC ---
-  //     // Ye line GetX ko batati hai ke list change hui hai,
-  //     // taake UI mein Obx wala error khatam ho jaye aur heart color change ho.
-  //     videoList.refresh();
-  //   } catch (e) {
-  //     Get.snackbar("Error", e.toString());
-  //   }
-  // }
-
-  //vidoe ko favourite kreyn
   // --- FAVORITE / SAVE VIDEO LOGIC ---
   // 1. Toggle Favorite: Data save karne aur delete karne ke liye
   Future<void> toggleFavorite(
