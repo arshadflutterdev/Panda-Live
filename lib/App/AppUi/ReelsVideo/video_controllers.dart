@@ -639,58 +639,62 @@ class ReelsController extends GetxController {
 
   // --- FIREBASE UPLOAD LOGIC ---
   // --- FIREBASE UPLOAD LOGIC ---
+  // Controller ke top par ye variable add karein
+  var uploadProgress = 0.0.obs;
+
   Future<void> uploadVideo(String caption, String videoPath) async {
     try {
       isLoading.value = true;
+      uploadProgress.value = 0.0; // Reset progress
+
       String uid = FirebaseAuth.instance.currentUser!.uid;
       String videoId = DateTime.now().millisecondsSinceEpoch.toString();
 
-      // 1. Storage mein upload
       Reference ref = FirebaseStorage.instance
           .ref()
           .child('videos')
           .child(videoId);
 
-      await ref.putFile(File(videoPath));
-      String downloadUrl = await ref.getDownloadURL();
+      // --- PROGRESS LOGIC START ---
+      UploadTask uploadTask = ref.putFile(File(videoPath));
 
-      // 2. User Profile Fetch
+      // Stream ke zariye progress track karein
+      uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
+        double progress = (snapshot.bytesTransferred / snapshot.totalBytes);
+        uploadProgress.value = progress; // 0.0 se 1.0 tak progress update hogi
+      });
+
+      // Upload mukammal hone ka wait karein
+      TaskSnapshot taskSnapshot = await uploadTask;
+      String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      // --- PROGRESS LOGIC END ---
+
+      // Baki saara Firestore ka code wese hi rahega...
       var userDoc = await FirebaseFirestore.instance
           .collection('userProfile')
           .doc(uid)
           .get();
+      // ... (Aapka purana Firestore code)
 
-      String realName = userDoc.data()?.containsKey('name') == true
-          ? userDoc['name']
-          : "User";
-      String realImage = userDoc.data()?.containsKey('userimage') == true
-          ? userDoc['userimage']
-          : "";
-
-      // 3. Save to Firestore
       await FirebaseFirestore.instance.collection('videos').doc(videoId).set({
         'uid': uid,
         'id': videoId,
-        'username': realName,
-        'profilePic': realImage,
         'videoUrl': downloadUrl,
         'caption': caption,
-        'songName': 'Original Audio',
+        'isPrivate': false,
         'createdAt': FieldValue.serverTimestamp(),
-        'likes': [],
-        'views': [],
-        'isPrivate': false, // <--- YE LINE ADD KARNA LAAZMI HAI
+        // baki fields...
       });
 
       Get.back();
-      Get.snackbar("Mubarak!", "Video kamyabi se post ho gayi.");
+      Get.snackbar("Mubarak!", "Video post ho gayi.");
     } catch (e) {
       Get.snackbar("Error", "Upload fail: $e");
     } finally {
       isLoading.value = false;
+      uploadProgress.value = 0.0;
     }
   }
-
   // Future<void> uploadVideo(String caption, String videoPath) async {
   //   try {
   //     isLoading.value = true;
@@ -719,7 +723,7 @@ class ReelsController extends GetxController {
   //         ? userDoc['userimage']
   //         : "";
 
-  //     // 3. Save to Firestore (IMPORTANT: Added 'likes' field)
+  //     // 3. Save to Firestore
   //     await FirebaseFirestore.instance.collection('videos').doc(videoId).set({
   //       'uid': uid,
   //       'id': videoId,
@@ -729,8 +733,9 @@ class ReelsController extends GetxController {
   //       'caption': caption,
   //       'songName': 'Original Audio',
   //       'createdAt': FieldValue.serverTimestamp(),
-  //       'likes': [], // <--- YE LINE ADD KARNA ZAROORI HAI
-  //       'views': [], // <--- YE LINE ADD KAREIN
+  //       'likes': [],
+  //       'views': [],
+  //       'isPrivate': false, // <--- YE LINE ADD KARNA LAAZMI HAI
   //     });
 
   //     Get.back();

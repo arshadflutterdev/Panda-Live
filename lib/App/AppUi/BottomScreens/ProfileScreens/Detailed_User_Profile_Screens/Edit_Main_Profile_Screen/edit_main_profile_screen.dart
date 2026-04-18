@@ -37,17 +37,43 @@ class _EditProfileScreenState extends State<EditProfileScreen> {
         .collection('userProfile')
         .doc(_uid)
         .get();
+
     if (doc.exists) {
+      // Map nikaal lein taaki data access safe ho jaye
+      Map<String, dynamic>? data = doc.data();
+
       setState(() {
-        initialName = doc['name'] ?? "";
-        initialBio = doc['bio'] ?? "";
-        currentImageUrl = doc['userimage'] ?? "";
+        initialName = data?['name'] ?? "";
+
+        // Agar 'bio' field database mein hai hi nahi, to ye null return karega
+        // aur hum usey handle kar lenge crash ke baghair.
+        initialBio = data?['bio'] ?? "";
+        currentImageUrl = data?['userimage'] ?? "";
 
         nameController.text = initialName;
+
+        // Aapne kaha tha random text ya default text show ho
         bioController.text = initialBio.isEmpty ? "No bio yet" : initialBio;
       });
     }
   }
+
+  // _loadUserData() async {
+  //   var doc = await FirebaseFirestore.instance
+  //       .collection('userProfile')
+  //       .doc(_uid)
+  //       .get();
+  //   if (doc.exists) {
+  //     setState(() {
+  //       initialName = doc['name'] ?? "";
+  //       initialBio = doc['bio'] ?? "";
+  //       currentImageUrl = doc['userimage'] ?? "";
+
+  //       nameController.text = initialName;
+  //       bioController.text = initialBio.isEmpty ? "No bio yet" : initialBio;
+  //     });
+  //   }
+  // }
 
   Future<void> _pickImage() async {
     final pickedFile = await ImagePicker().pickImage(

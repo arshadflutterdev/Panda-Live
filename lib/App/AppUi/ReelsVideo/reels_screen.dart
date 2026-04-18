@@ -398,6 +398,8 @@ class ReelsScreen extends StatelessWidget {
     }
 
     return Scaffold(
+      extendBody: true, // <--- Ye bottom bar ka gap khatam karega
+      extendBodyBehindAppBar: true,
       backgroundColor: Colors.black,
       body: Stack(
         children: [
@@ -465,7 +467,7 @@ class ReelsScreen extends StatelessWidget {
                     // 2. Right Side Profile/User Section (TikTok Style)
                     Positioned(
                       right: 15,
-                      bottom: 80,
+                      bottom: 45,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.end,
                         children: [
@@ -529,7 +531,7 @@ class ReelsScreen extends StatelessWidget {
                             ),
                           ),
 
-                          const SizedBox(height: 25),
+                          const SizedBox(height: 15),
 
                           // --- LIKE BUTTON ---
                           Obx(() {
@@ -562,7 +564,7 @@ class ReelsScreen extends StatelessWidget {
                             );
                           }),
 
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 5),
 
                           // --- COMMENT BUTTON ---
                           Column(
@@ -592,8 +594,6 @@ class ReelsScreen extends StatelessWidget {
                               }),
                             ],
                           ),
-
-                          const SizedBox(height: 20),
 
                           // --- SAVE (FAVORITE) BUTTON ---
                           StreamBuilder<int>(
@@ -638,7 +638,7 @@ class ReelsScreen extends StatelessWidget {
                             },
                           ),
 
-                          const SizedBox(height: 20),
+                          const SizedBox(height: 10),
 
                           // --- DIRECT DOWNLOAD BUTTON (For All Videos) ---
                           Column(
@@ -899,7 +899,7 @@ class ReelsScreen extends StatelessWidget {
                     // ),
                     // User Info Section (Positioned widget jahan caption hai)
                     Positioned(
-                      bottom: 30,
+                      bottom: 20,
                       left: 15,
                       right: 80,
                       child: Column(

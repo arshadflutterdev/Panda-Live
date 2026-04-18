@@ -30,17 +30,63 @@ class ConfirmUploadScreen extends StatelessWidget {
               decoration: InputDecoration(hintText: "Caption likhein..."),
             ),
           ),
-          Obx(
-            () => controller.isLoading.value
-                ? CircularProgressIndicator()
-                : ElevatedButton(
-                    onPressed: () => controller.uploadVideo(
-                      _captionController.text,
-                      videoFile.path,
+          Obx(() {
+            if (controller.isLoading.value) {
+              return Column(
+                children: [
+                  // Professional Linear Progress Bar
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 30),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: LinearProgressIndicator(
+                        value: controller.uploadProgress.value,
+                        backgroundColor: Colors.grey[300],
+                        color: Colors.blueAccent,
+                        minHeight: 10,
+                      ),
                     ),
-                    child: Text("Upload Karein"),
                   ),
-          ),
+                  const SizedBox(height: 10),
+                  // Percentage Text
+                  Text(
+                    "${(controller.uploadProgress.value * 100).toStringAsFixed(0)}% Uploading...",
+                    style: const TextStyle(fontWeight: FontWeight.bold),
+                  ),
+                ],
+              );
+            } else {
+              return ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.black,
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: 50,
+                    vertical: 12,
+                  ),
+                ),
+                onPressed: () => controller.uploadVideo(
+                  _captionController.text,
+                  videoFile.path,
+                ),
+                child: const Text(
+                  "Upload Karein",
+                  style: TextStyle(color: Colors.white),
+                ),
+              );
+            }
+          }),
+
+          // Obx(
+          //   () => controller.isLoading.value
+          //       ? CircularProgressIndicator()
+          //       : ElevatedButton(
+          //           onPressed: () => controller.uploadVideo(
+          //             _captionController.text,
+          //             videoFile.path,
+          //           ),
+          //           child: Text("Upload Karein"),
+          //         ),
+          // ),
         ],
       ),
     );

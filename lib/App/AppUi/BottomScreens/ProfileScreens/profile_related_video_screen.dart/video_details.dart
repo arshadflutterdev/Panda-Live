@@ -703,8 +703,9 @@ class VideoDetailScreen extends StatelessWidget {
     final ReelsController reelsController = Get.find<ReelsController>();
 
     return Scaffold(
-      backgroundColor: Colors.black,
+      extendBody: true, // <--- Ye bottom bar ka gap khatam karega
       extendBodyBehindAppBar: true,
+      backgroundColor: Colors.black,
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
@@ -736,11 +737,11 @@ class VideoDetailScreen extends StatelessWidget {
                 VideoPlayerItem(videoUrl: data.videoUrl, videoId: data.id),
                 Positioned(
                   right: 15,
-                  bottom: 100,
+                  bottom: 45,
                   child: Column(
                     children: [
                       _buildProfileSection(data, reelsController),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 10),
 
                       // Like Button
                       Obx(() {
@@ -759,7 +760,6 @@ class VideoDetailScreen extends StatelessWidget {
                           onTap: () => reelsController.likeVideo(data.id),
                         );
                       }),
-                      const SizedBox(height: 20),
 
                       // Comment Button
                       _buildActionItem(
@@ -767,7 +767,6 @@ class VideoDetailScreen extends StatelessWidget {
                         label: "${data.commentCount}",
                         onTap: () {},
                       ),
-                      const SizedBox(height: 20),
 
                       // Favorite/Save Button (App ke andar save karne ke liye)
                       StreamBuilder<bool>(
@@ -791,7 +790,6 @@ class VideoDetailScreen extends StatelessWidget {
                       // DOWNLOAD BUTTON (Sirf Dusre User ki video pe dikhega)
                       if (data.uid !=
                           FirebaseAuth.instance.currentUser!.uid) ...[
-                        const SizedBox(height: 20),
                         _buildActionItem(
                           icon: Icons.download_for_offline_outlined,
                           label: "Download",
@@ -805,7 +803,6 @@ class VideoDetailScreen extends StatelessWidget {
                       // MORE OPTIONS (Apni video pe 3 dots jisme download aur privacy hai)
                       if (data.uid ==
                           FirebaseAuth.instance.currentUser!.uid) ...[
-                        const SizedBox(height: 20),
                         _buildActionItem(
                           icon: Icons.more_horiz,
                           label: "More",
@@ -822,7 +819,7 @@ class VideoDetailScreen extends StatelessWidget {
 
                 // User Info Section
                 Positioned(
-                  bottom: 30,
+                  bottom: 20,
                   left: 15,
                   right: 80,
                   child: Column(
