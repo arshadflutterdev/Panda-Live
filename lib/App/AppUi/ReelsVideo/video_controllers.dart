@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -8,6 +9,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:pandlive/App/AppUi/ReelsVideo/Reels_Models.dart/comments_model.dart';
 import 'package:pandlive/App/AppUi/ReelsVideo/confirm_upload_screen.dart';
 import 'package:pandlive/App/AppUi/ReelsVideo/Reels_Models.dart/reels_model.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:saver_gallery/saver_gallery.dart';
 
 class ReelsController extends GetxController {
   var videoList = <VideoModel>[].obs;
@@ -269,6 +272,103 @@ class ReelsController extends GetxController {
       print("Error liking comment: $e");
     }
   }
+
+  // video_controllers.dart mein ye variables add karein
+  var isDownloading = false.obs;
+  var downloadProgress = 0.0.obs;
+  CancelToken? downloadCancelToken;
+
+  Future<void> downloadVideo(String videoUrl, String videoId) async {
+    try {
+      isDownloading.value = true;
+      downloadProgress.value = 0.0;
+      downloadCancelToken = CancelToken();
+
+      final tempDir = await getTemporaryDirectory();
+      final path = "${tempDir.path}/$videoId.mp4";
+
+      await Dio().download(
+        videoUrl,
+        path,
+        cancelToken: downloadCancelToken,
+        onReceiveProgress: (received, total) {
+          if (total != -1) {
+            downloadProgress.value = received / total;
+          }
+        },
+      );
+
+      final result = await SaverGallery.saveFile(
+        filePath: path,
+        fileName: videoId,
+        skipIfExists: false,
+      );
+
+      isDownloading.value = false;
+      if (result.isSuccess) {
+        Get.snackbar(
+          "Success",
+          "Saved to Gallery",
+          snackPosition: SnackPosition.BOTTOM,
+          backgroundColor: Colors.green,
+          colorText: Colors.white,
+        );
+      }
+    } catch (e) {
+      isDownloading.value = false;
+      if (!CancelToken.isCancel(e as DioException)) {
+        Get.snackbar("Error", "Download failed");
+      }
+    }
+  }
+
+  void cancelDownload() {
+    downloadCancelToken?.cancel("Cancelled by user");
+    isDownloading.value = false;
+  }
+
+  //video download krn laz
+  // Future<void> downloadVideo(String videoUrl, String videoId) async {
+  //   try {
+  //     Get.snackbar(
+  //       "Downloading...",
+  //       "Video gallery mein save ho rahi hai...",
+  //       snackPosition: SnackPosition.BOTTOM,
+  //       backgroundColor: Colors.black54,
+  //       colorText: Colors.white,
+  //       showProgressIndicator: true,
+  //       duration: const Duration(seconds: 2),
+  //     );
+
+  //     final tempDir = await getTemporaryDirectory();
+  //     final path = "${tempDir.path}/$videoId.mp4";
+
+  //     await Dio().download(videoUrl, path);
+
+  //     // Yahan tabdeeli ki hai:
+  //     // Gallery mein save karne wala part update karein
+  //     final result = await SaverGallery.saveFile(
+  //       filePath: path,
+  //       fileName: videoId,
+  //       skipIfExists: false, // <--- Ye line add karein (Required Parameter)
+  //     );
+
+  //     if (result.isSuccess) {
+  //       Get.snackbar(
+  //         "Success",
+  //         "Video Gallery mein save ho gayi!",
+  //         backgroundColor: Colors.green,
+  //         colorText: Colors.white,
+  //         snackPosition: SnackPosition.BOTTOM,
+  //       );
+  //     } else {
+  //       Get.snackbar("Error", "Gallery mein save nahi ho saki.");
+  //     }
+  //   } catch (e) {
+  //     print("Download Error: $e");
+  //     Get.snackbar("Error", "Download fail ho gaya: $e");
+  //   }
+  // }
 
   // Reply post karne ke liye
   Future<void> postReply(
@@ -567,7 +667,7 @@ class ReelsController extends GetxController {
           ? userDoc['userimage']
           : "";
 
-      // 3. Save to Firestore (IMPORTANT: Added 'likes' field)
+      // 3. Save to Firestore
       await FirebaseFirestore.instance.collection('videos').doc(videoId).set({
         'uid': uid,
         'id': videoId,
@@ -577,8 +677,9 @@ class ReelsController extends GetxController {
         'caption': caption,
         'songName': 'Original Audio',
         'createdAt': FieldValue.serverTimestamp(),
-        'likes': [], // <--- YE LINE ADD KARNA ZAROORI HAI
-        'views': [], // <--- YE LINE ADD KAREIN
+        'likes': [],
+        'views': [],
+        'isPrivate': false, // <--- YE LINE ADD KARNA LAAZMI HAI
       });
 
       Get.back();
@@ -589,4 +690,55 @@ class ReelsController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  // Future<void> uploadVideo(String caption, String videoPath) async {
+  //   try {
+  //     isLoading.value = true;
+  //     String uid = FirebaseAuth.instance.currentUser!.uid;
+  //     String videoId = DateTime.now().millisecondsSinceEpoch.toString();
+
+  //     // 1. Storage mein upload
+  //     Reference ref = FirebaseStorage.instance
+  //         .ref()
+  //         .child('videos')
+  //         .child(videoId);
+
+  //     await ref.putFile(File(videoPath));
+  //     String downloadUrl = await ref.getDownloadURL();
+
+  //     // 2. User Profile Fetch
+  //     var userDoc = await FirebaseFirestore.instance
+  //         .collection('userProfile')
+  //         .doc(uid)
+  //         .get();
+
+  //     String realName = userDoc.data()?.containsKey('name') == true
+  //         ? userDoc['name']
+  //         : "User";
+  //     String realImage = userDoc.data()?.containsKey('userimage') == true
+  //         ? userDoc['userimage']
+  //         : "";
+
+  //     // 3. Save to Firestore (IMPORTANT: Added 'likes' field)
+  //     await FirebaseFirestore.instance.collection('videos').doc(videoId).set({
+  //       'uid': uid,
+  //       'id': videoId,
+  //       'username': realName,
+  //       'profilePic': realImage,
+  //       'videoUrl': downloadUrl,
+  //       'caption': caption,
+  //       'songName': 'Original Audio',
+  //       'createdAt': FieldValue.serverTimestamp(),
+  //       'likes': [], // <--- YE LINE ADD KARNA ZAROORI HAI
+  //       'views': [], // <--- YE LINE ADD KAREIN
+  //     });
+
+  //     Get.back();
+  //     Get.snackbar("Mubarak!", "Video kamyabi se post ho gayi.");
+  //   } catch (e) {
+  //     Get.snackbar("Error", "Upload fail: $e");
+  //   } finally {
+  //     isLoading.value = false;
+  //   }
+  // }
 }
