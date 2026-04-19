@@ -11,7 +11,7 @@ import 'package:pandlive/App/AppUi/ReelsVideo/confirm_upload_screen.dart';
 import 'package:pandlive/App/AppUi/ReelsVideo/Reels_Models.dart/reels_model.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:saver_gallery/saver_gallery.dart';
-import 'package:video_compress_plus/video_compress_plus.dart';
+import 'package:video_compress/video_compress.dart';
 
 class ReelsController extends GetxController {
   var videoList = <VideoModel>[].obs;
