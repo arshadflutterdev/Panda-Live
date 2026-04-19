@@ -61,6 +61,11 @@ dependencies:
   dio: ^5.9.2
   path_provider: ^2.1.5
   saver_gallery: ^4.1.1
+  video_editor: ^3.0.0
+  video_compress_plus: ^1.0.0
+
+ 
+  
   
  
 

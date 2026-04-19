@@ -463,6 +463,34 @@ class ReelsScreen extends StatelessWidget {
                       videoUrl: data.videoUrl,
                       videoId: data.id, // <--- Ye lazmi pass karein
                     ),
+                    // Home Screen ke Stack mein kahi bhi add kar dein
+                    Obx(() {
+                      final controller = Get.find<ReelsController>();
+                      if (controller.isLoading.value) {
+                        return Positioned(
+                          top: 50,
+                          right: 20,
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              CircularProgressIndicator(
+                                value: controller.uploadProgress.value,
+                                color: Colors.white,
+                                backgroundColor: Colors.white24,
+                              ),
+                              Text(
+                                "${(controller.uploadProgress.value * 100).toStringAsFixed(0)}%",
+                                style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 10,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+                      return const SizedBox.shrink();
+                    }),
 
                     // 2. Right Side Profile/User Section (TikTok Style)
                     Positioned(
@@ -1042,6 +1070,7 @@ class ReelsScreen extends StatelessWidget {
                   ),
                   onPressed: () => controller.pickVideo(),
                 ),
+
                 const SizedBox(width: 20),
 
                 // TABS (Ab clickable aur reactive hain)
