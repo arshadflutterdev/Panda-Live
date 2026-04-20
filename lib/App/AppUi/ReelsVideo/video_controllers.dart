@@ -571,19 +571,19 @@ class ReelsController extends GetxController {
   // Controller ke top par ye variable lazmi add karein
 
   // --- Video Compression Logic ---
-  Future<File?> _compressVideo(String videoPath) async {
-    try {
-      final info = await VideoCompress.compressVideo(
-        videoPath,
-        quality: VideoQuality.MediumQuality, // TikTok style medium quality
-        deleteOrigin: false,
-      );
-      return info?.file;
-    } catch (e) {
-      print("Compression Error: $e");
-      return null;
-    }
-  }
+  // Future<File?> _compressVideo(String videoPath) async {
+  //   try {
+  //     final info = await VideoCompress.compressVideo(
+  //       videoPath,
+  //       quality: VideoQuality.MediumQuality, // TikTok style medium quality
+  //       deleteOrigin: false,
+  //     );
+  //     return info?.file;
+  //   } catch (e) {
+  //     print("Compression Error: $e");
+  //     return null;
+  //   }
+  // }
 
   // --- Thumbnail Generation Logic ---
   Future<File> _getThumbnail(String videoPath) async {
@@ -592,7 +592,13 @@ class ReelsController extends GetxController {
   }
 
   var uploadProgress = 0.0.obs;
-  Future<void> uploadVideo(String caption, String videoPath) async {
+
+  Future<void> uploadVideo(
+    String caption,
+    String videoPath, {
+    Duration? start,
+    Duration? end, // Trim parameters added
+  }) async {
     // 1. Foran Confirm Screen band kar do taaki banda pichli screen (Home/TikTok) par chala jaye
     Get.back();
 
@@ -610,8 +616,13 @@ class ReelsController extends GetxController {
       isLoading.value = true;
       uploadProgress.value = 0.0;
 
-      // --- Compression & Thumbnail (Background mein chalta rahega) ---
-      File? compressedVideo = await _compressVideo(videoPath);
+      // --- Compression & Thumbnail (Now using trim points) ---
+      // Humne yahan start aur end pass kar diya hai
+      File? compressedVideo = await _compressVideo(
+        videoPath,
+        start: start,
+        end: end,
+      );
       if (compressedVideo == null) return;
 
       File thumbnailFile = await _getThumbnail(videoPath);
@@ -678,22 +689,60 @@ class ReelsController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  // Ye helper function bhi update kar lein taaki actual trimming ho sake
+  Future<File?> _compressVideo(
+    String path, {
+    Duration? start,
+    Duration? end,
+  }) async {
+    try {
+      final info = await VideoCompress.compressVideo(
+        path,
+        quality: VideoQuality.DefaultQuality,
+        deleteOrigin: false,
+        includeAudio: true,
+        // Actual trimming points
+        startTime: start?.inSeconds,
+        duration: (start != null && end != null)
+            ? (end.inSeconds - start.inSeconds)
+            : null,
+      );
+      return info?.file;
+    } catch (e) {
+      VideoCompress.cancelCompression();
+      return null;
+    }
+  }
+  // var uploadProgress = 0.0.obs;
   // Future<void> uploadVideo(String caption, String videoPath) async {
+  //   // 1. Foran Confirm Screen band kar do taaki banda pichli screen (Home/TikTok) par chala jaye
+  //   Get.back();
+
+  //   // 2. Aik Snackbar ya chota sa notification dikha do ke "Uploading started..."
+  //   Get.snackbar(
+  //     "Uploading...",
+  //     "Aapki video background mein post ho rahi hai",
+  //     snackPosition: SnackPosition.TOP,
+  //     backgroundColor: Colors.black.withOpacity(0.7),
+  //     colorText: Colors.white,
+  //     duration: const Duration(seconds: 2),
+  //   );
+
   //   try {
   //     isLoading.value = true;
   //     uploadProgress.value = 0.0;
 
-  //     String uid = FirebaseAuth.instance.currentUser!.uid;
-  //     String videoId = DateTime.now().millisecondsSinceEpoch.toString();
-
-  //     // --- STEP A: COMPRESS VIDEO FIRST ---
+  //     // --- Compression & Thumbnail (Background mein chalta rahega) ---
   //     File? compressedVideo = await _compressVideo(videoPath);
   //     if (compressedVideo == null) return;
 
-  //     // --- STEP B: GENERATE THUMBNAIL ---
   //     File thumbnailFile = await _getThumbnail(videoPath);
 
-  //     // --- STEP C: UPLOAD THUMBNAIL TO STORAGE ---
+  //     // --- Storage Upload ---
+  //     String videoId = DateTime.now().millisecondsSinceEpoch.toString();
+
+  //     // Thumbnail upload
   //     Reference thumbRef = FirebaseStorage.instance
   //         .ref()
   //         .child('thumbnails')
@@ -701,7 +750,7 @@ class ReelsController extends GetxController {
   //     await thumbRef.putFile(thumbnailFile);
   //     String thumbUrl = await thumbRef.getDownloadURL();
 
-  //     // --- STEP D: UPLOAD COMPRESSED VIDEO WITH PROGRESS ---
+  //     // Video upload with progress
   //     Reference videoRef = FirebaseStorage.instance
   //         .ref()
   //         .child('videos')
@@ -709,181 +758,47 @@ class ReelsController extends GetxController {
   //     UploadTask uploadTask = videoRef.putFile(compressedVideo);
 
   //     uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
-  //       double progress = (snapshot.bytesTransferred / snapshot.totalBytes);
-  //       uploadProgress.value = progress;
+  //       uploadProgress.value =
+  //           (snapshot.bytesTransferred / snapshot.totalBytes);
+  //       // Yahan aap chaho to notification bar mein progress dikha sakte ho
   //     });
 
   //     TaskSnapshot taskSnapshot = await uploadTask;
   //     String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
-  //     // 2. User Profile Fetch
+  //     // --- Firestore Save ---
+  //     String uid = FirebaseAuth.instance.currentUser!.uid;
   //     var userDoc = await FirebaseFirestore.instance
   //         .collection('userProfile')
   //         .doc(uid)
   //         .get();
-  //     String realName = userDoc.data()?.containsKey('name') == true
-  //         ? userDoc['name']
-  //         : "User";
-  //     String realImage = userDoc.data()?.containsKey('userimage') == true
-  //         ? userDoc['userimage']
-  //         : "";
 
-  //     // 3. Save to Firestore (Including Thumbnail URL)
   //     await FirebaseFirestore.instance.collection('videos').doc(videoId).set({
   //       'uid': uid,
   //       'id': videoId,
-  //       'username': realName,
-  //       'profilePic': realImage,
   //       'videoUrl': downloadUrl,
-  //       'thumbnail': thumbUrl, // <--- Naya field for grid view
+  //       'thumbnail': thumbUrl,
   //       'caption': caption,
-  //       'songName': 'Original Audio',
+  //       'username': userDoc.data()?['name'] ?? "User",
+  //       'profilePic': userDoc.data()?['userimage'] ?? "",
   //       'createdAt': FieldValue.serverTimestamp(),
-  //       'likes': [],
-  //       'views': [],
   //       'isPrivate': false,
   //     });
 
-  //     // Cleanup Compression Cache (Memory bachane ke liye)
+  //     // Cleanup
   //     await VideoCompress.deleteAllCache();
 
-  //     Get.back();
-  //     Get.snackbar("Mubarak!", "Reel successfully post ho gayi!");
+  //     // Final Success Message
+  //     Get.snackbar(
+  //       "Success",
+  //       "Video Post Ho Gayi!",
+  //       backgroundColor: Colors.green,
+  //       colorText: Colors.white,
+  //     );
   //   } catch (e) {
-  //     Get.snackbar("Error", "Upload fail: $e");
+  //     Get.snackbar("Error", "Upload fail ho gaya");
   //   } finally {
   //     isLoading.value = false;
-  //     uploadProgress.value = 0.0;
-  //   }
-  // }
-
-  // Future<void> uploadVideo(String caption, String videoPath) async {
-  //   try {
-  //     isLoading.value = true;
-  //     uploadProgress.value = 0.0; // Reset progress
-
-  //     String uid = FirebaseAuth.instance.currentUser!.uid;
-  //     String videoId = DateTime.now().millisecondsSinceEpoch.toString();
-
-  //     // 1. Storage mein upload
-  //     Reference ref = FirebaseStorage.instance
-  //         .ref()
-  //         .child('videos')
-  //         .child(videoId);
-
-  //     // --- Upload with Progress ---
-  //     UploadTask uploadTask = ref.putFile(File(videoPath));
-
-  //     // Progress stream listen karein
-  //     uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
-  //       double progress = (snapshot.bytesTransferred / snapshot.totalBytes);
-  //       uploadProgress.value = progress;
-  //     });
-
-  //     // Upload complete hone ka wait karein
-  //     TaskSnapshot taskSnapshot = await uploadTask;
-  //     String downloadUrl = await taskSnapshot.ref.getDownloadURL();
-
-  //     // 2. User Profile Fetch
-  //     var userDoc = await FirebaseFirestore.instance
-  //         .collection('userProfile')
-  //         .doc(uid)
-  //         .get();
-
-  //     String realName = userDoc.data()?.containsKey('name') == true
-  //         ? userDoc['name']
-  //         : "User";
-  //     String realImage = userDoc.data()?.containsKey('userimage') == true
-  //         ? userDoc['userimage']
-  //         : "";
-
-  //     // 3. Save to Firestore
-  //     await FirebaseFirestore.instance.collection('videos').doc(videoId).set({
-  //       'uid': uid,
-  //       'id': videoId,
-  //       'username': realName,
-  //       'profilePic': realImage,
-  //       'videoUrl': downloadUrl,
-  //       'caption': caption,
-  //       'songName': 'Original Audio',
-  //       'createdAt': FieldValue.serverTimestamp(),
-  //       'likes': [],
-  //       'views': [],
-  //       'isPrivate': false, // <--- YE LINE ADD KARNA LAAZMI HAI
-  //     });
-
-  //     Get.back();
-  //     Get.snackbar("Mubarak!", "Video kamyabi se post ho gayi.");
-  //   } catch (e) {
-  //     Get.snackbar("Error", "Upload fail: $e");
-  //   } finally {
-  //     isLoading.value = false;
-  //     uploadProgress.value = 0.0;
-  //   }
-  // }
-
-  // Future<void> uploadVideo(String caption, String videoPath) async {
-  //   try {
-  //     isLoading.value = true;
-  //     uploadProgress.value = 0.0; // Reset progress
-
-  //     String uid = FirebaseAuth.instance.currentUser!.uid;
-  //     String videoId = DateTime.now().millisecondsSinceEpoch.toString();
-
-  //     // 1. Storage mein upload
-  //     Reference ref = FirebaseStorage.instance
-  //         .ref()
-  //         .child('videos')
-  //         .child(videoId);
-
-  //     // --- Upload with Progress ---
-  //     UploadTask uploadTask = ref.putFile(File(videoPath));
-
-  //     // Progress stream listen karein
-  //     uploadTask.snapshotEvents.listen((TaskSnapshot snapshot) {
-  //       double progress = (snapshot.bytesTransferred / snapshot.totalBytes);
-  //       uploadProgress.value = progress;
-  //     });
-
-  //     // Upload complete hone ka wait karein
-  //     TaskSnapshot taskSnapshot = await uploadTask;
-  //     String downloadUrl = await taskSnapshot.ref.getDownloadURL();
-
-  //     // 2. User Profile Fetch
-  //     var userDoc = await FirebaseFirestore.instance
-  //         .collection('userProfile')
-  //         .doc(uid)
-  //         .get();
-
-  //     String realName = userDoc.data()?.containsKey('name') == true
-  //         ? userDoc['name']
-  //         : "User";
-  //     String realImage = userDoc.data()?.containsKey('userimage') == true
-  //         ? userDoc['userimage']
-  //         : "";
-
-  //     // 3. Save to Firestore
-  //     await FirebaseFirestore.instance.collection('videos').doc(videoId).set({
-  //       'uid': uid,
-  //       'id': videoId,
-  //       'username': realName,
-  //       'profilePic': realImage,
-  //       'videoUrl': downloadUrl,
-  //       'caption': caption,
-  //       'songName': 'Original Audio',
-  //       'createdAt': FieldValue.serverTimestamp(),
-  //       'likes': [],
-  //       'views': [],
-  //       'isPrivate': false, // <--- YE LINE ADD KARNA LAAZMI HAI
-  //     });
-
-  //     Get.back();
-  //     Get.snackbar("Mubarak!", "Video kamyabi se post ho gayi.");
-  //   } catch (e) {
-  //     Get.snackbar("Error", "Upload fail: $e");
-  //   } finally {
-  //     isLoading.value = false;
-  //     uploadProgress.value = 0.0;
   //   }
   // }
 }

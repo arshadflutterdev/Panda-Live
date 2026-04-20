@@ -126,6 +126,7 @@
 //     );
 //   }
 // }
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -175,17 +176,17 @@ class _VideoEditingScreenState extends State<VideoEditingScreen> {
       _controller.video.pause();
     }
 
-    // --- YE VALUES NIKALNI HAIN ---
+    // 1. Pehle ye do variables define karein (Ye error fix kar dega)
     final Duration start =
         _controller.video.value.duration * _controller.minTrim;
     final Duration end = _controller.video.value.duration * _controller.maxTrim;
 
-    // Ab inhein ConfirmUploadScreen mein pass karein
+    // 2. Ab inhein pass karein
     Get.off(
       () => ConfirmUploadScreen(
         videoFile: widget.file,
-        startTime: start,
-        endTime: end,
+        startTime: start, // Ab 'start' defined hai
+        endTime: end, // Ab 'end' defined hai
       ),
     );
   }

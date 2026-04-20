@@ -643,6 +643,7 @@
 //     );
 //   }
 // }
+
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -833,7 +834,9 @@ class _ConfirmUploadScreenState extends State<ConfirmUploadScreen> {
                           ),
                         ],
                       )
-                    : SizedBox(
+                    :
+                      // 1. Post Button ka logic
+                      SizedBox(
                         width: double.infinity,
                         height: 50,
                         child: ElevatedButton(
@@ -842,15 +845,48 @@ class _ConfirmUploadScreenState extends State<ConfirmUploadScreen> {
                           ),
                           onPressed: () {
                             if (_captionController.text.isNotEmpty) {
-                              // SIRF UPLOAD HOGA, SCREEN CHANGE NAHI HOGI
+                              // Screen piche le jao
+                              Get.back();
+
+                              // Background mein upload start karo with TRIM points
                               controller.uploadVideo(
                                 _captionController.text,
                                 widget.videoFile.path,
+                                // YE DO LINES LAAZMI HAIN
+                                start: widget.startTime,
+                                end: widget.endTime,
                               );
-                            } else {
-                              Get.snackbar("Error", "Please add a description");
+
+                              Get.snackbar(
+                                "Success",
+                                "Uploading trimmed video...",
+                              );
                             }
                           },
+                          // onPressed: () {
+                          //   if (_captionController.text.isNotEmpty) {
+                          //     // --- FIX START ---
+                          //     // Pehle navigation handle karein taaki screen foran band ho jaye
+                          //     Get.back();
+
+                          //     // Phir upload start karein background mein
+                          //     controller.uploadVideo(
+                          //       _captionController.text,
+                          //       widget.videoFile.path,
+                          //     );
+
+                          //     Get.snackbar(
+                          //       "Success",
+                          //       "Uploading in background...",
+                          //       snackPosition: SnackPosition.BOTTOM,
+                          //       backgroundColor: Colors.black54,
+                          //       colorText: Colors.white,
+                          //     );
+                          //     // --- FIX END ---
+                          //   } else {
+                          //     Get.snackbar("Error", "Please add a description");
+                          //   }
+                          // },
                           child: const Text(
                             "Post",
                             style: TextStyle(
@@ -860,6 +896,37 @@ class _ConfirmUploadScreenState extends State<ConfirmUploadScreen> {
                           ),
                         ),
                       ),
+
+                // 2. Niche wala Obx block bilkul hta dein (Iska kaam Reels page pe hoga)
+                // Jo aapka 0% Uploading wala Column hai, usay yahan se remove kar dein.
+                // SizedBox(
+                //     width: double.infinity,
+                //     height: 50,
+                //     child: ElevatedButton(
+                //       style: ElevatedButton.styleFrom(
+                //         backgroundColor: const Color(0xFFE94359),
+                //       ),
+                //       onPressed: () {
+                //         if (_captionController.text.isNotEmpty) {
+                //           // SIRF UPLOAD HOGA, SCREEN CHANGE NAHI HOGI
+                //           controller.uploadVideo(
+                //             _captionController.text,
+                //             widget.videoFile.path,
+                //           );
+                //         } else {
+                //           Get.snackbar("Error", "Please add a description");
+                //         }
+                //       },
+
+                //       child: const Text(
+                //         "Post",
+                //         style: TextStyle(
+                //           color: Colors.white,
+                //           fontWeight: FontWeight.bold,
+                //         ),
+                //       ),
+                //     ),
+                //   ),
               );
             }),
           ],
