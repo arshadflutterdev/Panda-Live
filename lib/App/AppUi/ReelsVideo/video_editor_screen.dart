@@ -126,177 +126,9 @@
 //     );
 //   }
 // }
-
-// import 'dart:io';
-// import 'package:flutter/material.dart';
-// import 'package:get/get.dart';
-// import 'package:image_picker/image_picker.dart';
-// import 'package:video_player/video_player.dart';
-// // --- YE IMPORT LAAZMI HAI ---
-// import 'package:video_editor/video_editor.dart';
-// import 'confirm_upload_screen.dart';
-
-// class VideoEditingScreen extends StatefulWidget {
-//   final File file;
-//   const VideoEditingScreen({super.key, required this.file});
-
-//   @override
-//   State<VideoEditingScreen> createState() => _VideoEditingScreenState();
-// }
-
-// class _VideoEditingScreenState extends State<VideoEditingScreen> {
-//   late VideoEditorController _controller;
-
-//   @override
-//   void initState() {
-//     super.initState();
-//     _controller = VideoEditorController.file(
-//       File(widget.file.path),
-//       minDuration: const Duration(seconds: 1),
-//       maxDuration: const Duration(seconds: 60),
-//     )..initialize().then((_) {
-//         // --- FIX: Listener add kiya taaki play/pause state update ho ---
-//         _controller.video.addListener(() {
-//           if (mounted) setState(() {});
-//         });
-//         setState(() {});
-//       });
-//   }
-
-//   @override
-//   void dispose() {
-//     _controller.video.removeListener(() {}); // Listener remove karna zaruri hai
-//     _controller.dispose();
-//     super.dispose();
-//   }
-
-//   void _finishEditing() {
-//     Get.to(() => ConfirmUploadScreen(videoFile: widget.file));
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       backgroundColor: Colors.black,
-//       body: _controller.initialized
-//           ? SafeArea(
-//               child: Column(
-//                 children: [
-//                   // --- Custom AppBar ---
-//                   Padding(
-//                     padding: const EdgeInsets.symmetric(horizontal: 10),
-//                     child: Row(
-//                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                       children: [
-//                         IconButton(
-//                           icon: const Icon(Icons.close, color: Colors.white),
-//                           onPressed: () => Get.back(),
-//                         ),
-//                         const Text(
-//                           "Trim Video",
-//                           style: TextStyle(
-//                             color: Colors.white,
-//                             fontWeight: FontWeight.bold,
-//                           ),
-//                         ),
-//                         TextButton(
-//                           onPressed: _finishEditing,
-//                           child: const Text(
-//                             "Next",
-//                             style: TextStyle(
-//                               color: Colors.blueAccent,
-//                               fontSize: 16,
-//                             ),
-//                           ),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-
-//                   // --- Video Preview ---
-//                   Expanded(
-//                     child: Center(
-//                       child: Stack(
-//                         alignment: Alignment.center,
-//                         children: [
-//                           AspectRatio(
-//                             aspectRatio: _controller.video.value.aspectRatio,
-//                             child: CropGridViewer.preview(controller: _controller),
-//                           ),
-
-//                           // --- PLAY/PAUSE OVERLAY FIX ---
-//                           GestureDetector(
-//                             onTap: () {
-//                               _controller.video.value.isPlaying
-//                                   ? _controller.video.pause()
-//                                   : _controller.video.play();
-//                             },
-//                             child: Container(
-//                               width: double.infinity,
-//                               height: double.infinity,
-//                               color: Colors.transparent, // Poori screen par tap detect karne ke liye
-//                               child: !_controller.video.value.isPlaying
-//                                   ? Center(
-//                                       child: Container(
-//                                         padding: const EdgeInsets.all(10),
-//                                         decoration: const BoxDecoration(
-//                                           color: Colors.black45,
-//                                           shape: BoxShape.circle,
-//                                         ),
-//                                         child: const Icon(
-//                                           Icons.play_arrow,
-//                                           color: Colors.white,
-//                                           size: 70,
-//                                         ),
-//                                       ),
-//                                     )
-//                                   : const SizedBox.shrink(),
-//                             ),
-//                           ),
-//                         ],
-//                       ),
-//                     ),
-//                   ),
-
-//                   // --- Trimming Timeline ---
-//                   Container(
-//                     height: 180,
-//                     padding: const EdgeInsets.symmetric(vertical: 20),
-//                     child: Column(
-//                       children: [
-//                         TrimSlider(
-//                           controller: _controller,
-//                           height: 60,
-//                           horizontalMargin: 20,
-//                           child: TrimTimeline(
-//                             controller: _controller,
-//                             padding: const EdgeInsets.only(top: 10),
-//                           ),
-//                         ),
-//                         const SizedBox(height: 20),
-//                         const Text(
-//                           "Drag corner handles to trim",
-//                           style: TextStyle(color: Colors.white54),
-//                         ),
-//                       ],
-//                     ),
-//                   ),
-//                 ],
-//               ),
-//             )
-//           : const Center(
-//               child: CircularProgressIndicator(color: Colors.blueAccent),
-//             ),
-//     );
-//   }
-// }
-
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:video_player/video_player.dart';
-// --- Video Editor Package ---
 import 'package:video_editor/video_editor.dart';
 import 'confirm_upload_screen.dart';
 
@@ -311,40 +143,24 @@ class VideoEditingScreen extends StatefulWidget {
 class _VideoEditingScreenState extends State<VideoEditingScreen> {
   late VideoEditorController _controller;
 
+  // GetX for minimal UI updates only
+  final RxBool isInitialized = false.obs;
+  final RxBool isPlaying = false.obs;
+
   @override
   void initState() {
     super.initState();
     _controller =
         VideoEditorController.file(
-            File(widget.file.path),
+            widget.file,
             minDuration: const Duration(seconds: 1),
             maxDuration: const Duration(seconds: 60),
           )
           ..initialize().then((_) {
-            // Listener to update UI on play/pause and keep it within trim points
+            isInitialized.value = true;
             _controller.video.addListener(() {
-              if (mounted) {
-                // FIXED: Playback ko trimmed area ke andar rakhne ke liye logic
-                final bool isPlaying = _controller.video.value.isPlaying;
-                final int currentPos =
-                    _controller.video.value.position.inMilliseconds;
-                final int startTrim =
-                    (_controller.video.value.duration.inMilliseconds *
-                            _controller.minTrim)
-                        .toInt();
-                final int endTrim =
-                    (_controller.video.value.duration.inMilliseconds *
-                            _controller.maxTrim)
-                        .toInt();
-
-                if (isPlaying && currentPos >= endTrim) {
-                  _controller.video.seekTo(Duration(milliseconds: startTrim));
-                }
-
-                setState(() {});
-              }
+              isPlaying.value = _controller.video.value.isPlaying;
             });
-            setState(() {});
           });
   }
 
@@ -354,18 +170,18 @@ class _VideoEditingScreenState extends State<VideoEditingScreen> {
     super.dispose();
   }
 
-  // --- FIXED: Next par click karne se trimmed hissa hi jaye ga ---
   void _finishEditing() {
     if (_controller.video.value.isPlaying) {
       _controller.video.pause();
     }
 
-    // Double ko Duration mein convert kiya
+    // --- YE VALUES NIKALNI HAIN ---
     final Duration start =
         _controller.video.value.duration * _controller.minTrim;
     final Duration end = _controller.video.value.duration * _controller.maxTrim;
 
-    Get.to(
+    // Ab inhein ConfirmUploadScreen mein pass karein
+    Get.off(
       () => ConfirmUploadScreen(
         videoFile: widget.file,
         startTime: start,
@@ -378,154 +194,114 @@ class _VideoEditingScreenState extends State<VideoEditingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: _controller.initialized
-          ? SafeArea(
-              child: Column(
-                children: [
-                  // --- AppBar ---
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        IconButton(
-                          icon: const Icon(Icons.close, color: Colors.white),
-                          onPressed: () => Get.back(),
-                        ),
-                        const Text(
-                          "Trim Video",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        TextButton(
-                          onPressed: _finishEditing,
-                          child: const Text(
-                            "Next",
-                            style: TextStyle(
-                              color: Colors.blueAccent,
-                              fontSize: 16,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // --- Video Preview ---
-                  Expanded(
-                    child: Center(
-                      child: Stack(
-                        alignment: Alignment.center,
+      body: Obx(
+        () => isInitialized.value
+            ? SafeArea(
+                child: Column(
+                  children: [
+                    // --- Transparent AppBar ---
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          AspectRatio(
-                            aspectRatio: _controller.video.value.aspectRatio,
-                            child: CropGridViewer.preview(
-                              controller: _controller,
+                          IconButton(
+                            icon: const Icon(Icons.close, color: Colors.white),
+                            onPressed: () => Get.back(),
+                          ),
+                          const Text(
+                            "Trim Video",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
                             ),
                           ),
-                          GestureDetector(
-                            onTap: () {
-                              // FIXED: Play dabate waqt agar position trim se bahar hai to start par le jaye
-                              final int startTrim =
-                                  (_controller
-                                              .video
-                                              .value
-                                              .duration
-                                              .inMilliseconds *
-                                          _controller.minTrim)
-                                      .toInt();
-                              final int endTrim =
-                                  (_controller
-                                              .video
-                                              .value
-                                              .duration
-                                              .inMilliseconds *
-                                          _controller.maxTrim)
-                                      .toInt();
-                              final int currentPos = _controller
-                                  .video
-                                  .value
-                                  .position
-                                  .inMilliseconds;
-
-                              if (!_controller.video.value.isPlaying) {
-                                if (currentPos < startTrim ||
-                                    currentPos >= endTrim) {
-                                  _controller.video.seekTo(
-                                    Duration(milliseconds: startTrim),
-                                  );
-                                }
-                                _controller.video.play();
-                              } else {
-                                _controller.video.pause();
-                              }
-                            },
-                            child: Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              color: Colors.transparent,
-                              child: !_controller.video.value.isPlaying
-                                  ? Center(
-                                      child: Container(
-                                        padding: const EdgeInsets.all(10),
-                                        decoration: const BoxDecoration(
-                                          color: Colors.black45,
-                                          shape: BoxShape.circle,
-                                        ),
-                                        child: const Icon(
-                                          Icons.play_arrow,
-                                          color: Colors.white,
-                                          size: 70,
-                                        ),
-                                      ),
-                                    )
-                                  : const SizedBox.shrink(),
+                          TextButton(
+                            onPressed: _finishEditing,
+                            child: const Text(
+                              "Next",
+                              style: TextStyle(
+                                color: Colors.blueAccent,
+                                fontSize: 17,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                  ),
 
-                  // --- THE FINAL FIXED TRIMMER ---
-                  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 20,
-                      horizontal: 20,
+                    // --- Full Video Preview ---
+                    Expanded(
+                      child: GestureDetector(
+                        onTap: () => isPlaying.value
+                            ? _controller.video.pause()
+                            : _controller.video.play(),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            CropGridViewer.preview(controller: _controller),
+
+                            // Play Icon Overlay
+                            Obx(
+                              () => !isPlaying.value
+                                  ? Container(
+                                      padding: const EdgeInsets.all(15),
+                                      decoration: const BoxDecoration(
+                                        color: Colors.black26,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: const Icon(
+                                        Icons.play_arrow,
+                                        color: Colors.white,
+                                        size: 60,
+                                      ),
+                                    )
+                                  : const SizedBox.shrink(),
+                            ),
+                          ],
+                        ),
+                      ),
                     ),
-                    child: Column(
-                      children: [
-                        // SizedBox ensure karta hai ke trimmer screen ke andar hi rahay
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width,
-                          child: TrimSlider(
+
+                    // --- Raw Trimmer (No Background Boxes) ---
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.only(top: 20, bottom: 40),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          // Direct Trim Slider for maximum response
+                          TrimSlider(
                             controller: _controller,
                             height: 60,
-                            // Margin ko 0 rakha hai taaki edges tak access ho
-                            horizontalMargin: 0,
+                            horizontalMargin:
+                                0, // Handles ab poori width use karein ge
                             child: TrimTimeline(
                               controller: _controller,
                               padding: const EdgeInsets.only(top: 10),
                             ),
                           ),
-                        ),
-                        const SizedBox(height: 25),
-                        const Text(
-                          "Hold handles firmly to trim from ends",
-                          style: TextStyle(color: Colors.white54, fontSize: 13),
-                        ),
-                      ],
+                          const SizedBox(height: 20),
+                          const Text(
+                            "Trim from both ends",
+                            style: TextStyle(
+                              color: Colors.white38,
+                              fontSize: 13,
+                              letterSpacing: 0.5,
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
+              )
+            : const Center(
+                child: CircularProgressIndicator(color: Colors.blueAccent),
               ),
-            )
-          : const Center(
-              child: CircularProgressIndicator(color: Colors.blueAccent),
-            ),
+      ),
     );
   }
 }
