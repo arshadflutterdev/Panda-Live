@@ -107,7 +107,13 @@ class ReelsController extends GetxController {
   Future<void> pickVideo() async {
     final video = await ImagePicker().pickVideo(source: ImageSource.gallery);
     if (video != null) {
-      Get.to(() => ConfirmUploadScreen(videoFile: File(video.path)));
+      Get.to(
+        () => ConfirmUploadScreen(
+          videoFile: File(video.path),
+          isBold: false,
+          isItalic: false,
+        ),
+      );
     }
   }
 
