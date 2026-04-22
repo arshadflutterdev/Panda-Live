@@ -720,6 +720,7 @@ class ReelsController extends GetxController {
       return null;
     }
   }
+
   // var uploadProgress = 0.0.obs;
   // Future<void> uploadVideo(String caption, String videoPath) async {
   //   // 1. Foran Confirm Screen band kar do taaki banda pichli screen (Home/TikTok) par chala jaye
