@@ -63,6 +63,7 @@ dependencies:
   saver_gallery: ^4.1.1
   video_editor: ^3.0.0
   video_compress: ^3.1.4
+  ffmpeg_kit_flutter_new: ^4.1.0
 
  
   
