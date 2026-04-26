@@ -41,6 +41,96 @@ class _VideoEditingScreenState extends State<VideoEditingScreen> {
   ];
   final RxInt currentColorIndex = 0.obs;
 
+  //here is code related filters
+  // --- FILTERS STATE ---
+  final RxString selectedFilter = "".obs; // FFmpeg command string
+  final Rx<List<double>?> currentMatrix = Rx<List<double>?>(
+    null,
+  ); // Live Preview Matrix
+
+  final List<Map<String, dynamic>> filters = [
+    {"name": "Original", "value": "", "matrix": null},
+    {
+      "name": "B&W",
+      "value": "colorchannelmixer=.3:.4:.3:0:.3:.4:.3:0:.3:.4:.3",
+      "matrix": [
+        0.2126,
+        0.7152,
+        0.0722,
+        0.0,
+        0.0,
+        0.2126,
+        0.7152,
+        0.0722,
+        0.0,
+        0.0,
+        0.2126,
+        0.7152,
+        0.0722,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+      ],
+    },
+    {
+      "name": "Sepia",
+      "value":
+          "colorchannelmixer=.393:.769:.189:0:.349:.686:.168:0:.272:.534:.131",
+      "matrix": [
+        0.393,
+        0.769,
+        0.189,
+        0.0,
+        0.0,
+        0.349,
+        0.686,
+        0.168,
+        0.0,
+        0.0,
+        0.272,
+        0.534,
+        0.131,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+      ],
+    },
+    {
+      "name": "Vivid",
+      "value": "eq=contrast=1.2:saturation=1.5",
+      "matrix": [
+        1.2,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.2,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.2,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        1.0,
+        0.0,
+      ],
+    },
+  ];
+
   @override
   void initState() {
     super.initState();
@@ -56,6 +146,55 @@ class _VideoEditingScreenState extends State<VideoEditingScreen> {
               isPlaying.value = _controller.video.value.isPlaying;
             });
           });
+  }
+
+  Widget _buildFilterSelector() {
+    return Container(
+      height: 80,
+      margin: const EdgeInsets.symmetric(vertical: 10),
+      child: ListView.builder(
+        scrollDirection: Axis.horizontal,
+        itemCount: filters.length,
+        itemBuilder: (context, index) {
+          final filter = filters[index];
+          return GestureDetector(
+            onTap: () {
+              selectedFilter.value = filter['value'];
+              // Safe casting to avoid List<num> error
+              if (filter['matrix'] != null) {
+                currentMatrix.value = (filter['matrix'] as List)
+                    .map((e) => (e as num).toDouble())
+                    .toList();
+              } else {
+                currentMatrix.value = null;
+              }
+            },
+            child: Obx(() {
+              bool isSelected = selectedFilter.value == filter['value'];
+              return Container(
+                width: 80,
+                margin: const EdgeInsets.symmetric(horizontal: 8),
+                decoration: BoxDecoration(
+                  color: isSelected
+                      ? Colors.blueAccent.withOpacity(0.2)
+                      : Colors.transparent,
+                  border: Border.all(
+                    color: isSelected ? Colors.blueAccent : Colors.white24,
+                  ),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Center(
+                  child: Text(
+                    filter['name'],
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ),
+              );
+            }),
+          );
+        },
+      ),
+    );
   }
 
   @override
@@ -119,9 +258,26 @@ class _VideoEditingScreenState extends State<VideoEditingScreen> {
                                   ? _controller.video.pause()
                                   : _controller.video.play();
                             },
-                            child: CropGridViewer.preview(
-                              controller: _controller,
-                            ),
+                            child:
+                                // Stack ke andar jahan video nazar aa rahi hai
+                                Obx(
+                                  () => ColorFiltered(
+                                    colorFilter: currentMatrix.value != null
+                                        ? ColorFilter.matrix(
+                                            currentMatrix.value!,
+                                          )
+                                        : const ColorFilter.mode(
+                                            Colors.transparent,
+                                            BlendMode.multiply,
+                                          ),
+                                    child: CropGridViewer.preview(
+                                      controller: _controller,
+                                    ),
+                                  ),
+                                ),
+                            // CropGridViewer.preview(
+                            //   controller: _controller,
+                            // ),
                           ),
                           _buildTextLayer(),
                           if (!isPlaying.value && !isEditingMode.value)
@@ -136,6 +292,7 @@ class _VideoEditingScreenState extends State<VideoEditingScreen> {
                       ),
                     ),
                     _buildBottomControls(),
+                    _buildFilterSelector(),
                   ],
                 ),
               )
@@ -354,6 +511,7 @@ class _VideoEditingScreenState extends State<VideoEditingScreen> {
         fontSize: fontSize.value,
         isBold: isBold.value,
         isItalic: isItalic.value,
+        filter: selectedFilter.value,
       ),
     );
   }

@@ -16,8 +16,10 @@ class ConfirmUploadScreen extends StatefulWidget {
   final double? fontSize;
   final bool isBold;
   final bool isItalic;
+  final String filter;
 
-  ConfirmUploadScreen({
+  const ConfirmUploadScreen({
+    super.key,
     required this.videoFile,
     this.startTime,
     this.endTime,
@@ -27,6 +29,7 @@ class ConfirmUploadScreen extends StatefulWidget {
     this.fontSize,
     required this.isBold,
     required this.isItalic,
+    required this.filter,
   });
 
   @override
