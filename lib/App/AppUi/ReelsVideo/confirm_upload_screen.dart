@@ -136,6 +136,7 @@ class _ConfirmUploadScreenState extends State<ConfirmUploadScreen> {
 
   @override
   Widget build(BuildContext context) {
+    print("Check Matrix: ${widget.filterMatrix}");
     return Scaffold(
       backgroundColor: Colors.white,
       appBar: AppBar(
@@ -282,6 +283,11 @@ class _ConfirmUploadScreenState extends State<ConfirmUploadScreen> {
                                 widget.videoFile.path,
                                 start: widget.startTime,
                                 end: widget.endTime,
+                                filterMatrix: widget
+                                    .filterMatrix, // Preview ke liye matrix
+                                filterString: widget
+                                    .filter, // FFmpeg command ke liye string
+                                overlayText: widget.overlayText,
                               );
                               Get.snackbar(
                                 "Success",
@@ -289,6 +295,7 @@ class _ConfirmUploadScreenState extends State<ConfirmUploadScreen> {
                               );
                             }
                           },
+
                           child: const Text(
                             "Post",
                             style: TextStyle(

@@ -461,7 +461,8 @@ class ReelsScreen extends StatelessWidget {
                     // 1. Actual Video Player
                     VideoPlayerItem(
                       videoUrl: data.videoUrl,
-                      videoId: data.id, // <--- Ye lazmi pass karein
+                      videoId: data.id, // <--- Ye lazmi pass
+                      filterMatrix: data.filterMatrix,
                     ),
                     // Home Screen ke Stack mein kahi bhi add kar dein
                     Obx(() {

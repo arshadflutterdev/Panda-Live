@@ -13,6 +13,7 @@ class VideoModel {
   int commentCount;
   List views;
   final bool isPrivate; // 1. Ye line add karein
+  List<dynamic>? filterMatrix;
 
   VideoModel({
     required this.username,
@@ -27,6 +28,7 @@ class VideoModel {
     required this.commentCount,
     required this.views,
     required this.isPrivate,
+    this.filterMatrix,
   });
 
   // Firebase se data map karne ke liye (DocumentSnapshot use karna behtar hai)
@@ -46,6 +48,7 @@ class VideoModel {
       commentCount: data['commentCount'] ?? 0,
       views: data['views'] ?? [],
       isPrivate: data['isPrivate'] ?? false,
+      filterMatrix: data['filterMatrix'],
     );
   }
 
@@ -63,5 +66,6 @@ class VideoModel {
     "commentCount": commentCount,
     "views": views,
     "isPrivate": isPrivate, // 3. JSON mein add karein
+    "filterMatrix": filterMatrix,
   };
 }

@@ -8,11 +8,14 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 class VideoPlayerItem extends StatefulWidget {
   final String videoUrl;
+
   final String videoId; // <--- Ye line add karein
+  final List<dynamic>? filterMatrix;
   const VideoPlayerItem({
     super.key,
     required this.videoUrl,
     required this.videoId,
+    this.filterMatrix,
   });
 
   @override
@@ -101,16 +104,46 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
           Container(
             width: size.width,
             height: size.height,
-            color: Colors.black, // Background black rahega agar ratio chota ho
+            color: Colors.black,
             child: (isInitialized && videoPlayerController != null)
                 ? Center(
                     child: AspectRatio(
                       aspectRatio: videoPlayerController!.value.aspectRatio,
-                      child: VideoPlayer(videoPlayerController!),
+                      // --- FILTER YAHAN APPLY HOGA ---
+                      child: ColorFiltered(
+                        colorFilter:
+                            (widget.filterMatrix != null &&
+                                widget.filterMatrix!.length == 20)
+                            ? ColorFilter.matrix(
+                                List<double>.from(
+                                  widget.filterMatrix!.map(
+                                    (e) => (e as num).toDouble(),
+                                  ),
+                                ),
+                              )
+                            : const ColorFilter.mode(
+                                Colors.transparent,
+                                BlendMode.multiply,
+                              ),
+                        child: VideoPlayer(videoPlayerController!),
+                      ),
                     ),
                   )
-                : const SizedBox.shrink(), // No Loading Circle
+                : const SizedBox.shrink(),
           ),
+          // Container(
+          //   width: size.width,
+          //   height: size.height,
+          //   color: Colors.black, // Background black rahega agar ratio chota ho
+          //   child: (isInitialized && videoPlayerController != null)
+          //       ? Center(
+          //           child: AspectRatio(
+          //             aspectRatio: videoPlayerController!.value.aspectRatio,
+          //             child: VideoPlayer(videoPlayerController!),
+          //           ),
+          //         )
+          //       : const SizedBox.shrink(), // No Loading Circle
+          // ),
 
           // 2. Play Icon Overlay (Sirf Pause hone par dikhega)
           if (isPaused)

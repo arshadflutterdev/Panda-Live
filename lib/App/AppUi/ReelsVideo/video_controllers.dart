@@ -606,6 +606,9 @@ class ReelsController extends GetxController {
     String videoPath, {
     Duration? start,
     Duration? end,
+    List<double>? filterMatrix,
+    String? filterString,
+    String? overlayText,
   }) async {
     Get.back();
 
@@ -652,7 +655,8 @@ class ReelsController extends GetxController {
 
       // --- UPLOAD PROCESS ---
       // Thumbnail hamesha original se lein (ya trimmed se bhi le sakte hain)
-      File thumbnailFile = await _getThumbnail(videoPath);
+      // File thumbnailFile = await _getThumbnail(videoPath);
+      File thumbnailFile = await _getThumbnail(fileToUpload.path);
 
       // 1. Thumbnail Upload
       Reference thumbRef = FirebaseStorage.instance
@@ -701,6 +705,9 @@ class ReelsController extends GetxController {
         'likes': [],
         'commentCount': 0,
         'views': [],
+        'filterMatrix': filterMatrix, // Ye list save hogi
+        'filterString': filterString, // FFmpeg string
+        'overlayText': overlayText, // Video text
       });
 
       Get.snackbar(
@@ -716,6 +723,7 @@ class ReelsController extends GetxController {
       isLoading.value = false;
     }
   }
+
   // Future<void> uploadVideo(
   //   String caption,
   //   String videoPath, {
