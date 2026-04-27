@@ -17,6 +17,7 @@ class ConfirmUploadScreen extends StatefulWidget {
   final bool isBold;
   final bool isItalic;
   final String filter;
+  final List<double>? filterMatrix;
 
   const ConfirmUploadScreen({
     super.key,
@@ -30,6 +31,7 @@ class ConfirmUploadScreen extends StatefulWidget {
     required this.isBold,
     required this.isItalic,
     required this.filter,
+    this.filterMatrix,
   });
 
   @override
@@ -88,10 +90,23 @@ class _ConfirmUploadScreenState extends State<ConfirmUploadScreen> {
               // Yahan Full Screen mein bhi Text Preview add kiya hai
               alignment: Alignment.center,
               children: [
-                AspectRatio(
-                  aspectRatio: _previewController.value.aspectRatio,
-                  child: VideoPlayer(_previewController),
+                ColorFiltered(
+                  colorFilter: widget.filterMatrix != null
+                      ? ColorFilter.matrix(widget.filterMatrix!)
+                      : const ColorFilter.mode(
+                          Colors.transparent,
+                          BlendMode.multiply,
+                        ),
+                  child: AspectRatio(
+                    aspectRatio: _previewController.value.aspectRatio,
+                    child: VideoPlayer(_previewController),
+                  ),
                 ),
+
+                // AspectRatio(
+                //   aspectRatio: _previewController.value.aspectRatio,
+                //   child: VideoPlayer(_previewController),
+                // ),
                 if (widget.overlayText != null &&
                     widget.overlayText!.isNotEmpty)
                   Positioned(

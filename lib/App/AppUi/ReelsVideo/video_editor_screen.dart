@@ -512,6 +512,7 @@ class _VideoEditingScreenState extends State<VideoEditingScreen> {
         isBold: isBold.value,
         isItalic: isItalic.value,
         filter: selectedFilter.value,
+        filterMatrix: currentMatrix.value,
       ),
     );
   }
