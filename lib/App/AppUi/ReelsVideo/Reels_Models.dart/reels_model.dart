@@ -14,6 +14,7 @@ class VideoModel {
   List views;
   final bool isPrivate; // 1. Ye line add karein
   List<dynamic>? filterMatrix;
+  final String overlayText;
 
   VideoModel({
     required this.username,
@@ -29,6 +30,7 @@ class VideoModel {
     required this.views,
     required this.isPrivate,
     this.filterMatrix,
+    this.overlayText = '',
   });
 
   // Firebase se data map karne ke liye (DocumentSnapshot use karna behtar hai)
@@ -49,6 +51,7 @@ class VideoModel {
       views: data['views'] ?? [],
       isPrivate: data['isPrivate'] ?? false,
       filterMatrix: data['filterMatrix'],
+      overlayText: data['overlayText'] ?? '',
     );
   }
 

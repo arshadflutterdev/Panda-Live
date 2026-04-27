@@ -465,6 +465,21 @@ class ReelsScreen extends StatelessWidget {
                       filterMatrix: data.filterMatrix,
                     ),
                     // Home Screen ke Stack mein kahi bhi add kar dein
+                    if (data.overlayText.isNotEmpty)
+                      Positioned(
+                        top: 100, // Aap apni marzi se adjust kar sakte hain
+                        left: 20,
+                        child: Text(
+                          data.overlayText,
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold,
+                            backgroundColor:
+                                Colors.black26, // Text readable banane ke liye
+                          ),
+                        ),
+                      ),
                     Obx(() {
                       final controller = Get.find<ReelsController>();
                       if (controller.isLoading.value) {
@@ -697,235 +712,6 @@ class ReelsScreen extends StatelessWidget {
                       ),
                     ),
 
-                    // Positioned(
-                    //   right: 15,
-                    //   bottom: 80,
-                    //   child: Column(
-                    //     mainAxisAlignment: MainAxisAlignment.end,
-                    //     children: [
-                    //       // --- PROFILE SECTION ---
-                    //       GestureDetector(
-                    //         onTap: () =>
-                    //             Get.to(() => ProfileScreen(uid: data.uid)),
-                    //         child: Stack(
-                    //           clipBehavior: Clip.none,
-                    //           children: [
-                    //             Container(
-                    //               padding: const EdgeInsets.all(1.5),
-                    //               decoration: const BoxDecoration(
-                    //                 color: Colors.white,
-                    //                 shape: BoxShape.circle,
-                    //               ),
-                    //               child: CircleAvatar(
-                    //                 radius: 25,
-                    //                 backgroundImage: data.profilePic.isNotEmpty
-                    //                     ? NetworkImage(data.profilePic)
-                    //                     : null,
-                    //                 child: data.profilePic.isEmpty
-                    //                     ? Text(data.username[0].toUpperCase())
-                    //                     : null,
-                    //               ),
-                    //             ),
-                    //             StreamBuilder<bool>(
-                    //               stream: controller.isFollowing(data.uid),
-                    //               builder: (context, snapshot) {
-                    //                 if (data.uid ==
-                    //                         FirebaseAuth
-                    //                             .instance
-                    //                             .currentUser!
-                    //                             .uid ||
-                    //                     snapshot.data == true) {
-                    //                   return const SizedBox.shrink();
-                    //                 }
-                    //                 return Positioned(
-                    //                   bottom: -8,
-                    //                   left: 18,
-                    //                   child: GestureDetector(
-                    //                     onTap: () =>
-                    //                         controller.followUser(data.uid),
-                    //                     child: Container(
-                    //                       padding: const EdgeInsets.all(2),
-                    //                       decoration: const BoxDecoration(
-                    //                         color: Colors.red,
-                    //                         shape: BoxShape.circle,
-                    //                       ),
-                    //                       child: const Icon(
-                    //                         Icons.add,
-                    //                         color: Colors.white,
-                    //                         size: 16,
-                    //                       ),
-                    //                     ),
-                    //                   ),
-                    //                 );
-                    //               },
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ),
-
-                    //       const SizedBox(height: 25),
-
-                    //       // --- LIKE BUTTON (Fixed with GetX Obx) ---
-                    //       Obx(() {
-                    //         final currentVideo = controller.videoList
-                    //             .firstWhere((v) => v.id == data.id);
-                    //         bool isLiked = currentVideo.likes.contains(
-                    //           FirebaseAuth.instance.currentUser!.uid,
-                    //         );
-
-                    //         return Column(
-                    //           children: [
-                    //             GestureDetector(
-                    //               onTap: () => controller.likeVideo(data.id),
-                    //               child: Icon(
-                    //                 Icons.favorite,
-                    //                 size: 38,
-                    //                 color: isLiked ? Colors.red : Colors.white,
-                    //               ),
-                    //             ),
-                    //             const SizedBox(height: 5),
-                    //             Text(
-                    //               "${currentVideo.likes.length}",
-                    //               style: const TextStyle(
-                    //                 color: Colors.white,
-                    //                 fontSize: 13,
-                    //                 fontWeight: FontWeight.bold,
-                    //               ),
-                    //             ),
-                    //           ],
-                    //         );
-                    //       }),
-
-                    //       const SizedBox(height: 20),
-
-                    //       // --- COMMENT BUTTON (With Real-time Count) ---
-                    //       Column(
-                    //         children: [
-                    //           GestureDetector(
-                    //             onTap: () {
-                    //               controller.getComments(data.id);
-                    //               showCommentBottomSheet(context, data.id);
-                    //             },
-                    //             child: const Icon(
-                    //               Icons.comment,
-                    //               size: 38,
-                    //               color: Colors.white,
-                    //             ),
-                    //           ),
-                    //           const SizedBox(height: 5),
-                    //           Obx(() {
-                    //             final currentVideo = controller.videoList
-                    //                 .firstWhere((v) => v.id == data.id);
-                    //             return Text(
-                    //               "${currentVideo.commentCount ?? 0}",
-                    //               style: const TextStyle(
-                    //                 color: Colors.white,
-                    //                 fontSize: 13,
-                    //               ),
-                    //             );
-                    //           }),
-                    //         ],
-                    //       ),
-
-                    //       const SizedBox(height: 20),
-
-                    //       StreamBuilder<int>(
-                    //         stream: Get.find<ReelsController>()
-                    //             .getTotalSaveCount(data.id),
-                    //         builder: (context, countSnapshot) {
-                    //           int count = countSnapshot.data ?? 0;
-
-                    //           return StreamBuilder<bool>(
-                    //             stream: Get.find<ReelsController>().isFavorite(
-                    //               data.id,
-                    //             ),
-                    //             builder: (context, favSnapshot) {
-                    //               bool isFav = favSnapshot.data ?? false;
-
-                    //               return Column(
-                    //                 mainAxisSize: MainAxisSize.min,
-                    //                 children: [
-                    //                   IconButton(
-                    //                     onPressed: () {
-                    //                       Get.find<ReelsController>()
-                    //                           .toggleFavorite(
-                    //                             data.id,
-                    //                             data.toJson(),
-                    //                           );
-                    //                     },
-                    //                     icon: Icon(
-                    //                       isFav
-                    //                           ? Icons.bookmark
-                    //                           : Icons.bookmark_border,
-                    //                       color: isFav
-                    //                           ? Colors.amber
-                    //                           : Colors.white,
-                    //                       size: 35,
-                    //                     ),
-                    //                   ),
-                    //                   Text(
-                    //                     count > 0 ? "$count" : "Save",
-                    //                     style: const TextStyle(
-                    //                       color: Colors.white,
-                    //                       fontSize: 12,
-                    //                       fontWeight: FontWeight.bold,
-                    //                       shadows: [
-                    //                         Shadow(
-                    //                           blurRadius: 4.0,
-                    //                           color: Colors.black,
-                    //                           offset: Offset(1.0, 1.0),
-                    //                         ),
-                    //                       ],
-                    //                     ),
-                    //                   ),
-                    //                 ],
-                    //               );
-                    //             },
-                    //           );
-                    //         },
-                    //       ),
-
-                    //       // --- SHARE BUTTON ---
-                    //       // Share button ko hata kar ye lagayein
-                    //       const SizedBox(height: 20),
-
-                    //       if (data.uid !=
-                    //           FirebaseAuth.instance.currentUser!.uid)
-                    //         _buildActionItem(
-                    //           icon: Icons.download_for_offline_outlined,
-                    //           label: "Download",
-                    //           onTap: () => reelsController.downloadVideo(
-                    //             data.videoUrl,
-                    //             data.id,
-                    //           ),
-                    //         )
-                    //       else
-                    //         _buildActionItem(
-                    //           icon: Icons.more_horiz,
-                    //           label: "More",
-                    //           onTap: () => _showOptionsBottomSheet(
-                    //             context,
-                    //             data,
-                    //             reelsController,
-                    //           ),
-                    //         ),
-                    //       // const Column(
-                    //       //   children: [
-                    //       //     Icon(Icons.share, size: 35, color: Colors.white),
-                    //       //     SizedBox(height: 5),
-                    //       //     Text(
-                    //       //       "Share",
-                    //       //       style: TextStyle(
-                    //       //         color: Colors.white,
-                    //       //         fontSize: 13,
-                    //       //       ),
-                    //       //     ),
-                    //       //   ],
-                    //       // ),
-
-                    //     ],
-                    //   ),
-                    // ),
                     // User Info Section (Positioned widget jahan caption hai)
                     Positioned(
                       bottom: 20,
@@ -997,57 +783,6 @@ class ReelsScreen extends StatelessWidget {
                         ],
                       ),
                     ),
-
-                    // Positioned(
-                    //   bottom: 20,
-                    //   left: 20,
-                    //   child: Column(
-                    //     crossAxisAlignment: CrossAxisAlignment.start,
-                    //     children: [
-                    //       GestureDetector(
-                    //         onTap: () {
-                    //           Get.to(
-                    //             () => ProfileScreen(uid: data.uid),
-                    //             transition: Transition.rightToLeft,
-                    //           );
-                    //         },
-                    //         child: Text(
-                    //           "@${data.username}",
-                    //           style: const TextStyle(
-                    //             color: Colors.white,
-                    //             fontWeight: FontWeight.bold,
-                    //             fontSize: 16,
-                    //           ),
-                    //         ),
-                    //       ),
-                    //       Text(
-                    //         data.caption,
-                    //         style: const TextStyle(color: Colors.white),
-                    //       ),
-                    //       Obx(() {
-                    //         final currentVideo = controller.videoList
-                    //             .firstWhere((v) => v.id == data.id);
-                    //         return Row(
-                    //           children: [
-                    //             const Icon(
-                    //               Icons.play_arrow_outlined,
-                    //               size: 25,
-                    //               color: Colors.white,
-                    //             ),
-                    //             Text(
-                    //               "${currentVideo.views.length}",
-                    //               style: const TextStyle(
-                    //                 color: Colors.white,
-                    //                 fontSize: 13,
-                    //               ),
-                    //             ),
-                    //           ],
-                    //         );
-                    //       }),
-
-                    //     ],
-                    //   ),
-                    // ),
                   ],
                 );
               },

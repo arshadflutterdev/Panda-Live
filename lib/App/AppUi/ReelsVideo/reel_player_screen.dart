@@ -131,19 +131,6 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
                   )
                 : const SizedBox.shrink(),
           ),
-          // Container(
-          //   width: size.width,
-          //   height: size.height,
-          //   color: Colors.black, // Background black rahega agar ratio chota ho
-          //   child: (isInitialized && videoPlayerController != null)
-          //       ? Center(
-          //           child: AspectRatio(
-          //             aspectRatio: videoPlayerController!.value.aspectRatio,
-          //             child: VideoPlayer(videoPlayerController!),
-          //           ),
-          //         )
-          //       : const SizedBox.shrink(), // No Loading Circle
-          // ),
 
           // 2. Play Icon Overlay (Sirf Pause hone par dikhega)
           if (isPaused)
