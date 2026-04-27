@@ -114,6 +114,7 @@ class ReelsController extends GetxController {
           videoFile: File(video.path),
           isBold: false,
           isItalic: false,
+          filter: "",
         ),
       );
     }
