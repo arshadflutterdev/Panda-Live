@@ -435,7 +435,7 @@ class ReelsScreen extends StatelessWidget {
                         ),
                         onPressed: () {
                           controller.isForYou.value = true;
-                          controller.getAllVideos();
+                          controller.fetchVideos();
                         },
                         child: const Text(
                           "Explore For You",
@@ -839,7 +839,7 @@ class ReelsScreen extends StatelessWidget {
                   () => GestureDetector(
                     onTap: () {
                       controller.isForYou.value = true;
-                      controller.getAllVideos(); // For You (All Videos) call
+                      controller.fetchVideos(); // For You (All Videos) call
                     },
                     child: Text(
                       "For You",

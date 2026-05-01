@@ -23,30 +23,147 @@ class ReelsController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    getAllVideos();
+    fetchVideos();
   }
 
-  getAllVideos() async {
-    videoList.bindStream(
-      FirebaseFirestore.instance
+  Future<void> fetchVideos() async {
+    try {
+      isLoading.value = true;
+
+      // 1. Total users count karein
+      int totalUsers = await FirebaseFirestore.instance
+          .collection('userProfile')
+          .get()
+          .then((value) => value.size);
+
+      Query query;
+
+      // 2. Fallback strategy agar users 10 se kam hon
+      if (totalUsers < 10) {
+        query = FirebaseFirestore.instance
+            .collection('videos')
+            .where('isPrivate', isEqualTo: false)
+            .orderBy('createdAt', descending: true)
+            .limit(20);
+      } else {
+        // 3. Normal Batch Testing query (Yahan quotes hata diye gaye hain aur variable use karein)
+        int currentBatchLimit =
+            10000; // Yahan apna dynamic variable ya limit dein jo aap use kar rahe hain
+
+        query = FirebaseFirestore.instance
+            .collection('videos')
+            .where('isPrivate', isEqualTo: false)
+            .where('views_count', isLessThanOrEqualTo: currentBatchLimit)
+            .orderBy('createdAt', descending: true)
+            .limit(20);
+      }
+
+      // 4. Data fetch kar ke list mein daal dein
+      QuerySnapshot snapshot = await query.get();
+
+      List<VideoModel> retVal = [];
+      for (var element in snapshot.docs) {
+        try {
+          retVal.add(VideoModel.fromSnap(element));
+        } catch (e) {
+          print("Video mapping error: $e");
+        }
+      }
+      videoList.value = retVal;
+    } catch (e) {
+      print("Error fetching videos: $e");
+    } finally {
+      isLoading.value = false;
+    }
+  }
+
+  // getAllVideos() async {
+  //   videoList.bindStream(
+  //     FirebaseFirestore.instance
+  //         .collection('videos')
+  //         .where('isPrivate', isEqualTo: false) // Sirf public videos
+  //         .orderBy('createdAt', descending: true)
+  //         .snapshots()
+  //         .map((query) {
+  //           List<VideoModel> retVal = [];
+  //           for (var element in query.docs) {
+  //             try {
+  //               retVal.add(VideoModel.fromSnap(element));
+  //             } catch (e) {
+  //               print(
+  //                 "Video mapping error: $e",
+  //               ); // Kisi video mein data missing ho toh crash na ho
+  //             }
+  //           }
+  //           return retVal;
+  //         }),
+  //   );
+  // }
+  Future<void> checkAndUpdateBatch(String videoId) async {
+    try {
+      DocumentReference videoRef = FirebaseFirestore.instance
           .collection('videos')
-          .where('isPrivate', isEqualTo: false) // Sirf public videos
-          .orderBy('createdAt', descending: true)
-          .snapshots()
-          .map((query) {
-            List<VideoModel> retVal = [];
-            for (var element in query.docs) {
-              try {
-                retVal.add(VideoModel.fromSnap(element));
-              } catch (e) {
-                print(
-                  "Video mapping error: $e",
-                ); // Kisi video mein data missing ho toh crash na ho
-              }
-            }
-            return retVal;
-          }),
-    );
+          .doc(videoId);
+
+      DocumentSnapshot doc = await videoRef.get();
+
+      if (doc.exists) {
+        var data = doc.data() as Map<String, dynamic>;
+
+        int viewsCount = data['views_count'] ?? 0;
+        int highRetention = data['high_retention_views'] ?? 0;
+        int currentLimit = data['current_batch_limit'] ?? 10;
+
+        // Agar high retention wale log 60% ya us se zyada hon, to limit barha dein
+        if (viewsCount >= currentLimit) {
+          int newLimit = currentLimit;
+
+          if (currentLimit == 10) {
+            newLimit = 50;
+          } else if (currentLimit == 50) {
+            newLimit = 500;
+          } else if (currentLimit == 500) {
+            // Limit ko aage mazeed barha sakte hain (e.g., 5000)
+            newLimit = 5000;
+          }
+
+          await videoRef.update({'current_batch_limit': newLimit});
+
+          print("Batch limit updated to: $newLimit");
+        }
+      }
+    } catch (e) {
+      print("Error updating batch logic: $e");
+    }
+  }
+
+  Future<void> handleVideoViewCompletion(
+    String videoId,
+    double videoDuration,
+    double watchedDuration,
+  ) async {
+    // Agar video 3 second se choti hai to high retention logic ignore karein
+    if (videoDuration < 3.0) {
+      return;
+    }
+
+    // Agar user ne video ka aadha hissa dekh lia hai
+    if (watchedDuration >= (videoDuration / 2)) {
+      try {
+        DocumentReference videoRef = FirebaseFirestore.instance
+            .collection('videos')
+            .doc(videoId);
+
+        await videoRef.update({
+          'high_retention_views': FieldValue.increment(1),
+        });
+
+        // Ab check karein ke batch limit change karni hai ya nahi
+        await checkAndUpdateBatch(videoId);
+      } catch (e) {
+        print("Error updating high retention views: $e");
+      }
+    }
   }
 
   getFollowingVideos() async {
@@ -693,6 +810,11 @@ class ReelsController extends GetxController {
         'filterMatrix': filterMatrix, // Ye list save hogi
         'filterString': filterString, // FFmpeg string
         'overlayText': overlayText, // Video text
+        //new things that will define our algoritham
+        'views_count': 0,
+        'high_retention_views': 0,
+        'current_batch_limit': 10,
+        'videoDuration': 8, // Ya wo value jo video ki actual length ho
       });
 
       Get.snackbar(
@@ -708,126 +830,4 @@ class ReelsController extends GetxController {
       isLoading.value = false;
     }
   }
-  // Future<void> uploadVideo(
-  //   String caption,
-  //   String videoPath, {
-  //   Duration? start,
-  //   Duration? end,
-  //   List<double>? filterMatrix,
-  //   String? filterString,
-  //   String? overlayText,
-  // }) async {
-  //   Get.back();
-
-  //   try {
-  //     isLoading.value = true;
-  //     uploadProgress.value = 0.0;
-
-  //     String videoId = DateTime.now().millisecondsSinceEpoch.toString();
-
-  //     // Default hum original file rakhte hain
-  //     File fileToUpload = File(videoPath);
-
-  //     // --- TRIMMING LOGIC ---
-  //     if (start != null && end != null) {
-  //       final tempDir = await getTemporaryDirectory();
-  //       final outputPath = "${tempDir.path}/trimmed_$videoId.mp4";
-
-  //       // Seconds nikalne ka sahi tariqa
-  //       double startSec = start.inMilliseconds / 1000.0;
-  //       double durationSec =
-  //           (end.inMilliseconds - start.inMilliseconds) / 1000.0;
-
-  //       // FFmpeg Command: -y (overwrite if exists), -ss (start), -t (duration)
-  //       // Hum '-c:v libx264' use kar rahe hain taake video format standard rahe aur corrupt na ho
-  //       String command =
-  //           "-y -ss $startSec -i \"$videoPath\" -t $durationSec -c:v libx264 -c:a copy \"$outputPath\"";
-
-  //       print("FFmpeg Running: $command");
-
-  //       // Yahan hum 'await' kar rahe hain session khatam hone ka
-  //       final session = await FFmpegKit.execute(command);
-  //       final returnCode = await session.getReturnCode();
-
-  //       if (ReturnCode.isSuccess(returnCode)) {
-  //         print("FFmpeg Success!");
-  //         fileToUpload = File(outputPath);
-  //       } else {
-  //         final logs = await session.getLogs();
-  //         print("FFmpeg Failed! Error: $logs");
-  //         // Agar fail ho jaye toh original hi bhejni paregi (taki app crash na ho)
-  //         fileToUpload = File(videoPath);
-  //       }
-  //     }
-
-  //     // --- UPLOAD PROCESS ---
-  //     // Thumbnail hamesha original se lein (ya trimmed se bhi le sakte hain)
-  //     // File thumbnailFile = await _getThumbnail(videoPath);
-  //     File thumbnailFile = await _getThumbnail(fileToUpload.path);
-
-  //     // 1. Thumbnail Upload
-  //     Reference thumbRef = FirebaseStorage.instance
-  //         .ref()
-  //         .child('thumbnails')
-  //         .child("$videoId.jpg");
-  //     await thumbRef.putFile(thumbnailFile);
-  //     String thumbUrl = await thumbRef.getDownloadURL();
-
-  //     // 2. Video Upload (Trimmed file)
-  //     Reference videoRef = FirebaseStorage.instance
-  //         .ref()
-  //         .child('videos')
-  //         .child("$videoId.mp4");
-
-  //     // Check file size for debug
-  //     print("Uploading File Size: ${await fileToUpload.length()} bytes");
-
-  //     UploadTask uploadTask = videoRef.putFile(fileToUpload);
-
-  //     uploadTask.snapshotEvents.listen((snapshot) {
-  //       uploadProgress.value =
-  //           (snapshot.bytesTransferred / snapshot.totalBytes);
-  //     });
-
-  //     TaskSnapshot taskSnapshot = await uploadTask;
-  //     String downloadUrl = await taskSnapshot.ref.getDownloadURL();
-
-  //     // 3. Firestore Save
-  //     String uid = FirebaseAuth.instance.currentUser!.uid;
-  //     var userDoc = await FirebaseFirestore.instance
-  //         .collection('userProfile')
-  //         .doc(uid)
-  //         .get();
-
-  //     await FirebaseFirestore.instance.collection('videos').doc(videoId).set({
-  //       'uid': uid,
-  //       'id': videoId,
-  //       'videoUrl': downloadUrl,
-  //       'thumbnail': thumbUrl,
-  //       'caption': caption,
-  //       'username': userDoc.data()?['name'] ?? "User",
-  //       'profilePic': userDoc.data()?['userimage'] ?? "",
-  //       'createdAt': FieldValue.serverTimestamp(),
-  //       'isPrivate': false,
-  //       'likes': [],
-  //       'commentCount': 0,
-  //       'views': [],
-  //       'filterMatrix': filterMatrix, // Ye list save hogi
-  //       'filterString': filterString, // FFmpeg string
-  //       'overlayText': overlayText, // Video text
-  //     });
-
-  //     Get.snackbar(
-  //       "Success",
-  //       "Video Post Ho Gayi!",
-  //       backgroundColor: Colors.green,
-  //       colorText: Colors.white,
-  //     );
-  //   } catch (e) {
-  //     print("Upload Error: $e");
-  //     Get.snackbar("Error", "Upload fail ho gaya: $e");
-  //   } finally {
-  //     isLoading.value = false;
-  //   }
-  // }
 }
