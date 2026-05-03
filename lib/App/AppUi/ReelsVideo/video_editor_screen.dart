@@ -466,7 +466,14 @@ class _VideoEditingScreenState extends State<VideoEditingScreen> {
       padding: const EdgeInsets.only(bottom: 30, top: 10),
       child: Column(
         children: [
-          TrimSlider(controller: _controller, height: 50, horizontalMargin: 0),
+          Padding(
+            padding: const EdgeInsets.only(right: 18),
+            child: TrimSlider(
+              controller: _controller,
+              height: 50,
+              horizontalMargin: 0,
+            ),
+          ),
           const SizedBox(height: 20),
           IconButton(
             icon: const Icon(Icons.text_fields, color: Colors.white, size: 35),
