@@ -505,46 +505,90 @@ class ReelsController extends GetxController {
   }
 
   //comment like upper
+
   Future<void> likeVideo(String id) async {
     try {
       String uid = FirebaseAuth.instance.currentUser!.uid;
+
+      // 1. Pehle local list mein index dhoondo
+      int index = videoList.indexWhere((v) => v.id == id);
+      if (index == -1) return;
+
+      // 2. Optimistic Update: Firebase ka wait kiye baghair UI badal do
+      if (videoList[index].likes.contains(uid)) {
+        videoList[index].likes.remove(uid); // Local unlike
+      } else {
+        videoList[index].likes.add(uid); // Local like
+      }
+
+      // UI ko foran refresh karo
+      videoList.refresh();
+
+      // 3. Background mein Firebase update karo (no 'await' here to keep UI fast)
       DocumentReference videoRef = FirebaseFirestore.instance
           .collection('videos')
           .doc(id);
-      DocumentSnapshot doc = await videoRef.get();
-      var likesList = (doc.data() as dynamic)['likes'] as List;
 
-      if (likesList.contains(uid)) {
-        // Unlike logic
-        await videoRef.update({
+      // Check karein ke actually unlike karna hai ya like
+      if (!videoList[index].likes.contains(uid)) {
+        videoRef.update({
           'likes': FieldValue.arrayRemove([uid]),
         });
-
-        // --- YEHA ADD KAREIN ---
-        // Agar hum 'Liked Videos' wali screen par hain aur ye aakhri video thi jo unlike hui
-        // To 500ms baad check karein aur screen close kar den
-        Future.delayed(const Duration(milliseconds: 500), () {
-          if (Get.currentRoute.contains('VideoDetailScreen') &&
-              !videoList.any((v) => v.id == id)) {
-            // Agar video ab list mein nahi rahi (unlike hone ki wajah se refresh hui)
-            // Aur list bilkul khali ho gayi hai, to wapas bhej dein
-            if (videoList.isEmpty) {
-              Get.back();
-            }
-          }
-        });
       } else {
-        // Like logic
-        await videoRef.update({
+        videoRef.update({
           'likes': FieldValue.arrayUnion([uid]),
         });
       }
 
-      videoList.refresh();
+      // 4. Sirf Unlike screen back logic ke liye thora delay rakhein
+      if (videoList.isEmpty && Get.currentRoute.contains('VideoDetailScreen')) {
+        Future.delayed(const Duration(milliseconds: 300), () => Get.back());
+      }
     } catch (e) {
-      Get.snackbar("Error", e.toString());
+      // Agar error aaye to user ko batao aur state wapas purani kar do (optional)
+      Get.snackbar("Error", "Connection slow hai");
     }
   }
+  // Future<void> likeVideo(String id) async {
+  //   try {
+  //     String uid = FirebaseAuth.instance.currentUser!.uid;
+  //     DocumentReference videoRef = FirebaseFirestore.instance
+  //         .collection('videos')
+  //         .doc(id);
+  //     DocumentSnapshot doc = await videoRef.get();
+  //     var likesList = (doc.data() as dynamic)['likes'] as List;
+
+  //     if (likesList.contains(uid)) {
+  //       // Unlike logic
+  //       await videoRef.update({
+  //         'likes': FieldValue.arrayRemove([uid]),
+  //       });
+
+  //       // --- YEHA ADD KAREIN ---
+  //       // Agar hum 'Liked Videos' wali screen par hain aur ye aakhri video thi jo unlike hui
+  //       // To 500ms baad check karein aur screen close kar den
+  //       Future.delayed(const Duration(milliseconds: 500), () {
+  //         if (Get.currentRoute.contains('VideoDetailScreen') &&
+  //             !videoList.any((v) => v.id == id)) {
+  //           // Agar video ab list mein nahi rahi (unlike hone ki wajah se refresh hui)
+  //           // Aur list bilkul khali ho gayi hai, to wapas bhej dein
+  //           if (videoList.isEmpty) {
+  //             Get.back();
+  //           }
+  //         }
+  //       });
+  //     } else {
+  //       // Like logic
+  //       await videoRef.update({
+  //         'likes': FieldValue.arrayUnion([uid]),
+  //       });
+  //     }
+
+  //     videoList.refresh();
+  //   } catch (e) {
+  //     Get.snackbar("Error", e.toString());
+  //   }
+  // }
 
   // --- FAVORITE / SAVE VIDEO LOGIC ---
   // 1. Toggle Favorite: Data save karne aur delete karne ke liye
