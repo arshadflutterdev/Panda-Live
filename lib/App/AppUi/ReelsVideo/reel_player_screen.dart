@@ -202,24 +202,26 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
   }
 
   // --- CACHE & INITIALIZE LOGIC (Updated) ---
+  // --- CACHE & INITIALIZE LOGIC (Corrected) ---
   Future<void> _initializeVideo() async {
     try {
-      // CHANGE HERE: Shared Pref ki bajaye Cache Manager use kar rahe hain data bachane ke liye
+      // 1. Check karein ke file cache mein hai ya nahi
       var fileInfo = await DefaultCacheManager().getFileFromCache(
         widget.videoUrl,
       );
-      File? videoFile;
 
-      if (fileInfo == null) {
-        // Pehli baar download karega
-        videoFile = await DefaultCacheManager().getSingleFile(widget.videoUrl);
+      if (fileInfo != null) {
+        // Local file se chalao
+        videoPlayerController = VideoPlayerController.file(fileInfo.file);
       } else {
-        // Dobara play hone par local storage se uthayega
-        videoFile = fileInfo.file;
-      }
+        // Network se chalao taake foran buffering shuru ho jaye
+        videoPlayerController = VideoPlayerController.networkUrl(
+          Uri.parse(widget.videoUrl),
+        );
 
-      // CHANGE HERE: .networkUrl ki bajaye .file use hoga kyunki video local save ho chuki hai
-      videoPlayerController = VideoPlayerController.file(videoFile);
+        // Background mein download shuru kar dein (await nahi lagaya taake code ruke nahi)
+        DefaultCacheManager().downloadFile(widget.videoUrl);
+      }
 
       await videoPlayerController!.initialize();
 
@@ -231,7 +233,6 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
 
           Get.find<ReelsController>().updateVideoViews(widget.videoId);
 
-          // CHANGE HERE: Listener ko clean rakha hai sirf completion tracking ke liye
           videoPlayerController!.addListener(() {
             if (videoPlayerController!.value.isInitialized) {
               final duration = videoPlayerController!.value.duration.inSeconds
@@ -254,6 +255,58 @@ class _VideoPlayerItemState extends State<VideoPlayerItem> {
       print("Video initialization error: $e");
     }
   }
+  // Future<void> _initializeVideo() async {
+  //   try {
+  //     // CHANGE HERE: Shared Pref ki bajaye Cache Manager use kar rahe hain data bachane ke liye
+  //     var fileInfo = await DefaultCacheManager().getFileFromCache(
+  //       widget.videoUrl,
+  //     );
+  //     File? videoFile;
+
+  //     if (fileInfo == null) {
+  //       // Pehli baar download karega
+  //       videoFile = await DefaultCacheManager().getSingleFile(widget.videoUrl);
+  //     } else {
+  //       // Dobara play hone par local storage se uthayega
+  //       videoFile = fileInfo.file;
+  //     }
+
+  //     // CHANGE HERE: .networkUrl ki bajaye .file use hoga kyunki video local save ho chuki hai
+  //     videoPlayerController = VideoPlayerController.file(videoFile);
+
+  //     await videoPlayerController!.initialize();
+
+  //     if (mounted) {
+  //       setState(() {
+  //         isInitialized = true;
+  //         videoPlayerController!.setLooping(true);
+  //         videoPlayerController!.play();
+
+  //         Get.find<ReelsController>().updateVideoViews(widget.videoId);
+
+  //         // CHANGE HERE: Listener ko clean rakha hai sirf completion tracking ke liye
+  //         videoPlayerController!.addListener(() {
+  //           if (videoPlayerController!.value.isInitialized) {
+  //             final duration = videoPlayerController!.value.duration.inSeconds
+  //                 .toDouble();
+  //             final position = videoPlayerController!.value.position.inSeconds
+  //                 .toDouble();
+
+  //             if (position > 0 && duration > 0) {
+  //               Get.find<ReelsController>().handleVideoViewCompletion(
+  //                 widget.videoId,
+  //                 duration,
+  //                 position,
+  //               );
+  //             }
+  //           }
+  //         });
+  //       });
+  //     }
+  //   } catch (e) {
+  //     print("Video initialization error: $e");
+  //   }
+  // }
 
   void togglePlayPause() {
     if (videoPlayerController != null &&

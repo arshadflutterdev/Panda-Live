@@ -77,28 +77,6 @@ class ReelsController extends GetxController {
     }
   }
 
-  // getAllVideos() async {
-  //   videoList.bindStream(
-  //     FirebaseFirestore.instance
-  //         .collection('videos')
-  //         .where('isPrivate', isEqualTo: false) // Sirf public videos
-  //         .orderBy('createdAt', descending: true)
-  //         .snapshots()
-  //         .map((query) {
-  //           List<VideoModel> retVal = [];
-  //           for (var element in query.docs) {
-  //             try {
-  //               retVal.add(VideoModel.fromSnap(element));
-  //             } catch (e) {
-  //               print(
-  //                 "Video mapping error: $e",
-  //               ); // Kisi video mein data missing ho toh crash na ho
-  //             }
-  //           }
-  //           return retVal;
-  //         }),
-  //   );
-  // }
   Future<void> checkAndUpdateBatch(String videoId) async {
     try {
       DocumentReference videoRef = FirebaseFirestore.instance
@@ -549,46 +527,6 @@ class ReelsController extends GetxController {
       Get.snackbar("Error", "Connection slow hai");
     }
   }
-  // Future<void> likeVideo(String id) async {
-  //   try {
-  //     String uid = FirebaseAuth.instance.currentUser!.uid;
-  //     DocumentReference videoRef = FirebaseFirestore.instance
-  //         .collection('videos')
-  //         .doc(id);
-  //     DocumentSnapshot doc = await videoRef.get();
-  //     var likesList = (doc.data() as dynamic)['likes'] as List;
-
-  //     if (likesList.contains(uid)) {
-  //       // Unlike logic
-  //       await videoRef.update({
-  //         'likes': FieldValue.arrayRemove([uid]),
-  //       });
-
-  //       // --- YEHA ADD KAREIN ---
-  //       // Agar hum 'Liked Videos' wali screen par hain aur ye aakhri video thi jo unlike hui
-  //       // To 500ms baad check karein aur screen close kar den
-  //       Future.delayed(const Duration(milliseconds: 500), () {
-  //         if (Get.currentRoute.contains('VideoDetailScreen') &&
-  //             !videoList.any((v) => v.id == id)) {
-  //           // Agar video ab list mein nahi rahi (unlike hone ki wajah se refresh hui)
-  //           // Aur list bilkul khali ho gayi hai, to wapas bhej dein
-  //           if (videoList.isEmpty) {
-  //             Get.back();
-  //           }
-  //         }
-  //       });
-  //     } else {
-  //       // Like logic
-  //       await videoRef.update({
-  //         'likes': FieldValue.arrayUnion([uid]),
-  //       });
-  //     }
-
-  //     videoList.refresh();
-  //   } catch (e) {
-  //     Get.snackbar("Error", e.toString());
-  //   }
-  // }
 
   // --- FAVORITE / SAVE VIDEO LOGIC ---
   // 1. Toggle Favorite: Data save karne aur delete karne ke liye
