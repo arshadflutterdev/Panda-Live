@@ -1,5 +1,3 @@
--keep class io.agora.** { *; }
--dontwarn io.agora.**
 -keep class com.arthenica.ffmpegkit.** { *; }
 -keep class xyz.justsoft.video_thumbnail.** { *; }
 -keep class io.flutter.plugins.** { *; }

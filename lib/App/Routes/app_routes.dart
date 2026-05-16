@@ -77,8 +77,8 @@ class AppRoutes {
     GetPage(name: withdrawalscreen, page: () => WithdrawlHistory()),
     GetPage(name: splash, page: () => SplashScreen()),
     GetPage(name: buycoins, page: () => CoinPlansScreen()),
-    GetPage(name: liveSetup, page: () => LiveSetupScreen()),
 
+    // GetPage(name: liveSetup, page: () => LiveSetupScreen()),
     GetPage(
       binding: AuthBindings(),
       name: authoptions,
@@ -114,12 +114,12 @@ class AppRoutes {
     ),
     GetPage(name: invitefriend, page: () => InviteFriendScreen()),
     GetPage(name: withdrawlhistory, page: () => WithdrawlHistory()),
-    GetPage(
-      name: watchstream,
-      binding: AuthBindings(),
-      page: () => WatchstreamingClass(),
-    ),
-    GetPage(name: golive, page: () => GoliveScreen()),
+    // GetPage(
+    //   name: watchstream,
+    //   binding: AuthBindings(),
+    //   page: () => WatchstreamingClass(),
+    // ),
+    // GetPage(name: golive, page: () => GoliveScreen()),
     //in profile screen navigates
     GetPage(name: help, page: () => HelpScreen()),
     GetPage(name: level, page: () => MyLevelScreen()),
