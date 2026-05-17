@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:gap/gap.dart';
 import 'package:get/get.dart';
 import 'package:pandlive/App/Authentication/GoogleAuth/google_auth_controller.dart';
@@ -54,66 +52,6 @@ class _AuthOptionsState extends State<AuthOptions> {
   //function to signin with google
   GoogleAuthController gauthcontroller = Get.find<GoogleAuthController>();
   //function to sigin with facebook
-
-  // Future<User?> signinWithFacebook() async {
-  //   try {
-  //     // 1️⃣ Clear previous Facebook session (optional, fresh login)
-  //     await FacebookAuth.instance.logOut();
-
-  //     // 2️⃣ Trigger Facebook login
-  //     final LoginResult result = await FacebookAuth.instance.login(
-  //       permissions: ['email', 'public_profile'], // required permissions
-  //     );
-
-  //     // 3️⃣ Check login status
-  //     if (result.status == LoginStatus.success && result.accessToken != null) {
-  //       // 4️⃣ Create Firebase credential
-  //       final OAuthCredential credential = FacebookAuthProvider.credential(
-  //         result.accessToken!.tokenString,
-  //       );
-
-  //       // 5️⃣ Sign in with Firebase
-  //       UserCredential userCredential = await FirebaseAuth.instance
-  //           .signInWithCredential(credential);
-
-  //       // 6️⃣ Print some info (optional, for debugging)
-  //       print("Facebook login successful!");
-  //       print("User: ${userCredential.user?.displayName}");
-  //       print("Email: ${userCredential.user?.email}");
-
-  //       return userCredential.user;
-  //     } else if (result.status == LoginStatus.cancelled) {
-  //       print("Facebook login cancelled by user.");
-  //       return null;
-  //     } else {
-  //       print("Facebook login failed: ${result.message}");
-  //       return null;
-  //     }
-  //   } catch (e) {
-  //     print("Error during Facebook login: $e");
-  //     return null;
-  //   }
-  // }
-
-  // Future<UserCredential?> signinwithfacebook() async {
-  //   FirebaseAuth auth = FirebaseAuth.instance;
-  //   try {
-  //     final LoginResult loginResult = await FacebookAuth.instance.login();
-  //     if (loginResult.status == LoginStatus.success &&
-  //         loginResult.accessToken != null) {
-  //       final OAuthCredential authCredential = FacebookAuthProvider.credential(
-  //         loginResult.accessToken!.tokenString,
-  //       );
-  //       await auth.signInWithCredential(authCredential);
-  //       print("user successfully signin");
-  //     } else if (loginResult.status == LoginStatus.cancelled) {
-  //       print("User cancelled");
-  //     }
-  //   } catch (e) {
-  //     print(e.toString());
-  //   }
-  //   return null;
-  // }
 
   //here below to show dialogebox
   bool isNavigate = false;
@@ -298,109 +236,9 @@ class _AuthOptionsState extends State<AuthOptions> {
 
                     // here is image
                     // Gap(15),
-
-                    // GestureDetector(
-                    //   onTap: () {
-                    //     if (checkValue.value == true) {
-                    //       Get.toNamed(AppRoutes.createprofile);
-                    //     } else {
-                    //       showDialog(
-                    //         context: context,
-                    //         builder: (context) => TermsDialog(
-                    //           onAccept: () {
-                    //             Get.back();
-                    //             Get.toNamed(AppRoutes.createprofile);
-                    //           },
-                    //         ),
-                    //       );
-                    //     }
-                    //   },
-
-                    //   child: GestureDetector(
-                    //     onTap: () async {
-                    //       if (checkValue.value == true) {
-                    //         User? user = await signinWithFacebook();
-                    //         if (user == null) {
-                    //           print("log not completed");
-                    //           return;
-                    //         }
-                    //       } else {
-                    //         showDialog(
-                    //           context: context,
-                    //           builder: (context) => TermsDialog(
-                    //             onAccept: () async {
-                    //               Get.back();
-                    //               User? user = await signinWithFacebook();
-                    //               if (user == null) {
-                    //                 print("log not completed");
-                    //                 return;
-                    //               }
-                    //             },
-                    //           ),
-                    //         );
-                    //       }
-                    //     },
-
-                    //     // onTap: () async {
-                    //     //   User? user = await signinWithFacebook();
-                    //     //   if (user != null) {
-                    //     //     // Login successful → navigate to next screen
-                    //     //     if (FirebaseAuth.instance.currentUser ==
-                    //     //         FirebaseAuth.instance.currentUser!.uid) {
-                    //     //       Get.toNamed(AppRoutes.bottomnav);
-                    //     //     } else {
-                    //     //       Get.toNamed(AppRoutes.createprofile);
-                    //     //     }
-                    //     //   } else {
-                    //     //     // Login failed or cancelled
-                    //     //     print("Login not completed");
-                    //     //   }
-                    //     // },
-                    //     child: Container(
-                    //       height: 50,
-                    //       width: double.infinity,
-                    //       decoration: BoxDecoration(
-                    //         color: Colors.white,
-
-                    //         borderRadius: BorderRadius.circular(20),
-                    //       ),
-                    //       child: Directionality(
-                    //         textDirection: TextDirection.ltr,
-                    //         child: Row(
-                    //           children: [
-                    //             // Icon(CupertinoIcons.goog)
-                    //             Padding(
-                    //               padding: const EdgeInsets.symmetric(
-                    //                 horizontal: 6,
-                    //                 vertical: 2,
-                    //               ),
-                    //               child: Image(
-                    //                 height: 30,
-                    //                 width: 40,
-                    //                 image: AssetImage(AppImages.facebook),
-                    //               ),
-                    //             ),
-                    //             Gap(width * 0.050),
-                    //             Text(
-                    //               localization.facebook,
-                    //               style: isArabic
-                    //                   ? AppStyle.arabictext.copyWith(
-                    //                       color: Colors.blue,
-                    //                       fontWeight: FontWeight.w600,
-                    //                       fontSize: 20,
-                    //                     )
-                    //                   : AppStyle.btext.copyWith(
-                    //                       color: Colors.blue,
-                    //                     ),
-                    //             ),
-                    //           ],
-                    //         ),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // ),
                     Gap(height * 0.060),
-                    Image(image: AssetImage(AppImages.or)),
+                    // Image(image: AssetImage(AppImages.or)),
+                    Text("- - - - OR - - - -"),
                     Gap(height * 0.030),
 
                     Directionality(
@@ -431,28 +269,6 @@ class _AuthOptionsState extends State<AuthOptions> {
                             ),
                           ),
 
-                          // Gap(20),
-                          // GestureDetector(
-                          //   onTap: () {
-                          //     if (checkValue.value == true) {
-                          //       Get.toNamed(AppRoutes.userauth);
-                          //     } else {
-                          //       showDialog(
-                          //         context: context,
-                          //         builder: (context) => TermsDialog(
-                          //           onAccept: () {
-                          //             Get.back();
-                          //             Get.toNamed(AppRoutes.userauth);
-                          //           },
-                          //         ),
-                          //       );
-                          //     }
-                          //   },
-
-                          //   child: CircleAvatar(
-                          //     backgroundImage: AssetImage(AppImages.userId),
-                          //   ),
-                          // ),
                           Gap(20),
                           GestureDetector(
                             onTap: () {
