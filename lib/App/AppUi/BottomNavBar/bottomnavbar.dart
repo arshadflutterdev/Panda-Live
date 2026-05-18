@@ -88,7 +88,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
             BottomNavigationBarItem(
               icon: Image(
                 image: AssetImage(AppImages.myprofile),
-                color: selectedScreen.value == 3
+                color: selectedScreen.value == 2
                     ? Colors.black
                     : Colors.black38,
 

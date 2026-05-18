@@ -15,11 +15,11 @@ class AppImages {
   static const language = "assets/images/challl.jpg";
   static const bg = "assets/images/challl.jpg";
   //below icons for live stream and bottomnav bar
-  static const chat = "assets/images/challl.jpg";
+  static const chat = "assets/icons/notification.png";
   static const golive = "assets/images/challl.jpg";
   static const live = "assets/images/challl.jpg";
-  static const profile = "assets/images/challl.jpg";
-  static const myprofile = "assets/images/challl.jpg";
+  static const profile = "assets/icons/user (1).png";
+  static const myprofile = "assets/icons/user (1).png";
   static const settings = "assets/icons/setting (1).png";
   static const dollar = "assets/images/challl.jpg";
   static const coins = "assets/images/challl.jpg";
@@ -45,7 +45,7 @@ class AppImages {
   static String history = "assets/images/challl.jpg";
   static String refresh = "assets/images/challl.jpg";
   static String wallet = "assets/images/challl.jpg";
-  static String reels = "assets/images/challl.jpg";
+  static String reels = "assets/icons/reel.png";
   //below images are related for live streamers
   static const eman = "assets/images/challl.jpg";
   static const egirll = "assets/images/challl.jpg";
