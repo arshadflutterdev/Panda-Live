@@ -142,14 +142,14 @@ class _AuthOptionsState extends State<AuthOptions> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(
-                                "PandaLive",
+                                "TiKTaK",
                                 style: AppStyle.logo.copyWith(
                                   color: Colors.white,
                                 ),
                               ),
 
                               Text(
-                                "Live. Stream. Connect.",
+                                "Scroll. Smile. Create.",
                                 style: TextStyle(color: Colors.white),
                               ),
                             ],
@@ -265,7 +265,9 @@ class _AuthOptionsState extends State<AuthOptions> {
                             },
 
                             child: CircleAvatar(
-                              backgroundImage: AssetImage(AppImages.email),
+                              // backgroundImage: AssetImage(AppImages.email),
+                              backgroundColor: Colors.white,
+                              child: Icon(Icons.email),
                             ),
                           ),
 
@@ -288,7 +290,9 @@ class _AuthOptionsState extends State<AuthOptions> {
                             },
 
                             child: CircleAvatar(
-                              backgroundImage: AssetImage(AppImages.phone),
+                              backgroundColor: Colors.white,
+                              // backgroundImage: AssetImage(AppImages.phone),
+                              child: Icon(Icons.phone),
                             ),
                           ),
                         ],

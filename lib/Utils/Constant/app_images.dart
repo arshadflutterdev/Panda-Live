@@ -3,7 +3,7 @@ class AppImages {
   static String logo = "assets/images/challl.jpg";
   static String splashimage = "assets/images/challl.jpg.png";
   static String facebook = "assets/images/challl.jpg";
-  static String google = "assets/images/challl.jpg";
+  static String google = "assets/icons/google (1).png";
   static String or = "assets/images/challl.jpg";
   static String phone = "assets/images/challl.jpg";
   static String email = "assets/images/challl.jpg";
@@ -20,7 +20,7 @@ class AppImages {
   static const live = "assets/images/challl.jpg";
   static const profile = "assets/images/challl.jpg";
   static const myprofile = "assets/images/challl.jpg";
-  static const settings = "assets/images/challl.jpg";
+  static const settings = "assets/icons/setting (1).png";
   static const dollar = "assets/images/challl.jpg";
   static const coins = "assets/images/challl.jpg";
   static const switchcamera = "assets/images/challl.jpg";
