@@ -691,6 +691,7 @@ class ReelsScreen extends StatelessWidget {
                                 onTap: () => controller.downloadVideo(
                                   data.videoUrl,
                                   data.id,
+                                  data.username,
                                 ),
                                 child: const Icon(
                                   Icons.download_for_offline_outlined,

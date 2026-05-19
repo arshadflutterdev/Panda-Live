@@ -1,6 +1,6 @@
 class AppImages {
   //app logo is here
-  static String logo = "assets/images/challl.jpg";
+  static String logo = "assets/icons/logooo.png";
   static String splashimage = "assets/images/challl.jpg.png";
   static String facebook = "assets/images/challl.jpg";
   static String google = "assets/icons/google (1).png";

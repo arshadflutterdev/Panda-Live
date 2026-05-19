@@ -354,42 +354,81 @@ class ReelsController extends GetxController {
   var downloadProgress = 0.0.obs;
   CancelToken? downloadCancelToken;
 
-  Future<void> downloadVideo(String videoUrl, String videoId) async {
+  // Method name same to same rakha hai jo UI call kar rahi hai, bas username extra add kiya hai watermark ke liye
+  Future<void> downloadVideo(
+    String videoUrl,
+    String videoId,
+    String username,
+  ) async {
     try {
       isDownloading.value = true;
       downloadProgress.value = 0.0;
       downloadCancelToken = CancelToken();
 
       final tempDir = await getTemporaryDirectory();
+
+      // Original downloaded file path
+      final rawPath = "${tempDir.path}/raw_$videoId.mp4";
+      // Final Output path jo gallery me jani h
       final path = "${tempDir.path}/$videoId.mp4";
 
+      // Khali check lagaya taaki overwriting glitch na aaye
+      if (await File(rawPath).exists()) await File(rawPath).delete();
+      if (await File(path).exists()) await File(path).delete();
+
+      // 1. Dio Download (Same logic)
       await Dio().download(
         videoUrl,
-        path,
+        rawPath,
         cancelToken: downloadCancelToken,
         onReceiveProgress: (received, total) {
           if (total != -1) {
-            downloadProgress.value = received / total;
+            downloadProgress.value =
+                (received / total) * 0.8; // 80% progress download tak
           }
         },
       );
 
-      final result = await SaverGallery.saveFile(
-        filePath: path,
-        fileName: videoId,
-        skipIfExists: false,
-      );
+      // 2. Watermark Processing Engine (TikTok dual-movement style)
+      String ffmpegCommand =
+          "-i $rawPath -vf \""
+          "drawtext=text='TikTak\\n@$username':"
+          "x='if(lt(mod(t,10),5), 20, w-tw-20)':" // Har 5 seconds baad x axis switch
+          "y='if(lt(mod(t,10),5), 40, h-th-40)':" // Har 5 seconds baad y axis switch
+          "fontcolor=white:fontsize=24:box=1:boxcolor=black@0.4:boxborderw=5,"
+          "format=yuv420p\" -c:a copy $path";
 
-      isDownloading.value = false;
-      if (result.isSuccess) {
-        Get.snackbar(
-          "Success",
-          "Saved to Gallery",
-          snackPosition: SnackPosition.BOTTOM,
-          backgroundColor: Colors.green,
-          colorText: Colors.white,
-        );
-      }
+      await FFmpegKit.execute(ffmpegCommand).then((session) async {
+        final returnCode = await session.getReturnCode();
+
+        if (ReturnCode.isSuccess(returnCode)) {
+          downloadProgress.value = 1.0;
+
+          // 3. Save to Gallery (Same SaverGallery plugin line)
+          final result = await SaverGallery.saveFile(
+            filePath: path,
+            fileName: videoId,
+            skipIfExists: false,
+          );
+
+          isDownloading.value = false;
+          if (result.isSuccess) {
+            Get.snackbar(
+              "Success",
+              "Saved to Gallery",
+              snackPosition: SnackPosition.BOTTOM,
+              backgroundColor: Colors.green,
+              colorText: Colors.white,
+            );
+          }
+        } else {
+          isDownloading.value = false;
+          Get.snackbar("Error", "Watermark generation failed");
+        }
+      });
+
+      // Raw video delete taaki storage full na ho user ki
+      if (await File(rawPath).exists()) await File(rawPath).delete();
     } catch (e) {
       isDownloading.value = false;
       if (!CancelToken.isCancel(e as DioException)) {
@@ -402,6 +441,59 @@ class ReelsController extends GetxController {
     downloadCancelToken?.cancel("Cancelled by user");
     isDownloading.value = false;
   }
+
+  // var isDownloading = false.obs;
+  // var downloadProgress = 0.0.obs;
+  // CancelToken? downloadCancelToken;
+
+  // Future<void> downloadVideo(String videoUrl, String videoId) async {
+  //   try {
+  //     isDownloading.value = true;
+  //     downloadProgress.value = 0.0;
+  //     downloadCancelToken = CancelToken();
+
+  //     final tempDir = await getTemporaryDirectory();
+  //     final path = "${tempDir.path}/$videoId.mp4";
+
+  //     await Dio().download(
+  //       videoUrl,
+  //       path,
+  //       cancelToken: downloadCancelToken,
+  //       onReceiveProgress: (received, total) {
+  //         if (total != -1) {
+  //           downloadProgress.value = received / total;
+  //         }
+  //       },
+  //     );
+
+  //     final result = await SaverGallery.saveFile(
+  //       filePath: path,
+  //       fileName: videoId,
+  //       skipIfExists: false,
+  //     );
+
+  //     isDownloading.value = false;
+  //     if (result.isSuccess) {
+  //       Get.snackbar(
+  //         "Success",
+  //         "Saved to Gallery",
+  //         snackPosition: SnackPosition.BOTTOM,
+  //         backgroundColor: Colors.green,
+  //         colorText: Colors.white,
+  //       );
+  //     }
+  //   } catch (e) {
+  //     isDownloading.value = false;
+  //     if (!CancelToken.isCancel(e as DioException)) {
+  //       Get.snackbar("Error", "Download failed");
+  //     }
+  //   }
+  // }
+
+  // void cancelDownload() {
+  //   downloadCancelToken?.cancel("Cancelled by user");
+  //   isDownloading.value = false;
+  // }
 
   // Reply post karne ke liye
   Future<void> postReply(
