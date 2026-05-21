@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:country_picker/country_picker.dart'; // New Import
 
 class LinkPhoneScreen extends StatefulWidget {
   const LinkPhoneScreen({Key? key}) : super(key: key);
@@ -26,6 +27,10 @@ class _LinkPhoneScreenState extends State<LinkPhoneScreen> {
   bool _isLoading = false;
   String? _verificationId;
 
+  // Dynamic Country Code State (Default Pakistan)
+  String _selectedCountryCode = "92";
+  String _selectedCountryFlag = "🇵🇰";
+
   @override
   void initState() {
     super.initState();
@@ -34,26 +39,42 @@ class _LinkPhoneScreenState extends State<LinkPhoneScreen> {
 
   void _validateInput() {
     setState(() {
-      // Pakistan ke numbers ke mutabiq validation (9 se 10 digits)
+      // Input length check dynamic ho sakti h har country k mutabiq, normal 7 se 12 digits safely check krty hain
       _isButtonEnabled =
-          _phoneController.text.trim().length >= 9 && !_isLoading;
+          _phoneController.text.trim().length >= 7 && !_isLoading;
     });
   }
 
-  // 1. Send OTP Logic via Firebase Auth
+  // 1. Send OTP Logic (Dynamic Country Code Ke Sath)
   Future<void> _sendOtp() async {
     setState(() {
       _isLoading = true;
       _isButtonEnabled = false;
     });
 
-    String formattedPhone = "+92${_phoneController.text.trim()}";
+    // Dynamic selection ko mila kr final string banana
+    String formattedPhone =
+        "+$_selectedCountryCode${_phoneController.text.trim()}";
 
     try {
+      // Already attached check in Firestore
+      var checkNumberQuery = await _firestore
+          .collection('userProfile')
+          .where('phoneNumber', isEqualTo: formattedPhone)
+          .get();
+
+      if (checkNumberQuery.docs.isNotEmpty) {
+        _showSnackBar(
+          "This phone number is already linked to another TikTak account!",
+        );
+        _resetLoading();
+        return;
+      }
+
+      // Firebase OTP Verification trigger
       await _auth.verifyPhoneNumber(
         phoneNumber: formattedPhone,
         verificationCompleted: (PhoneAuthCredential credential) async {
-          // Auto-verification (Rare on Android, but good to handle)
           await _linkNumberToFirestore(formattedPhone);
         },
         verificationFailed: (FirebaseAuthException e) {
@@ -79,7 +100,6 @@ class _LinkPhoneScreenState extends State<LinkPhoneScreen> {
 
   // 2. Verify OTP Logic
   Future<void> _verifyOtp() async {
-    // Sary controllers se text nikal kr code combine krna
     String smsCode = _otpControllers
         .map((controller) => controller.text)
         .join();
@@ -89,8 +109,6 @@ class _LinkPhoneScreenState extends State<LinkPhoneScreen> {
       return;
     }
 
-    // Modal bottom sheet ke andar loading dikhane ke liye local state update handle krna hoga,
-    // filhal context pop kr k parent screen pe loading handle krty hain.
     Navigator.pop(context); // Close Bottom Sheet
     setState(() {
       _isLoading = true;
@@ -102,14 +120,11 @@ class _LinkPhoneScreenState extends State<LinkPhoneScreen> {
         smsCode: smsCode,
       );
 
-      // Current logged-in user ko check krna
       User? currentUser = _auth.currentUser;
       if (currentUser != null) {
-        // Number ko current authenticated user ke account se link krna
         await currentUser.updatePhoneNumber(credential);
-
-        // Firestore me user document update krna
-        String formattedPhone = "+92${_phoneController.text.trim()}";
+        String formattedPhone =
+            "+$_selectedCountryCode${_phoneController.text.trim()}";
         await _linkNumberToFirestore(formattedPhone);
       } else {
         _showSnackBar("No active user session found!");
@@ -121,16 +136,16 @@ class _LinkPhoneScreenState extends State<LinkPhoneScreen> {
     }
   }
 
-  // 3. Firestore me User Document Update krna
+  // 3. Firestore Database Sync
   Future<void> _linkNumberToFirestore(String phoneNumber) async {
     User? currentUser = _auth.currentUser;
     if (currentUser != null) {
       await _firestore.collection('userProfile').doc(currentUser.uid).update({
-        'phoneNumber': phoneNumber, // New field update ya create ho jaye ga
+        'phoneNumber': phoneNumber,
       });
 
       _showSnackBar("Mobile number linked successfully!");
-      Navigator.pop(context, phoneNumber); // Back to settings screen with value
+      Navigator.pop(context, phoneNumber);
     }
   }
 
@@ -145,6 +160,31 @@ class _LinkPhoneScreenState extends State<LinkPhoneScreen> {
     ScaffoldMessenger.of(
       context,
     ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  // Country Picker Open Karne Ka Function
+  void _openCountryPicker() {
+    showCountryPicker(
+      context: context,
+      showPhoneCode: true, // Phone dial codes show hon list me
+      countryListTheme: CountryListThemeData(
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(20)),
+        inputDecoration: InputDecoration(
+          hintText: 'Search country...',
+          prefixIcon: const Icon(Icons.search),
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(12),
+            borderSide: const BorderSide(color: Colors.grey),
+          ),
+        ),
+      ),
+      onSelect: (Country country) {
+        setState(() {
+          _selectedCountryCode = country.phoneCode;
+          _selectedCountryFlag = country.flagEmoji;
+        });
+      },
+    );
   }
 
   @override
@@ -204,7 +244,7 @@ class _LinkPhoneScreenState extends State<LinkPhoneScreen> {
             ),
             const SizedBox(height: 30),
 
-            // Phone Input Field
+            // Phone Input Field with Dynamic Prefix Code Picker
             TextField(
               controller: _phoneController,
               keyboardType: TextInputType.phone,
@@ -213,11 +253,45 @@ class _LinkPhoneScreenState extends State<LinkPhoneScreen> {
               style: const TextStyle(fontSize: 16, letterSpacing: 1),
               decoration: InputDecoration(
                 hintText: '300 1234567',
-                prefixText: '+92 ',
-                prefixStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.black,
+
+                // Dynamic Clickable Country Picker Code Layout
+                prefixIcon: InkWell(
+                  onTap: _isLoading ? null : _openCountryPicker,
+                  borderRadius: BorderRadius.circular(8),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 12,
+                      vertical: 14,
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          _selectedCountryFlag,
+                          style: const TextStyle(fontSize: 20),
+                        ),
+                        const SizedBox(width: 6),
+                        Text(
+                          "+$_selectedCountryCode",
+                          style: const TextStyle(
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black,
+                          ),
+                        ),
+                        const Icon(
+                          Icons.arrow_drop_down,
+                          color: Colors.black54,
+                        ),
+                        const SizedBox(width: 8),
+                        Container(
+                          height: 20,
+                          width: 1,
+                          color: Colors.grey[300], // Visual Divider
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(12),
@@ -313,7 +387,6 @@ class _LinkPhoneScreenState extends State<LinkPhoneScreen> {
               ),
               const SizedBox(height: 24),
 
-              // Custom Snappy 6-Digit Row Layout
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: List.generate(6, (index) {

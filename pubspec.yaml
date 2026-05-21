@@ -64,6 +64,7 @@ dependencies:
   video_editor: ^3.0.0
   video_compress: ^3.1.4
   ffmpeg_kit_flutter_new: ^4.1.0
+  country_picker: ^2.0.27
 
  
   
