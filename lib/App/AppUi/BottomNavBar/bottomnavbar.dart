@@ -7,6 +7,7 @@ import 'package:pandlive/App/AppUi/BottomScreens/updates_screen.dart';
 // import 'package:pandlive/App/AppUi/BottomScreens/homescreen.dart';
 // import 'package:pandlive/App/AppUi/BottomScreens/ProfileScreens/profile_screen.dart';
 import 'package:pandlive/App/AppUi/ReelsVideo/reels_screen.dart';
+import 'package:pandlive/App/AppUi/Settings/settings.dart';
 import 'package:pandlive/Utils/Constant/app_images.dart';
 
 class Bottomnavbar extends StatefulWidget {
@@ -24,6 +25,7 @@ class _BottomnavbarState extends State<Bottomnavbar> {
     UpdatesScreen(),
     // WalletScreen(),
     ProfileScreen(uid: FirebaseAuth.instance.currentUser?.uid ?? ""),
+    SettingsScreen(),
   ];
   @override
   Widget build(BuildContext context) {
@@ -97,6 +99,18 @@ class _BottomnavbarState extends State<Bottomnavbar> {
               ),
 
               label: isArabic ? "حساب تعريفي" : "Profile",
+            ),
+            BottomNavigationBarItem(
+              icon: Image(
+                image: AssetImage(AppImages.settings),
+                color: selectedScreen.value == 3
+                    ? Colors.black
+                    : Colors.black38,
+
+                height: 30,
+                width: 30,
+              ),
+              label: isArabic ? "حساب تعريفي" : "Settings",
             ),
           ],
         ),
