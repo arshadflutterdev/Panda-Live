@@ -226,7 +226,7 @@ class _VerifyNumberState extends State<VerifyNumber> {
         children: [
           // Top Image + Back Button
           Container(
-            height: height * 0.27,
+            height: height * 0.37,
             width: width,
             decoration: BoxDecoration(
               image: DecorationImage(

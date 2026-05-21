@@ -796,7 +796,6 @@ class VideoDetailScreen extends StatelessWidget {
                           onTap: () => reelsController.downloadVideo(
                             data.videoUrl,
                             data.id,
-                            data.username,
                           ),
                         ),
                       ],
@@ -910,11 +909,7 @@ class VideoDetailScreen extends StatelessWidget {
                 title: const Text("Download Video"),
                 onTap: () {
                   Get.back();
-                  reelsController.downloadVideo(
-                    video.videoUrl,
-                    video.id,
-                    video.username,
-                  );
+                  reelsController.downloadVideo(video.videoUrl, video.id);
                 },
               ),
 

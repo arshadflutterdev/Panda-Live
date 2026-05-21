@@ -110,7 +110,7 @@ class _VerifyEmailState extends State<VerifyEmail> {
         body: Column(
           children: [
             Container(
-              height: height * 0.27,
+              height: height * 0.37,
               width: width,
               decoration: BoxDecoration(
                 color: Colors.white,

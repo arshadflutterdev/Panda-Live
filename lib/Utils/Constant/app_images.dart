@@ -28,7 +28,7 @@ class AppImages {
   static String splashScren = "assets/images/challl.jpg";
   //more used image
   static String bgimage = "assets/images/challl.jpg";
-  static String halfbg = "assets/images/222e (3).jpg";
+  static String halfbg = "assets/icons/logooo.png";
   //below images for authOpt screen
   static String girl1 = "assets/images/challl.jpg";
   static String girl2 = "assets/images/222e (1).jpg";
